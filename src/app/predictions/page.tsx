@@ -262,9 +262,10 @@ export default function PredictionsPage() {
                 {/* Matches */}
                 <div className="divide-y divide-white/5">
                   {leagueMatches.map((match, index) => (
-                    <div
+                    <Link
+                      href={`/predictions/${match.id}`}
                       key={match.id}
-                      className="px-5 py-4 hover:bg-white/5 transition-colors group"
+                      className="block px-5 py-4 hover:bg-white/5 transition-colors group cursor-pointer"
                     >
                       <div className="grid grid-cols-12 gap-4 items-center">
                         {/* Time */}
@@ -322,7 +323,7 @@ export default function PredictionsPage() {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
