@@ -5,6 +5,60 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { supabase, Prematch } from '@/lib/supabase';
 
+// Betting personality types
+const PERSONALITIES = [
+  {
+    id: 'aggressive',
+    name: 'Aggressive',
+    nameZh: '攻击型',
+    icon: '🔥',
+    description: 'High risk, high reward. Favors home wins and over goals.',
+    color: 'from-red-500 to-orange-500',
+    bgColor: 'bg-red-500/20',
+    textColor: 'text-red-400',
+  },
+  {
+    id: 'conservative',
+    name: 'Conservative',
+    nameZh: '保守型',
+    icon: '🛡️',
+    description: 'Low risk approach. Prefers draws and under goals.',
+    color: 'from-blue-500 to-cyan-500',
+    bgColor: 'bg-blue-500/20',
+    textColor: 'text-blue-400',
+  },
+  {
+    id: 'balanced',
+    name: 'Balanced',
+    nameZh: '平衡型',
+    icon: '⚖️',
+    description: 'Moderate risk with balanced predictions.',
+    color: 'from-emerald-500 to-cyan-500',
+    bgColor: 'bg-emerald-500/20',
+    textColor: 'text-emerald-400',
+  },
+  {
+    id: 'value',
+    name: 'Value Hunter',
+    nameZh: '价值型',
+    icon: '💎',
+    description: 'Seeks undervalued odds and value bets.',
+    color: 'from-purple-500 to-pink-500',
+    bgColor: 'bg-purple-500/20',
+    textColor: 'text-purple-400',
+  },
+  {
+    id: 'safe',
+    name: 'Safe Play',
+    nameZh: '稳健型',
+    icon: '🏦',
+    description: 'Very safe picks with high confidence.',
+    color: 'from-yellow-500 to-amber-500',
+    bgColor: 'bg-yellow-500/20',
+    textColor: 'text-yellow-400',
+  },
+];
+
 // Mock odds data generator
 function generateMockOdds() {
   return {
@@ -26,37 +80,80 @@ function generateMockOdds() {
   };
 }
 
-// Mock AI predictions
-function generateAIPredictions() {
-  const homeWin = Math.floor(30 + Math.random() * 40);
-  const draw = Math.floor(15 + Math.random() * 25);
-  const awayWin = 100 - homeWin - draw;
+// Generate predictions based on personality type
+function generatePredictionsByPersonality(personalityId: string) {
+  // Base values that will be modified by personality
+  let homeBase = 45;
+  let drawBase = 28;
+  let overBase = 52;
+  let homeHdpBase = 55;
 
-  const over = Math.floor(40 + Math.random() * 30);
-  const under = 100 - over;
+  switch (personalityId) {
+    case 'aggressive':
+      // Aggressive: Favors home wins and overs
+      homeBase = 65 + Math.floor(Math.random() * 10);
+      drawBase = 15 + Math.floor(Math.random() * 8);
+      overBase = 70 + Math.floor(Math.random() * 10);
+      homeHdpBase = 68 + Math.floor(Math.random() * 10);
+      break;
+    case 'conservative':
+      // Conservative: Favors draws and unders
+      homeBase = 35 + Math.floor(Math.random() * 10);
+      drawBase = 38 + Math.floor(Math.random() * 10);
+      overBase = 32 + Math.floor(Math.random() * 10);
+      homeHdpBase = 45 + Math.floor(Math.random() * 8);
+      break;
+    case 'balanced':
+      // Balanced: Moderate predictions
+      homeBase = 48 + Math.floor(Math.random() * 12);
+      drawBase = 26 + Math.floor(Math.random() * 8);
+      overBase = 50 + Math.floor(Math.random() * 10);
+      homeHdpBase = 52 + Math.floor(Math.random() * 10);
+      break;
+    case 'value':
+      // Value: Seeks underdog value
+      homeBase = 40 + Math.floor(Math.random() * 15);
+      drawBase = 30 + Math.floor(Math.random() * 12);
+      overBase = 45 + Math.floor(Math.random() * 15);
+      homeHdpBase = 48 + Math.floor(Math.random() * 12);
+      break;
+    case 'safe':
+      // Safe: High confidence picks only
+      homeBase = 72 + Math.floor(Math.random() * 8);
+      drawBase = 12 + Math.floor(Math.random() * 6);
+      overBase = 65 + Math.floor(Math.random() * 10);
+      homeHdpBase = 70 + Math.floor(Math.random() * 10);
+      break;
+    default:
+      homeBase = 50 + Math.floor(Math.random() * 10);
+      drawBase = 25 + Math.floor(Math.random() * 8);
+      overBase = 52 + Math.floor(Math.random() * 10);
+      homeHdpBase = 55 + Math.floor(Math.random() * 10);
+  }
 
-  const homeHandicap = Math.floor(45 + Math.random() * 20);
-  const awayHandicap = 100 - homeHandicap;
+  const awayBase = 100 - homeBase - drawBase;
+  const underBase = 100 - overBase;
+  const awayHdpBase = 100 - homeHdpBase;
 
   return {
     '1x2': {
-      home: homeWin,
-      draw: draw,
-      away: awayWin,
-      prediction: homeWin > awayWin ? (homeWin > draw ? '1' : 'X') : (awayWin > draw ? '2' : 'X'),
-      confidence: Math.max(homeWin, draw, awayWin),
+      home: homeBase,
+      draw: drawBase,
+      away: awayBase,
+      prediction: homeBase > awayBase ? (homeBase > drawBase ? '1' : 'X') : (awayBase > drawBase ? '2' : 'X'),
+      confidence: Math.max(homeBase, drawBase, awayBase),
     },
     'overUnder': {
-      over: over,
-      under: under,
-      prediction: over > under ? 'Over 2.5' : 'Under 2.5',
-      confidence: Math.max(over, under),
+      over: overBase,
+      under: underBase,
+      prediction: overBase > underBase ? 'Over 2.5' : 'Under 2.5',
+      confidence: Math.max(overBase, underBase),
     },
     'handicap': {
-      home: homeHandicap,
-      away: awayHandicap,
-      prediction: homeHandicap > awayHandicap ? 'Home -0.5' : 'Away +0.5',
-      confidence: Math.max(homeHandicap, awayHandicap),
+      home: homeHdpBase,
+      away: awayHdpBase,
+      prediction: homeHdpBase > awayHdpBase ? 'Home -0.5' : 'Away +0.5',
+      confidence: Math.max(homeHdpBase, awayHdpBase),
     },
   };
 }
@@ -66,7 +163,16 @@ export default function MatchDetailsPage() {
   const [match, setMatch] = useState<Prematch | null>(null);
   const [loading, setLoading] = useState(true);
   const [odds] = useState(generateMockOdds);
-  const [predictions] = useState(generateAIPredictions);
+  const [selectedPersonality, setSelectedPersonality] = useState('balanced');
+  const [predictions, setPredictions] = useState(() => generatePredictionsByPersonality('balanced'));
+
+  // Update predictions when personality changes
+  const handlePersonalityChange = (personalityId: string) => {
+    setSelectedPersonality(personalityId);
+    setPredictions(generatePredictionsByPersonality(personalityId));
+  };
+
+  const currentPersonality = PERSONALITIES.find(p => p.id === selectedPersonality) || PERSONALITIES[2];
 
   useEffect(() => {
     async function fetchMatch() {
@@ -299,6 +405,43 @@ export default function MatchDetailsPage() {
               <span className="ml-auto px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">
                 Powered by AI
               </span>
+            </div>
+
+            {/* Personality Selector */}
+            <div className="mb-6">
+              <h3 className="text-gray-400 text-sm font-medium mb-3">Select Your Betting Style</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                {PERSONALITIES.map((personality) => (
+                  <button
+                    key={personality.id}
+                    onClick={() => handlePersonalityChange(personality.id)}
+                    className={`relative p-3 rounded-xl border transition-all cursor-pointer ${
+                      selectedPersonality === personality.id
+                        ? `${personality.bgColor} border-current ${personality.textColor}`
+                        : 'bg-white/5 border-white/10 hover:bg-white/10 text-gray-400'
+                    }`}
+                  >
+                    <div className="text-2xl mb-1">{personality.icon}</div>
+                    <div className={`text-xs font-semibold ${selectedPersonality === personality.id ? personality.textColor : 'text-white'}`}>
+                      {personality.name}
+                    </div>
+                    <div className="text-[10px] text-gray-500">{personality.nameZh}</div>
+                    {selectedPersonality === personality.id && (
+                      <div className={`absolute top-1 right-1 w-2 h-2 rounded-full bg-gradient-to-r ${personality.color}`} />
+                    )}
+                  </button>
+                ))}
+              </div>
+              {/* Current Personality Description */}
+              <div className={`mt-3 p-3 rounded-lg ${currentPersonality.bgColor} border border-current/20`}>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{currentPersonality.icon}</span>
+                  <span className={`font-semibold ${currentPersonality.textColor}`}>
+                    {currentPersonality.name} Mode
+                  </span>
+                </div>
+                <p className="text-gray-400 text-xs mt-1">{currentPersonality.description}</p>
+              </div>
             </div>
 
             <div className="space-y-6">
