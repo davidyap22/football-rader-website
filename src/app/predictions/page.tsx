@@ -4,15 +4,20 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase, Prematch } from '@/lib/supabase';
 
-// Date helper functions
+// Date helper functions - All using UTC
+function getUTCToday() {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+}
+
 function getDateRange() {
   const dates = [];
-  const today = new Date();
+  const today = getUTCToday();
 
   // Get 7 days: 3 days before, today, 3 days after
   for (let i = -3; i <= 3; i++) {
     const date = new Date(today);
-    date.setDate(today.getDate() + i);
+    date.setUTCDate(today.getUTCDate() + i);
     dates.push(date);
   }
 
@@ -20,36 +25,40 @@ function getDateRange() {
 }
 
 function formatDateLabel(date: Date, today: Date) {
-  const diffDays = Math.floor((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  // Compare UTC dates only (ignore time)
+  const dateUTC = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  const todayUTC = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  const diffDays = Math.round((dateUTC - todayUTC) / (1000 * 60 * 60 * 24));
 
   if (diffDays === -1) return 'YESTERDAY';
   if (diffDays === 0) return 'TODAY';
   if (diffDays === 1) return 'TOMORROW';
 
-  const day = date.getDate();
-  const month = date.toLocaleDateString('en-US', { month: 'long' }).toUpperCase();
+  const day = date.getUTCDate();
+  const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+  const month = months[date.getUTCMonth()];
   return `${day} ${month}`;
 }
 
 function formatDateForQuery(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
 
 function isSameDay(date1: Date, date2: Date) {
-  return date1.getFullYear() === date2.getFullYear() &&
-         date1.getMonth() === date2.getMonth() &&
-         date1.getDate() === date2.getDate();
+  return date1.getUTCFullYear() === date2.getUTCFullYear() &&
+         date1.getUTCMonth() === date2.getUTCMonth() &&
+         date1.getUTCDate() === date2.getUTCDate();
 }
 
 export default function PredictionsPage() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(getUTCToday);
   const [matches, setMatches] = useState<Prematch[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dates] = useState(getDateRange());
-  const today = new Date();
+  const [dates] = useState(getDateRange);
+  const today = getUTCToday();
 
   useEffect(() => {
     async function fetchMatches() {
@@ -82,7 +91,10 @@ export default function PredictionsPage() {
 
   const formatTime = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+    // Display UTC time
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
   };
 
   const getConfidence = (index: number) => {
