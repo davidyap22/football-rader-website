@@ -1026,7 +1026,7 @@ function Navbar() {
     };
     checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user || null);
     });
 
@@ -1252,7 +1252,7 @@ function LeaguesSection() {
 
         // Group by league and count matches
         const leagueMap = new Map<string, { logo: string; count: number }>();
-        data?.forEach((match) => {
+        data?.forEach((match: any) => {
           if (match.league_name) {
             const existing = leagueMap.get(match.league_name);
             if (existing) {

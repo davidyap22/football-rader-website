@@ -410,7 +410,7 @@ export default function PerformancePage() {
       setUser(session?.user || null);
     };
     checkUser();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user || null);
     });
     return () => subscription.unsubscribe();

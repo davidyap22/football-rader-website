@@ -368,7 +368,7 @@ export default function PricingPage() {
       setUser(session?.user || null);
     };
     checkUser();
-    const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user || null);
     });
     return () => authSub.unsubscribe();
