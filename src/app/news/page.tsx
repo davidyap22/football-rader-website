@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase, FootballNews } from '@/lib/supabase';
-import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
+import { User } from '@supabase/supabase-js';
 
 const ITEMS_PER_PAGE = 21;
 
@@ -285,7 +285,7 @@ export default function NewsPage() {
       setUser(session?.user || null);
     };
     checkUser();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
     });
     return () => subscription.unsubscribe();

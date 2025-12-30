@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase, signOut, getUserSubscription, UserSubscription } from '@/lib/supabase';
-import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
+import { User } from '@supabase/supabase-js';
 
 type MenuSection = 'profile' | 'subscription' | 'calculator' | 'settings';
 
@@ -41,7 +41,7 @@ export default function DashboardPage() {
 
     // Listen for auth changes
     const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange(
-      async (event: AuthChangeEvent, session: Session | null) => {
+      async (event, session) => {
         if (event === 'SIGNED_OUT') {
           router.push('/login');
         } else if (session?.user) {

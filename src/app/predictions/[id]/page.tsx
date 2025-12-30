@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription } from '@/lib/supabase';
-import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
+import { User } from '@supabase/supabase-js';
 
 // Language options
 const LANGUAGES = [
@@ -239,7 +239,7 @@ export default function MatchDetailsPage() {
   const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [subscription, setSubscription] = useState<UserSubscription | null>(null);
+  const [userSubscription, setUserSubscription] = useState<UserSubscription | null>(null);
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
   // Check auth session
@@ -250,11 +250,11 @@ export default function MatchDetailsPage() {
     };
     checkUser();
 
-    const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
     });
 
-    return () => authSub.unsubscribe();
+    return () => subscription.unsubscribe();
   }, []);
 
   // Load user subscription
@@ -262,7 +262,7 @@ export default function MatchDetailsPage() {
     const loadSubscription = async () => {
       if (user) {
         const { data } = await getUserSubscription(user.id);
-        setSubscription(data);
+        setUserSubscription(data);
       }
     };
     loadSubscription();
@@ -270,19 +270,25 @@ export default function MatchDetailsPage() {
 
   // Check if a betting style is available based on subscription
   const isStyleAvailable = (styleId: string) => {
-    if (!subscription) return styleId === 'aggressive'; // Default to aggressive only if no subscription
+    // Aggressive is always available
+    if (styleId === 'aggressive') return true;
 
-    // Ultimate plan gets all styles
-    if (subscription.package_type === 'ultimate') return true;
-
-    // Pro plan gets 1 style (user's choice, default aggressive)
-    if (subscription.package_type === 'pro') {
-      const selectedStyles = subscription.selected_betting_styles || ['aggressive'];
-      return selectedStyles.includes(styleId) || styleId === 'aggressive';
+    // If no subscription or free trial, only aggressive is available
+    if (!userSubscription || userSubscription.package_type === 'free_trial') {
+      return false;
     }
 
-    // Starter and Free Trial get only aggressive
-    return styleId === 'aggressive';
+    // Starter and Pro plans: only 1 betting style (aggressive)
+    if (userSubscription.package_type === 'starter' || userSubscription.package_type === 'pro') {
+      return false;
+    }
+
+    // Ultimate plan: all styles available
+    if (userSubscription.package_type === 'ultimate') {
+      return true;
+    }
+
+    return false;
   };
 
   // Load language from localStorage on mount
@@ -1410,7 +1416,6 @@ export default function MatchDetailsPage() {
                   <button
                     key={p.id}
                     onClick={() => available && handlePersonalityChange(p.id)}
-                    disabled={!available}
                     className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
                       !available
                         ? 'bg-white/5 text-gray-600 cursor-not-allowed opacity-60'
@@ -1418,12 +1423,13 @@ export default function MatchDetailsPage() {
                         ? `bg-gradient-to-r ${p.color} text-black cursor-pointer`
                         : 'bg-white/5 text-gray-400 hover:bg-white/10 cursor-pointer'
                     }`}
+                    title={!available ? 'Upgrade to Ultimate to unlock' : ''}
                   >
                     <span>{p.icon}</span>
                     <span>{p.name}</span>
                     {!available && (
-                      <svg className="w-3 h-3 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                      <svg className="w-3 h-3 ml-0.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
                     )}
                   </button>

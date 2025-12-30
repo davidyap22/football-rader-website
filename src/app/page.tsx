@@ -1,10 +1,10 @@
 "use client";
-// Build: 2024-12-30
+
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef, createContext, useContext, ReactNode } from "react";
 import { supabase, Prematch } from "@/lib/supabase";
-import { User, AuthChangeEvent, Session } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
 
 // ============ Translations ============
 const translations: Record<string, Record<string, string>> = {
@@ -1026,7 +1026,7 @@ function Navbar() {
     };
     checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
     });
 
@@ -1252,7 +1252,7 @@ function LeaguesSection() {
 
         // Group by league and count matches
         const leagueMap = new Map<string, { logo: string; count: number }>();
-        data?.forEach((match: { league_name: string | null; league_logo: string | null }) => {
+        data?.forEach((match) => {
           if (match.league_name) {
             const existing = leagueMap.get(match.league_name);
             if (existing) {

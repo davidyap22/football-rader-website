@@ -3,16 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-// Create client with persistent session storage
+// Create client even if env vars are missing (for development without Supabase)
 export const supabase = supabaseUrl && supabaseKey
-  ? createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        persistSession: true,
-        storageKey: 'oddsflow-auth',
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-      },
-    })
+  ? createClient(supabaseUrl, supabaseKey)
   : null as any;
 
 // Auth helper functions
