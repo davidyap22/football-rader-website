@@ -1,5 +1,5 @@
 "use client";
-// Build: 2024-12-30-v2-SYNC
+// Build: 2024-12-30
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef, createContext, useContext, ReactNode } from "react";
@@ -2125,7 +2125,7 @@ function Footer() {
         </div>
 
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm">&copy; 2025 OddsFlow. {t('allRightsReserved')}</p>
+          <p className="text-gray-500 text-sm">&copy; 2024 OddsFlow. {t('allRightsReserved')}</p>
           <p className="text-gray-600 text-xs">{t('gamblingWarning')}</p>
         </div>
       </div>
