@@ -11,8 +11,40 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // Get the session from URL hash
-        const { data: { session }, error } = await supabase.auth.getSession();
+        // Handle the OAuth callback - exchange code/hash for session
+        // This handles both PKCE (code in query) and implicit (hash fragment) flows
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const queryParams = new URLSearchParams(window.location.search);
+
+        // Check if we have an access token in hash (implicit flow)
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+
+        // Check if we have a code in query (PKCE flow)
+        const code = queryParams.get('code');
+
+        let session = null;
+        let error = null;
+
+        if (accessToken) {
+          // Implicit flow - set session from hash
+          const { data, error: setError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken || '',
+          });
+          session = data?.session;
+          error = setError;
+        } else if (code) {
+          // PKCE flow - exchange code for session
+          const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+          session = data?.session;
+          error = exchangeError;
+        } else {
+          // Try getting existing session
+          const { data, error: getError } = await supabase.auth.getSession();
+          session = data?.session;
+          error = getError;
+        }
 
         if (error) {
           console.error('Auth callback error:', error);
