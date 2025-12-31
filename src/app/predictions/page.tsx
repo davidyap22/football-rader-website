@@ -306,13 +306,23 @@ export default function PredictionsPage() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Load date from URL parameter on mount
+  // Load date from URL parameter or sessionStorage on mount
   useEffect(() => {
     const dateParam = searchParams.get('date');
     if (dateParam) {
       const parsedDate = new Date(dateParam + 'T00:00:00Z');
       if (!isNaN(parsedDate.getTime())) {
         setSelectedDate(parsedDate);
+        sessionStorage.setItem('oddsflow_selected_date', dateParam);
+      }
+    } else {
+      // No URL param, check sessionStorage
+      const savedDate = sessionStorage.getItem('oddsflow_selected_date');
+      if (savedDate) {
+        const parsedDate = new Date(savedDate + 'T00:00:00Z');
+        if (!isNaN(parsedDate.getTime())) {
+          setSelectedDate(parsedDate);
+        }
       }
     }
   }, [searchParams]);
@@ -552,7 +562,10 @@ export default function PredictionsPage() {
                 return (
                   <button
                     key={index}
-                    onClick={() => setSelectedDate(date)}
+                    onClick={() => {
+                      setSelectedDate(date);
+                      sessionStorage.setItem('oddsflow_selected_date', formatDateForQuery(date));
+                    }}
                     className={`
                       relative px-5 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-300
                       ${isSelected
