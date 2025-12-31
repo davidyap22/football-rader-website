@@ -55,6 +55,19 @@ function isSameDay(date1: Date, date2: Date) {
          date1.getUTCDate() === date2.getUTCDate();
 }
 
+function getInitialDate() {
+  if (typeof window !== 'undefined') {
+    const savedDate = sessionStorage.getItem('oddsflow_selected_date');
+    if (savedDate) {
+      const parsedDate = new Date(savedDate + 'T00:00:00Z');
+      if (!isNaN(parsedDate.getTime())) {
+        return parsedDate;
+      }
+    }
+  }
+  return getUTCToday();
+}
+
 // Language options
 const LANGUAGES = [
   { code: 'EN', name: 'English', flag: '🇬🇧' },
@@ -272,7 +285,7 @@ const translations: Record<string, Record<string, string>> = {
 
 export default function PredictionsPage() {
   const searchParams = useSearchParams();
-  const [selectedDate, setSelectedDate] = useState(getUTCToday);
+  const [selectedDate, setSelectedDate] = useState(getInitialDate);
   const [matches, setMatches] = useState<Prematch[]>([]);
   const [loading, setLoading] = useState(true);
   const [dates] = useState(getDateRange);
@@ -308,21 +321,35 @@ export default function PredictionsPage() {
 
   // Load date from URL parameter or sessionStorage on mount
   useEffect(() => {
+    // First check URL parameter
     const dateParam = searchParams.get('date');
     if (dateParam) {
       const parsedDate = new Date(dateParam + 'T00:00:00Z');
       if (!isNaN(parsedDate.getTime())) {
         setSelectedDate(parsedDate);
         sessionStorage.setItem('oddsflow_selected_date', dateParam);
+        return;
       }
-    } else {
-      // No URL param, check sessionStorage
-      const savedDate = sessionStorage.getItem('oddsflow_selected_date');
-      if (savedDate) {
-        const parsedDate = new Date(savedDate + 'T00:00:00Z');
-        if (!isNaN(parsedDate.getTime())) {
-          setSelectedDate(parsedDate);
-        }
+    }
+
+    // No valid URL param, check sessionStorage (runs on mount for client-side hydration)
+    const savedDate = sessionStorage.getItem('oddsflow_selected_date');
+    if (savedDate) {
+      const parsedDate = new Date(savedDate + 'T00:00:00Z');
+      if (!isNaN(parsedDate.getTime())) {
+        setSelectedDate(parsedDate);
+      }
+    }
+  }, []); // Empty dependency - run once on mount
+
+  // Also handle URL param changes
+  useEffect(() => {
+    const dateParam = searchParams.get('date');
+    if (dateParam) {
+      const parsedDate = new Date(dateParam + 'T00:00:00Z');
+      if (!isNaN(parsedDate.getTime())) {
+        setSelectedDate(parsedDate);
+        sessionStorage.setItem('oddsflow_selected_date', dateParam);
       }
     }
   }, [searchParams]);
