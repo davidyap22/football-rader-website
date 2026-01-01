@@ -286,27 +286,28 @@ export default function BlogPage() {
       </section>
 
       {/* Coming Soon Section */}
-      <section className="py-24 px-4">
+      <section className="py-12 md:py-24 px-4">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-12">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-6 md:p-12">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-4 md:mb-6">
+              <svg className="w-8 h-8 md:w-10 md:h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
               </svg>
             </div>
-            <h2 className="text-3xl font-bold mb-4">{t('comingSoon')}</h2>
-            <p className="text-gray-400 text-lg mb-8">{t('comingSoonText')}</p>
+            <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">{t('comingSoon')}</h2>
+            <p className="text-gray-400 text-base md:text-lg mb-6 md:mb-8">{t('comingSoonText')}</p>
 
-            <div className="bg-black/50 rounded-xl p-6 border border-white/5">
+            <div className="bg-black/50 rounded-xl p-4 md:p-6 border border-white/5">
               <h3 className="font-semibold mb-2">{t('subscribeTitle')}</h3>
               <p className="text-gray-500 text-sm mb-4">{t('subscribeText')}</p>
-              <div className="flex gap-3">
+              {/* Mobile: Stacked layout, Desktop: Horizontal */}
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
                   placeholder={t('enterEmail')}
                   className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-emerald-500/50 transition-colors"
                 />
-                <button className="px-6 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer whitespace-nowrap">
+                <button className="w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer whitespace-nowrap">
                   {t('subscribe')}
                 </button>
               </div>
