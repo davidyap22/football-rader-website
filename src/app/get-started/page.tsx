@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signUpWithEmail, signInWithGoogle, createFreeTrialSubscription } from '@/lib/supabase';
+import { signUpWithEmail, signInWithGoogle, createFreeTrialSubscription, validatePassword, getSafeErrorMessage } from '@/lib/supabase';
 
 export default function GetStartedPage() {
   const router = useRouter();
@@ -13,6 +13,18 @@ export default function GetStartedPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    if (newPassword) {
+      const validation = validatePassword(newPassword);
+      setPasswordErrors(validation.errors);
+    } else {
+      setPasswordErrors([]);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,11 +32,19 @@ export default function GetStartedPage() {
     setError('');
     setSuccess('');
 
+    // Validate password before submission
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.valid) {
+      setError(passwordValidation.errors[0]);
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data, error: signUpError } = await signUpWithEmail(email, password, name);
 
       if (signUpError) {
-        setError(signUpError.message);
+        setError(getSafeErrorMessage(signUpError));
         setLoading(false);
         return;
       }
@@ -168,13 +188,20 @@ export default function GetStartedPage() {
                   type="password"
                   id="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-colors"
-                  placeholder="Create a password (min 6 characters)"
+                  placeholder="Min 8 chars, uppercase, lowercase, number"
                   required
-                  minLength={6}
+                  minLength={8}
                   disabled={loading}
                 />
+                {passwordErrors.length > 0 && (
+                  <div className="mt-2 text-xs text-amber-400">
+                    {passwordErrors.map((err, i) => (
+                      <p key={i}>{err}</p>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>

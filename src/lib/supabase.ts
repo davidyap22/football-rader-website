@@ -1,7 +1,101 @@
 import { createClient } from '@supabase/supabase-js';
+import DOMPurify from 'dompurify';
+import validator from 'validator';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+// ============ SECURITY UTILITIES ============
+
+// Sanitize user input to prevent XSS
+export const sanitizeInput = (input: string): string => {
+  if (typeof window !== 'undefined') {
+    return DOMPurify.sanitize(input.trim(), {
+      ALLOWED_TAGS: [], // No HTML tags allowed
+      ALLOWED_ATTR: [],
+    });
+  }
+  // Server-side fallback: basic sanitization
+  return input
+    .trim()
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+};
+
+// Validate and sanitize email
+export const sanitizeEmail = (email: string): string | null => {
+  const trimmed = email.trim().toLowerCase();
+  if (!validator.isEmail(trimmed)) {
+    return null;
+  }
+  return validator.normalizeEmail(trimmed) || null;
+};
+
+// Rate limiting helper
+const rateLimitMap = new Map<string, number>();
+const RATE_LIMIT_WINDOW = 1000; // 1 second
+
+export const checkRateLimit = (key: string, maxPerSecond: number = 5): boolean => {
+  const now = Date.now();
+  const lastCall = rateLimitMap.get(key) || 0;
+
+  if (now - lastCall < RATE_LIMIT_WINDOW / maxPerSecond) {
+    return false; // Rate limited
+  }
+
+  rateLimitMap.set(key, now);
+  return true; // Allowed
+};
+
+// Password validation
+export const validatePassword = (password: string): { valid: boolean; errors: string[] } => {
+  const errors: string[] = [];
+
+  if (password.length < 8) {
+    errors.push('Password must be at least 8 characters');
+  }
+  if (!/[A-Z]/.test(password)) {
+    errors.push('Password must contain an uppercase letter');
+  }
+  if (!/[a-z]/.test(password)) {
+    errors.push('Password must contain a lowercase letter');
+  }
+  if (!/[0-9]/.test(password)) {
+    errors.push('Password must contain a number');
+  }
+
+  return { valid: errors.length === 0, errors };
+};
+
+// Sanitize error messages to prevent information leakage
+export const getSafeErrorMessage = (error: any): string => {
+  const message = error?.message?.toLowerCase() || '';
+
+  if (message.includes('invalid login credentials')) {
+    return 'Invalid email or password';
+  }
+  if (message.includes('user already') || message.includes('duplicate')) {
+    return 'An account with this email already exists';
+  }
+  if (message.includes('invalid email')) {
+    return 'Please enter a valid email address';
+  }
+  if (message.includes('password')) {
+    return 'Password does not meet requirements';
+  }
+  if (message.includes('rate') || message.includes('limit')) {
+    return 'Too many requests. Please try again later.';
+  }
+
+  // Log original error for debugging (server-side only)
+  if (typeof window === 'undefined') {
+    console.error('Supabase error:', error);
+  }
+
+  return 'An error occurred. Please try again.';
+};
 
 // Create client even if env vars are missing (for development without Supabase)
 export const supabase = supabaseUrl && supabaseKey
@@ -275,15 +369,41 @@ export const submitContactMessage = async (contactData: Omit<ContactMessage, 'id
     return { data: null, error: { message: 'Supabase client not initialized' } };
   }
 
+  // Input validation
+  if (!contactData.name?.trim() || contactData.name.length > 100) {
+    return { data: null, error: { message: 'Invalid name (max 100 characters)' } };
+  }
+
+  const validEmail = sanitizeEmail(contactData.email);
+  if (!validEmail) {
+    return { data: null, error: { message: 'Invalid email address' } };
+  }
+
+  if (!contactData.subject?.trim() || contactData.subject.length > 200) {
+    return { data: null, error: { message: 'Invalid subject (max 200 characters)' } };
+  }
+
+  if (!contactData.message?.trim() || contactData.message.length > 5000) {
+    return { data: null, error: { message: 'Message too long (max 5000 characters)' } };
+  }
+
+  // Rate limiting - max 1 contact message per 30 seconds
+  if (!checkRateLimit(`contact-${validEmail}`, 0.033)) {
+    return { data: null, error: { message: 'Please wait before sending another message' } };
+  }
+
+  // Sanitize inputs
+  const sanitizedData = {
+    name: sanitizeInput(contactData.name),
+    email: validEmail,
+    subject: sanitizeInput(contactData.subject),
+    message: sanitizeInput(contactData.message),
+  };
+
   try {
     const { data, error } = await supabase
       .from('contact_messages')
-      .insert({
-        name: contactData.name,
-        email: contactData.email,
-        subject: contactData.subject,
-        message: contactData.message,
-      })
+      .insert(sanitizedData)
       .select();
 
     if (error) {
@@ -387,13 +507,32 @@ export const addComment = async (
     return { data: null, error: { message: 'Supabase client not initialized' } };
   }
 
+  // Input validation
+  if (!content || content.trim().length === 0) {
+    return { data: null, error: { message: 'Comment cannot be empty' } };
+  }
+  if (content.length > 1000) {
+    return { data: null, error: { message: 'Comment too long (max 1000 characters)' } };
+  }
+  if (!Number.isInteger(fixtureId) || fixtureId < 0) {
+    return { data: null, error: { message: 'Invalid fixture ID' } };
+  }
+
+  // Rate limiting
+  if (!checkRateLimit(`comment-${userId}`, 2)) {
+    return { data: null, error: { message: 'Too many comments. Please wait.' } };
+  }
+
+  // Sanitize content to prevent XSS
+  const sanitizedContent = sanitizeInput(content);
+
   try {
     const { data, error } = await supabase
       .from('match_comments')
       .insert({
         fixture_id: fixtureId,
         user_id: userId,
-        content: content,
+        content: sanitizedContent,
         parent_id: parentId || null,
       })
       .select()
@@ -569,12 +708,28 @@ export const sendChatMessage = async (userId: string, content: string, fixtureId
     return { data: null, error: { message: 'Supabase client not initialized' } };
   }
 
+  // Input validation
+  if (!content || content.trim().length === 0) {
+    return { data: null, error: { message: 'Message cannot be empty' } };
+  }
+  if (content.length > 500) {
+    return { data: null, error: { message: 'Message too long (max 500 characters)' } };
+  }
+
+  // Rate limiting - max 3 messages per second
+  if (!checkRateLimit(`chat-${userId}`, 3)) {
+    return { data: null, error: { message: 'Too many messages. Please wait.' } };
+  }
+
+  // Sanitize content to prevent XSS
+  const sanitizedContent = sanitizeInput(content);
+
   try {
     const { data, error } = await supabase
       .from('chat_messages')
       .insert({
         user_id: userId,
-        content: content,
+        content: sanitizedContent,
         fixture_id: fixtureId ?? null,
       })
       .select()
