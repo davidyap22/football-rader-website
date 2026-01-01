@@ -293,6 +293,7 @@ export default function PredictionsPage() {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const today = getUTCToday();
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
@@ -500,7 +501,7 @@ export default function PredictionsPage() {
               <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* Language Selector */}
               <div className="relative">
                 <button
@@ -553,13 +554,89 @@ export default function PredictionsPage() {
               ) : (
                 <>
                   <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer">{t('getStarted')}</Link>
+                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
                 </>
               )}
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[45] md:hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Menu Panel */}
+          <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+            <div className="px-4 py-4 space-y-1">
+              {[
+                { href: '/', label: t('home') },
+                { href: '/predictions', label: t('predictions'), active: true },
+                { href: '/leagues', label: t('leagues') },
+                { href: '/performance', label: t('performance') },
+                { href: '/community', label: t('community') },
+                { href: '/news', label: t('news') },
+                { href: '/pricing', label: t('pricing') },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block px-4 py-3 rounded-lg text-base font-medium transition-all ${
+                    link.active
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              {/* Mobile Login/Signup */}
+              {!user && (
+                <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all"
+                  >
+                    {t('login')}
+                  </Link>
+                  <Link
+                    href="/get-started"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold hover:shadow-lg transition-all"
+                  >
+                    {t('getStarted')}
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Spacer for fixed navbar + date bar */}
       <div className="h-[132px]"></div>
@@ -671,7 +748,7 @@ export default function PredictionsPage() {
                       href={`/predictions/${match.id}?date=${formatDateForQuery(selectedDate)}`}
                       key={match.id}
                       onClick={(e) => handleMatchClick(e, match.id)}
-                      className={`block px-5 py-4 transition-all duration-300 group cursor-pointer relative overflow-hidden ${
+                      className={`block transition-all duration-300 group cursor-pointer relative overflow-hidden ${
                         match.type === 'In Play'
                           ? 'bg-red-500/5 hover:bg-red-500/10 border-l-2 border-red-500'
                           : 'hover:bg-emerald-500/5'
@@ -688,9 +765,11 @@ export default function PredictionsPage() {
                       {match.type === 'In Play' && (
                         <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-transparent to-transparent animate-pulse pointer-events-none" />
                       )}
-                      <div className="grid grid-cols-12 gap-4 items-center">
-                        {/* Time / Live / Finished Indicator */}
-                        <div className="col-span-2 sm:col-span-1">
+
+                      {/* Mobile Layout */}
+                      <div className="md:hidden p-4 space-y-3">
+                        {/* Time Row */}
+                        <div className="flex items-center justify-between">
                           {match.type === 'In Play' ? (
                             <div className="flex items-center gap-1.5">
                               <span className="relative flex h-2.5 w-2.5">
@@ -702,9 +781,78 @@ export default function PredictionsPage() {
                               </span>
                             </div>
                           ) : match.type === 'Finished' ? (
-                            <span className="text-gray-500 font-medium text-xs">
-                              FT
+                            <span className="text-gray-500 font-medium text-xs">FT</span>
+                          ) : (
+                            <span className="text-emerald-400 font-mono text-sm font-medium">
+                              {formatTime(match.start_date_msia)}
                             </span>
+                          )}
+                          <span className="text-emerald-400 font-bold text-sm">{getConfidence(index)}%</span>
+                        </div>
+
+                        {/* Teams Row */}
+                        <div className="flex items-center justify-between gap-2">
+                          {/* Home Team */}
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            {match.home_logo && (
+                              <div className="w-8 h-8 rounded-full bg-white p-0.5 flex-shrink-0">
+                                <img src={match.home_logo} alt="" className="w-full h-full object-contain" />
+                              </div>
+                            )}
+                            <span className="text-white font-medium text-sm truncate">{match.home_name}</span>
+                          </div>
+
+                          {/* VS / Score */}
+                          {(match.type === 'Finished' || match.type === 'In Play') ? (
+                            <div className={`px-3 py-1 rounded-lg text-sm font-bold flex-shrink-0 ${
+                              match.type === 'In Play'
+                                ? 'bg-red-500/20 text-white'
+                                : 'bg-gray-700/50 text-gray-300'
+                            }`}>
+                              {match.goals_home ?? 0} - {match.goals_away ?? 0}
+                            </div>
+                          ) : (
+                            <span className="text-gray-600 text-xs font-medium flex-shrink-0">vs</span>
+                          )}
+
+                          {/* Away Team */}
+                          <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
+                            <span className="text-white font-medium text-sm truncate text-right">{match.away_name}</span>
+                            {match.away_logo && (
+                              <div className="w-8 h-8 rounded-full bg-white p-0.5 flex-shrink-0">
+                                <img src={match.away_logo} alt="" className="w-full h-full object-contain" />
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Confidence Bar */}
+                        <div className="flex items-center gap-3">
+                          <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full"
+                              style={{ width: `${getConfidence(index)}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout */}
+                      <div className="hidden md:grid grid-cols-12 gap-4 items-center px-5 py-4">
+                        {/* Time / Live / Finished Indicator */}
+                        <div className="col-span-1">
+                          {match.type === 'In Play' ? (
+                            <div className="flex items-center gap-1.5">
+                              <span className="relative flex h-2.5 w-2.5">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+                              </span>
+                              <span className="text-red-500 font-bold text-xs uppercase animate-pulse">
+                                {match.status_elapsed ? `${match.status_elapsed}'` : 'LIVE'}
+                              </span>
+                            </div>
+                          ) : match.type === 'Finished' ? (
+                            <span className="text-gray-500 font-medium text-xs">FT</span>
                           ) : (
                             <span className="text-emerald-400 font-mono text-sm font-medium">
                               {formatTime(match.start_date_msia)}
@@ -713,7 +861,7 @@ export default function PredictionsPage() {
                         </div>
 
                         {/* Teams */}
-                        <div className="col-span-6 sm:col-span-7">
+                        <div className="col-span-7">
                           <div className="flex items-center gap-3">
                             {/* Home Team */}
                             <div className="flex items-center gap-2 flex-1 justify-end">
@@ -751,15 +899,15 @@ export default function PredictionsPage() {
                         </div>
 
                         {/* AI Confidence */}
-                        <div className="col-span-4 sm:col-span-4 text-right">
+                        <div className="col-span-4 text-right">
                           <div className="inline-flex items-center gap-2">
-                            <div className="w-16 h-1.5 bg-gray-800 rounded-full overflow-hidden hidden sm:block">
+                            <div className="w-16 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                               <div
                                 className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full"
                                 style={{ width: `${getConfidence(index)}%` }}
                               />
                             </div>
-                            <span className="text-emerald-400 font-bold text-sm">{t('aiConfidence')} {getConfidence(index)}%</span>
+                            <span className="text-emerald-400 font-bold text-sm">{getConfidence(index)}%</span>
                           </div>
                         </div>
                       </div>
