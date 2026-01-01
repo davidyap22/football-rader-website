@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
+import { supabase, Prematch, MatchComment, ChatMessage, ChatReaction, CommentReaction, getMatchComments, addComment, toggleCommentLike, deleteComment, getCommentStats, getChatMessages, sendChatMessage, subscribeToChatMessages, getMessageReactions, toggleMessageReaction, getCommentReactions, toggleCommentReaction } from '@/lib/supabase';
 
 const LANGUAGES = [
   { code: 'EN', name: 'English', flag: '🇬🇧' },
@@ -19,293 +19,609 @@ const LANGUAGES = [
 
 const translations: Record<string, Record<string, string>> = {
   EN: {
-    community: "Community",
-    communitySubtitle: "Join the discussion with thousands of football enthusiasts",
-    home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance", news: "News", pricing: "Pricing",
-    login: "Log In", getStarted: "Get Started",
-    footer: "18+ | Gambling involves risk. Please gamble responsibly.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
-    members: "Members", discussions: "Discussions", comments: "Comments", onlineNow: "Online Now",
-    categories: "Categories", topContributors: "Top Contributors",
-    latest: "Latest", popular: "Popular", unanswered: "Unanswered", newDiscussion: "New Discussion",
-    loadMore: "Load More Discussions", replies: "replies", views: "views", by: "by", pinned: "Pinned",
-  },
-  ES: {
-    community: "Comunidad",
-    communitySubtitle: "Únete a la discusión con miles de entusiastas del fútbol",
-    home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Análisis", news: "Noticias", pricing: "Precios",
-    login: "Iniciar Sesión", getStarted: "Comenzar",
-    footer: "18+ | El juego implica riesgo. Por favor juega responsablemente.",
-    allRights: "© 2025 OddsFlow. Todos los derechos reservados.",
-    members: "Miembros", discussions: "Discusiones", comments: "Comentarios", onlineNow: "En Línea",
-    categories: "Categorías", topContributors: "Mejores Contribuidores",
-    latest: "Recientes", popular: "Popular", unanswered: "Sin Respuesta", newDiscussion: "Nueva Discusión",
-    loadMore: "Cargar Más Discusiones", replies: "respuestas", views: "vistas", by: "por", pinned: "Fijado",
-  },
-  PT: {
-    community: "Comunidade",
-    communitySubtitle: "Participe da discussão com milhares de entusiastas do futebol",
-    home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Análise", news: "Notícias", pricing: "Preços",
-    login: "Entrar", getStarted: "Começar",
-    footer: "18+ | O jogo envolve risco. Por favor, jogue com responsabilidade.",
-    allRights: "© 2025 OddsFlow. Todos os direitos reservados.",
-    members: "Membros", discussions: "Discussões", comments: "Comentários", onlineNow: "Online Agora",
-    categories: "Categorias", topContributors: "Melhores Contribuidores",
-    latest: "Recentes", popular: "Popular", unanswered: "Sem Resposta", newDiscussion: "Nova Discussão",
-    loadMore: "Carregar Mais Discussões", replies: "respostas", views: "visualizações", by: "por", pinned: "Fixado",
-  },
-  DE: {
-    community: "Community",
-    communitySubtitle: "Diskutieren Sie mit Tausenden von Fußball-Enthusiasten",
-    home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "Analyse", news: "Nachrichten", pricing: "Preise",
-    login: "Anmelden", getStarted: "Loslegen",
-    footer: "18+ | Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
-    allRights: "© 2025 OddsFlow. Alle Rechte vorbehalten.",
-    members: "Mitglieder", discussions: "Diskussionen", comments: "Kommentare", onlineNow: "Online Jetzt",
-    categories: "Kategorien", topContributors: "Top-Mitwirkende",
-    latest: "Neueste", popular: "Beliebt", unanswered: "Unbeantwortet", newDiscussion: "Neue Diskussion",
-    loadMore: "Mehr Laden", replies: "Antworten", views: "Aufrufe", by: "von", pinned: "Angeheftet",
-  },
-  FR: {
-    community: "Communauté",
-    communitySubtitle: "Rejoignez la discussion avec des milliers de passionnés de football",
-    home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Analyse", news: "Actualités", pricing: "Tarifs",
-    login: "Connexion", getStarted: "Commencer",
-    footer: "18+ | Les jeux d'argent comportent des risques. Jouez de manière responsable.",
-    allRights: "© 2025 OddsFlow. Tous droits réservés.",
-    members: "Membres", discussions: "Discussions", comments: "Commentaires", onlineNow: "En Ligne",
-    categories: "Catégories", topContributors: "Meilleurs Contributeurs",
-    latest: "Récent", popular: "Populaire", unanswered: "Sans Réponse", newDiscussion: "Nouvelle Discussion",
-    loadMore: "Charger Plus", replies: "réponses", views: "vues", by: "par", pinned: "Épinglé",
-  },
-  JA: {
-    community: "コミュニティ",
-    communitySubtitle: "何千人ものサッカー愛好家と議論に参加しましょう",
-    home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "分析", news: "ニュース", pricing: "料金",
-    login: "ログイン", getStarted: "始める",
-    footer: "18+ | ギャンブルにはリスクが伴います。責任を持ってプレイしてください。",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
-    members: "メンバー", discussions: "ディスカッション", comments: "コメント", onlineNow: "オンライン中",
-    categories: "カテゴリー", topContributors: "トップ貢献者",
-    latest: "最新", popular: "人気", unanswered: "未回答", newDiscussion: "新規ディスカッション",
-    loadMore: "もっと読み込む", replies: "返信", views: "閲覧", by: "by", pinned: "固定",
-  },
-  KO: {
-    community: "커뮤니티",
-    communitySubtitle: "수천 명의 축구 애호가들과 토론에 참여하세요",
-    home: "홈", predictions: "예측", leagues: "리그", performance: "분석", news: "뉴스", pricing: "가격",
-    login: "로그인", getStarted: "시작하기",
-    footer: "18+ | 도박에는 위험이 따릅니다. 책임감 있게 플레이하세요.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
-    members: "회원", discussions: "토론", comments: "댓글", onlineNow: "온라인",
-    categories: "카테고리", topContributors: "최고 기여자",
-    latest: "최신", popular: "인기", unanswered: "답변 없음", newDiscussion: "새 토론",
-    loadMore: "더 보기", replies: "답글", views: "조회", by: "by", pinned: "고정됨",
+    home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance",
+    community: "Community", news: "News", pricing: "Pricing", login: "Log In", getStarted: "Get Started",
+    communityTitle: "Match Discussions",
+    communitySubtitle: "Share your thoughts on today's matches with the community",
+    totalComments: "Total Comments",
+    todayComments: "Today",
+    activeUsers: "Active Users",
+    noMatches: "No matches for this date",
+    comments: "comments",
+    writeComment: "Write a comment...",
+    reply: "Reply",
+    likes: "likes",
+    loginToComment: "Login to comment",
+    send: "Send",
+    cancel: "Cancel",
+    delete: "Delete",
+    showComments: "Show Comments",
+    hideComments: "Hide Comments",
+    noComments: "No comments yet. Be the first to comment!",
+    yesterday: "Yesterday",
+    today: "Today",
+    tomorrow: "Tomorrow",
+    globalChat: "Global Chat",
+    matchChat: "Match Chat",
+    onlineNow: "online now",
+    typeMessage: "Type a message...",
+    loginToChat: "Login to chat",
+    closeChat: "Close",
+    openChat: "Chat",
+    liveChat: "Live Chat",
   },
   '中文': {
-    community: "社区",
-    communitySubtitle: "与数千名足球爱好者一起讨论",
-    home: "首页", predictions: "预测", leagues: "联赛", performance: "分析", news: "新闻", pricing: "价格",
-    login: "登录", getStarted: "开始使用",
-    footer: "18+ | 赌博有风险，请理性参与。",
-    allRights: "© 2025 OddsFlow. 保留所有权利。",
-    members: "成员", discussions: "讨论", comments: "评论", onlineNow: "在线",
-    categories: "分类", topContributors: "顶级贡献者",
-    latest: "最新", popular: "热门", unanswered: "未回答", newDiscussion: "新讨论",
-    loadMore: "加载更多", replies: "回复", views: "浏览", by: "由", pinned: "置顶",
+    home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现",
+    community: "社区", news: "新闻", pricing: "价格", login: "登录", getStarted: "开始",
+    communityTitle: "比赛讨论",
+    communitySubtitle: "与社区分享您对今日比赛的看法",
+    totalComments: "总评论",
+    todayComments: "今日",
+    activeUsers: "活跃用户",
+    noMatches: "该日期没有比赛",
+    comments: "评论",
+    writeComment: "写评论...",
+    reply: "回复",
+    likes: "赞",
+    loginToComment: "登录后评论",
+    send: "发送",
+    cancel: "取消",
+    delete: "删除",
+    showComments: "显示评论",
+    hideComments: "隐藏评论",
+    noComments: "暂无评论，成为第一个评论者！",
+    yesterday: "昨天",
+    today: "今天",
+    tomorrow: "明天",
+    globalChat: "全局聊天",
+    matchChat: "比赛聊天",
+    onlineNow: "在线",
+    typeMessage: "输入消息...",
+    loginToChat: "登录聊天",
+    closeChat: "关闭",
+    openChat: "聊天",
+    liveChat: "实时聊天",
   },
   '繁體': {
-    community: "社區",
-    communitySubtitle: "與數千名足球愛好者一起討論",
-    home: "首頁", predictions: "預測", leagues: "聯賽", performance: "分析", news: "新聞", pricing: "價格",
-    login: "登入", getStarted: "開始使用",
-    footer: "18+ | 賭博有風險，請理性參與。",
-    allRights: "© 2025 OddsFlow. 保留所有權利。",
-    members: "成員", discussions: "討論", comments: "評論", onlineNow: "在線",
-    categories: "分類", topContributors: "頂級貢獻者",
-    latest: "最新", popular: "熱門", unanswered: "未回答", newDiscussion: "新討論",
-    loadMore: "載入更多", replies: "回覆", views: "瀏覽", by: "由", pinned: "置頂",
+    home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現",
+    community: "社區", news: "新聞", pricing: "價格", login: "登入", getStarted: "開始",
+    communityTitle: "比賽討論",
+    communitySubtitle: "與社區分享您對今日比賽的看法",
+    totalComments: "總評論",
+    todayComments: "今日",
+    activeUsers: "活躍用戶",
+    noMatches: "該日期沒有比賽",
+    comments: "評論",
+    writeComment: "寫評論...",
+    reply: "回覆",
+    likes: "讚",
+    loginToComment: "登入後評論",
+    send: "發送",
+    cancel: "取消",
+    delete: "刪除",
+    showComments: "顯示評論",
+    hideComments: "隱藏評論",
+    noComments: "暫無評論，成為第一個評論者！",
+    yesterday: "昨天",
+    today: "今天",
+    tomorrow: "明天",
+    globalChat: "全局聊天",
+    matchChat: "比賽聊天",
+    onlineNow: "在線",
+    typeMessage: "輸入消息...",
+    loginToChat: "登入聊天",
+    closeChat: "關閉",
+    openChat: "聊天",
+    liveChat: "實時聊天",
   },
 };
 
-// Mock comments for discussions
-const mockComments: Record<number, Array<{
-  id: number;
-  author: string;
-  avatar: string;
-  badge?: string;
-  content: string;
-  time: string;
-  likes: number;
-  replies?: Array<{
-    id: number;
-    author: string;
-    avatar: string;
-    content: string;
-    time: string;
-    likes: number;
-  }>;
-}>> = {
-  1: [
-    {
-      id: 1,
-      author: "TacticsGuru",
-      avatar: "🔴",
-      badge: "Expert",
-      content: "I'm going with Arsenal to win this weekend. They've been in great form and their home record is exceptional. City might slip up against a tough Newcastle side.",
-      time: "5 min ago",
-      likes: 45,
-      replies: [
-        { id: 11, author: "FootballFan99", avatar: "🔵", content: "Agree on Arsenal! Their midfield has been unstoppable.", time: "3 min ago", likes: 12 },
-        { id: 12, author: "SmartBettor", avatar: "⚽", content: "The odds on Arsenal are great value right now.", time: "2 min ago", likes: 8 },
-      ]
-    },
-    {
-      id: 2,
-      author: "DataDriven",
-      avatar: "📊",
-      badge: "Pro",
-      content: "Looking at the stats, Liverpool has a 67% win rate in away games this season. I'm backing them to beat Wolves.",
-      time: "12 min ago",
-      likes: 32,
-    },
-    {
-      id: 3,
-      author: "NewUser2024",
-      avatar: "🆕",
-      content: "What about the Chelsea vs Brighton game? I think Brighton might cause an upset.",
-      time: "25 min ago",
-      likes: 15,
-      replies: [
-        { id: 31, author: "TacticsGuru", avatar: "🔴", content: "Brighton is in good form but Chelsea at home is a different beast.", time: "20 min ago", likes: 9 },
-      ]
-    },
-  ],
-  2: [
-    {
-      id: 1,
-      author: "FootballFan99",
-      avatar: "🔵",
-      badge: "Pro",
-      content: "What a match! United's pressing in the second half completely changed the game. Fernandes was everywhere!",
-      time: "15 min ago",
-      likes: 67,
-    },
-    {
-      id: 2,
-      author: "SpanishFootball",
-      avatar: "🇪🇸",
-      content: "Liverpool's defense was exposed multiple times. They need to sort that out before the next big game.",
-      time: "30 min ago",
-      likes: 41,
-    },
-  ],
-};
+// Helper function to get UTC today
+function getUTCToday() {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+}
 
-// Mock data for community
-const mockDiscussions = [
-  {
-    id: 1,
-    title: "Premier League Weekend Predictions Thread",
-    author: "FootballFan99",
-    avatar: "🔵",
-    replies: 156,
-    views: 2340,
-    lastActivity: "5 min ago",
-    category: "Predictions",
-    pinned: true,
-    content: "Share your predictions for this weekend's Premier League fixtures! Who do you think will win the top of the table clash?",
-  },
-  {
-    id: 2,
-    title: "Manchester United vs Liverpool - Match Performance",
-    author: "TacticsGuru",
-    avatar: "🔴",
-    replies: 89,
-    views: 1567,
-    lastActivity: "15 min ago",
-    category: "Match Discussion",
-    pinned: true,
-    content: "Let's discuss the tactical breakdown of yesterday's match. What were the key moments that decided the outcome?",
-  },
-  {
-    id: 3,
-    title: "Best value bets for Champions League this week?",
-    author: "SmartBettor",
-    avatar: "⚽",
-    replies: 45,
-    views: 892,
-    lastActivity: "32 min ago",
-    category: "Tips & Strategies",
-    pinned: false,
-    content: "Looking for some good value bets in the upcoming CL matches. What are your picks?",
-  },
-  {
-    id: 4,
-    title: "How accurate are the AI predictions? My results after 30 days",
-    author: "DataDriven",
-    avatar: "📊",
-    replies: 234,
-    views: 4521,
-    lastActivity: "1 hour ago",
-    category: "General",
-    pinned: false,
-    content: "I've been tracking the AI predictions for 30 days. Here's my detailed analysis and ROI breakdown.",
-  },
-  {
-    id: 5,
-    title: "La Liga insights - Barcelona looking strong",
-    author: "SpanishFootball",
-    avatar: "🇪🇸",
-    replies: 67,
-    views: 1123,
-    lastActivity: "2 hours ago",
-    category: "League Discussion",
-    pinned: false,
-    content: "Barcelona's recent form has been impressive. Let's discuss their title chances and upcoming fixtures.",
-  },
-  {
-    id: 6,
-    title: "New to OddsFlow - Any tips for beginners?",
-    author: "NewUser2024",
-    avatar: "🆕",
-    replies: 28,
-    views: 456,
-    lastActivity: "3 hours ago",
-    category: "General",
-    pinned: false,
-    content: "Just joined OddsFlow! Would love some tips from experienced users on how to get started.",
-  },
-];
+// Helper to format time ago
+function timeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-const mockTopContributors = [
-  { name: "TacticsGuru", points: 12450, avatar: "🔴", badge: "Expert" },
-  { name: "FootballFan99", points: 9820, avatar: "🔵", badge: "Pro" },
-  { name: "DataDriven", points: 8540, avatar: "📊", badge: "Pro" },
-  { name: "SmartBettor", points: 7230, avatar: "⚽", badge: "Rising Star" },
-  { name: "SpanishFootball", points: 5670, avatar: "🇪🇸", badge: "Rising Star" },
-];
+  if (seconds < 60) return 'just now';
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+  if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+  return date.toLocaleDateString();
+}
 
-const categories = [
-  { name: "All", count: 1234 },
-  { name: "Predictions", count: 456 },
-  { name: "Match Discussion", count: 321 },
-  { name: "Tips & Strategies", count: 234 },
-  { name: "League Discussion", count: 156 },
-  { name: "General", count: 67 },
-];
+// Format chat time
+function formatChatTime(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
+// Chat Component
+function ChatRoom({
+  fixtureId,
+  user,
+  t,
+  matchInfo,
+  onClose
+}: {
+  fixtureId: number | null;
+  user: User | null;
+  t: (key: string) => string;
+  matchInfo?: { home: string; away: string; league: string };
+  onClose?: () => void;
+}) {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [showEmojis, setShowEmojis] = useState(false);
+  const [emojiCategory, setEmojiCategory] = useState(0);
+  const [reactions, setReactions] = useState<Record<string, ChatReaction[]>>({});
+  const [showReactionPicker, setShowReactionPicker] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Available reactions
+  const reactionTypes = [
+    { type: 'like', emoji: '👍' },
+    { type: 'love', emoji: '❤️' },
+    { type: 'haha', emoji: '😂' },
+    { type: 'wow', emoji: '😮' },
+    { type: 'sad', emoji: '😢' },
+    { type: 'angry', emoji: '😡' },
+  ];
+
+  // Emoji categories for chat
+  const emojiCategories = [
+    {
+      name: 'Faces',
+      emojis: ['😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊', '😇', '🙂', '😉', '😍', '🥰', '😘', '😋', '😜', '🤪', '😎', '🤩', '🥳', '😏', '😒', '🙄', '😬', '😌', '😔', '😢', '😭', '😤', '😠', '🤬', '😱', '😨', '😰', '🤔', '🤫', '🤭', '🥱', '😴', '🤤']
+    },
+    {
+      name: 'Gestures',
+      emojis: ['👍', '👎', '👊', '✊', '🤛', '🤜', '👏', '🙌', '👐', '🤝', '🙏', '✌️', '🤞', '🤟', '🤘', '👌', '🤌', '👈', '👉', '👆', '👇', '☝️', '💪', '🦾', '🖐️', '✋', '👋', '🤚', '🖖']
+    },
+    {
+      name: 'Sports',
+      emojis: ['⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🏉', '🎱', '🏓', '🏸', '🥅', '⛳', '🏆', '🥇', '🥈', '🥉', '🏅', '🎖️', '🎯', '🎮', '🎰', '🎲']
+    },
+    {
+      name: 'Money',
+      emojis: ['💰', '💵', '💴', '💶', '💷', '💸', '💳', '🪙', '📈', '📉', '📊', '💹', '🤑', '💎', '🏦', '💲']
+    },
+    {
+      name: 'Hearts',
+      emojis: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '♥️']
+    },
+    {
+      name: 'Objects',
+      emojis: ['🔥', '⭐', '✨', '💫', '🌟', '⚡', '💥', '🎉', '🎊', '🎁', '🏠', '🚀', '✈️', '🚗', '⏰', '📱', '💻', '🔔', '📢', '🔒', '🔑', '💡', '📌', '✅', '❌', '⚠️', '❓', '❗', '💯', '🆒', '🆕', '🆓']
+    },
+  ];
+
+  const insertEmoji = (emoji: string) => {
+    setInput(prev => prev + emoji);
+    // Keep emoji picker open, don't close
+  };
+
+  // Load initial messages
+  useEffect(() => {
+    const loadMessages = async () => {
+      setLoading(true);
+      const { data } = await getChatMessages(fixtureId, 100);
+      if (data) {
+        setMessages(data);
+      }
+      setLoading(false);
+    };
+    loadMessages();
+  }, [fixtureId]);
+
+  // Subscribe to real-time messages
+  useEffect(() => {
+    const channel = subscribeToChatMessages(fixtureId, (newMessage) => {
+      // Only add if not already in the list (avoid duplicates from optimistic updates)
+      setMessages(prev => {
+        const exists = prev.some(m => m.id === newMessage.id);
+        if (exists) return prev;
+        // Also remove any temp message with same content from same user
+        const filtered = prev.filter(m =>
+          !(m.id.startsWith('temp-') && m.user_id === newMessage.user_id && m.content === newMessage.content)
+        );
+        return [...filtered, newMessage];
+      });
+    });
+
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, [fixtureId]);
+
+  // Auto scroll to bottom
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Load reactions when messages change
+  useEffect(() => {
+    const loadReactions = async () => {
+      const messageIds = messages.filter(m => !m.id.startsWith('temp-')).map(m => m.id);
+      if (messageIds.length > 0) {
+        const { data } = await getMessageReactions(messageIds);
+        if (data) {
+          setReactions(data);
+        }
+      }
+    };
+    loadReactions();
+  }, [messages]);
+
+  // Handle reaction
+  const handleReaction = async (messageId: string, reactionType: string) => {
+    if (!user || messageId.startsWith('temp-')) return;
+
+    // Optimistic update
+    setReactions(prev => {
+      const messageReactions = prev[messageId] || [];
+      const existingIndex = messageReactions.findIndex(r => r.user_id === user.id);
+
+      if (existingIndex >= 0) {
+        if (messageReactions[existingIndex].reaction_type === reactionType) {
+          // Remove reaction
+          return {
+            ...prev,
+            [messageId]: messageReactions.filter((_, i) => i !== existingIndex)
+          };
+        } else {
+          // Update reaction
+          const updated = [...messageReactions];
+          updated[existingIndex] = { ...updated[existingIndex], reaction_type: reactionType };
+          return { ...prev, [messageId]: updated };
+        }
+      } else {
+        // Add new reaction
+        return {
+          ...prev,
+          [messageId]: [...messageReactions, {
+            id: `temp-${Date.now()}`,
+            message_id: messageId,
+            user_id: user.id,
+            reaction_type: reactionType,
+            created_at: new Date().toISOString()
+          }]
+        };
+      }
+    });
+
+    setShowReactionPicker(null);
+    await toggleMessageReaction(messageId, user.id, reactionType);
+  };
+
+  // Get reaction summary for a message
+  const getReactionSummary = (messageId: string) => {
+    const messageReactions = reactions[messageId] || [];
+    const summary: Record<string, { count: number; hasUser: boolean }> = {};
+
+    messageReactions.forEach(r => {
+      if (!summary[r.reaction_type]) {
+        summary[r.reaction_type] = { count: 0, hasUser: false };
+      }
+      summary[r.reaction_type].count++;
+      if (user && r.user_id === user.id) {
+        summary[r.reaction_type].hasUser = true;
+      }
+    });
+
+    return summary;
+  };
+
+  const handleSend = async () => {
+    if (!user || !input.trim()) return;
+
+    const content = input.trim();
+    setInput('');
+
+    // Optimistic update - show message immediately
+    const optimisticMessage: ChatMessage = {
+      id: `temp-${Date.now()}`,
+      fixture_id: fixtureId,
+      user_id: user.id,
+      content: content,
+      created_at: new Date().toISOString(),
+    };
+    setMessages(prev => [...prev, optimisticMessage]);
+
+    // Send to database
+    const { data, error } = await sendChatMessage(user.id, content, fixtureId);
+
+    if (error) {
+      // Remove optimistic message if failed
+      setMessages(prev => prev.filter(m => m.id !== optimisticMessage.id));
+      console.error('Failed to send message:', error);
+    } else if (data) {
+      // Replace optimistic message with real one
+      setMessages(prev => prev.map(m => m.id === optimisticMessage.id ? data : m));
+    }
+  };
+
+  const getUserDisplay = (message: ChatMessage) => {
+    if (user?.id === message.user_id) {
+      return {
+        name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'You',
+        avatar: user.user_metadata?.avatar_url || user.user_metadata?.picture,
+        isMe: true,
+      };
+    }
+    return {
+      name: `User${message.user_id.substring(0, 4)}`,
+      avatar: null,
+      isMe: false,
+    };
+  };
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Chat Header */}
+      <div className="flex items-center justify-between p-3 border-b border-white/10 bg-white/5">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+          <span className="text-sm font-medium text-white">
+            {fixtureId === null ? t('globalChat') : matchInfo ? `${matchInfo.home} vs ${matchInfo.away}` : t('matchChat')}
+          </span>
+        </div>
+        {onClose && (
+          <button onClick={onClose} className="text-gray-400 hover:text-white p-1 cursor-pointer">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-3 min-h-0">
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-emerald-500"></div>
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="text-center py-8 text-gray-500 text-sm">
+            {t('liveChat')} - Start the conversation!
+          </div>
+        ) : (
+          messages.map((message) => {
+            const userDisplay = getUserDisplay(message);
+            const reactionSummary = getReactionSummary(message.id);
+            const hasReactions = Object.keys(reactionSummary).length > 0;
+
+            return (
+              <div key={message.id} className={`group flex gap-2 ${userDisplay.isMe ? 'flex-row-reverse' : ''}`}>
+                {userDisplay.avatar ? (
+                  <img src={userDisplay.avatar} alt="" className="w-7 h-7 rounded-full flex-shrink-0" />
+                ) : (
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${userDisplay.isMe ? 'bg-emerald-500 text-black' : 'bg-gray-700 text-white'}`}>
+                    {userDisplay.name[0].toUpperCase()}
+                  </div>
+                )}
+                <div className={`max-w-[75%] ${userDisplay.isMe ? 'text-right' : ''}`}>
+                  <div className={`flex items-center gap-2 mb-0.5 ${userDisplay.isMe ? 'justify-end' : ''}`}>
+                    <span className="text-xs font-medium text-gray-400">{userDisplay.name}</span>
+                    <span className="text-xs text-gray-600">{formatChatTime(message.created_at)}</span>
+                  </div>
+
+                  {/* Message bubble with reactions */}
+                  <div className="relative inline-block">
+                    <div className={`inline-flex items-end gap-1 px-3 py-2 rounded-xl text-sm ${userDisplay.isMe ? 'bg-emerald-500/20 text-emerald-100' : 'bg-white/10 text-gray-200'}`}>
+                      <span className="whitespace-pre-wrap break-words">{message.content}</span>
+                      {userDisplay.isMe && (
+                        <span className="flex-shrink-0 ml-1">
+                          {message.id.startsWith('temp-') ? (
+                            <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          ) : (
+                            <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Reaction display */}
+                    {hasReactions && (
+                      <div className={`flex gap-0.5 mt-1 ${userDisplay.isMe ? 'justify-end' : 'justify-start'}`}>
+                        {Object.entries(reactionSummary).map(([type, data]) => {
+                          const reactionEmoji = reactionTypes.find(r => r.type === type)?.emoji || '👍';
+                          return (
+                            <button
+                              key={type}
+                              onClick={() => handleReaction(message.id, type)}
+                              className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs cursor-pointer transition-colors ${
+                                data.hasUser
+                                  ? 'bg-emerald-500/30 border border-emerald-500/50'
+                                  : 'bg-white/10 border border-white/10 hover:bg-white/20'
+                              }`}
+                            >
+                              <span>{reactionEmoji}</span>
+                              {data.count > 1 && <span className="text-gray-300">{data.count}</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Reaction picker trigger - shows on hover */}
+                    {user && !message.id.startsWith('temp-') && (
+                      <div className={`absolute top-0 ${userDisplay.isMe ? 'left-0 -translate-x-full pr-1' : 'right-0 translate-x-full pl-1'} opacity-0 group-hover:opacity-100 transition-opacity`}>
+                        <button
+                          onClick={() => setShowReactionPicker(showReactionPicker === message.id ? null : message.id)}
+                          className="p-1 rounded-full bg-white/10 hover:bg-white/20 text-gray-400 cursor-pointer"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Reaction picker popup */}
+                    {showReactionPicker === message.id && (
+                      <>
+                        <div className="fixed inset-0 z-10" onClick={() => setShowReactionPicker(null)} />
+                        <div className={`absolute z-20 ${userDisplay.isMe ? 'right-0' : 'left-0'} bottom-full mb-1 flex gap-1 p-1.5 bg-gray-800 border border-white/10 rounded-full shadow-xl`}>
+                          {reactionTypes.map(({ type, emoji }) => (
+                            <button
+                              key={type}
+                              onClick={() => handleReaction(message.id, type)}
+                              className="p-1.5 text-lg hover:bg-white/10 rounded-full transition-transform hover:scale-125 cursor-pointer"
+                            >
+                              {emoji}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input */}
+      <div className="p-3 border-t border-white/10 relative">
+        {/* Emoji Picker */}
+        {showEmojis && (
+          <>
+            <div className="fixed inset-0 z-10" onClick={() => setShowEmojis(false)} />
+            <div className="absolute bottom-full left-0 right-0 mb-2 mx-3 bg-gray-800 border border-white/10 rounded-xl shadow-xl z-20 overflow-hidden">
+              {/* Category Tabs */}
+              <div className="flex border-b border-white/10 overflow-x-auto">
+                {emojiCategories.map((cat, i) => (
+                  <button
+                    key={cat.name}
+                    onClick={() => setEmojiCategory(i)}
+                    className={`px-3 py-2 text-xs font-medium whitespace-nowrap cursor-pointer transition-colors ${
+                      emojiCategory === i
+                        ? 'text-emerald-400 border-b-2 border-emerald-400 bg-white/5'
+                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+              {/* Emojis Grid */}
+              <div className="p-2 max-h-[200px] overflow-y-auto">
+                <div className="grid grid-cols-8 gap-1">
+                  {emojiCategories[emojiCategory].emojis.map((emoji, i) => (
+                    <button
+                      key={i}
+                      onClick={() => insertEmoji(emoji)}
+                      className="p-2 text-xl hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {user ? (
+          <div className="flex gap-2">
+            {/* Emoji Button */}
+            <button
+              onClick={() => setShowEmojis(!showEmojis)}
+              className={`px-3 py-2 rounded-lg border transition-all cursor-pointer ${showEmojis ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'}`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={t('typeMessage')}
+              className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm focus:outline-none focus:border-emerald-500/50 resize-none min-h-[40px] max-h-[120px]"
+              rows={1}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = 'auto';
+                target.style.height = Math.min(target.scrollHeight, 120) + 'px';
+              }}
+            />
+            <button
+              onClick={handleSend}
+              disabled={!input.trim()}
+              className="px-4 py-2 rounded-lg bg-emerald-500 text-black font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            </button>
+          </div>
+        ) : (
+          <Link href="/login" className="block w-full py-2 text-center rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 transition-all text-sm">
+            {t('loginToChat')}
+          </Link>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function CommunityPage() {
   const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
-  const [selectedDiscussion, setSelectedDiscussion] = useState<typeof mockDiscussions[0] | null>(null);
-  const [commentText, setCommentText] = useState('');
-  const [replyingTo, setReplyingTo] = useState<number | null>(null);
-  const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
+  const [user, setUser] = useState<User | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date>(getUTCToday());
+  const [matches, setMatches] = useState<Prematch[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedMatches, setExpandedMatches] = useState<Set<number>>(new Set());
+  const [matchComments, setMatchComments] = useState<Record<number, MatchComment[]>>({});
+  const [loadingComments, setLoadingComments] = useState<Set<number>>(new Set());
+  const [commentInputs, setCommentInputs] = useState<Record<number, string>>({});
+  const [replyInputs, setReplyInputs] = useState<Record<string, string>>({});
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [stats, setStats] = useState({ totalComments: 0, todayComments: 0, activeUsers: 0 });
+  const [activeTab, setActiveTab] = useState<'chat' | 'matches'>('chat');
+  const [matchChatOpen, setMatchChatOpen] = useState<number | null>(null);
+  const [commentCounts, setCommentCounts] = useState<Record<number, number>>({});
+  const [commentReactions, setCommentReactions] = useState<Record<string, CommentReaction[]>>({});
+  const [activeReactionPicker, setActiveReactionPicker] = useState<string | null>(null);
 
-  // Check auth session
+  const COMMENT_REACTIONS = ['👍', '❤️', '😂', '😮', '😢', '😡'];
+
+  const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
+  const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
+
+  // Generate date options (yesterday, today, tomorrow, +4 more days)
+  const dates = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(getUTCToday());
+    date.setUTCDate(date.getUTCDate() + i - 2);
+    return date;
+  });
+
+  // Auth check
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -318,23 +634,243 @@ export default function CommunityPage() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Load language
   useEffect(() => {
     const savedLang = localStorage.getItem('oddsflow_lang');
     if (savedLang) setSelectedLang(savedLang);
   }, []);
 
-  const handleLanguageChange = (langCode: string) => {
-    setSelectedLang(langCode);
-    localStorage.setItem('oddsflow_lang', langCode);
+  // Load stats
+  useEffect(() => {
+    const loadStats = async () => {
+      const { data } = await getCommentStats();
+      if (data) setStats(data);
+    };
+    loadStats();
+  }, []);
+
+  // Fetch matches for selected date
+  useEffect(() => {
+    const fetchMatches = async () => {
+      setLoading(true);
+      const dateStr = selectedDate.toISOString().split('T')[0];
+      const nextDate = new Date(selectedDate);
+      nextDate.setUTCDate(nextDate.getUTCDate() + 1);
+      const nextDateStr = nextDate.toISOString().split('T')[0];
+
+      const { data, error } = await supabase
+        .from('prematches')
+        .select('*')
+        .gte('start_date_msia', dateStr)
+        .lt('start_date_msia', nextDateStr)
+        .order('start_date_msia', { ascending: true });
+
+      if (!error && data) {
+        setMatches(data);
+
+        // Load comment counts for all matches
+        const fixtureIds = data.map((m: Prematch) => m.fixture_id);
+        if (fixtureIds.length > 0) {
+          const { data: countData, error: countError } = await supabase
+            .from('match_comments')
+            .select('fixture_id')
+            .in('fixture_id', fixtureIds);
+
+          if (!countError && countData) {
+            const counts: Record<number, number> = {};
+            countData.forEach((c: { fixture_id: number }) => {
+              counts[c.fixture_id] = (counts[c.fixture_id] || 0) + 1;
+            });
+            setCommentCounts(counts);
+          }
+        }
+      }
+      setLoading(false);
+    };
+    fetchMatches();
+  }, [selectedDate]);
+
+  // Load comments for a match
+  const loadComments = async (fixtureId: number) => {
+    setLoadingComments(prev => new Set(prev).add(fixtureId));
+    const { data } = await getMatchComments(fixtureId, user?.id);
+    if (data) {
+      setMatchComments(prev => ({ ...prev, [fixtureId]: data }));
+      // Load reactions for all comments and replies
+      const allCommentIds: string[] = [];
+      data.forEach((comment: MatchComment) => {
+        allCommentIds.push(comment.id);
+        if (comment.replies) {
+          comment.replies.forEach((reply: MatchComment) => allCommentIds.push(reply.id));
+        }
+      });
+      if (allCommentIds.length > 0) {
+        const { data: reactionsData } = await getCommentReactions(allCommentIds);
+        if (reactionsData) {
+          setCommentReactions(prev => ({ ...prev, ...reactionsData }));
+        }
+      }
+    }
+    setLoadingComments(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(fixtureId);
+      return newSet;
+    });
+  };
+
+  // Toggle expand match comments
+  const toggleExpand = async (fixtureId: number) => {
+    const newExpanded = new Set(expandedMatches);
+    if (newExpanded.has(fixtureId)) {
+      newExpanded.delete(fixtureId);
+    } else {
+      newExpanded.add(fixtureId);
+      if (!matchComments[fixtureId]) {
+        await loadComments(fixtureId);
+      }
+    }
+    setExpandedMatches(newExpanded);
+  };
+
+  // Submit comment
+  const handleSubmitComment = async (fixtureId: number) => {
+    if (!user || !commentInputs[fixtureId]?.trim()) return;
+
+    const { data } = await addComment(fixtureId, user.id, commentInputs[fixtureId].trim());
+    if (data) {
+      setCommentInputs(prev => ({ ...prev, [fixtureId]: '' }));
+      await loadComments(fixtureId);
+      setStats(prev => ({ ...prev, totalComments: prev.totalComments + 1, todayComments: prev.todayComments + 1 }));
+      setCommentCounts(prev => ({ ...prev, [fixtureId]: (prev[fixtureId] || 0) + 1 }));
+    }
+  };
+
+  // Submit reply
+  const handleSubmitReply = async (fixtureId: number, parentId: string) => {
+    if (!user || !replyInputs[parentId]?.trim()) return;
+
+    const { data } = await addComment(fixtureId, user.id, replyInputs[parentId].trim(), parentId);
+    if (data) {
+      setReplyInputs(prev => ({ ...prev, [parentId]: '' }));
+      setReplyingTo(null);
+      await loadComments(fixtureId);
+      setStats(prev => ({ ...prev, totalComments: prev.totalComments + 1, todayComments: prev.todayComments + 1 }));
+      setCommentCounts(prev => ({ ...prev, [fixtureId]: (prev[fixtureId] || 0) + 1 }));
+    }
+  };
+
+  // Handle comment reaction
+  const handleCommentReaction = async (fixtureId: number, commentId: string, reactionType: string) => {
+    if (!user) return;
+
+    // Optimistic update
+    const currentReactions = commentReactions[commentId] || [];
+    const existingReaction = currentReactions.find(r => r.user_id === user.id);
+
+    let newReactions: CommentReaction[];
+    if (existingReaction) {
+      if (existingReaction.reaction_type === reactionType) {
+        // Remove reaction
+        newReactions = currentReactions.filter(r => r.user_id !== user.id);
+      } else {
+        // Update reaction
+        newReactions = currentReactions.map(r =>
+          r.user_id === user.id ? { ...r, reaction_type: reactionType } : r
+        );
+      }
+    } else {
+      // Add new reaction
+      newReactions = [...currentReactions, {
+        id: `temp-${Date.now()}`,
+        comment_id: commentId,
+        user_id: user.id,
+        reaction_type: reactionType,
+        created_at: new Date().toISOString()
+      }];
+    }
+
+    setCommentReactions(prev => ({ ...prev, [commentId]: newReactions }));
+    setActiveReactionPicker(null);
+
+    // Actual update
+    await toggleCommentReaction(commentId, user.id, reactionType);
+    await loadComments(fixtureId);
+  };
+
+  // Get grouped reactions for a comment
+  const getGroupedReactions = (commentId: string) => {
+    const reactions = commentReactions[commentId] || [];
+    const grouped: Record<string, { count: number; hasUserReacted: boolean }> = {};
+
+    reactions.forEach(r => {
+      if (!grouped[r.reaction_type]) {
+        grouped[r.reaction_type] = { count: 0, hasUserReacted: false };
+      }
+      grouped[r.reaction_type].count++;
+      if (r.user_id === user?.id) {
+        grouped[r.reaction_type].hasUserReacted = true;
+      }
+    });
+
+    return grouped;
+  };
+
+  // Handle delete
+  const handleDelete = async (fixtureId: number, commentId: string) => {
+    if (!user) return;
+    await deleteComment(commentId, user.id);
+    await loadComments(fixtureId);
+    setStats(prev => ({ ...prev, totalComments: Math.max(0, prev.totalComments - 1) }));
+    setCommentCounts(prev => ({ ...prev, [fixtureId]: Math.max(0, (prev[fixtureId] || 0) - 1) }));
+  };
+
+  const handleSetLang = (newLang: string) => {
+    setSelectedLang(newLang);
+    localStorage.setItem('oddsflow_lang', newLang);
     setLangDropdownOpen(false);
   };
 
-  const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
+  // Format date label
+  const formatDateLabel = (date: Date) => {
+    const today = getUTCToday();
+    const diff = Math.floor((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (diff === -1) return t('yesterday');
+    if (diff === 0) return t('today');
+    if (diff === 1) return t('tomorrow');
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  // Get user display name
+  const getUserName = (comment: MatchComment) => {
+    if (user?.id === comment.user_id) {
+      return user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+    }
+    return `User${comment.user_id.substring(0, 4)}`;
+  };
+
+  // Get user avatar
+  const getUserAvatar = (comment: MatchComment) => {
+    if (user?.id === comment.user_id) {
+      return user.user_metadata?.avatar_url || user.user_metadata?.picture;
+    }
+    return null;
+  };
+
+  // Get match info for chat
+  const getMatchInfo = (fixtureId: number) => {
+    const match = matches.find(m => m.fixture_id === fixtureId);
+    if (!match) return undefined;
+    return {
+      home: match.home_name,
+      away: match.away_name,
+      league: match.league_name,
+    };
+  };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-3">
@@ -347,12 +883,13 @@ export default function CommunityPage() {
               <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
               <Link href="/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
               <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
-              <Link href="/community" className="text-emerald-400 text-sm font-medium">{t('community')}</Link>
+              <Link href="/community" className="text-emerald-400 font-medium text-sm">{t('community')}</Link>
               <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
               <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
             <div className="flex items-center gap-3">
+              {/* Language Selector */}
               <div className="relative">
                 <button onClick={() => setLangDropdownOpen(!langDropdownOpen)} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer">
                   <span>{currentLang.flag}</span>
@@ -364,108 +901,63 @@ export default function CommunityPage() {
                 {langDropdownOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
-                    <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
-                      {LANGUAGES.map((l) => (
-                        <button key={l.code} onClick={() => handleLanguageChange(l.code)} className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-left cursor-pointer ${selectedLang === l.code ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'}`}>
-                          <span className="text-lg">{l.flag}</span>
-                          <span className="font-medium">{l.name}</span>
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
+                      {LANGUAGES.map((language) => (
+                        <button key={language.code} onClick={() => handleSetLang(language.code)} className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-white/5 transition-colors cursor-pointer ${selectedLang === language.code ? 'bg-emerald-500/10 text-emerald-400' : 'text-gray-300'}`}>
+                          <span className="text-lg">{language.flag}</span>
+                          <span className="font-medium">{language.name}</span>
                         </button>
                       ))}
                     </div>
                   </>
                 )}
               </div>
+
+              {/* Auth buttons */}
               {user ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
                   {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
-                    <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-8 h-8 rounded-full" />
+                    <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-6 h-6 rounded-full" />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
-                      {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                    <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-xs font-bold text-black">
+                      {(user.user_metadata?.full_name || user.email || 'U')[0].toUpperCase()}
                     </div>
                   )}
                   <span className="text-sm font-medium hidden sm:block">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-                  <Link href="/get-started" className="hidden sm:block px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer">{t('getStarted')}</Link>
+                  <Link href="/login" className="hidden sm:block px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium">{t('login')}</Link>
+                  <Link href="/get-started" className="hidden sm:block px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm">{t('getStarted')}</Link>
                 </>
               )}
 
               {/* Mobile Menu Button */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
-                aria-label="Toggle menu"
-              >
-                {mobileMenuOpen ? (
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                )}
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                </svg>
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[45] md:hidden">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-
-          {/* Menu Panel */}
-          <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
+          <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10">
             <div className="px-4 py-4 space-y-1">
-              {[
-                { href: '/', label: t('home') },
-                { href: '/predictions', label: t('predictions') },
-                { href: '/leagues', label: t('leagues') },
-                { href: '/performance', label: t('performance') },
-                { href: '/community', label: t('community'), active: true },
-                { href: '/news', label: t('news') },
-                { href: '/pricing', label: t('pricing') },
-              ].map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-4 py-3 rounded-lg text-base font-medium transition-all ${
-                    link.active
-                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                  }`}
-                >
+              {[{ href: '/', label: t('home') }, { href: '/predictions', label: t('predictions') }, { href: '/leagues', label: t('leagues') }, { href: '/performance', label: t('performance') }, { href: '/community', label: t('community') }, { href: '/news', label: t('news') }, { href: '/pricing', label: t('pricing') }].map((link) => (
+                <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-white/5">
                   {link.label}
                 </Link>
               ))}
-
-              {/* Mobile Login/Signup */}
               {!user && (
                 <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all"
-                  >
-                    {t('login')}
-                  </Link>
-                  <Link
-                    href="/get-started"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold hover:shadow-lg transition-all"
-                  >
-                    {t('getStarted')}
-                  </Link>
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium">{t('login')}</Link>
+                  <Link href="/get-started" onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold">{t('getStarted')}</Link>
                 </div>
               )}
             </div>
@@ -473,333 +965,494 @@ export default function CommunityPage() {
         </div>
       )}
 
-      {/* Main Content */}
-      <main className="pt-24 pb-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-10">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                {t('community')}
-              </span>
-            </h1>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              {t('communitySubtitle')}
-            </p>
-          </div>
+      {/* Header */}
+      <section className="pt-24 pb-6 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+            {t('communityTitle')}
+          </h1>
+          <p className="text-gray-400 text-lg">{t('communitySubtitle')}</p>
+        </div>
+      </section>
 
-          {/* Stats Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {[
-              { label: t('members'), value: "12,450" },
-              { label: t('discussions'), value: "1,234" },
-              { label: t('comments'), value: "45.6K" },
-              { label: t('onlineNow'), value: "342" },
-            ].map((stat, index) => (
-              <div key={index} className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-4 text-center">
-                <div className="text-2xl font-bold text-emerald-400">{stat.value}</div>
-                <div className="text-sm text-gray-500">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Sidebar */}
-            <div className="lg:col-span-1 space-y-6">
-              {/* Categories */}
-              <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-white/5 p-5">
-                <h3 className="font-semibold text-white mb-4">{t('categories')}</h3>
-                <ul className="space-y-2">
-                  {categories.map((cat, index) => (
-                    <li key={index}>
-                      <button className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors cursor-pointer ${index === 0 ? 'bg-emerald-500/20 text-emerald-400' : 'hover:bg-white/5 text-gray-400'}`}>
-                        <span>{cat.name}</span>
-                        <span className="text-xs bg-white/10 px-2 py-0.5 rounded-full">{cat.count}</span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Top Contributors */}
-              <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-white/5 p-5">
-                <h3 className="font-semibold text-white mb-4">{t('topContributors')}</h3>
-                <ul className="space-y-3">
-                  {mockTopContributors.map((user, index) => (
-                    <li key={index} className="flex items-center gap-3">
-                      <span className="text-xl">{user.avatar}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-white truncate">{user.name}</div>
-                        <div className="text-xs text-gray-500">{user.points.toLocaleString()} pts</div>
-                      </div>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        user.badge === 'Expert' ? 'bg-yellow-500/20 text-yellow-400' :
-                        user.badge === 'Pro' ? 'bg-emerald-500/20 text-emerald-400' :
-                        'bg-blue-500/20 text-blue-400'
-                      }`}>
-                        {user.badge}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Discussions List */}
-            <div className="lg:col-span-3">
-              {/* Actions Bar */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <button className="px-4 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 text-sm font-medium cursor-pointer">{t('latest')}</button>
-                  <button className="px-4 py-2 rounded-lg hover:bg-white/5 text-gray-400 text-sm font-medium cursor-pointer">{t('popular')}</button>
-                  <button className="px-4 py-2 rounded-lg hover:bg-white/5 text-gray-400 text-sm font-medium cursor-pointer">{t('unanswered')}</button>
-                </div>
-                <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-sm font-semibold cursor-pointer">
-                  {t('newDiscussion')}
-                </button>
-              </div>
-
-              {/* Discussions */}
-              <div className="space-y-3">
-                {mockDiscussions.map((discussion) => (
-                  <div
-                    key={discussion.id}
-                    onClick={() => setSelectedDiscussion(discussion)}
-                    className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-5 hover:border-emerald-500/30 transition-all cursor-pointer"
-                  >
-                    <div className="flex items-start gap-4">
-                      <span className="text-2xl">{discussion.avatar}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          {discussion.pinned && (
-                            <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400">{t('pinned')}</span>
-                          )}
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-gray-400">{discussion.category}</span>
-                        </div>
-                        <h4 className="font-semibold text-white mb-1 hover:text-emerald-400 transition-colors">{discussion.title}</h4>
-                        <p className="text-sm text-gray-500 mb-2 line-clamp-2">{discussion.content}</p>
-                        <div className="flex items-center gap-4 text-xs text-gray-500">
-                          <span>{t('by')} <span className="text-gray-400">{discussion.author}</span></span>
-                          <span>{discussion.replies} {t('replies')}</span>
-                          <span>{discussion.views} {t('views')}</span>
-                          <span>{discussion.lastActivity}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Load More */}
-              <div className="text-center mt-6">
-                <button className="px-6 py-2.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-sm font-medium hover:bg-white/10 transition-colors cursor-pointer">
-                  {t('loadMore')}
-                </button>
-              </div>
-            </div>
+      {/* Tab Selector */}
+      <section className="px-4 pb-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex justify-center gap-2">
+            <button
+              onClick={() => setActiveTab('chat')}
+              className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer flex items-center gap-2 ${
+                activeTab === 'chat'
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50'
+                  : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              {t('globalChat')}
+            </button>
+            <button
+              onClick={() => setActiveTab('matches')}
+              className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer flex items-center gap-2 ${
+                activeTab === 'matches'
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50'
+                  : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              {t('today')}&apos;s Matches
+            </button>
           </div>
         </div>
-      </main>
+      </section>
 
-      {/* Discussion Modal */}
-      {selectedDiscussion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            onClick={() => {
-              setSelectedDiscussion(null);
-              setReplyingTo(null);
-              setCommentText('');
-            }}
-          />
+      {/* Main Content */}
+      <section className="px-4 pb-16">
+        <div className="max-w-6xl mx-auto">
+          {activeTab === 'chat' ? (
+            /* Global Chat Section */
+            <div className="grid md:grid-cols-3 gap-4">
+              {/* Global Chat - Full width on mobile, 2/3 on desktop */}
+              <div className="md:col-span-2 bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 overflow-hidden h-[500px] md:h-[600px]">
+                <ChatRoom fixtureId={null} user={user} t={t} />
+              </div>
 
-          {/* Modal Content */}
-          <div className="relative w-full max-w-4xl max-h-[90vh] bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl border border-white/10 overflow-hidden flex flex-col">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-white/10">
-              <div className="flex items-center gap-4">
-                <span className="text-3xl">{selectedDiscussion.avatar}</span>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    {selectedDiscussion.pinned && (
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400">{t('pinned')}</span>
-                    )}
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-gray-400">{selectedDiscussion.category}</span>
+              {/* Stats Sidebar */}
+              <div className="space-y-4">
+                {/* Stats Cards */}
+                <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 p-4">
+                  <h3 className="text-sm font-medium text-gray-400 mb-3">Community Stats</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-sm">{t('totalComments')}</span>
+                      <span className="text-emerald-400 font-bold">{stats.totalComments.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-sm">{t('todayComments')}</span>
+                      <span className="text-cyan-400 font-bold">{stats.todayComments.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-sm">{t('activeUsers')}</span>
+                      <span className="text-purple-400 font-bold">{stats.activeUsers.toLocaleString()}</span>
+                    </div>
                   </div>
-                  <h2 className="text-xl font-bold text-white">{selectedDiscussion.title}</h2>
-                  <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
-                    <span>{t('by')} <span className="text-emerald-400">{selectedDiscussion.author}</span></span>
-                    <span>{selectedDiscussion.lastActivity}</span>
+                </div>
+
+                {/* Today's Matches Quick View */}
+                <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 p-4">
+                  <h3 className="text-sm font-medium text-gray-400 mb-3">{t('today')}&apos;s Matches</h3>
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                    {matches.slice(0, 5).map((match) => (
+                      <button
+                        key={match.id}
+                        onClick={() => {
+                          setMatchChatOpen(match.fixture_id);
+                        }}
+                        className="w-full text-left p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2 text-xs text-gray-400 mb-1">
+                          {match.league_logo && <img src={match.league_logo} alt="" className="w-3 h-3" />}
+                          <span className="truncate">{match.league_name}</span>
+                        </div>
+                        <div className="text-sm text-white truncate">{match.home_name} vs {match.away_name}</div>
+                      </button>
+                    ))}
+                    {matches.length > 5 && (
+                      <button
+                        onClick={() => setActiveTab('matches')}
+                        className="w-full text-center text-xs text-emerald-400 hover:text-emerald-300 py-2 cursor-pointer"
+                      >
+                        View all {matches.length} matches →
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
-              <button
-                onClick={() => {
-                  setSelectedDiscussion(null);
-                  setReplyingTo(null);
-                  setCommentText('');
-                }}
-                className="p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
-              >
-                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
             </div>
-
-            {/* Discussion Content */}
-            <div className="p-6 border-b border-white/10 bg-white/5">
-              <p className="text-gray-300 leading-relaxed">{selectedDiscussion.content}</p>
-              <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
-                <span>{selectedDiscussion.views} {t('views')}</span>
-                <span>{selectedDiscussion.replies} {t('replies')}</span>
+          ) : (
+            /* Matches Tab */
+            <div>
+              {/* Date Selector */}
+              <div className="mb-6">
+                {/* Mobile: 3 dates */}
+                <div className="flex md:hidden justify-center gap-2">
+                  {dates.filter((_, i) => i >= 1 && i <= 3).map((date) => (
+                    <button
+                      key={date.toISOString()}
+                      onClick={() => setSelectedDate(date)}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                        selectedDate.toISOString().split('T')[0] === date.toISOString().split('T')[0]
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50'
+                          : 'bg-white/5 text-gray-400 border border-white/10'
+                      }`}
+                    >
+                      {formatDateLabel(date)}
+                    </button>
+                  ))}
+                </div>
+                {/* Desktop: All dates */}
+                <div className="hidden md:flex justify-center gap-3">
+                  {dates.map((date) => (
+                    <button
+                      key={date.toISOString()}
+                      onClick={() => setSelectedDate(date)}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                        selectedDate.toISOString().split('T')[0] === date.toISOString().split('T')[0]
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50'
+                          : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+                      }`}
+                    >
+                      {formatDateLabel(date)}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Comments Section */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {(mockComments[selectedDiscussion.id] || []).map((comment) => (
-                <div key={comment.id} className="group">
-                  {/* Main Comment */}
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-xl border border-white/10">
-                        {comment.avatar}
-                      </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl p-4 border border-white/5">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="font-semibold text-white">{comment.author}</span>
-                          {comment.badge && (
-                            <span className={`text-xs px-2 py-0.5 rounded-full ${
-                              comment.badge === 'Expert' ? 'bg-yellow-500/20 text-yellow-400' :
-                              comment.badge === 'Pro' ? 'bg-emerald-500/20 text-emerald-400' :
-                              'bg-blue-500/20 text-blue-400'
-                            }`}>
-                              {comment.badge}
-                            </span>
-                          )}
-                          <span className="text-xs text-gray-500">{comment.time}</span>
-                        </div>
-                        <p className="text-gray-300 text-sm leading-relaxed">{comment.content}</p>
-                      </div>
-                      <div className="flex items-center gap-4 mt-2 ml-2">
-                        <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-emerald-400 transition-colors cursor-pointer">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                          </svg>
-                          <span>{comment.likes}</span>
-                        </button>
-                        <button
-                          onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
-                          className="flex items-center gap-1 text-xs text-gray-500 hover:text-emerald-400 transition-colors cursor-pointer"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                          </svg>
-                          <span>Reply</span>
-                        </button>
-                      </div>
+              {/* Matches List */}
+              <div className="space-y-4">
+                {loading ? (
+                  <div className="flex items-center justify-center py-20">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-500"></div>
+                  </div>
+                ) : matches.length === 0 ? (
+                  <div className="text-center py-20 text-gray-500">{t('noMatches')}</div>
+                ) : (
+                  matches.map((match) => {
+                    const isExpanded = expandedMatches.has(match.fixture_id);
+                    const comments = matchComments[match.fixture_id] || [];
+                    const isLoadingComments = loadingComments.has(match.fixture_id);
+                    const matchTime = new Date(match.start_date_msia).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
 
-                      {/* Reply Input */}
-                      {replyingTo === comment.id && (
-                        <div className="mt-3 ml-2 flex gap-2">
-                          <input
-                            type="text"
-                            value={commentText}
-                            onChange={(e) => setCommentText(e.target.value)}
-                            placeholder={`Reply to ${comment.author}...`}
-                            className="flex-1 bg-gray-800/50 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50"
-                          />
-                          <button className="px-4 py-2 rounded-lg bg-emerald-500 text-black text-sm font-semibold hover:bg-emerald-400 transition-colors cursor-pointer">
-                            Send
-                          </button>
-                        </div>
-                      )}
+                    return (
+                      <div key={match.id} className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 overflow-hidden">
+                        {/* Match Info */}
+                        <div className="p-4">
+                          {/* League & Time */}
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              {match.league_logo && (
+                                <img src={match.league_logo} alt="" className="w-5 h-5 object-contain" />
+                              )}
+                              <span className="text-xs text-emerald-400 font-medium truncate max-w-[150px] md:max-w-none">{match.league_name}</span>
+                            </div>
+                            <span className="text-xs text-gray-500">{matchTime}</span>
+                          </div>
 
-                      {/* Nested Replies */}
-                      {comment.replies && comment.replies.length > 0 && (
-                        <div className="mt-4 ml-4 space-y-3 border-l-2 border-white/10 pl-4">
-                          {comment.replies.map((reply) => (
-                            <div key={reply.id} className="flex gap-3">
-                              <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center text-lg border border-white/10">
-                                  {reply.avatar}
-                                </div>
+                          {/* Teams */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-2">
+                                {match.home_logo && <img src={match.home_logo} alt="" className="w-6 h-6 object-contain flex-shrink-0" />}
+                                <span className="text-white font-medium truncate">{match.home_name}</span>
                               </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-lg p-3 border border-white/5">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="font-medium text-white text-sm">{reply.author}</span>
-                                    <span className="text-xs text-gray-500">{reply.time}</span>
+                              <div className="flex items-center gap-2">
+                                {match.away_logo && <img src={match.away_logo} alt="" className="w-6 h-6 object-contain flex-shrink-0" />}
+                                <span className="text-white font-medium truncate">{match.away_name}</span>
+                              </div>
+                            </div>
+                            {match.goals_home !== null && match.goals_away !== null && (
+                              <div className="text-right ml-4">
+                                <div className="text-xl font-bold text-white">{match.goals_home}</div>
+                                <div className="text-xl font-bold text-white">{match.goals_away}</div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex gap-2 mt-4">
+                            <button
+                              onClick={() => setMatchChatOpen(match.fixture_id)}
+                              className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 transition-all text-sm text-emerald-400 cursor-pointer border border-emerald-500/30"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                              </svg>
+                              {t('openChat')}
+                            </button>
+                            <button
+                              onClick={() => toggleExpand(match.fixture_id)}
+                              className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all text-sm text-gray-400 cursor-pointer"
+                            >
+                              <svg className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                              {isExpanded ? t('hideComments') : t('showComments')} ({comments.length || commentCounts[match.fixture_id] || 0})
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Comments Section */}
+                        {isExpanded && (
+                          <div className="border-t border-white/10 p-4 bg-black/20">
+                            {/* Comment Input */}
+                            {user ? (
+                              <div className="flex gap-3 mb-4">
+                                {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
+                                  <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-8 h-8 rounded-full flex-shrink-0" />
+                                ) : (
+                                  <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-xs font-bold text-black flex-shrink-0">
+                                    {(user.user_metadata?.full_name || user.email || 'U')[0].toUpperCase()}
                                   </div>
-                                  <p className="text-gray-400 text-sm">{reply.content}</p>
-                                </div>
-                                <div className="flex items-center gap-3 mt-1 ml-2">
-                                  <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-emerald-400 transition-colors cursor-pointer">
-                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                                    </svg>
-                                    <span>{reply.likes}</span>
+                                )}
+                                <div className="flex-1 flex gap-2">
+                                  <input
+                                    type="text"
+                                    value={commentInputs[match.fixture_id] || ''}
+                                    onChange={(e) => setCommentInputs(prev => ({ ...prev, [match.fixture_id]: e.target.value }))}
+                                    placeholder={t('writeComment')}
+                                    className="flex-1 px-3 md:px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm focus:outline-none focus:border-emerald-500/50"
+                                    onKeyDown={(e) => e.key === 'Enter' && handleSubmitComment(match.fixture_id)}
+                                  />
+                                  <button
+                                    onClick={() => handleSubmitComment(match.fixture_id)}
+                                    disabled={!commentInputs[match.fixture_id]?.trim()}
+                                    className="px-3 md:px-4 py-2 rounded-lg bg-emerald-500 text-black font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                  >
+                                    {t('send')}
                                   </button>
                                 </div>
                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                            ) : (
+                              <Link href="/login" className="block w-full py-3 mb-4 text-center rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 transition-all">
+                                {t('loginToComment')}
+                              </Link>
+                            )}
 
-              {/* Empty State */}
-              {(!mockComments[selectedDiscussion.id] || mockComments[selectedDiscussion.id].length === 0) && (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800/50 flex items-center justify-center">
-                    <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-500">No comments yet. Be the first to reply!</p>
-                </div>
-              )}
-            </div>
+                            {/* Comments List */}
+                            {isLoadingComments ? (
+                              <div className="flex justify-center py-8">
+                                <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-emerald-500"></div>
+                              </div>
+                            ) : comments.length === 0 ? (
+                              <div className="text-center py-8 text-gray-500 text-sm">{t('noComments')}</div>
+                            ) : (
+                              <div className="space-y-4">
+                                {comments.map((comment) => (
+                                  <div key={comment.id} className="space-y-3">
+                                    {/* Main Comment */}
+                                    <div className="flex gap-3">
+                                      {getUserAvatar(comment) ? (
+                                        <img src={getUserAvatar(comment)!} alt="" className="w-8 h-8 rounded-full flex-shrink-0" />
+                                      ) : (
+                                        <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+                                          {getUserName(comment)[0].toUpperCase()}
+                                        </div>
+                                      )}
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                          <span className="text-sm font-medium text-white">{getUserName(comment)}</span>
+                                          <span className="text-xs text-gray-500">{timeAgo(comment.created_at)}</span>
+                                        </div>
+                                        <p className="text-sm text-gray-300 break-words">{comment.content}</p>
 
-            {/* Comment Input */}
-            <div className="p-4 border-t border-white/10 bg-gray-900/50">
-              <div className="flex gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm flex-shrink-0">
-                  U
-                </div>
-                <div className="flex-1 flex gap-2">
-                  <input
-                    type="text"
-                    value={replyingTo ? '' : commentText}
-                    onChange={(e) => !replyingTo && setCommentText(e.target.value)}
-                    placeholder="Write a comment..."
-                    className="flex-1 bg-gray-800/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 transition-colors"
-                    disabled={replyingTo !== null}
-                  />
-                  <button
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={replyingTo !== null}
-                  >
-                    Post
-                  </button>
-                </div>
+                                        {/* Reaction Display */}
+                                        {Object.keys(getGroupedReactions(comment.id)).length > 0 && (
+                                          <div className="flex flex-wrap gap-1 mt-2">
+                                            {Object.entries(getGroupedReactions(comment.id)).map(([emoji, data]) => (
+                                              <button
+                                                key={emoji}
+                                                onClick={() => handleCommentReaction(match.fixture_id, comment.id, emoji)}
+                                                className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs ${
+                                                  data.hasUserReacted ? 'bg-emerald-500/20 border border-emerald-500/50' : 'bg-white/5 border border-white/10'
+                                                } cursor-pointer hover:bg-white/10`}
+                                              >
+                                                <span>{emoji}</span>
+                                                <span className="text-gray-400">{data.count}</span>
+                                              </button>
+                                            ))}
+                                          </div>
+                                        )}
+
+                                        <div className="flex items-center gap-4 mt-2">
+                                          {/* Reaction Button */}
+                                          <div className="relative">
+                                            <button
+                                              onClick={() => user && setActiveReactionPicker(activeReactionPicker === comment.id ? null : comment.id)}
+                                              disabled={!user}
+                                              className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-300 cursor-pointer disabled:opacity-50"
+                                            >
+                                              <span className="text-base">😀</span>
+                                              <span>React</span>
+                                            </button>
+                                            {activeReactionPicker === comment.id && (
+                                              <div className="absolute bottom-full left-0 mb-1 bg-gray-800 border border-white/10 rounded-lg p-2 flex gap-1 z-50 shadow-lg">
+                                                {COMMENT_REACTIONS.map(emoji => (
+                                                  <button
+                                                    key={emoji}
+                                                    onClick={() => handleCommentReaction(match.fixture_id, comment.id, emoji)}
+                                                    className="text-xl hover:scale-125 transition-transform cursor-pointer p-1"
+                                                  >
+                                                    {emoji}
+                                                  </button>
+                                                ))}
+                                              </div>
+                                            )}
+                                          </div>
+                                          {user && (
+                                            <button
+                                              onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
+                                              className="text-xs text-gray-500 hover:text-gray-300 cursor-pointer"
+                                            >
+                                              {t('reply')}
+                                            </button>
+                                          )}
+                                          {user?.id === comment.user_id && (
+                                            <button
+                                              onClick={() => handleDelete(match.fixture_id, comment.id)}
+                                              className="text-xs text-red-400 hover:text-red-300 cursor-pointer"
+                                            >
+                                              {t('delete')}
+                                            </button>
+                                          )}
+                                        </div>
+
+                                        {/* Reply Input */}
+                                        {replyingTo === comment.id && (
+                                          <div className="flex gap-2 mt-3">
+                                            <input
+                                              type="text"
+                                              value={replyInputs[comment.id] || ''}
+                                              onChange={(e) => setReplyInputs(prev => ({ ...prev, [comment.id]: e.target.value }))}
+                                              placeholder={t('writeComment')}
+                                              className="flex-1 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm focus:outline-none focus:border-emerald-500/50"
+                                              onKeyDown={(e) => e.key === 'Enter' && handleSubmitReply(match.fixture_id, comment.id)}
+                                              autoFocus
+                                            />
+                                            <button
+                                              onClick={() => handleSubmitReply(match.fixture_id, comment.id)}
+                                              disabled={!replyInputs[comment.id]?.trim()}
+                                              className="px-3 py-2 rounded-lg bg-emerald-500 text-black font-medium text-xs disabled:opacity-50 cursor-pointer"
+                                            >
+                                              {t('send')}
+                                            </button>
+                                            <button
+                                              onClick={() => setReplyingTo(null)}
+                                              className="px-3 py-2 rounded-lg bg-white/5 text-gray-400 text-xs cursor-pointer"
+                                            >
+                                              {t('cancel')}
+                                            </button>
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+
+                                    {/* Replies */}
+                                    {comment.replies && comment.replies.length > 0 && (
+                                      <div className="ml-8 md:ml-11 space-y-3 border-l-2 border-white/10 pl-3 md:pl-4">
+                                        {comment.replies.map((reply) => (
+                                          <div key={reply.id} className="flex gap-2 md:gap-3">
+                                            {getUserAvatar(reply) ? (
+                                              <img src={getUserAvatar(reply)!} alt="" className="w-6 h-6 rounded-full flex-shrink-0" />
+                                            ) : (
+                                              <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+                                                {getUserName(reply)[0].toUpperCase()}
+                                              </div>
+                                            )}
+                                            <div className="flex-1 min-w-0">
+                                              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                                <span className="text-sm font-medium text-white">{getUserName(reply)}</span>
+                                                <span className="text-xs text-gray-500">{timeAgo(reply.created_at)}</span>
+                                              </div>
+                                              <p className="text-sm text-gray-300 break-words">{reply.content}</p>
+
+                                              {/* Reply Reaction Display */}
+                                              {Object.keys(getGroupedReactions(reply.id)).length > 0 && (
+                                                <div className="flex flex-wrap gap-1 mt-2">
+                                                  {Object.entries(getGroupedReactions(reply.id)).map(([emoji, data]) => (
+                                                    <button
+                                                      key={emoji}
+                                                      onClick={() => handleCommentReaction(match.fixture_id, reply.id, emoji)}
+                                                      className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs ${
+                                                        data.hasUserReacted ? 'bg-emerald-500/20 border border-emerald-500/50' : 'bg-white/5 border border-white/10'
+                                                      } cursor-pointer hover:bg-white/10`}
+                                                    >
+                                                      <span>{emoji}</span>
+                                                      <span className="text-gray-400">{data.count}</span>
+                                                    </button>
+                                                  ))}
+                                                </div>
+                                              )}
+
+                                              <div className="flex items-center gap-4 mt-2">
+                                                {/* Reply Reaction Button */}
+                                                <div className="relative">
+                                                  <button
+                                                    onClick={() => user && setActiveReactionPicker(activeReactionPicker === reply.id ? null : reply.id)}
+                                                    disabled={!user}
+                                                    className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-300 cursor-pointer disabled:opacity-50"
+                                                  >
+                                                    <span className="text-sm">😀</span>
+                                                    <span>React</span>
+                                                  </button>
+                                                  {activeReactionPicker === reply.id && (
+                                                    <div className="absolute bottom-full left-0 mb-1 bg-gray-800 border border-white/10 rounded-lg p-2 flex gap-1 z-50 shadow-lg">
+                                                      {COMMENT_REACTIONS.map(emoji => (
+                                                        <button
+                                                          key={emoji}
+                                                          onClick={() => handleCommentReaction(match.fixture_id, reply.id, emoji)}
+                                                          className="text-lg hover:scale-125 transition-transform cursor-pointer p-1"
+                                                        >
+                                                          {emoji}
+                                                        </button>
+                                                      ))}
+                                                    </div>
+                                                  )}
+                                                </div>
+                                                {user?.id === reply.user_id && (
+                                                  <button
+                                                    onClick={() => handleDelete(match.fixture_id, reply.id)}
+                                                    className="text-xs text-red-400 hover:text-red-300 cursor-pointer"
+                                                  >
+                                                    {t('delete')}
+                                                  </button>
+                                                )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
+          )}
+        </div>
+      </section>
+
+      {/* Match Chat Modal */}
+      {matchChatOpen !== null && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setMatchChatOpen(null)} />
+          <div className="relative w-full max-w-lg h-[80vh] max-h-[600px] bg-gray-900 rounded-xl border border-white/10 overflow-hidden">
+            <ChatRoom
+              fixtureId={matchChatOpen}
+              user={user}
+              t={t}
+              matchInfo={getMatchInfo(matchChatOpen)}
+              onClose={() => setMatchChatOpen(null)}
+            />
           </div>
         </div>
       )}
 
       {/* Footer */}
-      <footer className="py-8 border-t border-white/5 text-center text-gray-500 text-sm">
-        <p>{t('footer')}</p>
-        <p className="mt-2">{t('allRights')}</p>
+      <footer className="py-8 px-4 bg-black border-t border-white/5">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-gray-500 text-sm">© 2025 OddsFlow. All rights reserved.</p>
+          <p className="text-gray-600 text-xs mt-2">Gambling involves risk. Please gamble responsibly.</p>
+        </div>
       </footer>
     </div>
   );
