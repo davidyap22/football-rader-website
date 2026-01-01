@@ -401,8 +401,17 @@ export default function PerformancePage() {
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [leagueDropdownOpen, setLeagueDropdownOpen] = useState(false);
 
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
+
+  // Get league logo map from matches
+  const leagueLogoMap = matches.reduce((acc, match) => {
+    if (match.league_name && match.league_logo && !acc[match.league_name]) {
+      acc[match.league_name] = match.league_logo;
+    }
+    return acc;
+  }, {} as Record<string, string>);
 
   // Check auth session
   useEffect(() => {
@@ -1128,44 +1137,140 @@ export default function PerformancePage() {
                 )}
               </div>
 
-              {/* League Filter - Mobile: Dropdown, Desktop: Buttons */}
-              {/* Mobile Dropdown */}
-              <div className="md:hidden mb-6">
-                <select
-                  value={selectedLeague}
-                  onChange={(e) => setSelectedLeague(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm font-medium appearance-none cursor-pointer focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', backgroundSize: '20px' }}
+              {/* League Filter - Mobile: Custom Dropdown with Logos, Desktop: Buttons */}
+              {/* Mobile Custom Dropdown */}
+              <div className="md:hidden mb-6 relative">
+                <button
+                  onClick={() => setLeagueDropdownOpen(!leagueDropdownOpen)}
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-gradient-to-r from-gray-800/80 to-gray-900/80 border border-white/10 hover:border-emerald-500/30 transition-all cursor-pointer"
                 >
-                  <option value="all" className="bg-gray-900 text-white">{t('allLeagues')}</option>
-                  {availableLeagues.map((league) => (
-                    <option key={league} value={league} className="bg-gray-900 text-white">{league}</option>
-                  ))}
-                </select>
+                  <div className="flex items-center gap-3">
+                    {selectedLeague === 'all' ? (
+                      <div className="w-7 h-7 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center">
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                        </svg>
+                      </div>
+                    ) : leagueLogoMap[selectedLeague] ? (
+                      <div className="w-7 h-7 rounded-lg bg-white/90 p-1 flex items-center justify-center">
+                        <img src={leagueLogoMap[selectedLeague]} alt="" className="w-full h-full object-contain" />
+                      </div>
+                    ) : (
+                      <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center">
+                        <span className="text-xs font-bold text-white">{selectedLeague.substring(0, 2)}</span>
+                      </div>
+                    )}
+                    <span className="text-white font-medium">
+                      {selectedLeague === 'all' ? t('allLeagues') : selectedLeague}
+                    </span>
+                  </div>
+                  <svg className={`w-5 h-5 text-gray-400 transition-transform ${leagueDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Dropdown Menu */}
+                {leagueDropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setLeagueDropdownOpen(false)} />
+                    <div className="absolute top-full left-0 right-0 mt-2 py-2 bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 max-h-[60vh] overflow-y-auto">
+                      {/* All Leagues Option */}
+                      <button
+                        onClick={() => { setSelectedLeague('all'); setLeagueDropdownOpen(false); }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 transition-all cursor-pointer ${
+                          selectedLeague === 'all'
+                            ? 'bg-emerald-500/20 text-emerald-400'
+                            : 'text-gray-300 hover:bg-white/5'
+                        }`}
+                      >
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                          selectedLeague === 'all'
+                            ? 'bg-gradient-to-r from-emerald-500 to-cyan-500'
+                            : 'bg-white/10'
+                        }`}>
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                          </svg>
+                        </div>
+                        <span className="font-medium">{t('allLeagues')}</span>
+                        {selectedLeague === 'all' && (
+                          <svg className="w-5 h-5 ml-auto text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </button>
+
+                      {/* League Options */}
+                      {availableLeagues.map((league) => (
+                        <button
+                          key={league}
+                          onClick={() => { setSelectedLeague(league); setLeagueDropdownOpen(false); }}
+                          className={`w-full flex items-center gap-3 px-4 py-3 transition-all cursor-pointer ${
+                            selectedLeague === league
+                              ? 'bg-emerald-500/20 text-emerald-400'
+                              : 'text-gray-300 hover:bg-white/5'
+                          }`}
+                        >
+                          {leagueLogoMap[league] ? (
+                            <div className="w-7 h-7 rounded-lg bg-white/90 p-1 flex items-center justify-center flex-shrink-0">
+                              <img src={leagueLogoMap[league]} alt="" className="w-full h-full object-contain" />
+                            </div>
+                          ) : (
+                            <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
+                              <span className="text-[10px] font-bold text-white">{league.substring(0, 2)}</span>
+                            </div>
+                          )}
+                          <span className="font-medium">{league}</span>
+                          {selectedLeague === league && (
+                            <svg className="w-5 h-5 ml-auto text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
 
-              {/* Desktop Buttons */}
-              <div className="hidden md:flex items-center gap-4 mb-6 overflow-x-auto pb-2">
+              {/* Desktop Buttons with Logos */}
+              <div className="hidden md:flex items-center gap-3 mb-6 overflow-x-auto pb-2">
                 <button
                   onClick={() => setSelectedLeague('all')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
                     selectedLeague === 'all'
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                      ? 'bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-400 border border-emerald-500/50 shadow-lg shadow-emerald-500/10'
+                      : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 hover:border-white/20'
                   }`}
                 >
+                  <div className={`w-5 h-5 rounded flex items-center justify-center ${
+                    selectedLeague === 'all' ? 'bg-emerald-500' : 'bg-white/20'
+                  }`}>
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                  </div>
                   {t('allLeagues')}
                 </button>
                 {availableLeagues.map((league) => (
                   <button
                     key={league}
                     onClick={() => setSelectedLeague(league)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
                       selectedLeague === league
-                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                        ? 'bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-400 border border-emerald-500/50 shadow-lg shadow-emerald-500/10'
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 hover:border-white/20'
                     }`}
                   >
+                    {leagueLogoMap[league] ? (
+                      <div className="w-5 h-5 rounded bg-white/90 p-0.5 flex items-center justify-center">
+                        <img src={leagueLogoMap[league]} alt="" className="w-full h-full object-contain" />
+                      </div>
+                    ) : (
+                      <div className="w-5 h-5 rounded bg-white/20 flex items-center justify-center">
+                        <span className="text-[8px] font-bold">{league.substring(0, 2)}</span>
+                      </div>
+                    )}
                     {league}
                   </button>
                 ))}
