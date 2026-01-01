@@ -882,32 +882,32 @@ export default function PerformancePage() {
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">{t('performanceSubtitle')}</p>
           </div>
 
-          {/* Trust Badges */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-              <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {/* Trust Badges - Mobile: 2 per row, Desktop: all in one row */}
+          <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-2 md:gap-4 mb-8 md:mb-12 px-2">
+            <div className="flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+              <svg className="w-4 h-4 md:w-5 md:h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-sm text-emerald-400 font-medium">AI Performance</span>
+              <span className="text-xs md:text-sm text-emerald-400 font-medium">AI Performance</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20">
-              <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20">
+              <svg className="w-4 h-4 md:w-5 md:h-5 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
-              <span className="text-sm text-cyan-400 font-medium">Transparent AI Betting Results</span>
+              <span className="text-xs md:text-sm text-cyan-400 font-medium whitespace-nowrap">Transparent AI</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20">
-              <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20">
+              <svg className="w-4 h-4 md:w-5 md:h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
-              <span className="text-sm text-purple-400 font-medium">Safest AI Football Tips</span>
+              <span className="text-xs md:text-sm text-purple-400 font-medium whitespace-nowrap">Safest Tips</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/20">
-              <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-4 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/20">
+              <svg className="w-4 h-4 md:w-5 md:h-5 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <span className="text-sm text-yellow-400 font-medium">Most Accurate AI Predictor</span>
+              <span className="text-xs md:text-sm text-yellow-400 font-medium whitespace-nowrap">Most Accurate</span>
             </div>
           </div>
 
@@ -968,9 +968,43 @@ export default function PerformancePage() {
               </div>
 
               {/* Profit by Market */}
-              <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-6 mb-8">
+              <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-4 md:p-6 mb-8">
                 <h2 className="text-lg font-semibold text-white mb-4">{t('profitByMarket')}</h2>
-                <div className="grid grid-cols-3 gap-4">
+                {/* Mobile: Vertical layout */}
+                <div className="md:hidden space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <span className="text-gray-400 text-sm">{t('moneyline')}</span>
+                    <span className={`text-lg font-bold ${overallStats.profitMoneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      <AnimatedCounter
+                        target={Math.abs(overallStats.profitMoneyline)}
+                        prefix={overallStats.profitMoneyline >= 0 ? '+$' : '-$'}
+                        isStarted={animationStarted}
+                      />
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <span className="text-gray-400 text-sm">{t('handicap')}</span>
+                    <span className={`text-lg font-bold ${overallStats.profitHandicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      <AnimatedCounter
+                        target={Math.abs(overallStats.profitHandicap)}
+                        prefix={overallStats.profitHandicap >= 0 ? '+$' : '-$'}
+                        isStarted={animationStarted}
+                      />
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <span className="text-gray-400 text-sm">{t('overUnder')}</span>
+                    <span className={`text-lg font-bold ${overallStats.profitOU >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      <AnimatedCounter
+                        target={Math.abs(overallStats.profitOU)}
+                        prefix={overallStats.profitOU >= 0 ? '+$' : '-$'}
+                        isStarted={animationStarted}
+                      />
+                    </span>
+                  </div>
+                </div>
+                {/* Desktop: Grid layout */}
+                <div className="hidden md:grid grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-white/5 rounded-lg">
                     <p className="text-gray-400 text-sm mb-1">{t('moneyline')}</p>
                     <p className={`text-xl font-bold ${overallStats.profitMoneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
@@ -1123,8 +1157,8 @@ export default function PerformancePage() {
 
               {/* Past Matches - Table Style */}
               <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 overflow-hidden">
-                {/* Header */}
-                <div className="grid grid-cols-12 gap-2 px-4 py-3 bg-white/5 border-b border-white/5 text-xs font-medium text-gray-400 uppercase tracking-wider">
+                {/* Desktop Header - Hidden on mobile */}
+                <div className="hidden md:grid grid-cols-12 gap-2 px-4 py-3 bg-white/5 border-b border-white/5 text-xs font-medium text-gray-400 uppercase tracking-wider">
                   <div className="col-span-4">{t('pastMatches')}</div>
                   <div className="col-span-2 text-center">Score</div>
                   <div className="col-span-1 text-right">{t('moneyline')}</div>
@@ -1132,6 +1166,11 @@ export default function PerformancePage() {
                   <div className="col-span-1 text-right">{t('overUnder')}</div>
                   <div className="col-span-1 text-right">ROI</div>
                   <div className="col-span-2 text-right">Total</div>
+                </div>
+
+                {/* Mobile Header */}
+                <div className="md:hidden px-4 py-3 bg-white/5 border-b border-white/5">
+                  <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider">{t('pastMatches')}</h3>
                 </div>
 
                 {filteredMatches.length === 0 ? (
@@ -1143,37 +1182,32 @@ export default function PerformancePage() {
                       const isHotMatch = dateInfo.isHot;
 
                       return (
-                      <div
-                        key={match.fixture_id}
-                        className={`relative grid grid-cols-12 gap-2 px-4 py-3 items-center transition-all ${
-                          index % 2 === 0 ? 'bg-white/[0.02]' : ''
-                        } ${isHotMatch ? 'hover:bg-emerald-500/10' : 'hover:bg-white/5'}`}
-                      >
-                        {/* Hot Match Glow Effect */}
-                        {isHotMatch && (
-                          <>
-                            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-transparent to-cyan-500/10 animate-pulse pointer-events-none" />
-                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 to-cyan-500 rounded-r pointer-events-none" />
-                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-20 h-20 bg-emerald-500/20 rounded-full blur-2xl -z-10 pointer-events-none" />
-                          </>
-                        )}
+                      <div key={match.fixture_id}>
+                        {/* Mobile Card Layout */}
+                        <div
+                          className={`md:hidden relative p-4 transition-all ${
+                            index % 2 === 0 ? 'bg-white/[0.02]' : ''
+                          } ${isHotMatch ? 'bg-emerald-500/5' : ''}`}
+                          onClick={() => openSignalHistory(match)}
+                        >
+                          {/* Hot Match Indicator */}
+                          {isHotMatch && (
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 to-cyan-500 rounded-r" />
+                          )}
 
-                        {/* Match Info */}
-                        <div className="col-span-4 relative">
-                          <div className="flex items-center gap-2 mb-1">
-                            {match.league_logo && (
-                              <div className="w-4 h-4 rounded-sm bg-white/90 p-0.5 flex items-center justify-center flex-shrink-0">
-                                <img src={match.league_logo} alt="" className="w-full h-full object-contain" />
-                              </div>
-                            )}
-                            <span className="text-[10px] text-emerald-400 font-medium">
-                              {match.league_name.length > 12 ? match.league_name.substring(0, 12) : match.league_name}
-                            </span>
-                            <span className={`text-[10px] flex items-center gap-1 ${
-                              dateInfo.isHot
-                                ? 'text-emerald-400 font-semibold'
-                                : 'text-gray-500'
-                            }`}>
+                          {/* Row 1: League & Date */}
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              {match.league_logo && (
+                                <div className="w-5 h-5 rounded-sm bg-white/90 p-0.5 flex items-center justify-center">
+                                  <img src={match.league_logo} alt="" className="w-full h-full object-contain" />
+                                </div>
+                              )}
+                              <span className="text-xs text-emerald-400 font-medium">
+                                {match.league_name.length > 15 ? match.league_name.substring(0, 15) + '...' : match.league_name}
+                              </span>
+                            </div>
+                            <span className={`text-xs flex items-center gap-1 ${dateInfo.isHot ? 'text-emerald-400 font-semibold' : 'text-gray-500'}`}>
                               {dateInfo.isHot && (
                                 <span className="relative flex h-2 w-2">
                                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -1183,79 +1217,190 @@ export default function PerformancePage() {
                               {dateInfo.text}
                             </span>
                           </div>
-                          <div className="flex items-center gap-3">
-                            {/* Home Team */}
-                            <div className="flex items-center gap-2 flex-1 min-w-0">
-                              <div className="w-7 h-7 rounded-full bg-white/10 p-1 flex items-center justify-center flex-shrink-0">
-                                {match.home_logo ? (
-                                  <img src={match.home_logo} alt={match.home_name} className="w-full h-full object-contain" />
-                                ) : (
-                                  <span className="text-[10px] font-bold text-white">{(match.home_name || 'H').substring(0, 2).toUpperCase()}</span>
-                                )}
+
+                          {/* Row 2: Teams & Score */}
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex-1 min-w-0 mr-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <div className="w-6 h-6 rounded-full bg-white/10 p-0.5 flex items-center justify-center flex-shrink-0">
+                                  {match.home_logo ? (
+                                    <img src={match.home_logo} alt="" className="w-full h-full object-contain" />
+                                  ) : (
+                                    <span className="text-[8px] font-bold text-white">{(match.home_name || 'H').substring(0, 2)}</span>
+                                  )}
+                                </div>
+                                <span className="text-sm text-white font-medium truncate">{match.home_name}</span>
                               </div>
-                              <span className="text-sm text-white font-medium truncate">{match.home_name}</span>
-                            </div>
-                            <span className="text-gray-500 text-xs font-medium">vs</span>
-                            {/* Away Team */}
-                            <div className="flex items-center gap-2 flex-1 min-w-0">
-                              <div className="w-7 h-7 rounded-full bg-white/10 p-1 flex items-center justify-center flex-shrink-0">
-                                {match.away_logo ? (
-                                  <img src={match.away_logo} alt={match.away_name} className="w-full h-full object-contain" />
-                                ) : (
-                                  <span className="text-[10px] font-bold text-white">{(match.away_name || 'A').substring(0, 2).toUpperCase()}</span>
-                                )}
+                              <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 rounded-full bg-white/10 p-0.5 flex items-center justify-center flex-shrink-0">
+                                  {match.away_logo ? (
+                                    <img src={match.away_logo} alt="" className="w-full h-full object-contain" />
+                                  ) : (
+                                    <span className="text-[8px] font-bold text-white">{(match.away_name || 'A').substring(0, 2)}</span>
+                                  )}
+                                </div>
+                                <span className="text-sm text-white font-medium truncate">{match.away_name}</span>
                               </div>
-                              <span className="text-sm text-white font-medium truncate">{match.away_name}</span>
                             </div>
+                            <div className="flex flex-col items-center">
+                              <span className="text-lg font-bold text-white">{match.home_score}</span>
+                              <span className="text-lg font-bold text-white">{match.away_score}</span>
+                            </div>
+                          </div>
+
+                          {/* Row 3: Profit breakdown */}
+                          <div className="flex items-center justify-between gap-2 mb-2">
+                            <div className="flex items-center gap-3 text-xs">
+                              <div>
+                                <span className="text-gray-500">1x2: </span>
+                                <span className={match.profit_moneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}>
+                                  {match.profit_moneyline >= 0 ? '+' : ''}{formatNumber(match.profit_moneyline, 0)}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-gray-500">HDP: </span>
+                                <span className={match.profit_handicap >= 0 ? 'text-emerald-400' : 'text-red-400'}>
+                                  {match.profit_handicap >= 0 ? '+' : ''}{formatNumber(match.profit_handicap, 0)}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-gray-500">O/U: </span>
+                                <span className={match.profit_ou >= 0 ? 'text-emerald-400' : 'text-red-400'}>
+                                  {match.profit_ou >= 0 ? '+' : ''}{formatNumber(match.profit_ou, 0)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Row 4: Total Profit & ROI */}
+                          <div className="flex items-center justify-between">
+                            <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold ${
+                              match.total_profit >= 0
+                                ? 'bg-emerald-500/10 text-emerald-400'
+                                : 'bg-red-500/10 text-red-400'
+                            }`}>
+                              Total: {match.total_profit >= 0 ? '+$' : '-$'}{formatNumber(Math.abs(match.total_profit), 0)}
+                            </span>
+                            <span className={`text-sm font-medium ${match.roi_percentage >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                              ROI: {match.roi_percentage >= 0 ? '+' : ''}{match.roi_percentage.toFixed(0)}%
+                            </span>
                           </div>
                         </div>
 
-                        {/* Score */}
-                        <div className="col-span-2 text-center">
-                          <span className="inline-flex items-center justify-center px-3 py-1 bg-white/5 rounded-md text-sm font-bold text-white min-w-[60px]">
-                            {match.home_score} - {match.away_score}
-                          </span>
-                        </div>
+                        {/* Desktop Row Layout */}
+                        <div
+                          className={`hidden md:grid relative grid-cols-12 gap-2 px-4 py-3 items-center transition-all ${
+                            index % 2 === 0 ? 'bg-white/[0.02]' : ''
+                          } ${isHotMatch ? 'hover:bg-emerald-500/10' : 'hover:bg-white/5'}`}
+                        >
+                          {/* Hot Match Glow Effect */}
+                          {isHotMatch && (
+                            <>
+                              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-transparent to-cyan-500/10 animate-pulse pointer-events-none" />
+                              <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 to-cyan-500 rounded-r pointer-events-none" />
+                              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-20 h-20 bg-emerald-500/20 rounded-full blur-2xl -z-10 pointer-events-none" />
+                            </>
+                          )}
 
-                        {/* 1x2 */}
-                        <div className={`col-span-1 text-right text-sm font-medium ${match.profit_moneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                          {match.profit_moneyline >= 0 ? '+' : ''}{formatNumber(match.profit_moneyline, 0)}
-                        </div>
+                          {/* Match Info */}
+                          <div className="col-span-4 relative">
+                            <div className="flex items-center gap-2 mb-1">
+                              {match.league_logo && (
+                                <div className="w-4 h-4 rounded-sm bg-white/90 p-0.5 flex items-center justify-center flex-shrink-0">
+                                  <img src={match.league_logo} alt="" className="w-full h-full object-contain" />
+                                </div>
+                              )}
+                              <span className="text-[10px] text-emerald-400 font-medium">
+                                {match.league_name.length > 12 ? match.league_name.substring(0, 12) : match.league_name}
+                              </span>
+                              <span className={`text-[10px] flex items-center gap-1 ${
+                                dateInfo.isHot
+                                  ? 'text-emerald-400 font-semibold'
+                                  : 'text-gray-500'
+                              }`}>
+                                {dateInfo.isHot && (
+                                  <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                                  </span>
+                                )}
+                                {dateInfo.text}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              {/* Home Team */}
+                              <div className="flex items-center gap-2 flex-1 min-w-0">
+                                <div className="w-7 h-7 rounded-full bg-white/10 p-1 flex items-center justify-center flex-shrink-0">
+                                  {match.home_logo ? (
+                                    <img src={match.home_logo} alt={match.home_name} className="w-full h-full object-contain" />
+                                  ) : (
+                                    <span className="text-[10px] font-bold text-white">{(match.home_name || 'H').substring(0, 2).toUpperCase()}</span>
+                                  )}
+                                </div>
+                                <span className="text-sm text-white font-medium truncate">{match.home_name}</span>
+                              </div>
+                              <span className="text-gray-500 text-xs font-medium">vs</span>
+                              {/* Away Team */}
+                              <div className="flex items-center gap-2 flex-1 min-w-0">
+                                <div className="w-7 h-7 rounded-full bg-white/10 p-1 flex items-center justify-center flex-shrink-0">
+                                  {match.away_logo ? (
+                                    <img src={match.away_logo} alt={match.away_name} className="w-full h-full object-contain" />
+                                  ) : (
+                                    <span className="text-[10px] font-bold text-white">{(match.away_name || 'A').substring(0, 2).toUpperCase()}</span>
+                                  )}
+                                </div>
+                                <span className="text-sm text-white font-medium truncate">{match.away_name}</span>
+                              </div>
+                            </div>
+                          </div>
 
-                        {/* HDP */}
-                        <div className={`col-span-1 text-right text-sm font-medium ${match.profit_handicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                          {match.profit_handicap >= 0 ? '+' : ''}{formatNumber(match.profit_handicap, 0)}
-                        </div>
+                          {/* Score */}
+                          <div className="col-span-2 text-center">
+                            <span className="inline-flex items-center justify-center px-3 py-1 bg-white/5 rounded-md text-sm font-bold text-white min-w-[60px]">
+                              {match.home_score} - {match.away_score}
+                            </span>
+                          </div>
 
-                        {/* O/U */}
-                        <div className={`col-span-1 text-right text-sm font-medium ${match.profit_ou >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                          {match.profit_ou >= 0 ? '+' : ''}{formatNumber(match.profit_ou, 0)}
-                        </div>
+                          {/* 1x2 */}
+                          <div className={`col-span-1 text-right text-sm font-medium ${match.profit_moneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {match.profit_moneyline >= 0 ? '+' : ''}{formatNumber(match.profit_moneyline, 0)}
+                          </div>
 
-                        {/* ROI */}
-                        <div className={`col-span-1 text-right text-sm font-medium ${match.roi_percentage >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                          {match.roi_percentage >= 0 ? '+' : ''}{match.roi_percentage.toFixed(0)}%
-                        </div>
+                          {/* HDP */}
+                          <div className={`col-span-1 text-right text-sm font-medium ${match.profit_handicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {match.profit_handicap >= 0 ? '+' : ''}{formatNumber(match.profit_handicap, 0)}
+                          </div>
 
-                        {/* Total + View Button */}
-                        <div className="col-span-2 flex items-center justify-end gap-2">
-                          <span className={`inline-flex items-center justify-center px-3 py-1 rounded-md text-sm font-bold min-w-[80px] ${
-                            match.total_profit >= 0
-                              ? 'bg-emerald-500/10 text-emerald-400'
-                              : 'bg-red-500/10 text-red-400'
-                          }`}>
-                            {match.total_profit >= 0 ? '+$' : '-$'}{formatNumber(Math.abs(match.total_profit), 0)}
-                          </span>
-                          <button
-                            onClick={() => openSignalHistory(match)}
-                            className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
-                            title="View Signal History"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                          </button>
+                          {/* O/U */}
+                          <div className={`col-span-1 text-right text-sm font-medium ${match.profit_ou >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {match.profit_ou >= 0 ? '+' : ''}{formatNumber(match.profit_ou, 0)}
+                          </div>
+
+                          {/* ROI */}
+                          <div className={`col-span-1 text-right text-sm font-medium ${match.roi_percentage >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {match.roi_percentage >= 0 ? '+' : ''}{match.roi_percentage.toFixed(0)}%
+                          </div>
+
+                          {/* Total + View Button */}
+                          <div className="col-span-2 flex items-center justify-end gap-2">
+                            <span className={`inline-flex items-center justify-center px-3 py-1 rounded-md text-sm font-bold min-w-[80px] ${
+                              match.total_profit >= 0
+                                ? 'bg-emerald-500/10 text-emerald-400'
+                                : 'bg-red-500/10 text-red-400'
+                            }`}>
+                              {match.total_profit >= 0 ? '+$' : '-$'}{formatNumber(Math.abs(match.total_profit), 0)}
+                            </span>
+                            <button
+                              onClick={() => openSignalHistory(match)}
+                              className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                              title="View Signal History"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                            </button>
+                          </div>
                         </div>
                       </div>
                       );
