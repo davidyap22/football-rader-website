@@ -195,11 +195,11 @@ export default function DashboardPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="relative z-10 pt-24 pb-16 px-4">
+      <main className="relative z-10 pt-24 pb-24 md:pb-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="flex gap-6">
-            {/* Left Sidebar Menu */}
-            <div className="w-64 flex-shrink-0">
+            {/* Left Sidebar Menu - Hidden on mobile */}
+            <div className="hidden md:block w-64 flex-shrink-0">
               <div className="bg-gradient-to-br from-gray-900/90 to-gray-950/90 rounded-2xl border border-white/10 p-4 sticky top-24">
                 {/* User Mini Profile */}
                 <div className="flex items-center gap-3 p-3 mb-4 rounded-xl bg-white/5">
@@ -822,6 +822,35 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-gray-900/95 backdrop-blur-xl border-t border-white/10">
+        <div className="flex items-center justify-around py-2 px-2">
+          {menuItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveSection(item.id)}
+              className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all ${
+                activeSection === item.id
+                  ? 'text-emerald-400'
+                  : 'text-gray-500'
+              }`}
+            >
+              {item.icon}
+              <span className="text-[10px] font-medium">{item.label.split(' ')[0]}</span>
+            </button>
+          ))}
+          <button
+            onClick={handleSignOut}
+            className="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-red-400 transition-all"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span className="text-[10px] font-medium">Sign Out</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
