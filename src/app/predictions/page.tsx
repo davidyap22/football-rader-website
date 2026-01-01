@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { supabase, Prematch } from '@/lib/supabase';
@@ -283,7 +283,7 @@ const translations: Record<string, Record<string, string>> = {
   },
 };
 
-export default function PredictionsPage() {
+function PredictionsContent() {
   const searchParams = useSearchParams();
   const [selectedDate, setSelectedDate] = useState(getInitialDate);
   const [matches, setMatches] = useState<Prematch[]>([]);
@@ -1069,5 +1069,26 @@ export default function PredictionsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+// Loading fallback component
+function PredictionsLoading() {
+  return (
+    <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"></div>
+        <p className="text-gray-400">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+// Wrap with Suspense to fix useSearchParams issue on navigation
+export default function PredictionsPage() {
+  return (
+    <Suspense fallback={<PredictionsLoading />}>
+      <PredictionsContent />
+    </Suspense>
   );
 }
