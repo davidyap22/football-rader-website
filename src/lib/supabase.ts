@@ -593,14 +593,15 @@ export const sendChatMessage = async (userId: string, content: string, fixtureId
 // Subscribe to chat messages (real-time)
 export const subscribeToChatMessages = (
   fixtureId: number | null,
-  onMessage: (message: ChatMessage) => void
+  onMessage: (message: ChatMessage) => void,
+  onStatusChange?: (status: string) => void
 ) => {
   if (!supabase) {
     return null;
   }
 
   const channel = supabase
-    .channel(`chat-${fixtureId ?? 'global'}`)
+    .channel(`chat-${fixtureId ?? 'global'}-${Date.now()}`)
     .on(
       'postgres_changes',
       {
@@ -613,7 +614,12 @@ export const subscribeToChatMessages = (
         onMessage(payload.new);
       }
     )
-    .subscribe();
+    .subscribe((status: string) => {
+      console.log('Realtime subscription status:', status);
+      if (onStatusChange) {
+        onStatusChange(status);
+      }
+    });
 
   return channel;
 };

@@ -221,25 +221,64 @@ function ChatRoom({
     loadMessages();
   }, [fixtureId]);
 
-  // Subscribe to real-time messages
+  // Subscribe to real-time messages with fallback polling
   useEffect(() => {
-    const channel = subscribeToChatMessages(fixtureId, (newMessage) => {
-      // Only add if not already in the list (avoid duplicates from optimistic updates)
-      setMessages(prev => {
-        const exists = prev.some(m => m.id === newMessage.id);
-        if (exists) return prev;
-        // Also remove any temp message with same content from same user
-        const filtered = prev.filter(m =>
-          !(m.id.startsWith('temp-') && m.user_id === newMessage.user_id && m.content === newMessage.content)
-        );
-        return [...filtered, newMessage];
-      });
-    });
+    let pollingInterval: NodeJS.Timeout | null = null;
+    let isRealtimeConnected = false;
+
+    const channel = subscribeToChatMessages(
+      fixtureId,
+      (newMessage) => {
+        // Only add if not already in the list (avoid duplicates from optimistic updates)
+        setMessages(prev => {
+          const exists = prev.some(m => m.id === newMessage.id);
+          if (exists) return prev;
+          // Also remove any temp message with same content from same user
+          const filtered = prev.filter(m =>
+            !(m.id.startsWith('temp-') && m.user_id === newMessage.user_id && m.content === newMessage.content)
+          );
+          return [...filtered, newMessage];
+        });
+      },
+      (status) => {
+        isRealtimeConnected = status === 'SUBSCRIBED';
+        // If realtime fails, start polling
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          if (!pollingInterval) {
+            pollingInterval = setInterval(async () => {
+              const { data } = await getChatMessages(fixtureId, 100);
+              if (data) {
+                setMessages(data);
+              }
+            }, 3000); // Poll every 3 seconds
+          }
+        }
+      }
+    );
+
+    // Fallback: always poll every 5 seconds as backup
+    const backupPolling = setInterval(async () => {
+      if (!isRealtimeConnected) {
+        const { data } = await getChatMessages(fixtureId, 100);
+        if (data) {
+          setMessages(prev => {
+            // Merge new messages without duplicates
+            const newIds = new Set(data.map((m: ChatMessage) => m.id));
+            const oldMessages = prev.filter((m: ChatMessage) => m.id.startsWith('temp-') || !newIds.has(m.id));
+            return [...data, ...oldMessages.filter((m: ChatMessage) => m.id.startsWith('temp-'))];
+          });
+        }
+      }
+    }, 5000);
 
     return () => {
       if (channel) {
         supabase.removeChannel(channel);
       }
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+      }
+      clearInterval(backupPolling);
     };
   }, [fixtureId]);
 
