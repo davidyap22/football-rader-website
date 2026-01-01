@@ -14,6 +14,7 @@ export default function DashboardPage() {
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<MenuSection>('profile');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Profit Calculator States
   const [betAmount, setBetAmount] = useState<string>('100');
@@ -189,10 +190,67 @@ export default function DashboardPage() {
                 )}
                 <span className="text-sm font-medium text-emerald-400 hidden sm:block">{user?.user_metadata?.full_name || user?.email?.split('@')[0]}</span>
               </Link>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[45] md:hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Menu Panel */}
+          <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+            <div className="px-4 py-4 space-y-1">
+              {[
+                { href: '/', label: 'Home' },
+                { href: '/predictions', label: 'Predictions' },
+                { href: '/leagues', label: 'Leagues' },
+                { href: '/performance', label: 'AI Performance' },
+                { href: '/community', label: 'Community' },
+                { href: '/news', label: 'News' },
+                { href: '/pricing', label: 'Pricing' },
+                { href: '/dashboard', label: 'Dashboard', active: true },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block px-4 py-3 rounded-lg text-base font-medium transition-all ${
+                    link.active
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="relative z-10 pt-24 pb-24 md:pb-16 px-4">
