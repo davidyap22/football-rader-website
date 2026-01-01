@@ -1128,8 +1128,24 @@ export default function PerformancePage() {
                 )}
               </div>
 
-              {/* League Filter */}
-              <div className="flex items-center gap-4 mb-6 overflow-x-auto pb-2">
+              {/* League Filter - Mobile: Dropdown, Desktop: Buttons */}
+              {/* Mobile Dropdown */}
+              <div className="md:hidden mb-6">
+                <select
+                  value={selectedLeague}
+                  onChange={(e) => setSelectedLeague(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white text-sm font-medium appearance-none cursor-pointer focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', backgroundSize: '20px' }}
+                >
+                  <option value="all" className="bg-gray-900 text-white">{t('allLeagues')}</option>
+                  {availableLeagues.map((league) => (
+                    <option key={league} value={league} className="bg-gray-900 text-white">{league}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Desktop Buttons */}
+              <div className="hidden md:flex items-center gap-4 mb-6 overflow-x-auto pb-2">
                 <button
                   onClick={() => setSelectedLeague('all')}
                   className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
