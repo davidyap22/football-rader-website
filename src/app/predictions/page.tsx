@@ -656,8 +656,38 @@ export default function PredictionsPage() {
           {/* Bottom glow line */}
           <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
 
-          <div className="max-w-7xl mx-auto px-4 py-5 relative z-10">
-            <div className="flex items-center justify-center gap-2 sm:gap-3 overflow-x-auto scrollbar-hide pb-1">
+          <div className="max-w-7xl mx-auto px-4 py-4 relative z-10">
+            {/* Mobile: Only show 3 dates (Yesterday, Today, Tomorrow) */}
+            <div className="flex md:hidden items-center justify-center gap-1">
+              {dates.filter((_, index) => index >= 2 && index <= 4).map((date, index) => {
+                const isSelected = isSameDay(date, selectedDate);
+                const isToday = isSameDay(date, today);
+                const label = formatDateLabelTranslated(date, today);
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      setSelectedDate(date);
+                      sessionStorage.setItem('oddsflow_selected_date', formatDateForQuery(date));
+                    }}
+                    className={`
+                      relative px-4 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-300
+                      ${isSelected
+                        ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-black shadow-lg shadow-emerald-500/30'
+                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                      }
+                      ${isToday && !isSelected ? 'text-emerald-400' : ''}
+                    `}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Desktop: Show all 7 dates */}
+            <div className="hidden md:flex items-center justify-center gap-3">
               {dates.map((date, index) => {
                 const isSelected = isSameDay(date, selectedDate);
                 const isToday = isSameDay(date, today);
