@@ -1487,7 +1487,8 @@ function AIPredictionsSection() {
           ) : (
             <>
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-3 px-4 py-3 bg-gray-900/50 border-b border-gray-800/50">
+              {/* Desktop Header - Hidden on mobile */}
+              <div className="hidden md:grid grid-cols-12 gap-3 px-4 py-3 bg-gray-900/50 border-b border-gray-800/50">
                 <div className="col-span-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('dateLeague')}</div>
                 <div className="col-span-6 text-[11px] font-semibold text-gray-500 uppercase tracking-wider text-center">{t('fixture')}</div>
                 <div className="col-span-3 text-[11px] font-semibold text-gray-500 uppercase tracking-wider text-right">{t('confidence')}</div>
@@ -1500,7 +1501,7 @@ function AIPredictionsSection() {
                   return (
                     <div
                       key={match.id}
-                      className="group relative grid grid-cols-12 gap-3 px-4 py-4 items-center border-b border-gray-800/30 hover:bg-emerald-500/5 transition-all duration-300 overflow-hidden"
+                      className="group relative border-b border-gray-800/30 hover:bg-emerald-500/5 transition-all duration-300 overflow-hidden"
                     >
                       {/* Shimmer effect */}
                       <div
@@ -1508,77 +1509,153 @@ function AIPredictionsSection() {
                         style={{ animationDelay: `${index * 0.1}s` }}
                       />
 
-                      {/* Date / League */}
-                      <div className="col-span-3 relative">
-                        <div className="flex items-center gap-2 mb-1">
-                          {match.league_logo && (
-                            <div className="w-5 h-5 rounded bg-white flex items-center justify-center p-0.5 flex-shrink-0">
-                              <Image
-                                src={match.league_logo}
-                                alt={match.league_name || 'League'}
-                                width={16}
-                                height={16}
-                                className="object-contain"
-                              />
-                            </div>
-                          )}
-                          <span className="text-gray-300 text-xs font-medium truncate">{match.league_name}</span>
+                      {/* Mobile Layout */}
+                      <div className="md:hidden p-4 space-y-3">
+                        {/* League & Date Row */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            {match.league_logo && (
+                              <div className="w-5 h-5 rounded bg-white flex items-center justify-center p-0.5 flex-shrink-0">
+                                <Image
+                                  src={match.league_logo}
+                                  alt={match.league_name || 'League'}
+                                  width={16}
+                                  height={16}
+                                  className="object-contain"
+                                />
+                              </div>
+                            )}
+                            <span className="text-gray-400 text-xs font-medium">{match.league_name}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <span className="text-emerald-400">{formatMatchDate(match.start_date_msia)}</span>
+                            <span>•</span>
+                            <span>{formatTime(match.start_date_msia)}</span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2 text-gray-500 text-xs">
-                          <span className="text-emerald-400/80">{formatMatchDate(match.start_date_msia)}</span>
-                          <span>•</span>
-                          <span>{formatTime(match.start_date_msia)}</span>
-                        </div>
-                      </div>
 
-                      {/* Fixture */}
-                      <div className="col-span-6 relative">
-                        <div className="flex items-center justify-center gap-2">
-                          <div className="flex items-center gap-2 flex-1 justify-end">
-                            <span className="text-white text-sm font-medium text-right truncate group-hover:text-emerald-300 transition-colors">{match.home_name}</span>
+                        {/* Teams Row */}
+                        <div className="flex items-center justify-between gap-3">
+                          {/* Home Team */}
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
                             {match.home_logo && (
-                              <div className="relative">
-                                <div className="absolute inset-0 bg-emerald-400/0 group-hover:bg-emerald-400/20 rounded-full transition-colors duration-300" />
-                                <Image
-                                  src={match.home_logo}
-                                  alt={match.home_name || 'Home'}
-                                  width={24}
-                                  height={24}
-                                  className="rounded-full flex-shrink-0 relative"
-                                />
-                              </div>
+                              <Image
+                                src={match.home_logo}
+                                alt={match.home_name || 'Home'}
+                                width={28}
+                                height={28}
+                                className="rounded-full flex-shrink-0"
+                              />
                             )}
+                            <span className="text-white text-sm font-medium truncate">{match.home_name}</span>
                           </div>
-                          <span className="text-emerald-400 text-xs font-bold px-2 group-hover:scale-110 transition-transform">vs</span>
-                          <div className="flex items-center gap-2 flex-1">
+
+                          {/* VS */}
+                          <span className="text-emerald-400 text-xs font-bold flex-shrink-0">vs</span>
+
+                          {/* Away Team */}
+                          <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
+                            <span className="text-white text-sm font-medium truncate text-right">{match.away_name}</span>
                             {match.away_logo && (
-                              <div className="relative">
-                                <div className="absolute inset-0 bg-emerald-400/0 group-hover:bg-emerald-400/20 rounded-full transition-colors duration-300" />
-                                <Image
-                                  src={match.away_logo}
-                                  alt={match.away_name || 'Away'}
-                                  width={24}
-                                  height={24}
-                                  className="rounded-full flex-shrink-0 relative"
-                                />
-                              </div>
+                              <Image
+                                src={match.away_logo}
+                                alt={match.away_name || 'Away'}
+                                width={28}
+                                height={28}
+                                className="rounded-full flex-shrink-0"
+                              />
                             )}
-                            <span className="text-white text-sm font-medium truncate group-hover:text-emerald-300 transition-colors">{match.away_name}</span>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Confidence */}
-                      <div className="col-span-3 relative">
-                        <div className="flex flex-col items-end gap-1">
-                          <span className={`text-sm font-bold transition-all duration-300 ${confidence >= 90 ? 'text-emerald-400 group-hover:text-emerald-300' : 'text-cyan-400 group-hover:text-cyan-300'}`}>
-                            {confidence}%
-                          </span>
-                          <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                        {/* Confidence Row */}
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                             <div
-                              className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full group-hover:shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-shadow duration-300"
+                              className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full"
                               style={{ width: `${confidence}%` }}
                             />
+                          </div>
+                          <span className={`text-sm font-bold flex-shrink-0 ${confidence >= 90 ? 'text-emerald-400' : 'text-cyan-400'}`}>
+                            {confidence}%
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout */}
+                      <div className="hidden md:grid grid-cols-12 gap-3 px-4 py-4 items-center">
+                        {/* Date / League */}
+                        <div className="col-span-3 relative">
+                          <div className="flex items-center gap-2 mb-1">
+                            {match.league_logo && (
+                              <div className="w-5 h-5 rounded bg-white flex items-center justify-center p-0.5 flex-shrink-0">
+                                <Image
+                                  src={match.league_logo}
+                                  alt={match.league_name || 'League'}
+                                  width={16}
+                                  height={16}
+                                  className="object-contain"
+                                />
+                              </div>
+                            )}
+                            <span className="text-gray-300 text-xs font-medium truncate">{match.league_name}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-500 text-xs">
+                            <span className="text-emerald-400/80">{formatMatchDate(match.start_date_msia)}</span>
+                            <span>•</span>
+                            <span>{formatTime(match.start_date_msia)}</span>
+                          </div>
+                        </div>
+
+                        {/* Fixture */}
+                        <div className="col-span-6 relative">
+                          <div className="flex items-center justify-center gap-2">
+                            <div className="flex items-center gap-2 flex-1 justify-end">
+                              <span className="text-white text-sm font-medium text-right truncate group-hover:text-emerald-300 transition-colors">{match.home_name}</span>
+                              {match.home_logo && (
+                                <div className="relative">
+                                  <div className="absolute inset-0 bg-emerald-400/0 group-hover:bg-emerald-400/20 rounded-full transition-colors duration-300" />
+                                  <Image
+                                    src={match.home_logo}
+                                    alt={match.home_name || 'Home'}
+                                    width={24}
+                                    height={24}
+                                    className="rounded-full flex-shrink-0 relative"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                            <span className="text-emerald-400 text-xs font-bold px-2 group-hover:scale-110 transition-transform">vs</span>
+                            <div className="flex items-center gap-2 flex-1">
+                              {match.away_logo && (
+                                <div className="relative">
+                                  <div className="absolute inset-0 bg-emerald-400/0 group-hover:bg-emerald-400/20 rounded-full transition-colors duration-300" />
+                                  <Image
+                                    src={match.away_logo}
+                                    alt={match.away_name || 'Away'}
+                                    width={24}
+                                    height={24}
+                                    className="rounded-full flex-shrink-0 relative"
+                                  />
+                                </div>
+                              )}
+                              <span className="text-white text-sm font-medium truncate group-hover:text-emerald-300 transition-colors">{match.away_name}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Confidence */}
+                        <div className="col-span-3 relative">
+                          <div className="flex flex-col items-end gap-1">
+                            <span className={`text-sm font-bold transition-all duration-300 ${confidence >= 90 ? 'text-emerald-400 group-hover:text-emerald-300' : 'text-cyan-400 group-hover:text-cyan-300'}`}>
+                              {confidence}%
+                            </span>
+                            <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full group-hover:shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-shadow duration-300"
+                                style={{ width: `${confidence}%` }}
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
