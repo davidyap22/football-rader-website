@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { supabase, TeamStatistics } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 
 // Language options
@@ -166,11 +166,34 @@ const translations: Record<string, Record<string, string>> = {
   },
 };
 
+// League data configuration with URL slugs
+const LEAGUES_CONFIG = [
+  { name: 'Premier League', country: 'England', logo: 'https://media.api-sports.io/football/leagues/39.png', slug: 'premier-league', dbName: 'Premier League' },
+  { name: 'Bundesliga', country: 'Germany', logo: 'https://media.api-sports.io/football/leagues/78.png', slug: 'bundesliga', dbName: 'Bundesliga' },
+  { name: 'Serie A', country: 'Italy', logo: 'https://media.api-sports.io/football/leagues/135.png', slug: 'serie-a', dbName: 'Serie A' },
+  { name: 'La Liga', country: 'Spain', logo: 'https://media.api-sports.io/football/leagues/140.png', slug: 'la-liga', dbName: 'La Liga' },
+  { name: 'Ligue 1', country: 'France', logo: 'https://media.api-sports.io/football/leagues/61.png', slug: 'ligue-1', dbName: 'Ligue 1' },
+  { name: 'Champions League', country: 'UEFA', logo: 'https://media.api-sports.io/football/leagues/2.png', slug: 'champions-league', dbName: 'UEFA Champions League' },
+];
+
+// League stats summary type
+interface LeagueStatsSummary {
+  teams: number;
+  totalGoals: number;
+  avgGoalsPerMatch: number;
+  cleanSheets: number;
+  topTeam: string | null;
+  topTeamLogo: string | null;
+  season: number | null;
+}
+
 export default function LeaguesPage() {
   const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [leagueStats, setLeagueStats] = useState<Record<string, LeagueStatsSummary>>({});
+  const [loadingStats, setLoadingStats] = useState(true);
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
   // Check auth session
@@ -184,6 +207,54 @@ export default function LeaguesPage() {
       setUser(session?.user || null);
     });
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Fetch league statistics
+  useEffect(() => {
+    async function fetchAllLeagueStats() {
+      if (!supabase) return;
+
+      setLoadingStats(true);
+      const statsMap: Record<string, LeagueStatsSummary> = {};
+
+      for (const league of LEAGUES_CONFIG) {
+        try {
+          const { data, error } = await supabase
+            .from('team_statistics')
+            .select('*')
+            .eq('league_name', league.dbName);
+
+          if (data && !error && data.length > 0) {
+            // Calculate points for sorting
+            const teamsWithPoints = data.map((team: TeamStatistics) => ({
+              ...team,
+              points: ((team.total_wins || 0) * 3) + (team.total_draws || 0),
+            }));
+
+            // Sort by points to find top team
+            teamsWithPoints.sort((a: TeamStatistics & { points: number }, b: TeamStatistics & { points: number }) => b.points - a.points);
+            const topTeam = teamsWithPoints[0];
+
+            statsMap[league.dbName] = {
+              teams: data.length,
+              totalGoals: data.reduce((sum: number, t: TeamStatistics) => sum + (t.goals_for_total || 0), 0),
+              avgGoalsPerMatch: data.reduce((sum: number, t: TeamStatistics) => sum + (t.goals_for_average || 0), 0) / data.length,
+              cleanSheets: data.reduce((sum: number, t: TeamStatistics) => sum + (t.clean_sheets || 0), 0),
+              topTeam: topTeam?.team_name || null,
+              topTeamLogo: topTeam?.logo || null,
+              season: data[0]?.season || null,
+            };
+          }
+        } catch (err) {
+          console.error(`Failed to fetch stats for ${league.name}`, err);
+        }
+      }
+
+      setLeagueStats(statsMap);
+      setLoadingStats(false);
+    }
+
+    fetchAllLeagueStats();
   }, []);
 
   // Load language from localStorage on mount
@@ -208,9 +279,9 @@ export default function LeaguesPage() {
     <div className="min-h-screen bg-[#0a0a0f] text-white">
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
@@ -225,7 +296,7 @@ export default function LeaguesPage() {
               <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               {/* Language Selector */}
               <div className="relative">
                 <button
@@ -282,6 +353,16 @@ export default function LeaguesPage() {
                 </>
               )}
 
+              {/* World Cup Special Button */}
+              <Link
+                href="/worldcup"
+                className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-5 w-auto object-contain relative z-10" />
+                <span className="text-black font-semibold text-sm relative z-10">FIFA 2026</span>
+              </Link>
+
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -309,6 +390,13 @@ export default function LeaguesPage() {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
           <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
             <div className="px-4 py-4 space-y-1">
+              {/* World Cup Special Entry */}
+              <Link href="/worldcup" onClick={() => setMobileMenuOpen(false)} className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-8 w-auto object-contain relative z-10" />
+                <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
+              </Link>
+
               {[
                 { href: '/', label: t('home') },
                 { href: '/predictions', label: t('predictions') },
@@ -362,119 +450,88 @@ export default function LeaguesPage() {
 
           {/* League Cards with SEO descriptions */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Premier League */}
-            <Link href="/predictions" className="group relative p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-2">
-                  <img src="https://media.api-sports.io/football/leagues/39.png" alt="Premier League" className="w-12 h-12 object-contain" />
+            {LEAGUES_CONFIG.map((league) => (
+              <Link
+                key={league.name}
+                href={`/leagues/${league.slug}`}
+                className="group relative p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer"
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-2">
+                    <img src={league.logo} alt={league.name} className="w-12 h-12 object-contain" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">{league.name}</h3>
+                    <p className="text-sm text-emerald-400">{league.country}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">Premier League</h3>
-                  <p className="text-sm text-emerald-400">England</p>
+                {/* Statistics Summary */}
+                {loadingStats ? (
+                  <div className="space-y-2 mb-3">
+                    <div className="h-4 bg-white/10 rounded animate-pulse w-3/4"></div>
+                    <div className="h-4 bg-white/10 rounded animate-pulse w-1/2"></div>
+                  </div>
+                ) : leagueStats[league.dbName] ? (
+                  <div className="mb-3">
+                    {/* Top Team */}
+                    {leagueStats[league.dbName].topTeam && (
+                      <div className="flex items-center gap-2 mb-3 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        {leagueStats[league.dbName].topTeamLogo && (
+                          <img
+                            src={leagueStats[league.dbName].topTeamLogo!}
+                            alt={leagueStats[league.dbName].topTeam!}
+                            className="w-6 h-6 object-contain"
+                          />
+                        )}
+                        <span className="text-xs text-emerald-400 font-medium">
+                          Leading: {leagueStats[league.dbName].topTeam}
+                        </span>
+                      </div>
+                    )}
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5">
+                        <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span className="text-gray-300">{leagueStats[league.dbName].teams} Teams</span>
+                      </div>
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5">
+                        <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <span className="text-gray-300">{leagueStats[league.dbName].totalGoals} Goals</span>
+                      </div>
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5">
+                        <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <span className="text-gray-300">{leagueStats[league.dbName].avgGoalsPerMatch.toFixed(1)} Avg/Match</span>
+                      </div>
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5">
+                        <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="text-gray-300">{leagueStats[league.dbName].cleanSheets} Clean Sheets</span>
+                      </div>
+                    </div>
+                    {/* Season Badge */}
+                    {leagueStats[league.dbName].season && (
+                      <div className="mt-2 text-center">
+                        <span className="text-xs text-gray-500">Season {leagueStats[league.dbName].season}/{(leagueStats[league.dbName].season! + 1).toString().slice(-2)}</span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-sm mb-3 italic">No statistics available</p>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">View Standings</span>
+                  <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-400">Team Stats</span>
+                  <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-400">Formations</span>
                 </div>
-              </div>
-              <p className="text-gray-400 text-sm mb-3">EPL top 5 betting predictions with our Premier League AI predictor. Get Premier League 1x2 predictions today, over 2.5 goals stats, and English Premier League draw predictions.</p>
-              <div className="flex flex-wrap gap-2">
-                <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">1x2 Predictions</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-400">Over/Under</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-400">Handicap</span>
-              </div>
-            </Link>
-
-            {/* Bundesliga */}
-            <Link href="/predictions" className="group relative p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-2">
-                  <img src="https://media.api-sports.io/football/leagues/78.png" alt="Bundesliga" className="w-12 h-12 object-contain" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">Bundesliga</h3>
-                  <p className="text-sm text-emerald-400">Germany</p>
-                </div>
-              </div>
-              <p className="text-gray-400 text-sm mb-3">Bundesliga AI betting predictions powered by advanced machine learning. Get Bundesliga top 5 betting predictions with verified AI betting records.</p>
-              <div className="flex flex-wrap gap-2">
-                <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">AI Analysis</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-400">Over 2.5 Goals</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-400">BTTS</span>
-              </div>
-            </Link>
-
-            {/* Serie A */}
-            <Link href="/predictions" className="group relative p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-2">
-                  <img src="https://media.api-sports.io/football/leagues/135.png" alt="Serie A" className="w-12 h-12 object-contain" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">Serie A</h3>
-                  <p className="text-sm text-emerald-400">Italy</p>
-                </div>
-              </div>
-              <p className="text-gray-400 text-sm mb-3">Serie A artificial intelligence picks with the most accurate AI football predictor. Get Serie A top 5 betting predictions and transparent AI betting results.</p>
-              <div className="flex flex-wrap gap-2">
-                <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">AI Picks</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-400">Match Odds</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-400">Draw Predictions</span>
-              </div>
-            </Link>
-
-            {/* La Liga */}
-            <Link href="/predictions" className="group relative p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-2">
-                  <img src="https://media.api-sports.io/football/leagues/140.png" alt="La Liga" className="w-12 h-12 object-contain" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">La Liga</h3>
-                  <p className="text-sm text-emerald-400">Spain</p>
-                </div>
-              </div>
-              <p className="text-gray-400 text-sm mb-3">La Liga top 5 betting predictions with European football AI tips. Best AI for handicap betting on Spanish football matches.</p>
-              <div className="flex flex-wrap gap-2">
-                <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">Handicap Tips</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-400">1x2 Analysis</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-400">Goals Market</span>
-              </div>
-            </Link>
-
-            {/* Ligue 1 */}
-            <Link href="/predictions" className="group relative p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-2">
-                  <img src="https://media.api-sports.io/football/leagues/61.png" alt="Ligue 1" className="w-12 h-12 object-contain" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">Ligue 1</h3>
-                  <p className="text-sm text-emerald-400">France</p>
-                </div>
-              </div>
-              <p className="text-gray-400 text-sm mb-3">Ligue 1 AI prediction model with verified betting records. Get Ligue 1 top 5 betting predictions and safest AI football tips.</p>
-              <div className="flex flex-wrap gap-2">
-                <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">AI Model</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-400">Safe Tips</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-400">Value Bets</span>
-              </div>
-            </Link>
-
-            {/* Champions League */}
-            <Link href="/predictions" className="group relative p-6 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-2">
-                  <img src="https://media.api-sports.io/football/leagues/2.png" alt="Champions League" className="w-12 h-12 object-contain" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">Champions League</h3>
-                  <p className="text-sm text-emerald-400">UEFA</p>
-                </div>
-              </div>
-              <p className="text-gray-400 text-sm mb-3">Champions League betting analysis AI with transparent AI betting sites. Get UCL predictions from the most accurate AI football predictor.</p>
-              <div className="flex flex-wrap gap-2">
-                <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">UCL Analysis</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-400">Match Preview</span>
-                <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-400">Odds Comparison</span>
-              </div>
-            </Link>
+              </Link>
+            ))}
           </div>
 
           {/* SEO Content Section */}

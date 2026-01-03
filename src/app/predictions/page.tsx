@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { supabase, Prematch } from '@/lib/supabase';
+import { supabase, Prematch, MatchPrediction, getMatchPredictions } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 
 // Date helper functions - All using UTC
@@ -56,15 +56,8 @@ function isSameDay(date1: Date, date2: Date) {
 }
 
 function getInitialDate() {
-  if (typeof window !== 'undefined') {
-    const savedDate = sessionStorage.getItem('oddsflow_selected_date');
-    if (savedDate) {
-      const parsedDate = new Date(savedDate + 'T00:00:00Z');
-      if (!isNaN(parsedDate.getTime())) {
-        return parsedDate;
-      }
-    }
-  }
+  // Always return today on initial render to avoid hydration mismatch
+  // useEffect will load saved date from sessionStorage/URL after hydration
   return getUTCToday();
 }
 
@@ -294,6 +287,7 @@ function PredictionsContent() {
   const [user, setUser] = useState<User | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [predictions, setPredictions] = useState<Record<number, MatchPrediction>>({});
   const today = getUTCToday();
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
@@ -409,6 +403,15 @@ function PredictionsContent() {
 
         if (error) throw error;
         setMatches(data || []);
+
+        // Fetch predictions for all matches
+        if (data && data.length > 0) {
+          const fixtureIds = data.map((m: Prematch) => m.id);
+          const { data: predictionsData } = await getMatchPredictions(fixtureIds);
+          if (predictionsData) {
+            setPredictions(predictionsData);
+          }
+        }
       } catch (error) {
         console.error('Error fetching matches:', error);
         setMatches([]);
@@ -483,10 +486,10 @@ function PredictionsContent() {
       </div>
 
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
+        <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
@@ -501,7 +504,7 @@ function PredictionsContent() {
               <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               {/* Language Selector */}
               <div className="relative">
                 <button
@@ -558,6 +561,16 @@ function PredictionsContent() {
                 </>
               )}
 
+              {/* World Cup Special Button */}
+              <Link
+                href="/worldcup"
+                className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-5 w-auto object-contain relative z-10" />
+                <span className="text-black font-semibold text-sm relative z-10">FIFA 2026</span>
+              </Link>
+
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -591,6 +604,17 @@ function PredictionsContent() {
           {/* Menu Panel */}
           <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
             <div className="px-4 py-4 space-y-1">
+              {/* World Cup Special Entry */}
+              <Link
+                href="/worldcup"
+                onClick={() => setMobileMenuOpen(false)}
+                className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-8 w-auto object-contain relative z-10" />
+                <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
+              </Link>
+
               {[
                 { href: '/', label: t('home') },
                 { href: '/predictions', label: t('predictions'), active: true },
@@ -817,7 +841,6 @@ function PredictionsContent() {
                               {formatTime(match.start_date_msia)}
                             </span>
                           )}
-                          <span className="text-emerald-400 font-bold text-sm">{getConfidence(index)}%</span>
                         </div>
 
                         {/* Teams Row */}
@@ -856,15 +879,25 @@ function PredictionsContent() {
                           </div>
                         </div>
 
-                        {/* Confidence Bar */}
-                        <div className="flex items-center gap-3">
-                          <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full"
-                              style={{ width: `${getConfidence(index)}%` }}
-                            />
+                        {/* AI Prediction Info - Only for Scheduled/In Play */}
+                        {match.type !== 'Finished' && predictions[match.id] && (
+                          <div className="flex items-center justify-between gap-2 text-xs">
+                            <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/20">
+                              <span className="text-gray-400">Winner:</span>
+                              <span className="text-emerald-400 font-medium truncate max-w-[80px]">
+                                {predictions[match.id].winner_name || 'Draw'}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20">
+                              <span className="text-gray-400">H:</span>
+                              <span className="text-blue-400 font-medium">{predictions[match.id].goals_home || '-'}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-green-500/10 border border-green-500/20">
+                              <span className="text-gray-400">A:</span>
+                              <span className="text-green-400 font-medium">{predictions[match.id].goals_away || '-'}</span>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
 
                       {/* Desktop Layout */}
@@ -928,17 +961,28 @@ function PredictionsContent() {
                           </div>
                         </div>
 
-                        {/* AI Confidence */}
+                        {/* AI Prediction - Only for Scheduled/In Play */}
                         <div className="col-span-4 text-right">
-                          <div className="inline-flex items-center gap-2">
-                            <div className="w-16 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full"
-                                style={{ width: `${getConfidence(index)}%` }}
-                              />
+                          {match.type !== 'Finished' && predictions[match.id] ? (
+                            <div className="inline-flex items-center gap-2 text-xs">
+                              <div className="flex items-center gap-1 px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/20">
+                                <span className="text-gray-400">Winner:</span>
+                                <span className="text-emerald-400 font-medium truncate max-w-[100px]">
+                                  {predictions[match.id].winner_name || 'Draw'}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20">
+                                <span className="text-gray-400">H:</span>
+                                <span className="text-blue-400 font-medium">{predictions[match.id].goals_home || '-'}</span>
+                              </div>
+                              <div className="flex items-center gap-1 px-2 py-1 rounded bg-green-500/10 border border-green-500/20">
+                                <span className="text-gray-400">A:</span>
+                                <span className="text-green-400 font-medium">{predictions[match.id].goals_away || '-'}</span>
+                              </div>
                             </div>
-                            <span className="text-emerald-400 font-bold text-sm">{getConfidence(index)}%</span>
-                          </div>
+                          ) : match.type === 'Finished' ? null : (
+                            <span className="text-gray-500 text-xs">No prediction</span>
+                          )}
                         </div>
                       </div>
                     </Link>

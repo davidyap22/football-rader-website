@@ -15,6 +15,7 @@ import {
   Area,
   AreaChart,
   Legend,
+  ReferenceLine,
 } from 'recharts';
 
 // Language options
@@ -38,6 +39,7 @@ const translations: Record<string, Record<string, string>> = {
     totalProfit: "Total Profit",
     winRate: "Win Rate",
     totalBets: "Total Bets",
+    totalMatches: "Total Matches",
     roi: "ROI",
     profitByMarket: "Profit by Market",
     moneyline: "1x2",
@@ -63,6 +65,7 @@ const translations: Record<string, Record<string, string>> = {
     totalProfit: "Ganancia Total",
     winRate: "Tasa de Acierto",
     totalBets: "Apuestas Totales",
+    totalMatches: "Partidos Totales",
     roi: "ROI",
     profitByMarket: "Ganancia por Mercado",
     moneyline: "1x2",
@@ -88,6 +91,7 @@ const translations: Record<string, Record<string, string>> = {
     totalProfit: "Lucro Total",
     winRate: "Taxa de Acerto",
     totalBets: "Apostas Totais",
+    totalMatches: "Total de Partidas",
     roi: "ROI",
     profitByMarket: "Lucro por Mercado",
     moneyline: "1x2",
@@ -113,6 +117,7 @@ const translations: Record<string, Record<string, string>> = {
     totalProfit: "Gesamtgewinn",
     winRate: "Gewinnrate",
     totalBets: "Gesamtwetten",
+    totalMatches: "Gesamtspiele",
     roi: "ROI",
     profitByMarket: "Gewinn nach Markt",
     moneyline: "1x2",
@@ -138,6 +143,7 @@ const translations: Record<string, Record<string, string>> = {
     totalProfit: "Profit Total",
     winRate: "Taux de Réussite",
     totalBets: "Paris Totaux",
+    totalMatches: "Matchs Totaux",
     roi: "ROI",
     profitByMarket: "Profit par Marché",
     moneyline: "1x2",
@@ -163,6 +169,7 @@ const translations: Record<string, Record<string, string>> = {
     totalProfit: "総利益",
     winRate: "勝率",
     totalBets: "総ベット数",
+    totalMatches: "総試合数",
     roi: "ROI",
     profitByMarket: "市場別利益",
     moneyline: "1x2",
@@ -188,6 +195,7 @@ const translations: Record<string, Record<string, string>> = {
     totalProfit: "총 수익",
     winRate: "승률",
     totalBets: "총 베팅",
+    totalMatches: "총 경기",
     roi: "ROI",
     profitByMarket: "시장별 수익",
     moneyline: "1x2",
@@ -213,6 +221,7 @@ const translations: Record<string, Record<string, string>> = {
     totalProfit: "总盈利",
     winRate: "胜率",
     totalBets: "总投注",
+    totalMatches: "总比赛",
     roi: "投资回报率",
     profitByMarket: "市场盈利",
     moneyline: "1x2",
@@ -238,6 +247,7 @@ const translations: Record<string, Record<string, string>> = {
     totalProfit: "總盈利",
     winRate: "勝率",
     totalBets: "總投注",
+    totalMatches: "總比賽",
     roi: "投資回報率",
     profitByMarket: "市場盈利",
     moneyline: "1x2",
@@ -742,9 +752,9 @@ export default function PerformancePage() {
     <div className="min-h-screen bg-[#0a0a0f] text-white">
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
@@ -759,7 +769,7 @@ export default function PerformancePage() {
               <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               <div className="relative">
                 <button onClick={() => setLangDropdownOpen(!langDropdownOpen)} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer">
                   <span>{currentLang.flag}</span>
@@ -800,6 +810,16 @@ export default function PerformancePage() {
                 </>
               )}
 
+              {/* World Cup Special Button */}
+              <Link
+                href="/worldcup"
+                className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-5 w-auto object-contain relative z-10" />
+                <span className="text-black font-semibold text-sm relative z-10">FIFA 2026</span>
+              </Link>
+
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -833,6 +853,13 @@ export default function PerformancePage() {
           {/* Menu Panel */}
           <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
             <div className="px-4 py-4 space-y-1">
+              {/* World Cup Special Entry */}
+              <Link href="/worldcup" onClick={() => setMobileMenuOpen(false)} className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-8 w-auto object-contain relative z-10" />
+                <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
+              </Link>
+
               {[
                 { href: '/', label: t('home') },
                 { href: '/predictions', label: t('predictions') },
@@ -928,7 +955,7 @@ export default function PerformancePage() {
           ) : (
             <>
               {/* Overall Stats Cards */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
                 <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-6">
                   <p className="text-gray-400 text-sm mb-1">{t('totalProfit')}</p>
                   <p className={`text-2xl font-bold ${overallStats.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
@@ -950,13 +977,22 @@ export default function PerformancePage() {
                       isStarted={animationStarted}
                     />
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">{matches.length} {t('pastMatches').toLowerCase()}</p>
                 </div>
                 <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-6">
                   <p className="text-gray-400 text-sm mb-1">{t('totalBets')}</p>
                   <p className="text-2xl font-bold text-white">
                     <AnimatedCounter
                       target={overallStats.totalBets}
+                      decimals={0}
+                      isStarted={animationStarted}
+                    />
+                  </p>
+                </div>
+                <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-6">
+                  <p className="text-gray-400 text-sm mb-1">{t('totalMatches')}</p>
+                  <p className="text-2xl font-bold text-cyan-400">
+                    <AnimatedCounter
+                      target={matches.length}
                       decimals={0}
                       isStarted={animationStarted}
                     />
@@ -1047,52 +1083,116 @@ export default function PerformancePage() {
                 </div>
               </div>
 
-              {/* Performance Line Chart */}
+              {/* Performance Line Chart - Stock Market Style */}
               <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-6 mb-8">
-                <h2 className="text-lg font-semibold text-white mb-6">{t('yearlyPerformance')}</h2>
+                {/* Header with stats */}
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                  <div>
+                    <h2 className="text-lg font-semibold text-white mb-1">{t('cumulativeProfit')}</h2>
+                    <div className="flex items-baseline gap-3">
+                      <span className={`text-3xl font-bold ${overallStats.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {overallStats.totalProfit >= 0 ? '+' : '-'}${formatNumber(Math.abs(overallStats.totalProfit))}
+                      </span>
+                      <span className={`text-sm font-medium px-2 py-0.5 rounded ${overallStats.roi >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
+                        {overallStats.roi >= 0 ? '+' : ''}{overallStats.roi.toFixed(1)}%
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                      <span className="text-gray-400">{t('moneyline')}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-cyan-500"></div>
+                      <span className="text-gray-400">{t('handicap')}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                      <span className="text-gray-400">{t('overUnder')}</span>
+                    </div>
+                  </div>
+                </div>
 
                 {dailyPerformance.length > 0 ? (
                   <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart
                         data={dailyPerformance}
-                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                        margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                       >
                         <defs>
-                          <linearGradient id="colorMoneyline" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
-                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                          <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor={overallStats.totalProfit >= 0 ? "#10b981" : "#ef4444"} stopOpacity={0.3} />
+                            <stop offset="100%" stopColor={overallStats.totalProfit >= 0 ? "#10b981" : "#ef4444"} stopOpacity={0} />
                           </linearGradient>
-                          <linearGradient id="colorHandicap" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.4} />
-                            <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
+                          <linearGradient id="colorMoneylineNew" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#10b981" stopOpacity={0.2} />
+                            <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
                           </linearGradient>
-                          <linearGradient id="colorOU" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4} />
-                            <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                          <linearGradient id="colorHandicapNew" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.2} />
+                            <stop offset="100%" stopColor="#06b6d4" stopOpacity={0} />
+                          </linearGradient>
+                          <linearGradient id="colorOUNew" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.2} />
+                            <stop offset="100%" stopColor="#f59e0b" stopOpacity={0} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
                         <XAxis
                           dataKey="date"
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: '#6b7280', fontSize: 12 }}
+                          tick={{ fill: '#4b5563', fontSize: 11 }}
                           tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          interval="preserveStartEnd"
+                          minTickGap={50}
                         />
                         <YAxis
                           axisLine={false}
                           tickLine={false}
-                          tick={{ fill: '#6b7280', fontSize: 12 }}
-                          tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
-                          width={60}
+                          tick={{ fill: '#4b5563', fontSize: 11 }}
+                          tickFormatter={(value) => {
+                            if (Math.abs(value) >= 1000) return `$${(value / 1000).toFixed(0)}k`;
+                            return `$${value}`;
+                          }}
+                          width={55}
+                          domain={['dataMin - 1000', 'dataMax + 1000']}
                         />
-                        <Tooltip content={<CustomTooltip />} />
-                        <Legend
-                          verticalAlign="top"
-                          height={36}
-                          iconType="circle"
-                          formatter={(value) => <span className="text-gray-400 text-sm">{value}</span>}
+                        <Tooltip
+                          content={({ active, payload, label }: any) => {
+                            if (active && payload && payload.length) {
+                              const total = (payload[0]?.value || 0) + (payload[1]?.value || 0) + (payload[2]?.value || 0);
+                              return (
+                                <div className="bg-gray-950/95 backdrop-blur-md border border-white/10 rounded-lg p-3 shadow-2xl min-w-[180px]">
+                                  <p className="text-gray-500 text-xs mb-2 border-b border-white/5 pb-2">
+                                    {new Date(label).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+                                  </p>
+                                  <div className="space-y-1.5">
+                                    {payload.map((entry: any, index: number) => (
+                                      <div key={index} className="flex items-center justify-between gap-4 text-xs">
+                                        <div className="flex items-center gap-2">
+                                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                                          <span className="text-gray-400">{entry.name}</span>
+                                        </div>
+                                        <span className={`font-mono font-medium ${entry.value >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                          {entry.value >= 0 ? '+' : ''}${formatNumber(entry.value, 0)}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                  <div className="border-t border-white/5 mt-2 pt-2 flex items-center justify-between">
+                                    <span className="text-gray-400 text-xs">Total</span>
+                                    <span className={`font-mono font-bold text-sm ${total >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                      {total >= 0 ? '+' : ''}${formatNumber(total, 0)}
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
                         />
                         <Area
                           type="monotone"
@@ -1101,9 +1201,9 @@ export default function PerformancePage() {
                           stroke="#10b981"
                           strokeWidth={2}
                           fillOpacity={1}
-                          fill="url(#colorMoneyline)"
+                          fill="url(#colorMoneylineNew)"
                           dot={false}
-                          activeDot={{ r: 6, fill: '#10b981', stroke: '#fff', strokeWidth: 2 }}
+                          activeDot={{ r: 4, fill: '#10b981', stroke: '#0a0a0f', strokeWidth: 2 }}
                         />
                         <Area
                           type="monotone"
@@ -1112,9 +1212,9 @@ export default function PerformancePage() {
                           stroke="#06b6d4"
                           strokeWidth={2}
                           fillOpacity={1}
-                          fill="url(#colorHandicap)"
+                          fill="url(#colorHandicapNew)"
                           dot={false}
-                          activeDot={{ r: 6, fill: '#06b6d4', stroke: '#fff', strokeWidth: 2 }}
+                          activeDot={{ r: 4, fill: '#06b6d4', stroke: '#0a0a0f', strokeWidth: 2 }}
                         />
                         <Area
                           type="monotone"
@@ -1123,10 +1223,12 @@ export default function PerformancePage() {
                           stroke="#f59e0b"
                           strokeWidth={2}
                           fillOpacity={1}
-                          fill="url(#colorOU)"
+                          fill="url(#colorOUNew)"
                           dot={false}
-                          activeDot={{ r: 6, fill: '#f59e0b', stroke: '#fff', strokeWidth: 2 }}
+                          activeDot={{ r: 4, fill: '#f59e0b', stroke: '#0a0a0f', strokeWidth: 2 }}
                         />
+                        {/* Zero line reference */}
+                        <ReferenceLine y={0} stroke="rgba(255,255,255,0.1)" strokeDasharray="3 3" />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>

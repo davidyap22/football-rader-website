@@ -24,7 +24,7 @@ const LANGUAGES = [
 const translations: Record<string, Record<string, string>> = {
   EN: {
     home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance", pricing: "Pricing",
-    login: "Log In", getStarted: "Get Started", backToPredictions: "Back to Predictions",
+    login: "Log In", getStarted: "Get Started", backToPredictions: "Back to World Cup",
     preMatchOdds: "Pre-match Odds", liveOdds: "Live Odds", finalOdds: "Final Odds", odds: "Odds",
     viewOddsHistory: "View Odds History", oddsHistory: "Odds History", noOddsData: "No odds data available",
     home_team: "Home", away_team: "Away", draw: "Draw", over: "Over", under: "Under",
@@ -42,7 +42,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Análisis", pricing: "Precios",
-    login: "Iniciar Sesión", getStarted: "Comenzar", backToPredictions: "Volver a Predicciones",
+    login: "Iniciar Sesión", getStarted: "Comenzar", backToPredictions: "Volver a World Cup",
     preMatchOdds: "Cuotas Pre-partido", liveOdds: "Cuotas en Vivo", finalOdds: "Cuotas Finales", odds: "Cuotas",
     viewOddsHistory: "Ver Historial de Cuotas", oddsHistory: "Historial de Cuotas", noOddsData: "No hay datos de cuotas disponibles",
     home_team: "Local", away_team: "Visitante", draw: "Empate", over: "Más", under: "Menos",
@@ -60,7 +60,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Análise", pricing: "Preços",
-    login: "Entrar", getStarted: "Começar", backToPredictions: "Voltar às Previsões",
+    login: "Entrar", getStarted: "Começar", backToPredictions: "Voltar ao World Cup",
     preMatchOdds: "Odds Pré-jogo", liveOdds: "Odds ao Vivo", finalOdds: "Odds Finais", odds: "Odds",
     viewOddsHistory: "Ver Histórico de Odds", oddsHistory: "Histórico de Odds", noOddsData: "Nenhum dado de odds disponível",
     home_team: "Casa", away_team: "Fora", draw: "Empate", over: "Mais", under: "Menos",
@@ -78,7 +78,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "Analyse", pricing: "Preise",
-    login: "Anmelden", getStarted: "Loslegen", backToPredictions: "Zurück zu Vorhersagen",
+    login: "Anmelden", getStarted: "Loslegen", backToPredictions: "Zurück zur World Cup",
     preMatchOdds: "Vorspiel-Quoten", liveOdds: "Live-Quoten", finalOdds: "Endquoten", odds: "Quoten",
     viewOddsHistory: "Quotenverlauf anzeigen", oddsHistory: "Quotenverlauf", noOddsData: "Keine Quotendaten verfügbar",
     home_team: "Heim", away_team: "Auswärts", draw: "Unentschieden", over: "Über", under: "Unter",
@@ -96,7 +96,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Analyse", pricing: "Tarifs",
-    login: "Connexion", getStarted: "Commencer", backToPredictions: "Retour aux Prédictions",
+    login: "Connexion", getStarted: "Commencer", backToPredictions: "Retour à World Cup",
     preMatchOdds: "Cotes Pré-match", liveOdds: "Cotes en Direct", finalOdds: "Cotes Finales", odds: "Cotes",
     viewOddsHistory: "Voir l'Historique des Cotes", oddsHistory: "Historique des Cotes", noOddsData: "Aucune donnée de cotes disponible",
     home_team: "Domicile", away_team: "Extérieur", draw: "Nul", over: "Plus", under: "Moins",
@@ -114,7 +114,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "分析", pricing: "料金",
-    login: "ログイン", getStarted: "始める", backToPredictions: "予測に戻る",
+    login: "ログイン", getStarted: "始める", backToPredictions: "World Cupに戻る",
     preMatchOdds: "試合前オッズ", liveOdds: "ライブオッズ", finalOdds: "最終オッズ", odds: "オッズ",
     viewOddsHistory: "オッズ履歴を見る", oddsHistory: "オッズ履歴", noOddsData: "オッズデータがありません",
     home_team: "ホーム", away_team: "アウェイ", draw: "引き分け", over: "オーバー", under: "アンダー",
@@ -132,7 +132,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "분석", pricing: "가격",
-    login: "로그인", getStarted: "시작하기", backToPredictions: "예측으로 돌아가기",
+    login: "로그인", getStarted: "시작하기", backToPredictions: "World Cup으로 돌아가기",
     preMatchOdds: "경기 전 배당률", liveOdds: "라이브 배당률", finalOdds: "최종 배당률", odds: "배당률",
     viewOddsHistory: "배당률 기록 보기", oddsHistory: "배당률 기록", noOddsData: "배당률 데이터 없음",
     home_team: "홈", away_team: "원정", draw: "무승부", over: "오버", under: "언더",
@@ -150,7 +150,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "分析", pricing: "价格",
-    login: "登录", getStarted: "开始使用", backToPredictions: "返回预测",
+    login: "登录", getStarted: "开始使用", backToPredictions: "返回世界杯",
     preMatchOdds: "赛前赔率", liveOdds: "实时赔率", finalOdds: "最终赔率", odds: "赔率",
     viewOddsHistory: "查看赔率历史", oddsHistory: "赔率历史", noOddsData: "暂无赔率数据",
     home_team: "主队", away_team: "客队", draw: "平局", over: "大", under: "小",
@@ -168,7 +168,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "分析", pricing: "價格",
-    login: "登入", getStarted: "開始使用", backToPredictions: "返回預測",
+    login: "登入", getStarted: "開始使用", backToPredictions: "返回世界盃",
     preMatchOdds: "賽前賠率", liveOdds: "即時賠率", finalOdds: "最終賠率", odds: "賠率",
     viewOddsHistory: "查看賠率歷史", oddsHistory: "賠率歷史", noOddsData: "暫無賠率資料",
     home_team: "主隊", away_team: "客隊", draw: "平局", over: "大", under: "小",
@@ -271,11 +271,13 @@ export default function MatchDetailsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const dateParam = searchParams.get('date');
+  const groupParam = searchParams.get('group');
   const [match, setMatch] = useState<Prematch | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedPersonality, setSelectedPersonality] = useState('aggressive');
   const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [fifaDropdownOpen, setFifaDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [userSubscription, setUserSubscription] = useState<UserSubscription | null>(null);
@@ -746,7 +748,7 @@ export default function MatchDetailsPage() {
     return (
       <div className="min-h-screen bg-[#0a0a0f] text-white flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-4">Match not found</h1>
-        <Link href={dateParam ? `/predictions?date=${dateParam}` : '/predictions'} className="text-emerald-400 hover:underline">
+        <Link href={`/worldcup/predictions${groupParam ? `?group=${encodeURIComponent(groupParam)}` : ''}`} className="text-amber-400 hover:underline">
           ← {t('backToPredictions')}
         </Link>
       </div>
@@ -765,13 +767,10 @@ export default function MatchDetailsPage() {
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
-              <Link href="/predictions" className="text-emerald-400 text-sm font-medium">{t('predictions')}</Link>
-              <Link href="/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
-              <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
-              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
-              <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
+              <Link href="/worldcup" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
+              <Link href="/worldcup/predictions" className="text-amber-400 text-sm font-medium">{t('predictions')}</Link>
+              <Link href="/worldcup/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
+              <Link href="/worldcup/ai_performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
@@ -831,15 +830,49 @@ export default function MatchDetailsPage() {
                 </>
               )}
 
-              {/* World Cup Special Button */}
-              <Link
-                href="/worldcup"
-                className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
-                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-5 w-auto object-contain relative z-10" />
-                <span className="text-black font-semibold text-sm relative z-10">FIFA 2026</span>
-              </Link>
+              {/* FIFA 2026 Dropdown Button */}
+              <div className="relative hidden sm:block">
+                <button
+                  onClick={() => setFifaDropdownOpen(!fifaDropdownOpen)}
+                  className="relative flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
+                >
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                  <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-5 w-auto object-contain relative z-10" />
+                  <span className="text-black font-semibold text-sm relative z-10">FIFA 2026</span>
+                  <svg className={`w-4 h-4 text-black relative z-10 transition-transform ${fifaDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {fifaDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-gray-900/95 backdrop-blur-xl border border-amber-500/30 rounded-xl shadow-xl shadow-amber-500/20 overflow-hidden z-50">
+                    <Link href="/" onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors border-b border-white/10">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                      </svg>
+                      <span className="font-medium">Back to OddsFlow</span>
+                    </Link>
+                    <Link href="/worldcup/predictions" onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-amber-400 bg-amber-500/10">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                      <span className="font-medium">{t('predictions')}</span>
+                    </Link>
+                    <Link href="/worldcup/leagues" onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                      <span className="font-medium">{t('leagues')}</span>
+                    </Link>
+                    <Link href="/worldcup/ai_performance" onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                      <span className="font-medium">{t('performance')}</span>
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -849,7 +882,7 @@ export default function MatchDetailsPage() {
       <main className="pt-24 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
           {/* Back Button */}
-          <Link href={dateParam ? `/predictions?date=${dateParam}` : '/predictions'} className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
+          <Link href={`/worldcup/predictions${groupParam ? `?group=${encodeURIComponent(groupParam)}` : ''}`} className="inline-flex items-center gap-2 text-amber-400 hover:text-white transition-colors mb-6">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>

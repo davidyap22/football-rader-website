@@ -218,6 +218,7 @@ export interface Prematch {
   type: string;
   goals_home: number | null;
   goals_away: number | null;
+  group_cup: string | null;
 }
 
 export interface League {
@@ -225,6 +226,74 @@ export interface League {
   league_logo: string;
   count: number;
 }
+
+export interface TeamStatistics {
+  id: number;
+  team_id: number | null;
+  team_name: string | null;
+  logo: string;
+  team_country: string;
+  team_founded: number | null;
+  league_id: number | null;
+  league_name: string | null;
+  season: number | null;
+  total_played: number | null;
+  total_wins: number | null;
+  total_draws: number | null;
+  total_loses: number | null;
+  goals_for_total: number | null;
+  goals_against_total: number | null;
+  goals_for_average: number | null;
+  goals_against_average: number | null;
+  clean_sheets: number | null;
+  failed_to_score: number | null;
+  yellow_cards_total: number | null;
+  red_cards_total: number | null;
+  form: string | null;
+  most_used_formation: string | null;
+  all_formations: string | null;
+  venue_id: number;
+  venue_name: string;
+  venue_image: string | null;
+  created_at: string | null;
+}
+
+// Get team statistics by league name
+export const getTeamStatisticsByLeague = async (leagueName: string) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('team_statistics')
+      .select('*')
+      .eq('league_name', leagueName)
+      .order('total_wins', { ascending: false });
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    // Calculate points and sort by points, then goal difference
+    const teamsWithPoints: (TeamStatistics & { points: number; goal_difference: number })[] = (data || []).map((team: TeamStatistics) => ({
+      ...team,
+      points: ((team.total_wins || 0) * 3) + (team.total_draws || 0),
+      goal_difference: (team.goals_for_total || 0) - (team.goals_against_total || 0),
+    }));
+
+    // Sort by points, then goal difference, then goals scored
+    teamsWithPoints.sort((a: TeamStatistics & { points: number; goal_difference: number }, b: TeamStatistics & { points: number; goal_difference: number }) => {
+      if (b.points !== a.points) return b.points - a.points;
+      if (b.goal_difference !== a.goal_difference) return b.goal_difference - a.goal_difference;
+      return (b.goals_for_total || 0) - (a.goals_for_total || 0);
+    });
+
+    return { data: teamsWithPoints, error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch team statistics' } };
+  }
+};
 
 export interface OddsHistory {
   id: number;
@@ -361,6 +430,178 @@ export interface ContactMessage {
   message: string;
   created_at?: string;
 }
+
+// Match Prediction interface (AI predictions)
+export interface MatchPrediction {
+  id: number;
+  fixture_id: number;
+  home_team: string;
+  away_team: string;
+  winner_id: number | null;
+  winner_name: string | null;
+  win_or_draw: boolean | null;
+  advice: string | null;
+  under_over: string | null;
+  goals_home: string | null;
+  goals_away: string | null;
+  prob_home: number | null;
+  prob_draw: number | null;
+  prob_away: number | null;
+  strength_home: number | null;
+  strength_away: number | null;
+  attacking_home: number | null;
+  attacking_away: number | null;
+  defensive_home: number | null;
+  defensive_away: number | null;
+  poisson_home: number | null;
+  poisson_away: number | null;
+  h2h_strength_home: number | null;
+  h2h_strength_away: number | null;
+  h2h_goals_home: number | null;
+  h2h_goals_away: number | null;
+}
+
+// Get match prediction by fixture_id
+export const getMatchPrediction = async (fixtureId: number) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('predictions_match')
+      .select('*')
+      .eq('fixture_id', fixtureId)
+      .single();
+
+    if (error) {
+      // No prediction found is not an error
+      if (error.code === 'PGRST116') {
+        return { data: null, error: null };
+      }
+      return { data: null, error };
+    }
+
+    return { data: data as MatchPrediction, error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch prediction' } };
+  }
+};
+
+// Batch fetch predictions for multiple fixtures
+export const getMatchPredictions = async (fixtureIds: number[]) => {
+  if (!supabase || fixtureIds.length === 0) {
+    return { data: null, error: null };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('predictions_match')
+      .select('*')
+      .in('fixture_id', fixtureIds);
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    // Return as a map for easy lookup by fixture_id
+    const predictionsMap: Record<number, MatchPrediction> = {};
+    (data as MatchPrediction[])?.forEach(p => {
+      predictionsMap[p.fixture_id] = p;
+    });
+
+    return { data: predictionsMap, error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch predictions' } };
+  }
+};
+
+// Lineup Summary interface
+export interface LineupSummary {
+  id: number;
+  team_id: number;
+  fixture_id: string;
+  team_name: string;
+  formation: string | null;
+  coach_name: string | null;
+}
+
+// Fixture Player interface
+export interface FixturePlayer {
+  id: number;
+  team_id: number;
+  player_id: number;
+  number: number | null;
+  is_starter: boolean;
+  fixture_id: string;
+  grid: string | null; // Position on pitch like "1:1", "2:3"
+  pos: string | null; // Position: G, D, M, F
+  player_name: string;
+}
+
+// Combined lineup data for a team
+export interface TeamLineup {
+  summary: LineupSummary;
+  starters: FixturePlayer[];
+  substitutes: FixturePlayer[];
+}
+
+// Get lineup data for a fixture
+export const getFixtureLineups = async (fixtureId: number) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    // Fetch lineup summaries for both teams
+    const { data: summaries, error: summaryError } = await supabase
+      .from('lineups_summary')
+      .select('*')
+      .eq('fixture_id', fixtureId.toString());
+
+    if (summaryError) {
+      return { data: null, error: summaryError };
+    }
+
+    if (!summaries || summaries.length === 0) {
+      return { data: null, error: null };
+    }
+
+    // Fetch all players for this fixture
+    const { data: players, error: playersError } = await supabase
+      .from('fixture_players')
+      .select('*')
+      .eq('fixture_id', fixtureId.toString());
+
+    if (playersError) {
+      return { data: null, error: playersError };
+    }
+
+    // Organize data by team
+    const lineups: TeamLineup[] = summaries.map((summary: LineupSummary) => {
+      const teamPlayers = (players || []).filter((p: FixturePlayer) => p.team_id === summary.team_id);
+      return {
+        summary,
+        starters: teamPlayers.filter((p: FixturePlayer) => p.is_starter).sort((a: FixturePlayer, b: FixturePlayer) => {
+          // Sort by grid position (row first, then column)
+          if (!a.grid || !b.grid) return 0;
+          const [aRow, aCol] = a.grid.split(':').map(Number);
+          const [bRow, bCol] = b.grid.split(':').map(Number);
+          if (aRow !== bRow) return aRow - bRow;
+          return aCol - bCol;
+        }),
+        substitutes: teamPlayers.filter((p: FixturePlayer) => !p.is_starter).sort((a: FixturePlayer, b: FixturePlayer) => {
+          // Sort by jersey number
+          return (a.number || 0) - (b.number || 0);
+        }),
+      };
+    });
+
+    return { data: lineups, error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch lineups' } };
+  }
+};
 
 // Submit contact form message
 export const submitContactMessage = async (contactData: Omit<ContactMessage, 'id' | 'created_at'>) => {

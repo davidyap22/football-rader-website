@@ -143,6 +143,10 @@ body {
   }
 }
 
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}
+
 /* Sparkle effect */
 @keyframes sparkle {
   0%, 100% {

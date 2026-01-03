@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef, createContext, useContext, ReactNode } from "react";
 import { supabase, Prematch } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import CookieConsent from "@/components/CookieConsent";
 
 // ============ Translations ============
 const translations: Record<string, Record<string, string>> = {
@@ -12,8 +13,9 @@ const translations: Record<string, Record<string, string>> = {
     // Navbar
     home: "Home",
     predictions: "Predictions",
+    worldcup: "World Cup",
     leagues: "Leagues",
-    analysis: "Performance",
+    performance: "AI Performance",
     community: "Community",
     news: "News",
     pricing: "Pricing",
@@ -154,8 +156,9 @@ const translations: Record<string, Record<string, string>> = {
     // Navbar
     home: "首页",
     predictions: "预测",
+    worldcup: "世界杯",
     leagues: "联赛",
-    analysis: "分析",
+    performance: "AI 分析",
     community: "社区",
     news: "新闻",
     pricing: "价格",
@@ -296,8 +299,9 @@ const translations: Record<string, Record<string, string>> = {
     // Navbar
     home: "首頁",
     predictions: "預測",
+    worldcup: "世界盃",
     leagues: "聯賽",
-    analysis: "分析",
+    performance: "AI 分析",
     community: "社區",
     news: "新聞",
     pricing: "價格",
@@ -438,7 +442,7 @@ const translations: Record<string, Record<string, string>> = {
     home: "Inicio",
     predictions: "Predicciones",
     leagues: "Ligas",
-    analysis: "Análisis",
+    performance: "AI Performance",
     community: "Comunidad",
     news: "Noticias",
     pricing: "Precios",
@@ -517,7 +521,7 @@ const translations: Record<string, Record<string, string>> = {
     home: "Início",
     predictions: "Previsões",
     leagues: "Ligas",
-    analysis: "Análise",
+    performance: "AI Performance",
     community: "Comunidade",
     news: "Notícias",
     pricing: "Preços",
@@ -596,7 +600,7 @@ const translations: Record<string, Record<string, string>> = {
     home: "ホーム",
     predictions: "予測",
     leagues: "リーグ",
-    analysis: "分析",
+    performance: "AI 分析",
     community: "コミュニティ",
     news: "ニュース",
     pricing: "料金",
@@ -675,7 +679,7 @@ const translations: Record<string, Record<string, string>> = {
     home: "홈",
     predictions: "예측",
     leagues: "리그",
-    analysis: "분석",
+    performance: "AI 분석",
     community: "커뮤니티",
     news: "뉴스",
     pricing: "가격",
@@ -754,7 +758,7 @@ const translations: Record<string, Record<string, string>> = {
     home: "Startseite",
     predictions: "Vorhersagen",
     leagues: "Ligen",
-    analysis: "Analyse",
+    performance: "AI Performance",
     community: "Community",
     news: "Nachrichten",
     pricing: "Preise",
@@ -833,7 +837,7 @@ const translations: Record<string, Record<string, string>> = {
     home: "Accueil",
     predictions: "Prédictions",
     leagues: "Ligues",
-    analysis: "Analyse",
+    performance: "AI Performance",
     community: "Communauté",
     news: "Actualités",
     pricing: "Tarifs",
@@ -1047,15 +1051,15 @@ function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
+            {/* Logo - Left */}
+            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Center */}
             <div className="hidden md:flex items-center gap-6">
               {navLinks.map((link) => (
                 <Link
@@ -1069,7 +1073,7 @@ function Navbar() {
             </div>
 
             {/* Right Side - Language, User, Menu Button */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               <LanguageSwitcher />
 
               {user ? (
@@ -1089,6 +1093,21 @@ function Navbar() {
                   <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
                 </>
               )}
+
+              {/* World Cup Special Button - Always Visible */}
+              <Link
+                href="/worldcup"
+                className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
+              >
+                {/* Shimmer effect */}
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                <img
+                  src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png"
+                  alt="FIFA World Cup 2026"
+                  className="h-5 w-auto object-contain relative z-10"
+                />
+                <span className="text-black font-semibold text-sm relative z-10">FIFA 2026</span>
+              </Link>
 
               {/* Mobile Menu Button */}
               <button
@@ -1123,6 +1142,21 @@ function Navbar() {
           {/* Menu Panel */}
           <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
             <div className="px-4 py-4 space-y-1">
+              {/* World Cup Special Entry */}
+              <Link
+                href="/worldcup"
+                onClick={() => setMobileMenuOpen(false)}
+                className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 border-2 border-yellow-300 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
+                <img
+                  src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png"
+                  alt="FIFA World Cup 2026"
+                  className="h-8 w-auto object-contain relative z-10"
+                />
+                <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
+              </Link>
+
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -2231,6 +2265,12 @@ function CTASection() {
   );
 }
 
+// ============ Cookie Consent Wrapper ============
+function CookieConsentWrapper() {
+  const { lang } = useLanguage();
+  return <CookieConsent lang={lang} />;
+}
+
 // ============ Footer ============
 function Footer() {
   const { t } = useLanguage();
@@ -2311,6 +2351,7 @@ export default function Home() {
         <TrustedBySection />
         <FAQSection />
         <Footer />
+        <CookieConsentWrapper />
       </div>
     </LanguageProvider>
   );
