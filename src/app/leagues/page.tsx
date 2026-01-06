@@ -35,6 +35,10 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "Get Started",
     footer: "18+ | Gambling involves risk. Please gamble responsibly.",
     allRights: "© 2025 OddsFlow. All rights reserved.",
+    seoTitle: "European Football AI Tips",
+    seoP1: "OddsFlow provides the most accurate AI football predictor for all major European leagues. Our transparent AI betting platform offers verified AI betting records for Premier League, Bundesliga, Serie A, La Liga, Ligue 1, and Champions League.",
+    seoP2: "Whether you're looking for Premier League 1x2 predictions today, Bundesliga AI betting predictions, or Serie A artificial intelligence picks, our platform delivers data-driven insights powered by advanced machine learning algorithms.",
+    seoP3: "Our best AI for handicap betting analyzes handicap draw predictions, over 2.5 goals stats, and provides comprehensive match analysis. Experience the safest AI football tips with our transparent AI betting results.",
   },
   ES: {
     leagues: "Ligas",
@@ -51,6 +55,10 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "Comenzar",
     footer: "18+ | El juego implica riesgo. Por favor juega responsablemente.",
     allRights: "© 2025 OddsFlow. Todos los derechos reservados.",
+    seoTitle: "Consejos de IA para Fútbol Europeo",
+    seoP1: "OddsFlow ofrece el predictor de fútbol con IA más preciso para todas las principales ligas europeas. Nuestra plataforma transparente de apuestas con IA ofrece registros verificados para Premier League, Bundesliga, Serie A, La Liga, Ligue 1 y Champions League.",
+    seoP2: "Ya sea que busques predicciones 1x2 de la Premier League, predicciones de apuestas con IA de la Bundesliga, o picks de inteligencia artificial de la Serie A, nuestra plataforma ofrece análisis basados en datos impulsados por algoritmos avanzados de aprendizaje automático.",
+    seoP3: "Nuestra mejor IA para apuestas handicap analiza predicciones de empate handicap, estadísticas de más de 2.5 goles y proporciona análisis completos de partidos. Experimenta los consejos de fútbol con IA más seguros con nuestros resultados transparentes.",
   },
   PT: {
     leagues: "Ligas",
@@ -67,6 +75,10 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "Começar",
     footer: "18+ | O jogo envolve risco. Por favor, jogue com responsabilidade.",
     allRights: "© 2025 OddsFlow. Todos os direitos reservados.",
+    seoTitle: "Dicas de IA para Futebol Europeu",
+    seoP1: "OddsFlow oferece o preditor de futebol com IA mais preciso para todas as principais ligas europeias. Nossa plataforma transparente de apostas com IA oferece registros verificados para Premier League, Bundesliga, Serie A, La Liga, Ligue 1 e Champions League.",
+    seoP2: "Seja você procurando previsões 1x2 da Premier League, previsões de apostas com IA da Bundesliga, ou picks de inteligência artificial da Serie A, nossa plataforma oferece insights baseados em dados impulsionados por algoritmos avançados de aprendizado de máquina.",
+    seoP3: "Nossa melhor IA para apostas handicap analisa previsões de empate handicap, estatísticas de mais de 2.5 gols e fornece análises abrangentes de partidas. Experimente as dicas de futebol com IA mais seguras com nossos resultados transparentes.",
   },
   DE: {
     leagues: "Ligen",
@@ -83,6 +95,10 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "Loslegen",
     footer: "18+ | Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
     allRights: "© 2025 OddsFlow. Alle Rechte vorbehalten.",
+    seoTitle: "KI-Tipps für Europäischen Fußball",
+    seoP1: "OddsFlow bietet den genauesten KI-Fußballprediktor für alle großen europäischen Ligen. Unsere transparente KI-Wettplattform bietet verifizierte Wettaufzeichnungen für Premier League, Bundesliga, Serie A, La Liga, Ligue 1 und Champions League.",
+    seoP2: "Ob Sie nach Premier League 1x2-Vorhersagen, Bundesliga KI-Wettvorhersagen oder Serie A-Picks mit künstlicher Intelligenz suchen, unsere Plattform liefert datengesteuerte Einblicke durch fortschrittliche maschinelle Lernalgorithmen.",
+    seoP3: "Unsere beste KI für Handicap-Wetten analysiert Handicap-Unentschieden-Vorhersagen, über 2,5 Tore-Statistiken und bietet umfassende Spielanalysen. Erleben Sie die sichersten KI-Fußballtipps mit unseren transparenten Wettergebnissen.",
   },
   FR: {
     leagues: "Ligues",
@@ -99,6 +115,10 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "Commencer",
     footer: "18+ | Les jeux d'argent comportent des risques. Jouez de manière responsable.",
     allRights: "© 2025 OddsFlow. Tous droits réservés.",
+    seoTitle: "Conseils IA pour le Football Européen",
+    seoP1: "OddsFlow offre le prédicteur de football IA le plus précis pour toutes les grandes ligues européennes. Notre plateforme de paris IA transparente offre des records de paris vérifiés pour la Premier League, la Bundesliga, la Serie A, La Liga, la Ligue 1 et la Champions League.",
+    seoP2: "Que vous cherchiez des prédictions 1x2 de Premier League, des prédictions de paris IA de Bundesliga, ou des picks d'intelligence artificielle de Serie A, notre plateforme fournit des analyses basées sur les données grâce à des algorithmes d'apprentissage automatique avancés.",
+    seoP3: "Notre meilleure IA pour les paris handicap analyse les prédictions de match nul handicap, les statistiques de plus de 2,5 buts et fournit des analyses de match complètes. Découvrez les conseils de football IA les plus sûrs avec nos résultats de paris transparents.",
   },
   JA: {
     leagues: "リーグ",
@@ -115,6 +135,10 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "始める",
     footer: "18+ | ギャンブルにはリスクが伴います。責任を持ってプレイしてください。",
     allRights: "© 2025 OddsFlow. All rights reserved.",
+    seoTitle: "欧州サッカーAI予測",
+    seoP1: "OddsFlowは、すべての主要欧州リーグで最も正確なAIサッカー予測を提供します。当社の透明なAIベッティングプラットフォームは、プレミアリーグ、ブンデスリーガ、セリエA、ラ・リーガ、リーグ1、チャンピオンズリーグの検証済みベッティング記録を提供します。",
+    seoP2: "プレミアリーグの1x2予測、ブンデスリーガのAIベッティング予測、セリエAの人工知能ピックをお探しの場合でも、当社のプラットフォームは高度な機械学習アルゴリズムによるデータ駆動型の分析を提供します。",
+    seoP3: "ハンディキャップベッティングに最適な当社のAIは、ハンディキャップドロー予測、2.5ゴール以上の統計を分析し、包括的な試合分析を提供します。透明なAIベッティング結果で最も安全なサッカー予測をお楽しみください。",
   },
   KO: {
     leagues: "리그",
@@ -131,6 +155,10 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "시작하기",
     footer: "18+ | 도박에는 위험이 따릅니다. 책임감 있게 플레이하세요.",
     allRights: "© 2025 OddsFlow. All rights reserved.",
+    seoTitle: "유럽 축구 AI 예측",
+    seoP1: "OddsFlow는 모든 주요 유럽 리그에서 가장 정확한 AI 축구 예측을 제공합니다. 당사의 투명한 AI 베팅 플랫폼은 프리미어리그, 분데스리가, 세리에 A, 라리가, 리그 1, 챔피언스 리그에 대한 검증된 베팅 기록을 제공합니다.",
+    seoP2: "프리미어리그 1x2 예측, 분데스리가 AI 베팅 예측, 세리에 A 인공지능 픽을 찾고 계시든, 당사 플랫폼은 고급 머신러닝 알고리즘을 통해 데이터 기반 분석을 제공합니다.",
+    seoP3: "핸디캡 베팅을 위한 최고의 AI는 핸디캡 무승부 예측, 2.5 이상 골 통계를 분석하고 포괄적인 경기 분석을 제공합니다. 투명한 AI 베팅 결과로 가장 안전한 축구 예측을 경험하세요.",
   },
   '中文': {
     leagues: "联赛",
@@ -147,6 +175,10 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "开始使用",
     footer: "18+ | 赌博有风险，请理性参与。",
     allRights: "© 2025 OddsFlow. 保留所有权利。",
+    seoTitle: "欧洲足球AI预测",
+    seoP1: "OddsFlow为所有主要欧洲联赛提供最精准的AI足球预测。我们透明的AI投注平台为英超、德甲、意甲、西甲、法甲和欧冠提供经过验证的投注记录。",
+    seoP2: "无论您是在寻找英超1x2预测、德甲AI投注预测，还是意甲人工智能选择，我们的平台都通过先进的机器学习算法提供数据驱动的分析。",
+    seoP3: "我们最优秀的让球投注AI分析让球平局预测、2.5球以上统计数据，并提供全面的比赛分析。通过我们透明的AI投注结果，体验最安全的足球预测。",
   },
   '繁體': {
     leagues: "聯賽",
@@ -163,6 +195,10 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "開始使用",
     footer: "18+ | 賭博有風險，請理性參與。",
     allRights: "© 2025 OddsFlow. 保留所有權利。",
+    seoTitle: "歐洲足球AI預測",
+    seoP1: "OddsFlow為所有主要歐洲聯賽提供最精準的AI足球預測。我們透明的AI投注平台為英超、德甲、意甲、西甲、法甲和歐冠提供經過驗證的投注記錄。",
+    seoP2: "無論您是在尋找英超1x2預測、德甲AI投注預測，還是意甲人工智能選擇，我們的平台都通過先進的機器學習算法提供數據驅動的分析。",
+    seoP3: "我們最優秀的讓球投注AI分析讓球平局預測、2.5球以上統計數據，並提供全面的比賽分析。通過我們透明的AI投注結果，體驗最安全的足球預測。",
   },
 };
 
@@ -536,16 +572,10 @@ export default function LeaguesPage() {
 
           {/* SEO Content Section */}
           <div className="mt-16 p-8 rounded-2xl bg-gradient-to-br from-gray-900/50 to-gray-950/50 border border-white/5">
-            <h2 className="text-2xl font-bold text-white mb-4">European Football AI Tips</h2>
-            <p className="text-gray-400 mb-4">
-              OddsFlow provides the most accurate AI football predictor for all major European leagues. Our transparent AI betting platform offers verified AI betting records for Premier League, Bundesliga, Serie A, La Liga, Ligue 1, and Champions League.
-            </p>
-            <p className="text-gray-400 mb-4">
-              Whether you&apos;re looking for Premier League 1x2 predictions today, Bundesliga AI betting predictions, or Serie A artificial intelligence picks, our platform delivers data-driven insights powered by advanced machine learning algorithms.
-            </p>
-            <p className="text-gray-400">
-              Our best AI for handicap betting analyzes handicap draw predictions, over 2.5 goals stats, and provides comprehensive match analysis. Experience the safest AI football tips with our transparent AI betting results.
-            </p>
+            <h2 className="text-2xl font-bold text-white mb-4">{t('seoTitle')}</h2>
+            <p className="text-gray-400 mb-4">{t('seoP1')}</p>
+            <p className="text-gray-400 mb-4">{t('seoP2')}</p>
+            <p className="text-gray-400">{t('seoP3')}</p>
           </div>
         </div>
       </main>
