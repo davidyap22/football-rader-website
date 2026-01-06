@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { supabase, TeamStatistics, getTeamStatisticsByLeague } from '@/lib/supabase';
+import { supabase, TeamStatistics, getTeamStatisticsByLeague, PlayerStats, getPlayerStatsByTeam } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 
 // Extended team type with calculated fields
@@ -32,6 +32,8 @@ export default function LeagueDetailPage() {
   const [user, setUser] = useState<User | null>(null);
   const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null);
   const [selectedFormations, setSelectedFormations] = useState<Record<number, string>>({});
+  const [playerStats, setPlayerStats] = useState<Record<number, PlayerStats[]>>({});
+  const [loadingPlayers, setLoadingPlayers] = useState<number | null>(null);
 
   // Check auth session
   useEffect(() => {
@@ -58,6 +60,32 @@ export default function LeagueDetailPage() {
 
     fetchStats();
   }, [leagueConfig]);
+
+  // Handle team expansion and fetch player stats
+  const handleTeamClick = async (team: TeamWithStats) => {
+    console.log('Team clicked:', team.team_name, 'team_id:', team.team_id);
+
+    if (expandedTeamId === team.id) {
+      setExpandedTeamId(null);
+      return;
+    }
+
+    setExpandedTeamId(team.id);
+
+    // Fetch player stats if not already loaded
+    if (team.team_id && !playerStats[team.team_id]) {
+      console.log('Fetching players for team_id:', team.team_id);
+      setLoadingPlayers(team.team_id);
+      const { data, error } = await getPlayerStatsByTeam(team.team_id);
+      console.log('Player stats result:', { data, error, count: data?.length });
+      if (data && !error) {
+        setPlayerStats(prev => ({ ...prev, [team.team_id!]: data }));
+      }
+      setLoadingPlayers(null);
+    } else {
+      console.log('No team_id or already loaded:', { team_id: team.team_id, hasData: team.team_id ? !!playerStats[team.team_id] : false });
+    }
+  };
 
   // Render football pitch with formation
   const renderFormationPitch = (formation: string | null) => {
@@ -245,14 +273,25 @@ export default function LeagueDetailPage() {
           </Link>
 
           {/* Header */}
-          <div className="flex items-center gap-4 md:gap-6 mb-8">
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white flex items-center justify-center p-3">
-              <img src={leagueConfig.logo} alt={leagueConfig.name} className="w-full h-full object-contain" />
+          <div className="flex items-center justify-between gap-4 md:gap-6 mb-8">
+            <div className="flex items-center gap-4 md:gap-6">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white flex items-center justify-center p-3">
+                <img src={leagueConfig.logo} alt={leagueConfig.name} className="w-full h-full object-contain" />
+              </div>
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-white">{leagueConfig.name}</h1>
+                <p className="text-emerald-400 text-lg">{leagueConfig.country} {teamStats.length > 0 ? `• ${teamStats[0]?.season || 2024} Season` : ''}</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white">{leagueConfig.name}</h1>
-              <p className="text-emerald-400 text-lg">{leagueConfig.country} {teamStats.length > 0 ? `• ${teamStats[0]?.season || 2024} Season` : ''}</p>
-            </div>
+            <Link
+              href={`/leagues/${leagueSlug}/player`}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-400 font-medium hover:from-emerald-500/30 hover:to-cyan-500/30 transition-all border border-emerald-500/30"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              View All Players
+            </Link>
           </div>
 
           {/* Stats Summary */}
@@ -305,14 +344,14 @@ export default function LeagueDetailPage() {
                       <th className="text-center py-4 px-2 font-semibold">GD</th>
                       <th className="text-center py-4 px-2 font-semibold">Pts</th>
                       <th className="text-center py-4 px-4 font-semibold hidden md:table-cell">Form</th>
+                      <th className="text-center py-4 px-4 font-semibold"></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {teamStats.map((team, index) => (
-                      <>
+                      <React.Fragment key={team.id}>
                         <tr
-                          key={team.id}
-                          onClick={() => setExpandedTeamId(expandedTeamId === team.id ? null : team.id)}
+                          onClick={() => handleTeamClick(team)}
                           className={`hover:bg-white/5 transition-colors cursor-pointer ${
                             index < 4 ? 'border-l-2 border-l-emerald-500' :
                             index >= teamStats.length - 3 ? 'border-l-2 border-l-red-500' : ''
@@ -362,11 +401,20 @@ export default function LeagueDetailPage() {
                               {renderForm(team.form)}
                             </div>
                           </td>
+                          <td className="py-4 px-4 text-center">
+                            <Link
+                              href={`/leagues/${leagueSlug}/${team.team_name?.toLowerCase().replace(/\s+/g, '-')}`}
+                              onClick={(e) => e.stopPropagation()}
+                              className="px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/30 transition-colors border border-cyan-500/30"
+                            >
+                              Profile
+                            </Link>
+                          </td>
                         </tr>
                         {/* Expanded Team Details */}
                         {expandedTeamId === team.id && (
                           <tr key={`${team.id}-details`} className="bg-gradient-to-r from-emerald-500/5 to-cyan-500/5">
-                            <td colSpan={11} className="py-6 px-4">
+                            <td colSpan={12} className="py-6 px-4">
                               <div className="flex flex-col lg:flex-row gap-6">
                                 {/* Formation Pitch */}
                                 <div className="flex-shrink-0">
@@ -439,12 +487,115 @@ export default function LeagueDetailPage() {
                                       </p>
                                     </div>
                                   </div>
+
+                                  {/* Player Stats Section */}
+                                  <div className="mt-6">
+                                    <p className="text-gray-400 text-xs uppercase tracking-wider mb-3">Squad Players</p>
+                                    {loadingPlayers === team.team_id ? (
+                                      <div className="flex items-center justify-center py-8">
+                                        <div className="w-6 h-6 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
+                                      </div>
+                                    ) : team.team_id && playerStats[team.team_id] && playerStats[team.team_id].length > 0 ? (
+                                      <div className="overflow-x-auto rounded-xl border border-white/10">
+                                        <table className="w-full min-w-[700px]">
+                                          <thead className="bg-gray-900/80">
+                                            <tr className="text-[10px] text-gray-400 uppercase tracking-wider">
+                                              <th className="text-left py-2.5 px-3 font-semibold">Player</th>
+                                              <th className="text-center py-2.5 px-2 font-semibold">Pos</th>
+                                              <th className="text-center py-2.5 px-2 font-semibold">Age</th>
+                                              <th className="text-center py-2.5 px-2 font-semibold">Apps</th>
+                                              <th className="text-center py-2.5 px-2 font-semibold">Mins</th>
+                                              <th className="text-center py-2.5 px-2 font-semibold">Goals</th>
+                                              <th className="text-center py-2.5 px-2 font-semibold">Assists</th>
+                                              <th className="text-center py-2.5 px-2 font-semibold">Rating</th>
+                                              <th className="text-center py-2.5 px-2 font-semibold">Y/R</th>
+                                              <th className="text-center py-2.5 px-2 font-semibold"></th>
+                                            </tr>
+                                          </thead>
+                                          <tbody className="divide-y divide-white/5">
+                                            {playerStats[team.team_id].map((player) => (
+                                              <tr key={player.id} className="hover:bg-white/5 transition-colors">
+                                                <td className="py-2.5 px-3">
+                                                  <div className="flex items-center gap-2">
+                                                    {player.photo ? (
+                                                      <img src={player.photo} alt={player.player_name || ''} className="w-8 h-8 rounded-full object-cover bg-gray-700" />
+                                                    ) : (
+                                                      <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-xs">
+                                                        {player.player_name?.charAt(0) || '?'}
+                                                      </div>
+                                                    )}
+                                                    <div>
+                                                      <div className="flex items-center gap-1.5">
+                                                        <span className="text-white text-sm font-medium">{player.player_name}</span>
+                                                        {player.captain && (
+                                                          <span className="px-1 py-0.5 text-[9px] font-bold bg-amber-500 text-black rounded">C</span>
+                                                        )}
+                                                        {player.injured && (
+                                                          <span className="px-1 py-0.5 text-[9px] font-bold bg-red-500 text-white rounded">INJ</span>
+                                                        )}
+                                                      </div>
+                                                      <span className="text-gray-500 text-[10px]">{player.nationality}</span>
+                                                    </div>
+                                                  </div>
+                                                </td>
+                                                <td className="text-center py-2.5 px-2">
+                                                  <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                                                    player.position === 'Goalkeeper' ? 'bg-yellow-500/20 text-yellow-400' :
+                                                    player.position === 'Defender' ? 'bg-blue-500/20 text-blue-400' :
+                                                    player.position === 'Midfielder' ? 'bg-green-500/20 text-green-400' :
+                                                    'bg-red-500/20 text-red-400'
+                                                  }`}>
+                                                    {player.position?.substring(0, 3).toUpperCase() || '-'}
+                                                  </span>
+                                                </td>
+                                                <td className="text-center py-2.5 px-2 text-gray-300 text-sm">{player.age || '-'}</td>
+                                                <td className="text-center py-2.5 px-2 text-gray-300 text-sm">{player.appearances || 0}</td>
+                                                <td className="text-center py-2.5 px-2 text-gray-400 text-sm">{player.minutes || 0}</td>
+                                                <td className="text-center py-2.5 px-2 text-emerald-400 font-semibold text-sm">{player.goals_total || 0}</td>
+                                                <td className="text-center py-2.5 px-2 text-cyan-400 font-semibold text-sm">{player.assists || 0}</td>
+                                                <td className="text-center py-2.5 px-2">
+                                                  {player.rating ? (
+                                                    <span className={`px-1.5 py-0.5 rounded text-xs font-bold ${
+                                                      player.rating >= 7.5 ? 'bg-emerald-500/20 text-emerald-400' :
+                                                      player.rating >= 7 ? 'bg-green-500/20 text-green-400' :
+                                                      player.rating >= 6.5 ? 'bg-yellow-500/20 text-yellow-400' :
+                                                      'bg-red-500/20 text-red-400'
+                                                    }`}>
+                                                      {Number(player.rating).toFixed(1)}
+                                                    </span>
+                                                  ) : (
+                                                    <span className="text-gray-500 text-sm">-</span>
+                                                  )}
+                                                </td>
+                                                <td className="text-center py-2.5 px-2">
+                                                  <span className="text-yellow-400 text-sm">{player.cards_yellow || 0}</span>
+                                                  <span className="text-gray-600 mx-0.5">/</span>
+                                                  <span className="text-red-400 text-sm">{player.cards_red || 0}</span>
+                                                </td>
+                                                <td className="text-center py-2.5 px-2">
+                                                  <Link
+                                                    href={`/leagues/${leagueSlug}/player/${player.player_id}`}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/30 transition-colors"
+                                                  >
+                                                    View Profile
+                                                  </Link>
+                                                </td>
+                                              </tr>
+                                            ))}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    ) : (
+                                      <p className="text-gray-500 text-sm py-4">No player data available</p>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </td>
                           </tr>
                         )}
-                      </>
+                      </React.Fragment>
                     ))}
                   </tbody>
                 </table>

@@ -102,6 +102,13 @@ export const supabase = supabaseUrl && supabaseKey
   ? createClient(supabaseUrl, supabaseKey)
   : null as any;
 
+// ============ SEPARATE CHAT SUPABASE CLIENT ============
+// Chat functionality uses a different Supabase instance (for global chat only)
+const chatSupabaseUrl = 'https://rlvmlnwnaejhotlnhbpi.supabase.co';
+const chatSupabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsdm1sbnduYWVqaG90bG5oYnBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU2NDkxNzYsImV4cCI6MjA4MTIyNTE3Nn0.5VUchXN2-P3-jcfZXyL37RN9A9DCXonFYqpjDOl3YJY';
+
+export const chatSupabase = createClient(chatSupabaseUrl, chatSupabaseKey);
+
 // Auth helper functions
 export const signUpWithEmail = async (email: string, password: string, fullName: string) => {
   const { data, error } = await supabase.auth.signUp({
@@ -292,6 +299,154 @@ export const getTeamStatisticsByLeague = async (leagueName: string) => {
     return { data: teamsWithPoints, error: null };
   } catch (err) {
     return { data: null, error: { message: 'Failed to fetch team statistics' } };
+  }
+};
+
+// Player Statistics interface
+export interface PlayerStats {
+  id: number;
+  player_id: number | null;
+  player_name: string | null;
+  firstname: string | null;
+  lastname: string | null;
+  photo: string | null;
+  age: number | null;
+  birth_date: string | null;
+  birth_country: string | null;
+  nationality: string | null;
+  height: string | null;
+  weight: string | null;
+  injured: boolean | null;
+  position: string | null;
+  number: number | null;
+  captain: boolean | null;
+  rating: number | null;
+  team_id: number | null;
+  team_name: string | null;
+  team_logo: string | null;
+  league_id: number | null;
+  league_name: string | null;
+  league_logo: string | null;
+  season: number | null;
+  appearances: number | null;
+  lineups: number | null;
+  minutes: number | null;
+  goals_total: number | null;
+  conceded: number | null;
+  assists: number | null;
+  shots_total: number | null;
+  shots_on: number | null;
+  passes_total: number | null;
+  passes_key: number | null;
+  tackles_total: number | null;
+  interceptions: number | null;
+  duels_total: number | null;
+  duels_won: number | null;
+  fouls_drawn: number | null;
+  fouls_committed: number | null;
+  cards_yellow: number | null;
+  cards_red: number | null;
+  penalty_scored: number | null;
+  penalty_missed: number | null;
+  created_at: string | null;
+}
+
+// Get player stats by team ID
+export const getPlayerStatsByTeam = async (teamId: number) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('player_stats')
+      .select('*')
+      .eq('team_id', teamId)
+      .order('rating', { ascending: false, nullsFirst: false });
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data: data as PlayerStats[], error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch player stats' } };
+  }
+};
+
+// Get team statistics by team name (for team profile page)
+export const getTeamStatsByName = async (teamName: string, leagueName: string) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    // Convert slug back to team name (e.g., "manchester-city" -> "Manchester City")
+    const normalizedName = teamName
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
+    const { data, error } = await supabase
+      .from('team_statistics')
+      .select('*')
+      .eq('league_name', leagueName)
+      .ilike('team_name', normalizedName)
+      .single();
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data: data as TeamStatistics, error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch team stats' } };
+  }
+};
+
+// Get all player stats by league name
+export const getPlayerStatsByLeague = async (leagueName: string) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('player_stats')
+      .select('*')
+      .ilike('league_name', leagueName)
+      .order('rating', { ascending: false, nullsFirst: false });
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data: data as PlayerStats[], error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch player stats' } };
+  }
+};
+
+// Get player stats by player ID
+export const getPlayerStatsById = async (playerId: number) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('player_stats')
+      .select('*')
+      .eq('player_id', playerId)
+      .single();
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data: data as PlayerStats, error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch player stats' } };
   }
 };
 
@@ -906,47 +1061,50 @@ export const getCommentStats = async () => {
 
 export interface ChatMessage {
   id: string;
-  fixture_id: number | null; // null = global chat, number = match-specific chat
-  user_id: string;
+  match_id: string | null; // null = global chat, string = match-specific chat
+  sender_name: string;
   content: string;
+  role?: string;
   created_at: string;
 }
 
-// Get chat messages (global or match-specific)
-export const getChatMessages = async (fixtureId?: number | null, limit: number = 50) => {
-  if (!supabase) {
-    return { data: null, error: { message: 'Supabase client not initialized' } };
+// Get chat messages (global or match-specific) - uses chatSupabase
+export const getChatMessages = async (matchId?: string | null, limit: number = 50) => {
+  if (!chatSupabase) {
+    console.error('chatSupabase is null');
+    return { data: null, error: { message: 'Chat Supabase client not initialized' } };
   }
 
   try {
-    let query = supabase
-      .from('chat_messages')
+    console.log('Fetching from global_chat_messages...');
+
+    const { data, error, status, statusText } = await chatSupabase
+      .from('global_chat_messages')
       .select('*')
       .order('created_at', { ascending: true })
       .limit(limit);
 
-    if (fixtureId === null || fixtureId === undefined) {
-      query = query.is('fixture_id', null); // Global chat
-    } else {
-      query = query.eq('fixture_id', fixtureId); // Match-specific chat
-    }
-
-    const { data, error } = await query;
+    console.log('Supabase response - status:', status, 'statusText:', statusText);
+    console.log('Supabase data:', data);
+    console.log('Supabase error:', error);
 
     if (error) {
+      console.error('getChatMessages error details:', JSON.stringify(error, null, 2));
       return { data: null, error };
     }
 
+    console.log('getChatMessages success:', data?.length, 'messages');
     return { data, error: null };
   } catch (err) {
+    console.error('getChatMessages exception:', err);
     return { data: null, error: { message: 'Failed to fetch chat messages' } };
   }
 };
 
-// Send chat message
-export const sendChatMessage = async (userId: string, content: string, fixtureId?: number | null) => {
-  if (!supabase) {
-    return { data: null, error: { message: 'Supabase client not initialized' } };
+// Send chat message - uses chatSupabase
+export const sendChatMessage = async (senderName: string, content: string, matchId?: string | null) => {
+  if (!chatSupabase) {
+    return { data: null, error: { message: 'Chat Supabase client not initialized' } };
   }
 
   // Input validation
@@ -958,7 +1116,7 @@ export const sendChatMessage = async (userId: string, content: string, fixtureId
   }
 
   // Rate limiting - max 3 messages per second
-  if (!checkRateLimit(`chat-${userId}`, 3)) {
+  if (!checkRateLimit(`chat-${senderName}`, 3)) {
     return { data: null, error: { message: 'Too many messages. Please wait.' } };
   }
 
@@ -966,17 +1124,19 @@ export const sendChatMessage = async (userId: string, content: string, fixtureId
   const sanitizedContent = sanitizeInput(content);
 
   try {
-    const { data, error } = await supabase
-      .from('chat_messages')
+    const { data, error } = await chatSupabase
+      .from('global_chat_messages')
       .insert({
-        user_id: userId,
+        sender_name: senderName,
         content: sanitizedContent,
-        fixture_id: fixtureId ?? null,
+        match_id: matchId ?? null,
+        role: 'user',
       })
       .select()
       .single();
 
     if (error) {
+      console.error('sendChatMessage error:', error);
       return { data: null, error };
     }
 
@@ -986,30 +1146,39 @@ export const sendChatMessage = async (userId: string, content: string, fixtureId
   }
 };
 
-// Subscribe to chat messages (real-time)
+// Subscribe to chat messages (real-time) - uses chatSupabase
 export const subscribeToChatMessages = (
-  fixtureId: number | null,
+  matchId: string | null,
   onMessage: (message: ChatMessage) => void,
   onStatusChange?: (status: string) => void
 ) => {
-  if (!supabase) {
+  if (!chatSupabase) {
     return null;
   }
 
-  const channel = supabase
-    .channel(`chat-${fixtureId ?? 'global'}-${Date.now()}`)
-    .on(
-      'postgres_changes',
-      {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'chat_messages',
-        filter: fixtureId === null ? 'fixture_id=is.null' : `fixture_id=eq.${fixtureId}`,
-      },
-      (payload: { new: ChatMessage }) => {
-        onMessage(payload.new);
-      }
-    )
+  // For global chat, subscribe to all messages (no filter)
+  // For match-specific, filter by match_id
+  const subscriptionConfig: {
+    event: 'INSERT';
+    schema: string;
+    table: string;
+    filter?: string;
+  } = {
+    event: 'INSERT',
+    schema: 'public',
+    table: 'global_chat_messages',
+  };
+
+  // Only add filter for match-specific chat
+  if (matchId !== null) {
+    subscriptionConfig.filter = `match_id=eq.${matchId}`;
+  }
+
+  const channel = chatSupabase
+    .channel(`chat-${matchId ?? 'global'}-${Date.now()}`)
+    .on('postgres_changes', subscriptionConfig, (payload: { new: ChatMessage }) => {
+      onMessage(payload.new);
+    })
     .subscribe((status: string) => {
       console.log('Realtime subscription status:', status);
       if (onStatusChange) {
@@ -1020,9 +1189,9 @@ export const subscribeToChatMessages = (
   return channel;
 };
 
-// Get online users count (approximate based on recent chat activity)
+// Get online users count (approximate based on recent chat activity) - uses chatSupabase
 export const getOnlineUsersCount = async () => {
-  if (!supabase) {
+  if (!chatSupabase) {
     return { data: 0, error: null };
   }
 
@@ -1030,12 +1199,12 @@ export const getOnlineUsersCount = async () => {
     const fiveMinutesAgo = new Date();
     fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 5);
 
-    const { data } = await supabase
-      .from('chat_messages')
-      .select('user_id')
+    const { data } = await chatSupabase
+      .from('global_chat_messages')
+      .select('sender_name')
       .gte('created_at', fiveMinutesAgo.toISOString());
 
-    const uniqueUsers = new Set(data?.map((m: { user_id: string }) => m.user_id)).size;
+    const uniqueUsers = new Set(data?.map((m: { sender_name: string }) => m.sender_name)).size;
     return { data: uniqueUsers, error: null };
   } catch (err) {
     return { data: 0, error: null };
@@ -1060,14 +1229,14 @@ export interface ReactionCount {
   users: string[];
 }
 
-// Get reactions for messages
+// Get reactions for messages - uses chatSupabase
 export const getMessageReactions = async (messageIds: string[]) => {
-  if (!supabase || messageIds.length === 0) {
+  if (!chatSupabase || messageIds.length === 0) {
     return { data: {}, error: null };
   }
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await chatSupabase
       .from('chat_reactions')
       .select('*')
       .in('message_id', messageIds);
@@ -1091,15 +1260,15 @@ export const getMessageReactions = async (messageIds: string[]) => {
   }
 };
 
-// Toggle reaction on a message
+// Toggle reaction on a message - uses chatSupabase
 export const toggleMessageReaction = async (messageId: string, userId: string, reactionType: string) => {
-  if (!supabase) {
-    return { data: null, error: { message: 'Supabase client not initialized' } };
+  if (!chatSupabase) {
+    return { data: null, error: { message: 'Chat Supabase client not initialized' } };
   }
 
   try {
     // Check if user already reacted
-    const { data: existing } = await supabase
+    const { data: existing } = await chatSupabase
       .from('chat_reactions')
       .select('*')
       .eq('message_id', messageId)
@@ -1109,14 +1278,14 @@ export const toggleMessageReaction = async (messageId: string, userId: string, r
     if (existing) {
       if (existing.reaction_type === reactionType) {
         // Same reaction - remove it
-        await supabase
+        await chatSupabase
           .from('chat_reactions')
           .delete()
           .eq('id', existing.id);
         return { data: { action: 'removed' }, error: null };
       } else {
         // Different reaction - update it
-        await supabase
+        await chatSupabase
           .from('chat_reactions')
           .update({ reaction_type: reactionType })
           .eq('id', existing.id);
@@ -1124,7 +1293,7 @@ export const toggleMessageReaction = async (messageId: string, userId: string, r
       }
     } else {
       // No existing reaction - add new one
-      await supabase
+      await chatSupabase
         .from('chat_reactions')
         .insert({
           message_id: messageId,

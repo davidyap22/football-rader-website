@@ -406,7 +406,7 @@ function PredictionsContent() {
 
         // Fetch predictions for all matches
         if (data && data.length > 0) {
-          const fixtureIds = data.map((m: Prematch) => m.id);
+          const fixtureIds = data.map((m: Prematch) => m.fixture_id);
           const { data: predictionsData } = await getMatchPredictions(fixtureIds);
           if (predictionsData) {
             setPredictions(predictionsData);
@@ -880,21 +880,32 @@ function PredictionsContent() {
                         </div>
 
                         {/* AI Prediction Info - Only for Scheduled/In Play */}
-                        {match.type !== 'Finished' && predictions[match.id] && (
-                          <div className="flex items-center justify-between gap-2 text-xs">
-                            <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/20">
-                              <span className="text-gray-400">Winner:</span>
-                              <span className="text-emerald-400 font-medium truncate max-w-[80px]">
-                                {predictions[match.id].winner_name || 'Draw'}
+                        {match.type !== 'Finished' && predictions[match.fixture_id] && (
+                          <div className="flex flex-col gap-2 text-xs">
+                            {/* Predicted Winner */}
+                            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30">
+                              <span className="text-amber-400">🏆</span>
+                              <span className="text-emerald-400 font-semibold truncate">
+                                {predictions[match.fixture_id].winner_name || 'Draw'}
                               </span>
                             </div>
-                            <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20">
-                              <span className="text-gray-400">H:</span>
-                              <span className="text-blue-400 font-medium">{predictions[match.id].goals_home || '-'}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-green-500/10 border border-green-500/20">
-                              <span className="text-gray-400">A:</span>
-                              <span className="text-green-400 font-medium">{predictions[match.id].goals_away || '-'}</span>
+                            {/* Win Probabilities */}
+                            <div className="flex items-center gap-1.5">
+                              <div className="flex-1 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20 text-center">
+                                <span className="text-blue-400 font-bold text-[11px]">
+                                  {predictions[match.fixture_id].prob_home ? `${Math.round(predictions[match.fixture_id].prob_home!)}%` : '-'}
+                                </span>
+                              </div>
+                              <div className="flex-1 px-2 py-1 rounded bg-gray-500/10 border border-gray-500/20 text-center">
+                                <span className="text-gray-400 font-bold text-[11px]">
+                                  {predictions[match.fixture_id].prob_draw ? `${Math.round(predictions[match.fixture_id].prob_draw!)}%` : '-'}
+                                </span>
+                              </div>
+                              <div className="flex-1 px-2 py-1 rounded bg-green-500/10 border border-green-500/20 text-center">
+                                <span className="text-green-400 font-bold text-[11px]">
+                                  {predictions[match.fixture_id].prob_away ? `${Math.round(predictions[match.fixture_id].prob_away!)}%` : '-'}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         )}
@@ -963,26 +974,35 @@ function PredictionsContent() {
 
                         {/* AI Prediction - Only for Scheduled/In Play */}
                         <div className="col-span-4 text-right">
-                          {match.type !== 'Finished' && predictions[match.id] ? (
+                          {match.type !== 'Finished' && predictions[match.fixture_id] ? (
                             <div className="inline-flex items-center gap-2 text-xs">
-                              <div className="flex items-center gap-1 px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/20">
-                                <span className="text-gray-400">Winner:</span>
-                                <span className="text-emerald-400 font-medium truncate max-w-[100px]">
-                                  {predictions[match.id].winner_name || 'Draw'}
+                              {/* Predicted Winner */}
+                              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30">
+                                <span className="text-amber-400">🏆</span>
+                                <span className="text-emerald-400 font-semibold truncate max-w-[100px]">
+                                  {predictions[match.fixture_id].winner_name || 'Draw'}
                                 </span>
                               </div>
-                              <div className="flex items-center gap-1 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20">
-                                <span className="text-gray-400">H:</span>
-                                <span className="text-blue-400 font-medium">{predictions[match.id].goals_home || '-'}</span>
-                              </div>
-                              <div className="flex items-center gap-1 px-2 py-1 rounded bg-green-500/10 border border-green-500/20">
-                                <span className="text-gray-400">A:</span>
-                                <span className="text-green-400 font-medium">{predictions[match.id].goals_away || '-'}</span>
+                              {/* Win Probabilities */}
+                              <div className="flex items-center gap-1 px-2 py-1.5 rounded-lg bg-white/5 border border-white/10">
+                                <div className="px-1.5 py-0.5 rounded bg-blue-500/20 text-center">
+                                  <span className="text-blue-400 font-bold text-[10px]">
+                                    {predictions[match.fixture_id].prob_home ? `${Math.round(predictions[match.fixture_id].prob_home!)}%` : '-'}
+                                  </span>
+                                </div>
+                                <div className="px-1.5 py-0.5 rounded bg-gray-500/20 text-center">
+                                  <span className="text-gray-400 font-bold text-[10px]">
+                                    {predictions[match.fixture_id].prob_draw ? `${Math.round(predictions[match.fixture_id].prob_draw!)}%` : '-'}
+                                  </span>
+                                </div>
+                                <div className="px-1.5 py-0.5 rounded bg-green-500/20 text-center">
+                                  <span className="text-green-400 font-bold text-[10px]">
+                                    {predictions[match.fixture_id].prob_away ? `${Math.round(predictions[match.fixture_id].prob_away!)}%` : '-'}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          ) : match.type === 'Finished' ? null : (
-                            <span className="text-gray-500 text-xs">No prediction</span>
-                          )}
+                          ) : null}
                         </div>
                       </div>
                     </Link>

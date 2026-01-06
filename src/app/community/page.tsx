@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
-import { supabase, Prematch, MatchComment, ChatMessage, ChatReaction, CommentReaction, getMatchComments, addComment, toggleCommentLike, deleteComment, getCommentStats, getChatMessages, sendChatMessage, subscribeToChatMessages, getMessageReactions, toggleMessageReaction, getCommentReactions, toggleCommentReaction } from '@/lib/supabase';
+import { supabase, chatSupabase, Prematch, MatchComment, ChatMessage, ChatReaction, CommentReaction, getMatchComments, addComment, toggleCommentLike, deleteComment, getCommentStats, getChatMessages, sendChatMessage, subscribeToChatMessages, getMessageReactions, toggleMessageReaction, getCommentReactions, toggleCommentReaction } from '@/lib/supabase';
 
 const LANGUAGES = [
   { code: 'EN', name: 'English', flag: '🇬🇧' },
@@ -212,7 +212,7 @@ function ChatRoom({
   useEffect(() => {
     const loadMessages = async () => {
       setLoading(true);
-      const { data } = await getChatMessages(fixtureId, 100);
+      const { data } = await getChatMessages(fixtureId ? String(fixtureId) : null, 100);
       if (data) {
         setMessages(data);
       }
@@ -227,7 +227,7 @@ function ChatRoom({
     let isRealtimeConnected = false;
 
     const channel = subscribeToChatMessages(
-      fixtureId,
+      fixtureId ? String(fixtureId) : null,
       (newMessage) => {
         // Only add if not already in the list (avoid duplicates from optimistic updates)
         setMessages(prev => {
@@ -235,7 +235,7 @@ function ChatRoom({
           if (exists) return prev;
           // Also remove any temp message with same content from same user
           const filtered = prev.filter(m =>
-            !(m.id.startsWith('temp-') && m.user_id === newMessage.user_id && m.content === newMessage.content)
+            !(m.id.startsWith('temp-') && m.sender_name === newMessage.sender_name && m.content === newMessage.content)
           );
           return [...filtered, newMessage];
         });
@@ -246,7 +246,7 @@ function ChatRoom({
         if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
           if (!pollingInterval) {
             pollingInterval = setInterval(async () => {
-              const { data } = await getChatMessages(fixtureId, 100);
+              const { data } = await getChatMessages(fixtureId ? String(fixtureId) : null, 100);
               if (data) {
                 setMessages(data);
               }
@@ -259,7 +259,7 @@ function ChatRoom({
     // Fallback: always poll every 5 seconds as backup
     const backupPolling = setInterval(async () => {
       if (!isRealtimeConnected) {
-        const { data } = await getChatMessages(fixtureId, 100);
+        const { data } = await getChatMessages(fixtureId ? String(fixtureId) : null, 100);
         if (data) {
           setMessages(prev => {
             // Merge new messages without duplicates
@@ -273,7 +273,7 @@ function ChatRoom({
 
     return () => {
       if (channel) {
-        supabase.removeChannel(channel);
+        chatSupabase.removeChannel(channel);
       }
       if (pollingInterval) {
         clearInterval(pollingInterval);
@@ -364,20 +364,22 @@ function ChatRoom({
     if (!user || !input.trim()) return;
 
     const content = input.trim();
+    const senderName = user.user_metadata?.full_name || user.email?.split('@')[0] || `User${user.id.substring(0, 4)}`;
     setInput('');
 
     // Optimistic update - show message immediately
     const optimisticMessage: ChatMessage = {
       id: `temp-${Date.now()}`,
-      fixture_id: fixtureId,
-      user_id: user.id,
+      match_id: fixtureId ? String(fixtureId) : null,
+      sender_name: senderName,
       content: content,
+      role: 'user',
       created_at: new Date().toISOString(),
     };
     setMessages(prev => [...prev, optimisticMessage]);
 
-    // Send to database
-    const { data, error } = await sendChatMessage(user.id, content, fixtureId);
+    // Send to database - pass sender_name and match_id as string
+    const { data, error } = await sendChatMessage(senderName, content, fixtureId ? String(fixtureId) : null);
 
     if (error) {
       // Remove optimistic message if failed
@@ -390,17 +392,13 @@ function ChatRoom({
   };
 
   const getUserDisplay = (message: ChatMessage) => {
-    if (user?.id === message.user_id) {
-      return {
-        name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'You',
-        avatar: user.user_metadata?.avatar_url || user.user_metadata?.picture,
-        isMe: true,
-      };
-    }
+    const currentUserName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '';
+    const isMe = message.sender_name === currentUserName;
+
     return {
-      name: `User${message.user_id.substring(0, 4)}`,
-      avatar: null,
-      isMe: false,
+      name: message.sender_name || 'Anonymous',
+      avatar: isMe ? (user?.user_metadata?.avatar_url || user?.user_metadata?.picture) : null,
+      isMe: isMe,
     };
   };
 
