@@ -182,7 +182,7 @@ export default function DashboardPage() {
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-emerald-500/30 hover:bg-white/10 transition-all cursor-pointer">
                 {getAvatarUrl() ? (
-                  <img src={getAvatarUrl()!} alt="" className="w-8 h-8 rounded-full" />
+                  <img src={getAvatarUrl()!} alt="" className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
                     {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0)?.toUpperCase() || 'U'}
@@ -279,7 +279,7 @@ export default function DashboardPage() {
                 {/* User Mini Profile */}
                 <div className="flex items-center gap-3 p-3 mb-4 rounded-xl bg-white/5">
                   {getAvatarUrl() ? (
-                    <img src={getAvatarUrl()!} alt="" className="w-10 h-10 rounded-full" />
+                    <img src={getAvatarUrl()!} alt="" className="w-10 h-10 rounded-full" referrerPolicy="no-referrer" />
                   ) : (
                     <div className="w-10 h-10 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
                       {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0)?.toUpperCase() || 'U'}
@@ -340,6 +340,7 @@ export default function DashboardPage() {
                             src={getAvatarUrl()!}
                             alt="Profile"
                             className="w-28 h-28 rounded-full object-cover border-4 border-emerald-500/30"
+                            referrerPolicy="no-referrer"
                           />
                         ) : (
                           <div className="w-28 h-28 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-4xl font-bold text-black">
