@@ -624,6 +624,7 @@ export default function MatchDetailsPage() {
         !isRefresh ? getFixtureLineups(matchData.fixture_id) : Promise.resolve({ data: null }),
       ]);
       if (predictionResult?.data) {
+        console.log('[DEBUG] Full prediction data:', JSON.stringify(predictionResult.data, null, 2));
         setMatchPrediction(predictionResult.data);
       }
       if (lineupsResult?.data) {
