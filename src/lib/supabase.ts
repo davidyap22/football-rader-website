@@ -627,17 +627,14 @@ export const getMatchPrediction = async (fixtureId: number) => {
       .from('predictions_match')
       .select('*')
       .eq('fixture_id', fixtureId)
-      .single();
+      .limit(1);
 
     if (error) {
-      // No prediction found is not an error
-      if (error.code === 'PGRST116') {
-        return { data: null, error: null };
-      }
       return { data: null, error };
     }
 
-    return { data: data as MatchPrediction, error: null };
+    // Return first result or null if no results
+    return { data: data && data.length > 0 ? data[0] as MatchPrediction : null, error: null };
   } catch (err) {
     return { data: null, error: { message: 'Failed to fetch prediction' } };
   }
