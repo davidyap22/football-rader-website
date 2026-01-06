@@ -574,7 +574,7 @@ export default function LeagueDetailPage() {
                                                 </td>
                                                 <td className="text-center py-2.5 px-2">
                                                   <Link
-                                                    href={`/leagues/${leagueSlug}/player/${player.player_id}`}
+                                                    href={`/leagues/${leagueSlug}/player/${player.id}`}
                                                     onClick={(e) => e.stopPropagation()}
                                                     className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/30 transition-colors"
                                                   >
