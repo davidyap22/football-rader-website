@@ -624,7 +624,6 @@ export default function MatchDetailsPage() {
         !isRefresh ? getFixtureLineups(matchData.fixture_id) : Promise.resolve({ data: null }),
       ]);
       if (predictionResult?.data) {
-        console.log('[DEBUG] Full prediction data:', JSON.stringify(predictionResult.data, null, 2));
         setMatchPrediction(predictionResult.data);
       }
       if (lineupsResult?.data) {
@@ -1005,7 +1004,7 @@ export default function MatchDetailsPage() {
             {/* Collapsible Content */}
             <div className={`grid transition-all duration-300 ease-in-out ${showComparison ? 'grid-rows-[1fr] opacity-100 mt-6' : 'grid-rows-[0fr] opacity-0 mt-0'}`}>
               <div className="overflow-hidden">
-                {!matchPrediction ? (
+                {!matchPrediction || (!matchPrediction.winner_name && !matchPrediction.prob_home && !matchPrediction.strength_home) ? (
                   <div className="text-center py-12">
                     <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
                       <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
