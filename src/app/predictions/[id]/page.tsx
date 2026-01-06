@@ -613,6 +613,7 @@ export default function MatchDetailsPage() {
   // Fetch all data (match + odds + AI predictions + lineups)
   const fetchAllData = useCallback(async (isRefresh: boolean = false) => {
     const matchData = await fetchMatch(isRefresh);
+    console.log('[DEBUG] Match data:', matchData?.id, matchData?.fixture_id, matchData?.home_name, 'vs', matchData?.away_name);
     if (matchData?.fixture_id) {
       // Fetch odds, AI predictions, match prediction, and lineups in parallel
       const personality = PERSONALITIES.find(p => p.id === selectedPersonality);
@@ -623,12 +624,15 @@ export default function MatchDetailsPage() {
         // Only fetch lineups on initial load, not on refresh
         !isRefresh ? getFixtureLineups(matchData.fixture_id) : Promise.resolve({ data: null }),
       ]);
+      console.log('[DEBUG] Prediction result for fixture_id', matchData.fixture_id, ':', predictionResult);
       if (predictionResult?.data) {
         setMatchPrediction(predictionResult.data);
       }
       if (lineupsResult?.data) {
         setLineups(lineupsResult.data);
       }
+    } else {
+      console.log('[DEBUG] No fixture_id found for match');
     }
   }, [fetchMatch, fetchOdds, fetchAIPredictions, selectedPersonality]);
 
