@@ -167,7 +167,7 @@ export default function AllPlayersPage() {
             {filteredPlayers.map((player) => (
               <Link
                 key={player.id}
-                href={`/leagues/${leagueSlug}/player/${player.player_id}`}
+                href={`/leagues/${leagueSlug}/player/${player.id}`}
                 className="group p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/50 border border-white/10 hover:border-emerald-500/30 transition-all hover:shadow-lg hover:shadow-emerald-500/10"
               >
                 <div className="flex items-start gap-4">

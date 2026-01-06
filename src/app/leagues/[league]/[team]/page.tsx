@@ -555,7 +555,7 @@ export default function TeamProfilePage() {
                               </td>
                               <td className="text-center py-3 px-3">
                                 <Link
-                                  href={`/leagues/${leagueSlug}/player/${player.player_id}`}
+                                  href={`/leagues/${leagueSlug}/player/${player.id}`}
                                   className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors border border-emerald-500/20"
                                 >
                                   View Profile

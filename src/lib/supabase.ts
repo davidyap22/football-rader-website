@@ -427,8 +427,8 @@ export const getPlayerStatsByLeague = async (leagueName: string) => {
   }
 };
 
-// Get player stats by player ID
-export const getPlayerStatsById = async (playerId: number) => {
+// Get player stats by row ID
+export const getPlayerStatsById = async (id: number) => {
   if (!supabase) {
     return { data: null, error: { message: 'Supabase client not initialized' } };
   }
@@ -437,7 +437,7 @@ export const getPlayerStatsById = async (playerId: number) => {
     const { data, error } = await supabase
       .from('player_stats')
       .select('*')
-      .eq('player_id', playerId)
+      .eq('id', id)
       .single();
 
     if (error) {
