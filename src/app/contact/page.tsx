@@ -14,6 +14,7 @@ const LANGUAGES = [
   { code: 'KO', name: '한국어', flag: '🇰🇷' },
   { code: '中文', name: '简体中文', flag: '🇨🇳' },
   { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
 ];
 
 const translations: Record<string, Record<string, string>> = {
@@ -35,7 +36,26 @@ const translations: Record<string, Record<string, string>> = {
     sending: "Sending...",
     followUs: "Follow Us",
     responseTime: "We typically respond within 24 hours",
-    footer: "© 2025 OddsFlow. All rights reserved.",
+    footer: "© 2026 OddsFlow. All rights reserved.",
+    // Footer
+    product: "Product",
+    liveOdds: "AI Performance",
+    solution: "Solution",
+    popularLeagues: "Popular Leagues",
+    communityFooter: "Community",
+    globalChat: "Global Chat",
+    userPredictions: "User Predictions",
+    todayMatches: "Today Matches",
+    company: "Company",
+    aboutUs: "About Us",
+    contact: "Contact",
+    blog: "Blog",
+    legal: "Legal",
+    termsOfService: "Terms of Service",
+    privacyPolicy: "Privacy Policy",
+    allRightsReserved: "All rights reserved.",
+    gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
+    disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
     successTitle: "Message Sent!",
     successMessage: "Thank you for contacting us. We'll get back to you within 24 hours.",
     sendAnother: "Send Another Message",
@@ -55,7 +75,26 @@ const translations: Record<string, Record<string, string>> = {
     sending: "Enviando...",
     followUs: "Síguenos",
     responseTime: "Normalmente respondemos en 24 horas",
-    footer: "© 2025 OddsFlow. Todos los derechos reservados.",
+    footer: "© 2026 OddsFlow. Todos los derechos reservados.",
+    // Footer
+    product: "Producto",
+    liveOdds: "Rendimiento IA",
+    solution: "Solución",
+    popularLeagues: "Ligas Populares",
+    communityFooter: "Comunidad",
+    globalChat: "Chat Global",
+    userPredictions: "Predicciones de Usuarios",
+    todayMatches: "Partidos de Hoy",
+    company: "Empresa",
+    aboutUs: "Sobre Nosotros",
+    contact: "Contacto",
+    blog: "Blog",
+    legal: "Legal",
+    termsOfService: "Términos de Servicio",
+    privacyPolicy: "Política de Privacidad",
+    allRightsReserved: "Todos los derechos reservados.",
+    gamblingWarning: "El juego implica riesgo. Por favor juegue responsablemente.",
+    disclaimer: "Aviso: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento. No garantizamos la precisión de las predicciones y no somos responsables de ninguna pérdida financiera. El juego implica riesgo. Por favor juegue responsablemente. Si usted o alguien que conoce tiene un problema de juego, busque ayuda. Los usuarios deben tener más de 18 años.",
     successTitle: "¡Mensaje Enviado!",
     successMessage: "Gracias por contactarnos. Te responderemos en 24 horas.",
     sendAnother: "Enviar Otro Mensaje",
@@ -75,7 +114,26 @@ const translations: Record<string, Record<string, string>> = {
     sending: "Enviando...",
     followUs: "Siga-nos",
     responseTime: "Normalmente respondemos em 24 horas",
-    footer: "© 2025 OddsFlow. Todos os direitos reservados.",
+    footer: "© 2026 OddsFlow. Todos os direitos reservados.",
+    // Footer
+    product: "Produto",
+    liveOdds: "Desempenho IA",
+    solution: "Solução",
+    popularLeagues: "Ligas Populares",
+    communityFooter: "Comunidade",
+    globalChat: "Chat Global",
+    userPredictions: "Previsões de Usuários",
+    todayMatches: "Jogos de Hoje",
+    company: "Empresa",
+    aboutUs: "Sobre Nós",
+    contact: "Contato",
+    blog: "Blog",
+    legal: "Legal",
+    termsOfService: "Termos de Serviço",
+    privacyPolicy: "Política de Privacidade",
+    allRightsReserved: "Todos os direitos reservados.",
+    gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
+    disclaimer: "Aviso: OddsFlow fornece previsões baseadas em IA apenas para fins informativos e de entretenimento. Não garantimos a precisão das previsões e não somos responsáveis por quaisquer perdas financeiras. Apostas envolvem risco. Por favor aposte com responsabilidade. Se você ou alguém que conhece tem um problema com jogos, procure ajuda. Usuários devem ter mais de 18 anos.",
     successTitle: "Mensagem Enviada!",
     successMessage: "Obrigado por entrar em contato. Responderemos em 24 horas.",
     sendAnother: "Enviar Outra Mensagem",
@@ -95,7 +153,26 @@ const translations: Record<string, Record<string, string>> = {
     sending: "Wird gesendet...",
     followUs: "Folgen Sie uns",
     responseTime: "Wir antworten normalerweise innerhalb von 24 Stunden",
-    footer: "© 2025 OddsFlow. Alle Rechte vorbehalten.",
+    footer: "© 2026 OddsFlow. Alle Rechte vorbehalten.",
+    // Footer
+    product: "Produkt",
+    liveOdds: "KI-Leistung",
+    solution: "Lösung",
+    popularLeagues: "Beliebte Ligen",
+    communityFooter: "Community",
+    globalChat: "Globaler Chat",
+    userPredictions: "Benutzer-Vorhersagen",
+    todayMatches: "Heutige Spiele",
+    company: "Unternehmen",
+    aboutUs: "Über uns",
+    contact: "Kontakt",
+    blog: "Blog",
+    legal: "Rechtliches",
+    termsOfService: "Nutzungsbedingungen",
+    privacyPolicy: "Datenschutz",
+    allRightsReserved: "Alle Rechte vorbehalten.",
+    gamblingWarning: "Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
+    disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestützte Vorhersagen nur zu Informations- und Unterhaltungszwecken. Wir garantieren nicht die Genauigkeit der Vorhersagen und sind nicht verantwortlich für finanzielle Verluste. Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll. Wenn Sie oder jemand, den Sie kennen, ein Glücksspielproblem hat, suchen Sie bitte Hilfe. Benutzer müssen über 18 Jahre alt sein.",
     successTitle: "Nachricht Gesendet!",
     successMessage: "Vielen Dank für Ihre Kontaktaufnahme. Wir melden uns innerhalb von 24 Stunden.",
     sendAnother: "Weitere Nachricht Senden",
@@ -115,7 +192,26 @@ const translations: Record<string, Record<string, string>> = {
     sending: "Envoi en cours...",
     followUs: "Suivez-nous",
     responseTime: "Nous répondons généralement dans les 24 heures",
-    footer: "© 2025 OddsFlow. Tous droits réservés.",
+    footer: "© 2026 OddsFlow. Tous droits réservés.",
+    // Footer
+    product: "Produit",
+    liveOdds: "Performance IA",
+    solution: "Solution",
+    popularLeagues: "Ligues Populaires",
+    communityFooter: "Communauté",
+    globalChat: "Chat Global",
+    userPredictions: "Prédictions Utilisateurs",
+    todayMatches: "Matchs du Jour",
+    company: "Entreprise",
+    aboutUs: "À Propos",
+    contact: "Contact",
+    blog: "Blog",
+    legal: "Mentions Légales",
+    termsOfService: "Conditions d'Utilisation",
+    privacyPolicy: "Politique de Confidentialité",
+    allRightsReserved: "Tous droits réservés.",
+    gamblingWarning: "Le jeu comporte des risques. Veuillez jouer de manière responsable.",
+    disclaimer: "Avertissement : OddsFlow fournit des prédictions basées sur l'IA à des fins d'information et de divertissement uniquement. Nous ne garantissons pas l'exactitude des prédictions et ne sommes pas responsables des pertes financières. Le jeu comporte des risques. Veuillez jouer de manière responsable. Si vous ou quelqu'un que vous connaissez a un problème de jeu, veuillez demander de l'aide. Les utilisateurs doivent avoir plus de 18 ans.",
     successTitle: "Message Envoyé!",
     successMessage: "Merci de nous avoir contactés. Nous vous répondrons dans les 24 heures.",
     sendAnother: "Envoyer un Autre Message",
@@ -135,7 +231,26 @@ const translations: Record<string, Record<string, string>> = {
     sending: "送信中...",
     followUs: "フォローする",
     responseTime: "通常24時間以内に返信いたします",
-    footer: "© 2025 OddsFlow. 全著作権所有。",
+    footer: "© 2026 OddsFlow. 全著作権所有。",
+    // Footer
+    product: "製品",
+    liveOdds: "AI分析",
+    solution: "ソリューション",
+    popularLeagues: "人気リーグ",
+    communityFooter: "コミュニティ",
+    globalChat: "グローバルチャット",
+    userPredictions: "ユーザー予測",
+    todayMatches: "今日の試合",
+    company: "会社",
+    aboutUs: "会社概要",
+    contact: "お問い合わせ",
+    blog: "ブログ",
+    legal: "法的情報",
+    termsOfService: "利用規約",
+    privacyPolicy: "プライバシーポリシー",
+    allRightsReserved: "全著作権所有。",
+    gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
+    disclaimer: "免責事項：OddsFlowはAI駆動の予測を情報および娯楽目的のみで提供しています。予測の正確性を保証するものではなく、いかなる財務損失についても責任を負いません。ギャンブルにはリスクが伴います。責任を持ってお楽しみください。あなたまたはあなたの知人がギャンブル問題を抱えている場合は、助けを求めてください。ユーザーは18歳以上である必要があります。",
     successTitle: "送信完了!",
     successMessage: "お問い合わせありがとうございます。24時間以内にご返信いたします。",
     sendAnother: "別のメッセージを送る",
@@ -155,7 +270,26 @@ const translations: Record<string, Record<string, string>> = {
     sending: "전송 중...",
     followUs: "팔로우",
     responseTime: "보통 24시간 이내에 답변드립니다",
-    footer: "© 2025 OddsFlow. 모든 권리 보유.",
+    footer: "© 2026 OddsFlow. 모든 권리 보유.",
+    // Footer
+    product: "제품",
+    liveOdds: "AI 분석",
+    solution: "솔루션",
+    popularLeagues: "인기 리그",
+    communityFooter: "커뮤니티",
+    globalChat: "글로벌 채팅",
+    userPredictions: "사용자 예측",
+    todayMatches: "오늘의 경기",
+    company: "회사",
+    aboutUs: "회사 소개",
+    contact: "연락처",
+    blog: "블로그",
+    legal: "법적 정보",
+    termsOfService: "서비스 약관",
+    privacyPolicy: "개인정보 처리방침",
+    allRightsReserved: "모든 권리 보유.",
+    gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
+    disclaimer: "면책조항: OddsFlow는 정보 및 엔터테인먼트 목적으로만 AI 기반 예측을 제공합니다. 예측의 정확성을 보장하지 않으며 재정적 손실에 대해 책임지지 않습니다. 도박에는 위험이 따릅니다. 책임감 있게 베팅하세요. 본인 또는 아는 사람이 도박 문제가 있다면 도움을 구하세요. 사용자는 18세 이상이어야 합니다.",
     successTitle: "메시지 전송 완료!",
     successMessage: "문의해 주셔서 감사합니다. 24시간 이내에 답변 드리겠습니다.",
     sendAnother: "다른 메시지 보내기",
@@ -175,7 +309,26 @@ const translations: Record<string, Record<string, string>> = {
     sending: "发送中...",
     followUs: "关注我们",
     responseTime: "我们通常在24小时内回复",
-    footer: "© 2025 OddsFlow. 版权所有。",
+    footer: "© 2026 OddsFlow. 版权所有。",
+    // Footer
+    product: "产品",
+    liveOdds: "AI分析",
+    solution: "解决方案",
+    popularLeagues: "热门联赛",
+    communityFooter: "社区",
+    globalChat: "全球聊天",
+    userPredictions: "用户预测",
+    todayMatches: "今日比赛",
+    company: "公司",
+    aboutUs: "关于我们",
+    contact: "联系我们",
+    blog: "博客",
+    legal: "法律",
+    termsOfService: "服务条款",
+    privacyPolicy: "隐私政策",
+    allRightsReserved: "版权所有。",
+    gamblingWarning: "博彩有风险，请理性投注。",
+    disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。我们不保证预测的准确性，也不对任何财务损失负责。博彩有风险，请理性投注。如果您或您认识的人有赌博问题，请寻求帮助。用户必须年满 18 岁。",
     successTitle: "发送成功!",
     successMessage: "感谢您的留言。我们将在24小时内回复您。",
     sendAnother: "发送另一条消息",
@@ -195,11 +348,69 @@ const translations: Record<string, Record<string, string>> = {
     sending: "發送中...",
     followUs: "關注我們",
     responseTime: "我們通常在24小時內回覆",
-    footer: "© 2025 OddsFlow. 版權所有。",
+    footer: "© 2026 OddsFlow. 版權所有。",
+    // Footer
+    product: "產品",
+    liveOdds: "AI分析",
+    solution: "解決方案",
+    popularLeagues: "熱門聯賽",
+    communityFooter: "社區",
+    globalChat: "全球聊天",
+    userPredictions: "用戶預測",
+    todayMatches: "今日比賽",
+    company: "公司",
+    aboutUs: "關於我們",
+    contact: "聯繫我們",
+    blog: "部落格",
+    legal: "法律",
+    termsOfService: "服務條款",
+    privacyPolicy: "隱私政策",
+    allRightsReserved: "版權所有。",
+    gamblingWarning: "博彩有風險，請理性投注。",
+    disclaimer: "免責聲明：OddsFlow 提供的 AI 預測僅供參考和娛樂目的。我們不保證預測的準確性，也不對任何財務損失負責。博彩有風險，請理性投注。如果您或您認識的人有賭博問題，請尋求幫助。用戶必須年滿 18 歲。",
     successTitle: "發送成功!",
     successMessage: "感謝您的留言。我們將在24小時內回覆您。",
     sendAnother: "發送另一條訊息",
     errorMessage: "發送失敗，請重試。",
+  },
+  ID: {
+    home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI",
+    community: "Komunitas", news: "Berita", pricing: "Harga", login: "Masuk", getStarted: "Mulai",
+    contactTitle: "Hubungi Kami",
+    contactSubtitle: "Kami senang mendengar dari Anda. Hubungi tim kami.",
+    generalInquiries: "Pertanyaan Umum",
+    generalEmail: "support@oddsflow.com",
+    businessInquiries: "Pertanyaan Bisnis",
+    businessEmail: "business@oddsflow.com",
+    sendMessage: "Kirim Pesan",
+    name: "Nama", email: "Email", subject: "Subjek", message: "Pesan", send: "Kirim",
+    sending: "Mengirim...",
+    followUs: "Ikuti Kami",
+    responseTime: "Kami biasanya merespons dalam 24 jam",
+    footer: "© 2026 OddsFlow. Hak cipta dilindungi.",
+    // Footer
+    product: "Produk",
+    liveOdds: "Performa AI",
+    solution: "Solusi",
+    popularLeagues: "Liga Populer",
+    communityFooter: "Komunitas",
+    globalChat: "Obrolan Global",
+    userPredictions: "Prediksi Pengguna",
+    todayMatches: "Pertandingan Hari Ini",
+    company: "Perusahaan",
+    aboutUs: "Tentang Kami",
+    contact: "Kontak",
+    blog: "Blog",
+    legal: "Hukum",
+    termsOfService: "Ketentuan Layanan",
+    privacyPolicy: "Kebijakan Privasi",
+    allRightsReserved: "Hak cipta dilindungi.",
+    gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    disclaimer: "Penafian: OddsFlow menyediakan prediksi bertenaga AI hanya untuk tujuan informasi dan hiburan. Kami tidak menjamin keakuratan prediksi dan tidak bertanggung jawab atas kerugian finansial. Perjudian melibatkan risiko. Harap bertaruh dengan bijak. Jika Anda atau seseorang yang Anda kenal memiliki masalah perjudian, silakan cari bantuan. Pengguna harus berusia 18+ tahun.",
+    successTitle: "Pesan Terkirim!",
+    successMessage: "Terima kasih telah menghubungi kami. Kami akan membalas dalam 24 jam.",
+    sendAnother: "Kirim Pesan Lain",
+    errorMessage: "Gagal mengirim pesan. Silakan coba lagi.",
   },
 };
 
@@ -607,63 +818,85 @@ export default function ContactPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 px-4 bg-black border-t border-white/5">
+      <footer className="relative z-10 py-16 px-4 bg-black border-t border-white/5">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-5 gap-12 mb-12">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 lg:gap-12 mb-12">
+            <div className="col-span-2">
               <Link href="/" className="flex items-center gap-3 mb-6">
                 <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
                 <span className="text-xl font-bold">OddsFlow</span>
               </Link>
               <p className="text-gray-400 mb-6 leading-relaxed">AI-powered football odds analysis for smarter predictions. Make data-driven decisions with real-time insights.</p>
-              <div className="flex gap-4">
-                {/* Facebook */}
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                  </svg>
-                </a>
-                {/* Instagram */}
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-                  </svg>
-                </a>
-                {/* Telegram */}
-                <a href="#" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-                  </svg>
-                </a>
+              <div className="flex items-center gap-4">
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </Link>
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </Link>
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                </Link>
               </div>
             </div>
+
             <div>
-              <h4 className="font-semibold mb-5 text-white">Product</h4>
+              <h4 className="font-semibold mb-5 text-white">{t('product')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">Predictions</Link></li>
-                <li><Link href="/leagues" className="hover:text-emerald-400 transition-colors">Leagues</Link></li>
-                <li><Link href="/performance" className="hover:text-emerald-400 transition-colors">AI Performance</Link></li>
+                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
+                <li><Link href="/leagues" className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
+                <li><Link href="/performance" className="hover:text-emerald-400 transition-colors">{t('liveOdds')}</Link></li>
+                <li><Link href="/solution" className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
               </ul>
             </div>
+
             <div>
-              <h4 className="font-semibold mb-5 text-white">Company</h4>
+              <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/about" className="hover:text-emerald-400 transition-colors">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Contact</Link></li>
-                <li><Link href="/blog" className="hover:text-emerald-400 transition-colors">Blog</Link></li>
+                <li><Link href="/leagues/premier-league" className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
+                <li><Link href="/leagues/la-liga" className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
+                <li><Link href="/leagues/serie-a" className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
+                <li><Link href="/leagues/bundesliga" className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
+                <li><Link href="/leagues/ligue-1" className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
+                <li><Link href="/leagues/champions-league" className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
               </ul>
             </div>
+
             <div>
-              <h4 className="font-semibold mb-5 text-white">Legal</h4>
+              <h4 className="font-semibold mb-5 text-white">{t('communityFooter')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/terms-of-service" className="hover:text-emerald-400 transition-colors">Terms of Service</Link></li>
-                <li><Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/community" className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
+                <li><Link href="/community/global-chat" className="hover:text-emerald-400 transition-colors">{t('globalChat')}</Link></li>
+                <li><Link href="/community/user-predictions" className="hover:text-emerald-400 transition-colors">{t('userPredictions')}</Link></li>
+              </ul>
+            </div>
+
+            <div className="relative z-10">
+              <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/about" className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+                <li><Link href="/blog" className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
+              </ul>
+            </div>
+
+            <div className="relative z-10">
+              <h4 className="font-semibold mb-5 text-white">{t('legal')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/terms-of-service" className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
               </ul>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-gray-500 text-sm">{t('footer')}</p>
-            <p className="text-gray-600 text-xs">Gambling involves risk. Please gamble responsibly.</p>
+
+          {/* Disclaimer */}
+          <div className="mt-8 pt-8 border-t border-white/5">
+            <p className="text-gray-500 text-xs leading-relaxed">{t('disclaimer')}</p>
+          </div>
+
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 mt-8">
+            <p className="text-gray-500 text-sm">&copy; 2026 OddsFlow. {t('allRightsReserved')}</p>
+            <p className="text-gray-600 text-xs">{t('gamblingWarning')}</p>
           </div>
         </div>
       </footer>

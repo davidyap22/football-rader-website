@@ -16,6 +16,7 @@ const LANGUAGES = [
   { code: 'KO', name: '한국어', flag: '🇰🇷' },
   { code: '中文', name: '简体中文', flag: '🇨🇳' },
   { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
 ];
 
 // Translations
@@ -30,15 +31,40 @@ const translations: Record<string, Record<string, string>> = {
     performance: "AI Performance",
     community: "Community",
     news: "News",
+    solution: "Solution",
     pricing: "Pricing",
     login: "Log In",
     getStarted: "Get Started",
     footer: "18+ | Gambling involves risk. Please gamble responsibly.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "AI-powered football odds analysis for smarter predictions. Make data-driven decisions with real-time insights.",
+    product: "Product",
+    company: "Company",
+    legal: "Legal",
+    aboutUs: "About Us",
+    contact: "Contact",
+    blog: "Blog",
+    termsOfService: "Terms of Service",
+    privacyPolicy: "Privacy Policy",
+    allRightsReserved: "All rights reserved.",
+    gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
     seoTitle: "European Football AI Tips",
     seoP1: "OddsFlow provides the most accurate AI football predictor for all major European leagues. Our transparent AI betting platform offers verified AI betting records for Premier League, Bundesliga, Serie A, La Liga, Ligue 1, and Champions League.",
     seoP2: "Whether you're looking for Premier League 1x2 predictions today, Bundesliga AI betting predictions, or Serie A artificial intelligence picks, our platform delivers data-driven insights powered by advanced machine learning algorithms.",
     seoP3: "Our best AI for handicap betting analyzes handicap draw predictions, over 2.5 goals stats, and provides comprehensive match analysis. Experience the safest AI football tips with our transparent AI betting results.",
+    popularLeagues: "Popular Leagues",
+    aiPredictionsFooter: "AI Predictions",
+    aiFootballPredictions: "AI Football Predictions",
+    onextwoPredictions: "1x2 Predictions",
+    overUnderTips: "Over/Under Tips",
+    handicapBetting: "Handicap Betting",
+    aiBettingPerformance: "AI Betting Performance",
+    footballTipsToday: "Football Tips Today",
+    communityFooter: "Community",
+    globalChat: "Global Chat",
+    userPredictions: "User Predictions",
+    todayMatches: "Today Matches",
+    disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
   },
   ES: {
     leagues: "Ligas",
@@ -47,18 +73,43 @@ const translations: Record<string, Record<string, string>> = {
     comingSoonDesc: "Estamos trabajando para ofrecerte cobertura completa de ligas",
     home: "Inicio",
     predictions: "Predicciones",
-    performance: "Análisis",
+    performance: "Rendimiento IA",
     community: "Comunidad",
     news: "Noticias",
+    solution: "Solución",
     pricing: "Precios",
     login: "Iniciar Sesión",
     getStarted: "Comenzar",
     footer: "18+ | El juego implica riesgo. Por favor juega responsablemente.",
-    allRights: "© 2025 OddsFlow. Todos los derechos reservados.",
+    allRights: "© 2026 OddsFlow. Todos los derechos reservados.",
+    footerDesc: "Analisis de cuotas de futbol impulsado por IA para predicciones mas inteligentes.",
+    product: "Producto",
+    company: "Empresa",
+    legal: "Legal",
+    aboutUs: "Sobre Nosotros",
+    contact: "Contacto",
+    blog: "Blog",
+    termsOfService: "Terminos de Servicio",
+    privacyPolicy: "Politica de Privacidad",
+    allRightsReserved: "Todos los derechos reservados.",
+    gamblingWarning: "El juego implica riesgo. Por favor juega responsablemente.",
     seoTitle: "Consejos de IA para Fútbol Europeo",
     seoP1: "OddsFlow ofrece el predictor de fútbol con IA más preciso para todas las principales ligas europeas. Nuestra plataforma transparente de apuestas con IA ofrece registros verificados para Premier League, Bundesliga, Serie A, La Liga, Ligue 1 y Champions League.",
     seoP2: "Ya sea que busques predicciones 1x2 de la Premier League, predicciones de apuestas con IA de la Bundesliga, o picks de inteligencia artificial de la Serie A, nuestra plataforma ofrece análisis basados en datos impulsados por algoritmos avanzados de aprendizaje automático.",
     seoP3: "Nuestra mejor IA para apuestas handicap analiza predicciones de empate handicap, estadísticas de más de 2.5 goles y proporciona análisis completos de partidos. Experimenta los consejos de fútbol con IA más seguros con nuestros resultados transparentes.",
+    popularLeagues: "Ligas Populares",
+    aiPredictionsFooter: "Predicciones IA",
+    aiFootballPredictions: "Predicciones de Fútbol IA",
+    onextwoPredictions: "Predicciones 1x2",
+    overUnderTips: "Consejos Over/Under",
+    handicapBetting: "Apuestas Hándicap",
+    aiBettingPerformance: "Rendimiento de Apuestas IA",
+    footballTipsToday: "Tips de Fútbol Hoy",
+    communityFooter: "Comunidad",
+    globalChat: "Chat Global",
+    userPredictions: "Predicciones de Usuarios",
+    todayMatches: "Partidos de Hoy",
+    disclaimer: "Aviso: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento. No se garantizan ganancias. Por favor, apueste de manera responsable.",
   },
   PT: {
     leagues: "Ligas",
@@ -67,18 +118,43 @@ const translations: Record<string, Record<string, string>> = {
     comingSoonDesc: "Estamos trabalhando para trazer cobertura completa das ligas",
     home: "Início",
     predictions: "Previsões",
-    performance: "Análise",
+    performance: "Desempenho IA",
     community: "Comunidade",
     news: "Notícias",
+    solution: "Solução",
     pricing: "Preços",
     login: "Entrar",
     getStarted: "Começar",
     footer: "18+ | O jogo envolve risco. Por favor, jogue com responsabilidade.",
-    allRights: "© 2025 OddsFlow. Todos os direitos reservados.",
+    allRights: "© 2026 OddsFlow. Todos os direitos reservados.",
+    footerDesc: "Analise de odds de futebol com IA para previsoes mais inteligentes.",
+    product: "Produto",
+    company: "Empresa",
+    legal: "Legal",
+    aboutUs: "Sobre Nos",
+    contact: "Contato",
+    blog: "Blog",
+    termsOfService: "Termos de Servico",
+    privacyPolicy: "Politica de Privacidade",
+    allRightsReserved: "Todos os direitos reservados.",
+    gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
     seoTitle: "Dicas de IA para Futebol Europeu",
     seoP1: "OddsFlow oferece o preditor de futebol com IA mais preciso para todas as principais ligas europeias. Nossa plataforma transparente de apostas com IA oferece registros verificados para Premier League, Bundesliga, Serie A, La Liga, Ligue 1 e Champions League.",
     seoP2: "Seja você procurando previsões 1x2 da Premier League, previsões de apostas com IA da Bundesliga, ou picks de inteligência artificial da Serie A, nossa plataforma oferece insights baseados em dados impulsionados por algoritmos avançados de aprendizado de máquina.",
     seoP3: "Nossa melhor IA para apostas handicap analisa previsões de empate handicap, estatísticas de mais de 2.5 gols e fornece análises abrangentes de partidas. Experimente as dicas de futebol com IA mais seguras com nossos resultados transparentes.",
+    popularLeagues: "Ligas Populares",
+    aiPredictionsFooter: "Previsões IA",
+    aiFootballPredictions: "Previsões de Futebol IA",
+    onextwoPredictions: "Previsões 1x2",
+    overUnderTips: "Dicas Over/Under",
+    handicapBetting: "Apostas Handicap",
+    aiBettingPerformance: "Desempenho de Apostas IA",
+    footballTipsToday: "Dicas de Futebol Hoje",
+    communityFooter: "Comunidade",
+    globalChat: "Chat Global",
+    userPredictions: "Previsões de Usuários",
+    todayMatches: "Jogos de Hoje",
+    disclaimer: "Aviso: OddsFlow fornece previsões baseadas em IA apenas para fins informativos e de entretenimento. Não há garantia de lucros. Por favor, aposte com responsabilidade.",
   },
   DE: {
     leagues: "Ligen",
@@ -87,18 +163,43 @@ const translations: Record<string, Record<string, string>> = {
     comingSoonDesc: "Wir arbeiten daran, Ihnen umfassende Liga-Abdeckung zu bieten",
     home: "Startseite",
     predictions: "Vorhersagen",
-    performance: "Analyse",
+    performance: "KI-Leistung",
     community: "Community",
     news: "Nachrichten",
+    solution: "Lösung",
     pricing: "Preise",
     login: "Anmelden",
     getStarted: "Loslegen",
     footer: "18+ | Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
-    allRights: "© 2025 OddsFlow. Alle Rechte vorbehalten.",
+    allRights: "© 2026 OddsFlow. Alle Rechte vorbehalten.",
+    footerDesc: "KI-gestutzte Fussball-Quotenanalyse fur intelligentere Vorhersagen.",
+    product: "Produkt",
+    company: "Unternehmen",
+    legal: "Rechtliches",
+    aboutUs: "Uber Uns",
+    contact: "Kontakt",
+    blog: "Blog",
+    termsOfService: "Nutzungsbedingungen",
+    privacyPolicy: "Datenschutz",
+    allRightsReserved: "Alle Rechte vorbehalten.",
+    gamblingWarning: "Glucksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
     seoTitle: "KI-Tipps für Europäischen Fußball",
     seoP1: "OddsFlow bietet den genauesten KI-Fußballprediktor für alle großen europäischen Ligen. Unsere transparente KI-Wettplattform bietet verifizierte Wettaufzeichnungen für Premier League, Bundesliga, Serie A, La Liga, Ligue 1 und Champions League.",
     seoP2: "Ob Sie nach Premier League 1x2-Vorhersagen, Bundesliga KI-Wettvorhersagen oder Serie A-Picks mit künstlicher Intelligenz suchen, unsere Plattform liefert datengesteuerte Einblicke durch fortschrittliche maschinelle Lernalgorithmen.",
     seoP3: "Unsere beste KI für Handicap-Wetten analysiert Handicap-Unentschieden-Vorhersagen, über 2,5 Tore-Statistiken und bietet umfassende Spielanalysen. Erleben Sie die sichersten KI-Fußballtipps mit unseren transparenten Wettergebnissen.",
+    popularLeagues: "Beliebte Ligen",
+    aiPredictionsFooter: "KI-Vorhersagen",
+    aiFootballPredictions: "KI-Fußballvorhersagen",
+    onextwoPredictions: "1x2 Vorhersagen",
+    overUnderTips: "Über/Unter Tipps",
+    handicapBetting: "Handicap-Wetten",
+    aiBettingPerformance: "KI-Wettleistung",
+    footballTipsToday: "Fußballtipps Heute",
+    communityFooter: "Community",
+    globalChat: "Globaler Chat",
+    userPredictions: "Benutzer-Vorhersagen",
+    todayMatches: "Heutige Spiele",
+    disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestützte Vorhersagen nur zu Informations- und Unterhaltungszwecken. Es werden keine Gewinne garantiert. Bitte wetten Sie verantwortungsvoll.",
   },
   FR: {
     leagues: "Ligues",
@@ -107,18 +208,43 @@ const translations: Record<string, Record<string, string>> = {
     comingSoonDesc: "Nous travaillons pour vous offrir une couverture complète des ligues",
     home: "Accueil",
     predictions: "Prédictions",
-    performance: "Analyse",
+    performance: "Performance IA",
     community: "Communauté",
     news: "Actualités",
+    solution: "Solution",
     pricing: "Tarifs",
     login: "Connexion",
     getStarted: "Commencer",
     footer: "18+ | Les jeux d'argent comportent des risques. Jouez de manière responsable.",
-    allRights: "© 2025 OddsFlow. Tous droits réservés.",
+    allRights: "© 2026 OddsFlow. Tous droits réservés.",
+    footerDesc: "Analyse de cotes de football propulsee par l'IA pour des predictions plus intelligentes.",
+    product: "Produit",
+    company: "Entreprise",
+    legal: "Mentions Legales",
+    aboutUs: "A Propos",
+    contact: "Contact",
+    blog: "Blog",
+    termsOfService: "Conditions d'Utilisation",
+    privacyPolicy: "Politique de Confidentialite",
+    allRightsReserved: "Tous droits reserves.",
+    gamblingWarning: "Le jeu comporte des risques. Veuillez jouer de maniere responsable.",
     seoTitle: "Conseils IA pour le Football Européen",
     seoP1: "OddsFlow offre le prédicteur de football IA le plus précis pour toutes les grandes ligues européennes. Notre plateforme de paris IA transparente offre des records de paris vérifiés pour la Premier League, la Bundesliga, la Serie A, La Liga, la Ligue 1 et la Champions League.",
     seoP2: "Que vous cherchiez des prédictions 1x2 de Premier League, des prédictions de paris IA de Bundesliga, ou des picks d'intelligence artificielle de Serie A, notre plateforme fournit des analyses basées sur les données grâce à des algorithmes d'apprentissage automatique avancés.",
     seoP3: "Notre meilleure IA pour les paris handicap analyse les prédictions de match nul handicap, les statistiques de plus de 2,5 buts et fournit des analyses de match complètes. Découvrez les conseils de football IA les plus sûrs avec nos résultats de paris transparents.",
+    popularLeagues: "Ligues Populaires",
+    aiPredictionsFooter: "Prédictions IA",
+    aiFootballPredictions: "Prédictions Football IA",
+    onextwoPredictions: "Prédictions 1x2",
+    overUnderTips: "Conseils Over/Under",
+    handicapBetting: "Paris Handicap",
+    aiBettingPerformance: "Performance Paris IA",
+    footballTipsToday: "Pronostics Foot Aujourd'hui",
+    communityFooter: "Communauté",
+    globalChat: "Chat Global",
+    userPredictions: "Prédictions Utilisateurs",
+    todayMatches: "Matchs du Jour",
+    disclaimer: "Avertissement : OddsFlow fournit des prédictions basées sur l'IA à des fins d'information et de divertissement uniquement. Aucun profit n'est garanti. Veuillez parier de manière responsable.",
   },
   JA: {
     leagues: "リーグ",
@@ -127,18 +253,43 @@ const translations: Record<string, Record<string, string>> = {
     comingSoonDesc: "包括的なリーグカバレッジを準備中です",
     home: "ホーム",
     predictions: "予測",
-    performance: "分析",
+    performance: "AIパフォーマンス",
     community: "コミュニティ",
     news: "ニュース",
+    solution: "ソリューション",
     pricing: "料金",
     login: "ログイン",
     getStarted: "始める",
     footer: "18+ | ギャンブルにはリスクが伴います。責任を持ってプレイしてください。",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "よりスマートな予測のためのAI駆動フットボールオッズ分析。",
+    product: "製品",
+    company: "会社",
+    legal: "法的情報",
+    aboutUs: "私たちについて",
+    contact: "お問い合わせ",
+    blog: "ブログ",
+    termsOfService: "利用規約",
+    privacyPolicy: "プライバシーポリシー",
+    allRightsReserved: "全著作権所有。",
+    gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
     seoTitle: "欧州サッカーAI予測",
     seoP1: "OddsFlowは、すべての主要欧州リーグで最も正確なAIサッカー予測を提供します。当社の透明なAIベッティングプラットフォームは、プレミアリーグ、ブンデスリーガ、セリエA、ラ・リーガ、リーグ1、チャンピオンズリーグの検証済みベッティング記録を提供します。",
     seoP2: "プレミアリーグの1x2予測、ブンデスリーガのAIベッティング予測、セリエAの人工知能ピックをお探しの場合でも、当社のプラットフォームは高度な機械学習アルゴリズムによるデータ駆動型の分析を提供します。",
     seoP3: "ハンディキャップベッティングに最適な当社のAIは、ハンディキャップドロー予測、2.5ゴール以上の統計を分析し、包括的な試合分析を提供します。透明なAIベッティング結果で最も安全なサッカー予測をお楽しみください。",
+    popularLeagues: "人気リーグ",
+    aiPredictionsFooter: "AI予測",
+    aiFootballPredictions: "AIサッカー予測",
+    onextwoPredictions: "1x2予測",
+    overUnderTips: "オーバー/アンダー予想",
+    handicapBetting: "ハンディキャップベット",
+    aiBettingPerformance: "AIベッティング実績",
+    footballTipsToday: "今日のサッカー予想",
+    communityFooter: "コミュニティ",
+    globalChat: "グローバルチャット",
+    userPredictions: "ユーザー予測",
+    todayMatches: "今日の試合",
+    disclaimer: "免責事項：OddsFlowはAI駆動の予測を情報および娯楽目的のみで提供しています。利益を保証するものではありません。責任を持ってお楽しみください。",
   },
   KO: {
     leagues: "리그",
@@ -147,18 +298,43 @@ const translations: Record<string, Record<string, string>> = {
     comingSoonDesc: "포괄적인 리그 커버리지를 준비하고 있습니다",
     home: "홈",
     predictions: "예측",
-    performance: "분석",
+    performance: "AI 성능",
     community: "커뮤니티",
     news: "뉴스",
+    solution: "솔루션",
     pricing: "가격",
     login: "로그인",
     getStarted: "시작하기",
     footer: "18+ | 도박에는 위험이 따릅니다. 책임감 있게 플레이하세요.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "더 스마트한 예측을 위한 AI 기반 축구 배당률 분석.",
+    product: "제품",
+    company: "회사",
+    legal: "법적 정보",
+    aboutUs: "회사 소개",
+    contact: "문의하기",
+    blog: "블로그",
+    termsOfService: "서비스 약관",
+    privacyPolicy: "개인정보 처리방침",
+    allRightsReserved: "모든 권리 보유.",
+    gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
     seoTitle: "유럽 축구 AI 예측",
     seoP1: "OddsFlow는 모든 주요 유럽 리그에서 가장 정확한 AI 축구 예측을 제공합니다. 당사의 투명한 AI 베팅 플랫폼은 프리미어리그, 분데스리가, 세리에 A, 라리가, 리그 1, 챔피언스 리그에 대한 검증된 베팅 기록을 제공합니다.",
     seoP2: "프리미어리그 1x2 예측, 분데스리가 AI 베팅 예측, 세리에 A 인공지능 픽을 찾고 계시든, 당사 플랫폼은 고급 머신러닝 알고리즘을 통해 데이터 기반 분석을 제공합니다.",
     seoP3: "핸디캡 베팅을 위한 최고의 AI는 핸디캡 무승부 예측, 2.5 이상 골 통계를 분석하고 포괄적인 경기 분석을 제공합니다. 투명한 AI 베팅 결과로 가장 안전한 축구 예측을 경험하세요.",
+    popularLeagues: "인기 리그",
+    aiPredictionsFooter: "AI 예측",
+    aiFootballPredictions: "AI 축구 예측",
+    onextwoPredictions: "1x2 예측",
+    overUnderTips: "오버/언더 팁",
+    handicapBetting: "핸디캡 베팅",
+    aiBettingPerformance: "AI 베팅 성과",
+    footballTipsToday: "오늘의 축구 팁",
+    communityFooter: "커뮤니티",
+    globalChat: "글로벌 채팅",
+    userPredictions: "사용자 예측",
+    todayMatches: "오늘의 경기",
+    disclaimer: "면책조항: OddsFlow는 정보 및 엔터테인먼트 목적으로만 AI 기반 예측을 제공합니다. 수익을 보장하지 않습니다. 책임감 있게 베팅하세요.",
   },
   '中文': {
     leagues: "联赛",
@@ -167,18 +343,43 @@ const translations: Record<string, Record<string, string>> = {
     comingSoonDesc: "我们正在努力为您提供全面的联赛覆盖",
     home: "首页",
     predictions: "预测",
-    performance: "分析",
+    performance: "AI表现",
     community: "社区",
     news: "新闻",
+    solution: "解决方案",
     pricing: "价格",
     login: "登录",
     getStarted: "开始使用",
     footer: "18+ | 赌博有风险，请理性参与。",
-    allRights: "© 2025 OddsFlow. 保留所有权利。",
+    allRights: "© 2026 OddsFlow. 保留所有权利。",
+    footerDesc: "AI 驱动的足球赔率分析，助您做出更明智的预测。",
+    product: "产品",
+    company: "公司",
+    legal: "法律",
+    aboutUs: "关于我们",
+    contact: "联系我们",
+    blog: "博客",
+    termsOfService: "服务条款",
+    privacyPolicy: "隐私政策",
+    allRightsReserved: "版权所有。",
+    gamblingWarning: "博彩有风险，请理性投注。",
     seoTitle: "欧洲足球AI预测",
     seoP1: "OddsFlow为所有主要欧洲联赛提供最精准的AI足球预测。我们透明的AI投注平台为英超、德甲、意甲、西甲、法甲和欧冠提供经过验证的投注记录。",
     seoP2: "无论您是在寻找英超1x2预测、德甲AI投注预测，还是意甲人工智能选择，我们的平台都通过先进的机器学习算法提供数据驱动的分析。",
     seoP3: "我们最优秀的让球投注AI分析让球平局预测、2.5球以上统计数据，并提供全面的比赛分析。通过我们透明的AI投注结果，体验最安全的足球预测。",
+    popularLeagues: "热门联赛",
+    aiPredictionsFooter: "AI 预测",
+    aiFootballPredictions: "AI 足球预测",
+    onextwoPredictions: "1x2 预测",
+    overUnderTips: "大小球建议",
+    handicapBetting: "让球盘投注",
+    aiBettingPerformance: "AI 投注表现",
+    footballTipsToday: "今日足球贴士",
+    communityFooter: "社区",
+    globalChat: "全球聊天",
+    userPredictions: "用户预测",
+    todayMatches: "今日比赛",
+    disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。我们不保证预测的准确性，也不对任何财务损失负责。博彩有风险，请理性投注。",
   },
   '繁體': {
     leagues: "聯賽",
@@ -187,18 +388,88 @@ const translations: Record<string, Record<string, string>> = {
     comingSoonDesc: "我們正在努力為您提供全面的聯賽覆蓋",
     home: "首頁",
     predictions: "預測",
-    performance: "分析",
+    performance: "AI表現",
     community: "社區",
     news: "新聞",
+    solution: "解決方案",
     pricing: "價格",
     login: "登入",
     getStarted: "開始使用",
     footer: "18+ | 賭博有風險，請理性參與。",
-    allRights: "© 2025 OddsFlow. 保留所有權利。",
+    allRights: "© 2026 OddsFlow. 保留所有權利。",
+    footerDesc: "AI 驅動的足球賠率分析，助您做出更明智的預測。",
+    product: "產品",
+    company: "公司",
+    legal: "法律",
+    aboutUs: "關於我們",
+    contact: "聯繫我們",
+    blog: "博客",
+    termsOfService: "服務條款",
+    privacyPolicy: "隱私政策",
+    allRightsReserved: "版權所有。",
+    gamblingWarning: "博彩有風險，請理性投注。",
     seoTitle: "歐洲足球AI預測",
     seoP1: "OddsFlow為所有主要歐洲聯賽提供最精準的AI足球預測。我們透明的AI投注平台為英超、德甲、意甲、西甲、法甲和歐冠提供經過驗證的投注記錄。",
     seoP2: "無論您是在尋找英超1x2預測、德甲AI投注預測，還是意甲人工智能選擇，我們的平台都通過先進的機器學習算法提供數據驅動的分析。",
     seoP3: "我們最優秀的讓球投注AI分析讓球平局預測、2.5球以上統計數據，並提供全面的比賽分析。通過我們透明的AI投注結果，體驗最安全的足球預測。",
+    popularLeagues: "熱門聯賽",
+    aiPredictionsFooter: "AI 預測",
+    aiFootballPredictions: "AI 足球預測",
+    onextwoPredictions: "1x2 預測",
+    overUnderTips: "大小球建議",
+    handicapBetting: "讓球盤投注",
+    aiBettingPerformance: "AI 投注表現",
+    footballTipsToday: "今日足球貼士",
+    communityFooter: "社區",
+    globalChat: "全球聊天",
+    userPredictions: "用戶預測",
+    todayMatches: "今日比賽",
+    disclaimer: "免責聲明：OddsFlow 提供的 AI 預測僅供參考和娛樂目的。我們不保證預測的準確性，也不對任何財務損失負責。博彩有風險，請理性投注。",
+  },
+  ID: {
+    leagues: "Liga",
+    leaguesSubtitle: "Jelajahi prediksi dari semua liga sepak bola utama di dunia",
+    comingSoon: "Segera Hadir",
+    comingSoonDesc: "Kami sedang menghadirkan cakupan liga yang komprehensif",
+    home: "Beranda",
+    predictions: "Prediksi",
+    performance: "Performa AI",
+    community: "Komunitas",
+    news: "Berita",
+    solution: "Solusi",
+    pricing: "Harga",
+    login: "Masuk",
+    getStarted: "Mulai",
+    footer: "18+ | Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    allRights: "© 2026 OddsFlow. Hak cipta dilindungi.",
+    footerDesc: "Analisis odds sepak bola bertenaga AI untuk prediksi yang lebih cerdas.",
+    product: "Produk",
+    company: "Perusahaan",
+    legal: "Legal",
+    aboutUs: "Tentang Kami",
+    contact: "Kontak",
+    blog: "Blog",
+    termsOfService: "Ketentuan Layanan",
+    privacyPolicy: "Kebijakan Privasi",
+    allRightsReserved: "Hak cipta dilindungi.",
+    gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    seoTitle: "Tips AI Sepak Bola Eropa",
+    seoP1: "OddsFlow menyediakan prediktor sepak bola AI paling akurat untuk semua liga utama Eropa. Platform taruhan AI transparan kami menawarkan catatan taruhan AI terverifikasi untuk Premier League, Bundesliga, Serie A, La Liga, Ligue 1, dan Liga Champions.",
+    seoP2: "Apakah Anda mencari prediksi 1x2 Premier League, prediksi taruhan AI Bundesliga, atau pilihan kecerdasan buatan Serie A, platform kami memberikan wawasan berbasis data yang didukung oleh algoritma pembelajaran mesin canggih.",
+    seoP3: "AI terbaik kami untuk taruhan handicap menganalisis prediksi seri handicap, statistik lebih dari 2,5 gol, dan menyediakan analisis pertandingan yang komprehensif. Rasakan tips sepak bola AI paling aman dengan hasil taruhan AI transparan kami.",
+    popularLeagues: "Liga Populer",
+    aiPredictionsFooter: "Prediksi AI",
+    aiFootballPredictions: "Prediksi Sepak Bola AI",
+    onextwoPredictions: "Prediksi 1x2",
+    overUnderTips: "Tips Over/Under",
+    handicapBetting: "Taruhan Handicap",
+    aiBettingPerformance: "Performa Taruhan AI",
+    footballTipsToday: "Tips Sepak Bola Hari Ini",
+    communityFooter: "Komunitas",
+    globalChat: "Obrolan Global",
+    userPredictions: "Prediksi Pengguna",
+    todayMatches: "Pertandingan Hari Ini",
+    disclaimer: "Penafian: OddsFlow menyediakan prediksi bertenaga AI hanya untuk tujuan informasi dan hiburan. Kami tidak menjamin keakuratan prediksi dan tidak bertanggung jawab atas kerugian finansial. Harap bertaruh dengan bijak.",
   },
 };
 
@@ -329,6 +600,7 @@ export default function LeaguesPage() {
               <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
               <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
               <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
               <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
@@ -440,6 +712,7 @@ export default function LeaguesPage() {
                 { href: '/performance', label: t('performance') },
                 { href: '/community', label: t('community') },
                 { href: '/news', label: t('news') },
+                { href: '/solution', label: t('solution') },
                 { href: '/pricing', label: t('pricing') },
               ].map((link) => (
                 <Link
@@ -581,9 +854,90 @@ export default function LeaguesPage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-white/5 text-center text-gray-500 text-sm">
-        <p>{t('footer')}</p>
-        <p className="mt-2">{t('allRights')}</p>
+      <footer className="relative z-10 py-16 px-4 bg-black border-t border-white/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 lg:gap-12 mb-12">
+            <div className="col-span-2">
+              <Link href="/" className="flex items-center gap-3 mb-6">
+                <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
+                <span className="text-xl font-bold">OddsFlow</span>
+              </Link>
+              <p className="text-gray-400 mb-6 leading-relaxed">{t('footerDesc')}</p>
+              <div className="flex items-center gap-4">
+                {/* Facebook */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </Link>
+                {/* Instagram */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </Link>
+                {/* Telegram */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-5 text-white">{t('product')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
+                <li><Link href="/leagues" className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
+                <li><Link href="/performance" className="hover:text-emerald-400 transition-colors">{t('performance')}</Link></li>
+                <li><Link href="/solution" className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/leagues/premier-league" className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
+                <li><Link href="/leagues/la-liga" className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
+                <li><Link href="/leagues/serie-a" className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
+                <li><Link href="/leagues/bundesliga" className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
+                <li><Link href="/leagues/ligue-1" className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
+                <li><Link href="/leagues/champions-league" className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-5 text-white">{t('communityFooter')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/community" className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
+                <li><Link href="/community/global-chat" className="hover:text-emerald-400 transition-colors">{t('globalChat')}</Link></li>
+                <li><Link href="/community/user-predictions" className="hover:text-emerald-400 transition-colors">{t('userPredictions')}</Link></li>
+              </ul>
+            </div>
+
+            <div className="relative z-10">
+              <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/about" className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+                <li><Link href="/blog" className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
+              </ul>
+            </div>
+
+            <div className="relative z-10">
+              <h4 className="font-semibold mb-5 text-white">{t('legal')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/terms-of-service" className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="mt-8 pt-8 border-t border-white/5">
+            <p className="text-gray-500 text-xs leading-relaxed">{t('disclaimer')}</p>
+          </div>
+
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 mt-8">
+            <p className="text-gray-500 text-sm">&copy; 2026 OddsFlow. {t('allRightsReserved')}</p>
+            <p className="text-gray-600 text-xs">{t('gamblingWarning')}</p>
+          </div>
+        </div>
       </footer>
     </div>
   );

@@ -20,7 +20,7 @@ const footerTranslations: Record<string, Record<string, string>> = {
     legal: 'Legal',
     termsOfService: 'Terms of Service',
     privacyPolicy: 'Privacy Policy',
-    allRights: '2025 OddsFlow. All rights reserved.',
+    allRights: '2026 OddsFlow. All rights reserved.',
     disclaimer: 'Gambling involves risk. Please gamble responsibly.',
   },
   '中文': {
@@ -36,7 +36,7 @@ const footerTranslations: Record<string, Record<string, string>> = {
     legal: '法律',
     termsOfService: '服务条款',
     privacyPolicy: '隐私政策',
-    allRights: '2025 OddsFlow. 保留所有权利。',
+    allRights: '2026 OddsFlow. 保留所有权利。',
     disclaimer: '博彩有风险，请理性投注。',
   },
   '繁體': {
@@ -52,7 +52,7 @@ const footerTranslations: Record<string, Record<string, string>> = {
     legal: '法律',
     termsOfService: '服務條款',
     privacyPolicy: '隱私政策',
-    allRights: '2025 OddsFlow. 保留所有權利。',
+    allRights: '2026 OddsFlow. 保留所有權利。',
     disclaimer: '博彩有風險，請理性投注。',
   },
 };

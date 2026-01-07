@@ -104,10 +104,13 @@ export const supabase = supabaseUrl && supabaseKey
 
 // ============ SEPARATE CHAT SUPABASE CLIENT ============
 // Chat functionality uses a different Supabase instance (for global chat only)
-const chatSupabaseUrl = 'https://rlvmlnwnaejhotlnhbpi.supabase.co';
-const chatSupabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsdm1sbnduYWVqaG90bG5oYnBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU2NDkxNzYsImV4cCI6MjA4MTIyNTE3Nn0.5VUchXN2-P3-jcfZXyL37RN9A9DCXonFYqpjDOl3YJY';
+// IMPORTANT: Move these to environment variables!
+const chatSupabaseUrl = process.env.NEXT_PUBLIC_CHAT_SUPABASE_URL || '';
+const chatSupabaseKey = process.env.NEXT_PUBLIC_CHAT_SUPABASE_ANON_KEY || '';
 
-export const chatSupabase = createClient(chatSupabaseUrl, chatSupabaseKey);
+export const chatSupabase = chatSupabaseUrl && chatSupabaseKey
+  ? createClient(chatSupabaseUrl, chatSupabaseKey)
+  : null as any;
 
 // Auth helper functions
 export const signUpWithEmail = async (email: string, password: string, fullName: string) => {
@@ -371,6 +374,46 @@ export const getPlayerStatsByTeam = async (teamId: number) => {
     return { data: data as PlayerStats[], error: null };
   } catch (err) {
     return { data: null, error: { message: 'Failed to fetch player stats' } };
+  }
+};
+
+// Coach interface
+export interface Coach {
+  coach_id: number;
+  name: string | null;
+  firstname: string | null;
+  lastname: string | null;
+  photo: string | null;
+  age: number | null;
+  birth_date: string | null;
+  birth_place: string | null;
+  birth_country: string | null;
+  nationality: string | null;
+  current_team_id: number | null;
+  current_team_name: string | null;
+  career_json: Record<string, unknown> | null;
+  updated_at: string | null;
+}
+
+// Get coaches by team IDs
+export const getCoachesByTeamIds = async (teamIds: number[]) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('coaches_full')
+      .select('*')
+      .in('current_team_id', teamIds);
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data: data as Coach[], error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch coaches' } };
   }
 };
 
@@ -1384,5 +1427,474 @@ export const toggleCommentReaction = async (commentId: string, userId: string, r
     }
   } catch (err) {
     return { data: null, error: { message: 'Failed to toggle comment reaction' } };
+  }
+};
+
+// ============================================
+// NEWS COMMENTS TYPES & FUNCTIONS
+// ============================================
+
+export interface NewsComment {
+  id: string;
+  news_id: number;
+  user_id: string;
+  content: string;
+  parent_id: string | null;
+  created_at: string;
+  updated_at: string;
+  // Joined fields from auth.users
+  user_email?: string;
+  user_name?: string;
+  user_avatar?: string;
+  // Nested data
+  replies?: NewsComment[];
+  reactions?: NewsCommentReaction[];
+}
+
+export interface NewsCommentReaction {
+  id: string;
+  comment_id: string;
+  user_id: string;
+  reaction_type: string;
+  created_at: string;
+}
+
+// Get comments for a news article with nested replies and reactions
+export const getNewsComments = async (newsId: number, userId?: string) => {
+  try {
+    // Fetch all comments for this news article
+    const { data: comments, error } = await supabase
+      .from('news_comments')
+      .select('*')
+      .eq('news_id', newsId)
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching comments:', error);
+      return { data: [], error: { message: error.message } };
+    }
+    if (!comments || comments.length === 0) {
+      return { data: [], error: null };
+    }
+
+    // Fetch reactions for all comments (graceful failure if table doesn't exist)
+    const commentIds = comments.map((c: NewsComment) => c.id);
+    let reactions: NewsCommentReaction[] = [];
+    try {
+      const { data: reactionsData, error: reactionsError } = await supabase
+        .from('news_comment_reactions')
+        .select('*')
+        .in('comment_id', commentIds);
+      if (!reactionsError && reactionsData) {
+        reactions = reactionsData;
+      }
+    } catch {
+      // Reactions table might not exist, continue without reactions
+      console.log('Reactions fetch failed, continuing without reactions');
+    }
+
+    // Build comment tree with reactions
+    const commentMap = new Map<string, NewsComment>();
+    const rootComments: NewsComment[] = [];
+
+    // First pass: create all comments with reactions
+    comments.forEach((comment: NewsComment) => {
+      const commentReactions = reactions.filter((r: NewsCommentReaction) => r.comment_id === comment.id);
+      commentMap.set(comment.id, {
+        ...comment,
+        replies: [],
+        reactions: commentReactions,
+      });
+    });
+
+    // Second pass: build tree structure
+    comments.forEach((comment: NewsComment) => {
+      const enrichedComment = commentMap.get(comment.id)!;
+      if (comment.parent_id) {
+        const parent = commentMap.get(comment.parent_id);
+        if (parent) {
+          parent.replies!.push(enrichedComment);
+        } else {
+          // Parent doesn't exist (maybe deleted), show as root comment
+          rootComments.push(enrichedComment);
+        }
+      } else {
+        rootComments.push(enrichedComment);
+      }
+    });
+
+    return { data: rootComments, error: null };
+  } catch (err) {
+    console.error('Error fetching news comments:', err);
+    return { data: [], error: { message: 'Failed to fetch comments' } };
+  }
+};
+
+// Get comment count for a news article
+export const getNewsCommentCount = async (newsId: number) => {
+  try {
+    const { count, error } = await supabase
+      .from('news_comments')
+      .select('*', { count: 'exact', head: true })
+      .eq('news_id', newsId);
+
+    if (error) throw error;
+    return { count: count || 0, error: null };
+  } catch (err) {
+    return { count: 0, error: { message: 'Failed to get comment count' } };
+  }
+};
+
+// Add a new comment to a news article
+export const addNewsComment = async (
+  newsId: number,
+  userId: string,
+  content: string,
+  parentId?: string,
+  userInfo?: { name?: string; email?: string; avatar?: string }
+) => {
+  try {
+    // Rate limiting: max 2 comments per second
+    if (!checkRateLimit(`news-comment-${userId}`, 2)) {
+      return { data: null, error: { message: 'Too many comments. Please wait a moment.' } };
+    }
+
+    // Sanitize input
+    const sanitizedContent = sanitizeInput(content);
+    if (!sanitizedContent || sanitizedContent.length < 1) {
+      return { data: null, error: { message: 'Comment cannot be empty' } };
+    }
+    if (sanitizedContent.length > 1000) {
+      return { data: null, error: { message: 'Comment is too long (max 1000 characters)' } };
+    }
+
+    const { data, error } = await supabase
+      .from('news_comments')
+      .insert({
+        news_id: newsId,
+        user_id: userId,
+        content: sanitizedContent,
+        parent_id: parentId || null,
+        user_name: userInfo?.name || null,
+        user_email: userInfo?.email || null,
+        user_avatar: userInfo?.avatar || null,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { data: { ...data, replies: [], reactions: [] }, error: null };
+  } catch (err) {
+    console.error('Error adding news comment:', err);
+    return { data: null, error: { message: 'Failed to add comment' } };
+  }
+};
+
+// Delete a news comment (only own comments)
+export const deleteNewsComment = async (commentId: string, userId: string) => {
+  try {
+    const { error } = await supabase
+      .from('news_comments')
+      .delete()
+      .eq('id', commentId)
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return { success: true, error: null };
+  } catch (err) {
+    console.error('Error deleting news comment:', err);
+    return { success: false, error: { message: 'Failed to delete comment' } };
+  }
+};
+
+// Toggle reaction on a news comment
+export const toggleNewsCommentReaction = async (
+  commentId: string,
+  userId: string,
+  reactionType: string
+) => {
+  try {
+    // Check if user already has a reaction on this comment
+    const { data: existing } = await supabase
+      .from('news_comment_reactions')
+      .select('*')
+      .eq('comment_id', commentId)
+      .eq('user_id', userId)
+      .single();
+
+    if (existing) {
+      if (existing.reaction_type === reactionType) {
+        // Same reaction - remove it
+        await supabase
+          .from('news_comment_reactions')
+          .delete()
+          .eq('id', existing.id);
+        return { data: { action: 'removed', type: reactionType }, error: null };
+      } else {
+        // Different reaction - update it
+        await supabase
+          .from('news_comment_reactions')
+          .update({ reaction_type: reactionType })
+          .eq('id', existing.id);
+        return { data: { action: 'updated', type: reactionType, previousType: existing.reaction_type }, error: null };
+      }
+    } else {
+      // No existing reaction - add new one
+      await supabase
+        .from('news_comment_reactions')
+        .insert({
+          comment_id: commentId,
+          user_id: userId,
+          reaction_type: reactionType,
+        });
+      return { data: { action: 'added', type: reactionType }, error: null };
+    }
+  } catch (err) {
+    console.error('Error toggling news comment reaction:', err);
+    return { data: null, error: { message: 'Failed to toggle reaction' } };
+  }
+};
+
+// ============================================
+// USER MATCH PREDICTIONS (Community Predictions)
+// ============================================
+
+export interface UserMatchPrediction {
+  id: string;
+  user_id: string;
+  match_id: number;
+  home_team: string;
+  away_team: string;
+  league: string | null;
+  match_date: string | null;
+  home_score_prediction: number | null;
+  away_score_prediction: number | null;
+  winner_prediction: '1' | 'X' | '2' | null; // 1=Home, X=Draw, 2=Away
+  analysis: string | null;
+  user_name: string | null;
+  user_avatar: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// Get all predictions for a specific match
+export const getMatchUserPredictions = async (matchId: number) => {
+  if (!supabase) {
+    return { data: [], error: null };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('user_match_predictions')
+      .select('*')
+      .eq('match_id', matchId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      // Table doesn't exist yet - return empty array gracefully
+      return { data: [], error: null };
+    }
+
+    return { data: data as UserMatchPrediction[] || [], error: null };
+  } catch {
+    return { data: [], error: null };
+  }
+};
+
+// Get prediction count for a match
+export const getMatchPredictionCount = async (matchId: number) => {
+  if (!supabase) {
+    return { count: 0, error: null };
+  }
+
+  try {
+    const { count, error } = await supabase
+      .from('user_match_predictions')
+      .select('*', { count: 'exact', head: true })
+      .eq('match_id', matchId);
+
+    if (error) throw error;
+    return { count: count || 0, error: null };
+  } catch (err) {
+    return { count: 0, error: { message: 'Failed to get prediction count' } };
+  }
+};
+
+// Get user's prediction for a specific match
+export const getUserPredictionForMatch = async (matchId: number, userId: string) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('user_match_predictions')
+      .select('*')
+      .eq('match_id', matchId)
+      .eq('user_id', userId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+      return { data: null, error: { message: error.message } };
+    }
+
+    return { data: data as UserMatchPrediction | null, error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch prediction' } };
+  }
+};
+
+// Add or update user prediction for a match
+export const submitUserPrediction = async (
+  matchId: number,
+  userId: string,
+  prediction: {
+    home_team: string;
+    away_team: string;
+    league?: string;
+    match_date?: string;
+    home_score_prediction?: number | null;
+    away_score_prediction?: number | null;
+    winner_prediction?: '1' | 'X' | '2' | null;
+    analysis?: string;
+  },
+  userInfo?: { name?: string; avatar?: string }
+) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  // Rate limiting: max 2 predictions per second
+  if (!checkRateLimit(`prediction-${userId}`, 2)) {
+    return { data: null, error: { message: 'Too many requests. Please wait a moment.' } };
+  }
+
+  // Validate analysis length
+  if (prediction.analysis && prediction.analysis.length > 500) {
+    return { data: null, error: { message: 'Analysis is too long (max 500 characters)' } };
+  }
+
+  // Sanitize analysis
+  const sanitizedAnalysis = prediction.analysis ? sanitizeInput(prediction.analysis) : null;
+
+  try {
+    // Check if user already has a prediction for this match
+    const { data: existing, error: checkError } = await supabase
+      .from('user_match_predictions')
+      .select('id')
+      .eq('match_id', matchId)
+      .eq('user_id', userId)
+      .single();
+
+    // If table doesn't exist, return helpful error
+    if (checkError && (checkError.code === '42P01' || checkError.message?.includes('does not exist'))) {
+      return { data: null, error: { message: 'Predictions feature not yet enabled. Please run the SQL setup.' } };
+    }
+
+    if (existing) {
+      // Update existing prediction
+      const { data, error } = await supabase
+        .from('user_match_predictions')
+        .update({
+          home_score_prediction: prediction.home_score_prediction ?? null,
+          away_score_prediction: prediction.away_score_prediction ?? null,
+          winner_prediction: prediction.winner_prediction ?? null,
+          analysis: sanitizedAnalysis,
+          user_name: userInfo?.name || null,
+          user_avatar: userInfo?.avatar || null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existing.id)
+        .select()
+        .single();
+
+      if (error) {
+        if (error.code === '42P01' || error.message?.includes('does not exist')) {
+          return { data: null, error: { message: 'Predictions feature not yet enabled. Please run the SQL setup.' } };
+        }
+        throw error;
+      }
+      return { data: data as UserMatchPrediction, error: null };
+    } else {
+      // Insert new prediction
+      const { data, error } = await supabase
+        .from('user_match_predictions')
+        .insert({
+          user_id: userId,
+          match_id: matchId,
+          home_team: prediction.home_team,
+          away_team: prediction.away_team,
+          league: prediction.league || null,
+          match_date: prediction.match_date || null,
+          home_score_prediction: prediction.home_score_prediction ?? null,
+          away_score_prediction: prediction.away_score_prediction ?? null,
+          winner_prediction: prediction.winner_prediction ?? null,
+          analysis: sanitizedAnalysis,
+          user_name: userInfo?.name || null,
+          user_avatar: userInfo?.avatar || null,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        if (error.code === '42P01' || error.message?.includes('does not exist')) {
+          return { data: null, error: { message: 'Predictions feature not yet enabled. Please run the SQL setup.' } };
+        }
+        throw error;
+      }
+      return { data: data as UserMatchPrediction, error: null };
+    }
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Failed to submit prediction';
+    // Check for table not exists error
+    if (errorMessage.includes('does not exist') || errorMessage.includes('42P01')) {
+      return { data: null, error: { message: 'Predictions feature not yet enabled. Please run the SQL setup.' } };
+    }
+    return { data: null, error: { message: errorMessage } };
+  }
+};
+
+// Delete user's prediction for a match
+export const deleteUserPrediction = async (predictionId: string, userId: string) => {
+  if (!supabase) {
+    return { success: false, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { error } = await supabase
+      .from('user_match_predictions')
+      .delete()
+      .eq('id', predictionId)
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return { success: true, error: null };
+  } catch (err) {
+    console.error('Error deleting prediction:', err);
+    return { success: false, error: { message: 'Failed to delete prediction' } };
+  }
+};
+
+// Get recent predictions across all matches (for community feed)
+export const getRecentPredictions = async (limit: number = 20) => {
+  if (!supabase) {
+    return { data: [], error: null };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('user_match_predictions')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      // Table doesn't exist yet - return empty array gracefully
+      return { data: [], error: null };
+    }
+
+    return { data: data as UserMatchPrediction[] || [], error: null };
+  } catch {
+    return { data: [], error: null };
   }
 };

@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { supabase, FootballNews } from '@/lib/supabase';
+import {
+  supabase,
+  FootballNews,
+  getNewsCommentCount,
+} from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 
 const ITEMS_PER_PAGE = 21;
 
-// Helper function to format relative time
+// Helper function to format relative time for news
 function getRelativeTime(dateString: string | undefined): string {
   if (!dateString) return '';
 
@@ -38,6 +42,7 @@ const LANGUAGES = [
   { code: 'KO', name: '한국어', flag: '🇰🇷' },
   { code: '中文', name: '简体中文', flag: '🇨🇳' },
   { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
 ];
 
 // Translations
@@ -61,11 +66,46 @@ const translations: Record<string, Record<string, string>> = {
     login: "Log In",
     getStarted: "Get Started",
     footer: "18+ | Gambling involves risk. Please gamble responsibly.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "AI-powered football odds analysis for smarter predictions. Make data-driven decisions with real-time insights.",
+    product: "Product",
+    company: "Company",
+    legal: "Legal",
+    aboutUs: "About Us",
+    contact: "Contact",
+    blog: "Blog",
+    termsOfService: "Terms of Service",
+    privacyPolicy: "Privacy Policy",
+    allRightsReserved: "All rights reserved.",
+    gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
     liveUpdates: "LIVE UPDATES",
     featuredStory: "FEATURED",
     latestNews: "LATEST NEWS",
     readMore: "Read Full Article",
+    comments: "Comments",
+    noComments: "No comments yet. Be the first to comment!",
+    writeComment: "Write a comment...",
+    reply: "Reply",
+    delete: "Delete",
+    loginToComment: "Log in to comment",
+    replying: "Replying to",
+    cancel: "Cancel",
+    submit: "Submit",
+    viewAllComments: "View All Comments",
+    popularLeagues: "Popular Leagues",
+    aiPredictionsFooter: "AI Predictions",
+    aiFootballPredictions: "AI Football Predictions",
+    onextwoPredictions: "1x2 Predictions",
+    overUnderTips: "Over/Under Tips",
+    handicapBetting: "Handicap Betting",
+    aiBettingPerformance: "AI Betting Performance",
+    footballTipsToday: "Football Tips Today",
+    solution: "Solution",
+    communityFooter: "Community",
+    globalChat: "Global Chat",
+    userPredictions: "User Predictions",
+    todayMatches: "Today Matches",
+    disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
   },
   ES: {
     newsTitle: "Noticias e Información",
@@ -79,18 +119,53 @@ const translations: Record<string, Record<string, string>> = {
     home: "Inicio",
     predictions: "Predicciones",
     leagues: "Ligas",
-    performance: "Análisis",
+    performance: "Rendimiento IA",
     community: "Comunidad",
     news: "Noticias",
     pricing: "Precios",
     login: "Iniciar Sesión",
     getStarted: "Comenzar",
     footer: "18+ | El juego implica riesgo. Por favor juega responsablemente.",
-    allRights: "© 2025 OddsFlow. Todos los derechos reservados.",
+    allRights: "© 2026 OddsFlow. Todos los derechos reservados.",
+    footerDesc: "Analisis de cuotas de futbol impulsado por IA para predicciones mas inteligentes.",
+    product: "Producto",
+    company: "Empresa",
+    legal: "Legal",
+    aboutUs: "Sobre Nosotros",
+    contact: "Contacto",
+    blog: "Blog",
+    termsOfService: "Terminos de Servicio",
+    privacyPolicy: "Politica de Privacidad",
+    allRightsReserved: "Todos los derechos reservados.",
+    gamblingWarning: "El juego implica riesgo. Por favor juega responsablemente.",
     liveUpdates: "EN VIVO",
     featuredStory: "DESTACADO",
     latestNews: "ÚLTIMAS NOTICIAS",
     readMore: "Leer Artículo Completo",
+    comments: "Comentarios",
+    noComments: "Aún no hay comentarios. ¡Sé el primero en comentar!",
+    writeComment: "Escribe un comentario...",
+    reply: "Responder",
+    delete: "Eliminar",
+    loginToComment: "Inicia sesión para comentar",
+    replying: "Respondiendo a",
+    cancel: "Cancelar",
+    submit: "Enviar",
+    viewAllComments: "Ver Todos los Comentarios",
+    popularLeagues: "Ligas Populares",
+    aiPredictionsFooter: "Predicciones IA",
+    aiFootballPredictions: "Predicciones de Futbol IA",
+    onextwoPredictions: "Predicciones 1x2",
+    overUnderTips: "Consejos Over/Under",
+    handicapBetting: "Apuestas Handicap",
+    aiBettingPerformance: "Rendimiento de Apuestas IA",
+    footballTipsToday: "Tips de Futbol Hoy",
+    solution: "Solución",
+    communityFooter: "Comunidad",
+    globalChat: "Chat Global",
+    userPredictions: "Predicciones de Usuarios",
+    todayMatches: "Partidos de Hoy",
+    disclaimer: "Aviso: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento. No se garantizan ganancias. Por favor, apueste de manera responsable.",
   },
   PT: {
     newsTitle: "Notícias e Insights",
@@ -104,18 +179,53 @@ const translations: Record<string, Record<string, string>> = {
     home: "Início",
     predictions: "Previsões",
     leagues: "Ligas",
-    performance: "Análise",
+    performance: "Desempenho IA",
     community: "Comunidade",
     news: "Notícias",
     pricing: "Preços",
     login: "Entrar",
     getStarted: "Começar",
     footer: "18+ | O jogo envolve risco. Por favor, jogue com responsabilidade.",
-    allRights: "© 2025 OddsFlow. Todos os direitos reservados.",
+    allRights: "© 2026 OddsFlow. Todos os direitos reservados.",
+    footerDesc: "Analise de odds de futebol com IA para previsoes mais inteligentes.",
+    product: "Produto",
+    company: "Empresa",
+    legal: "Legal",
+    aboutUs: "Sobre Nos",
+    contact: "Contato",
+    blog: "Blog",
+    termsOfService: "Termos de Servico",
+    privacyPolicy: "Politica de Privacidade",
+    allRightsReserved: "Todos os direitos reservados.",
+    gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
     liveUpdates: "AO VIVO",
     featuredStory: "DESTAQUE",
     latestNews: "ÚLTIMAS NOTÍCIAS",
     readMore: "Ler Artigo Completo",
+    comments: "Comentários",
+    noComments: "Ainda não há comentários. Seja o primeiro a comentar!",
+    writeComment: "Escreva um comentário...",
+    reply: "Responder",
+    delete: "Excluir",
+    loginToComment: "Faça login para comentar",
+    replying: "Respondendo a",
+    cancel: "Cancelar",
+    submit: "Enviar",
+    viewAllComments: "Ver Todos os Comentários",
+    popularLeagues: "Ligas Populares",
+    aiPredictionsFooter: "Previsões IA",
+    aiFootballPredictions: "Previsões de Futebol IA",
+    onextwoPredictions: "Previsões 1x2",
+    overUnderTips: "Dicas Over/Under",
+    handicapBetting: "Apostas Handicap",
+    aiBettingPerformance: "Desempenho de Apostas IA",
+    footballTipsToday: "Dicas de Futebol Hoje",
+    solution: "Solução",
+    communityFooter: "Comunidade",
+    globalChat: "Chat Global",
+    userPredictions: "Previsoes de Usuarios",
+    todayMatches: "Jogos de Hoje",
+    disclaimer: "Aviso: OddsFlow fornece previsoes baseadas em IA apenas para fins informativos e de entretenimento. Nao ha garantia de lucros. Por favor, aposte com responsabilidade.",
   },
   DE: {
     newsTitle: "Nachrichten & Einblicke",
@@ -129,18 +239,53 @@ const translations: Record<string, Record<string, string>> = {
     home: "Startseite",
     predictions: "Vorhersagen",
     leagues: "Ligen",
-    performance: "Analyse",
+    performance: "KI-Leistung",
     community: "Community",
     news: "Nachrichten",
     pricing: "Preise",
     login: "Anmelden",
     getStarted: "Loslegen",
     footer: "18+ | Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
-    allRights: "© 2025 OddsFlow. Alle Rechte vorbehalten.",
+    allRights: "© 2026 OddsFlow. Alle Rechte vorbehalten.",
+    footerDesc: "KI-gestutzte Fussball-Quotenanalyse fur intelligentere Vorhersagen.",
+    product: "Produkt",
+    company: "Unternehmen",
+    legal: "Rechtliches",
+    aboutUs: "Uber Uns",
+    contact: "Kontakt",
+    blog: "Blog",
+    termsOfService: "Nutzungsbedingungen",
+    privacyPolicy: "Datenschutz",
+    allRightsReserved: "Alle Rechte vorbehalten.",
+    gamblingWarning: "Glucksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
     liveUpdates: "LIVE",
     featuredStory: "HIGHLIGHT",
     latestNews: "NEUESTE NACHRICHTEN",
     readMore: "Vollständigen Artikel Lesen",
+    comments: "Kommentare",
+    noComments: "Noch keine Kommentare. Sei der Erste!",
+    writeComment: "Schreibe einen Kommentar...",
+    reply: "Antworten",
+    delete: "Löschen",
+    loginToComment: "Anmelden zum Kommentieren",
+    replying: "Antwort auf",
+    cancel: "Abbrechen",
+    submit: "Absenden",
+    viewAllComments: "Alle Kommentare anzeigen",
+    popularLeagues: "Beliebte Ligen",
+    aiPredictionsFooter: "KI-Vorhersagen",
+    aiFootballPredictions: "KI-Fussballvorhersagen",
+    onextwoPredictions: "1x2 Vorhersagen",
+    overUnderTips: "Über/Unter Tipps",
+    handicapBetting: "Handicap-Wetten",
+    aiBettingPerformance: "KI-Wettleistung",
+    footballTipsToday: "Fussballtipps Heute",
+    solution: "Lösung",
+    communityFooter: "Community",
+    globalChat: "Globaler Chat",
+    userPredictions: "Benutzer-Vorhersagen",
+    todayMatches: "Heutige Spiele",
+    disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestutzte Vorhersagen nur zu Informations- und Unterhaltungszwecken. Es werden keine Gewinne garantiert. Bitte wetten Sie verantwortungsvoll.",
   },
   FR: {
     newsTitle: "Actualités & Analyses",
@@ -154,18 +299,53 @@ const translations: Record<string, Record<string, string>> = {
     home: "Accueil",
     predictions: "Prédictions",
     leagues: "Ligues",
-    performance: "Analyse",
+    performance: "Performance IA",
     community: "Communauté",
     news: "Actualités",
     pricing: "Tarifs",
     login: "Connexion",
     getStarted: "Commencer",
     footer: "18+ | Les jeux d'argent comportent des risques. Jouez de manière responsable.",
-    allRights: "© 2025 OddsFlow. Tous droits réservés.",
+    allRights: "© 2026 OddsFlow. Tous droits réservés.",
+    footerDesc: "Analyse de cotes de football propulsee par l'IA pour des predictions plus intelligentes.",
+    product: "Produit",
+    company: "Entreprise",
+    legal: "Mentions Legales",
+    aboutUs: "A Propos",
+    contact: "Contact",
+    blog: "Blog",
+    termsOfService: "Conditions d'Utilisation",
+    privacyPolicy: "Politique de Confidentialite",
+    allRightsReserved: "Tous droits reserves.",
+    gamblingWarning: "Le jeu comporte des risques. Veuillez jouer de maniere responsable.",
     liveUpdates: "EN DIRECT",
     featuredStory: "À LA UNE",
     latestNews: "DERNIÈRES ACTUALITÉS",
     readMore: "Lire l'Article Complet",
+    comments: "Commentaires",
+    noComments: "Pas encore de commentaires. Soyez le premier !",
+    writeComment: "Écrivez un commentaire...",
+    reply: "Répondre",
+    delete: "Supprimer",
+    loginToComment: "Connectez-vous pour commenter",
+    replying: "Réponse à",
+    cancel: "Annuler",
+    submit: "Envoyer",
+    viewAllComments: "Voir tous les commentaires",
+    popularLeagues: "Ligues Populaires",
+    aiPredictionsFooter: "Prédictions IA",
+    aiFootballPredictions: "Prédictions Football IA",
+    onextwoPredictions: "Prédictions 1x2",
+    overUnderTips: "Conseils Over/Under",
+    handicapBetting: "Paris Handicap",
+    aiBettingPerformance: "Performance Paris IA",
+    footballTipsToday: "Pronostics Foot Aujourd'hui",
+    solution: "Solution",
+    communityFooter: "Communaute",
+    globalChat: "Chat Global",
+    userPredictions: "Predictions Utilisateurs",
+    todayMatches: "Matchs du Jour",
+    disclaimer: "Avertissement : OddsFlow fournit des predictions basees sur l'IA a des fins d'information et de divertissement uniquement. Aucun profit n'est garanti. Veuillez parier de maniere responsable.",
   },
   JA: {
     newsTitle: "ニュース＆インサイト",
@@ -179,18 +359,53 @@ const translations: Record<string, Record<string, string>> = {
     home: "ホーム",
     predictions: "予測",
     leagues: "リーグ",
-    performance: "分析",
+    performance: "AIパフォーマンス",
     community: "コミュニティ",
     news: "ニュース",
     pricing: "料金",
     login: "ログイン",
     getStarted: "始める",
     footer: "18+ | ギャンブルにはリスクが伴います。責任を持ってプレイしてください。",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "よりスマートな予測のためのAI駆動フットボールオッズ分析。",
+    product: "製品",
+    company: "会社",
+    legal: "法的情報",
+    aboutUs: "私たちについて",
+    contact: "お問い合わせ",
+    blog: "ブログ",
+    termsOfService: "利用規約",
+    privacyPolicy: "プライバシーポリシー",
+    allRightsReserved: "全著作権所有。",
+    gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
     liveUpdates: "ライブ更新",
     featuredStory: "注目",
     latestNews: "最新ニュース",
     readMore: "記事を読む",
+    comments: "コメント",
+    noComments: "コメントはまだありません。最初のコメントを！",
+    writeComment: "コメントを書く...",
+    reply: "返信",
+    delete: "削除",
+    loginToComment: "コメントするにはログイン",
+    replying: "返信先",
+    cancel: "キャンセル",
+    submit: "送信",
+    viewAllComments: "すべてのコメントを見る",
+    popularLeagues: "人気リーグ",
+    aiPredictionsFooter: "AI予測",
+    aiFootballPredictions: "AIサッカー予測",
+    onextwoPredictions: "1x2予測",
+    overUnderTips: "オーバー/アンダー予想",
+    handicapBetting: "ハンディキャップベット",
+    aiBettingPerformance: "AIベッティング実績",
+    footballTipsToday: "今日のサッカー予想",
+    solution: "ソリューション",
+    communityFooter: "コミュニティ",
+    globalChat: "グローバルチャット",
+    userPredictions: "ユーザー予測",
+    todayMatches: "今日の試合",
+    disclaimer: "免責事項：OddsFlowはAI駆動の予測を情報および娯楽目的のみで提供しています。利益を保証するものではありません。責任を持ってお楽しみください。",
   },
   KO: {
     newsTitle: "뉴스 & 인사이트",
@@ -204,18 +419,53 @@ const translations: Record<string, Record<string, string>> = {
     home: "홈",
     predictions: "예측",
     leagues: "리그",
-    performance: "분석",
+    performance: "AI 성능",
     community: "커뮤니티",
     news: "뉴스",
     pricing: "가격",
     login: "로그인",
     getStarted: "시작하기",
     footer: "18+ | 도박에는 위험이 따릅니다. 책임감 있게 플레이하세요.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "더 스마트한 예측을 위한 AI 기반 축구 배당률 분석.",
+    product: "제품",
+    company: "회사",
+    legal: "법적 정보",
+    aboutUs: "회사 소개",
+    contact: "문의하기",
+    blog: "블로그",
+    termsOfService: "서비스 약관",
+    privacyPolicy: "개인정보 처리방침",
+    allRightsReserved: "모든 권리 보유.",
+    gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
     liveUpdates: "실시간",
     featuredStory: "주요 기사",
     latestNews: "최신 뉴스",
     readMore: "전체 기사 읽기",
+    comments: "댓글",
+    noComments: "아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요!",
+    writeComment: "댓글을 작성하세요...",
+    reply: "답글",
+    delete: "삭제",
+    loginToComment: "댓글을 달려면 로그인하세요",
+    replying: "답글 대상",
+    cancel: "취소",
+    submit: "제출",
+    viewAllComments: "모든 댓글 보기",
+    popularLeagues: "인기 리그",
+    aiPredictionsFooter: "AI 예측",
+    aiFootballPredictions: "AI 축구 예측",
+    onextwoPredictions: "1x2 예측",
+    overUnderTips: "오버/언더 팁",
+    handicapBetting: "핸디캡 베팅",
+    aiBettingPerformance: "AI 베팅 성과",
+    footballTipsToday: "오늘의 축구 팁",
+    solution: "솔루션",
+    communityFooter: "커뮤니티",
+    globalChat: "글로벌 채팅",
+    userPredictions: "사용자 예측",
+    todayMatches: "오늘의 경기",
+    disclaimer: "면책조항: OddsFlow는 정보 및 엔터테인먼트 목적으로만 AI 기반 예측을 제공합니다. 수익을 보장하지 않습니다. 책임감 있게 베팅하세요.",
   },
   '中文': {
     newsTitle: "新闻与洞察",
@@ -229,18 +479,53 @@ const translations: Record<string, Record<string, string>> = {
     home: "首页",
     predictions: "预测",
     leagues: "联赛",
-    performance: "分析",
+    performance: "AI表现",
     community: "社区",
     news: "新闻",
     pricing: "价格",
     login: "登录",
     getStarted: "开始使用",
     footer: "18+ | 赌博有风险，请理性参与。",
-    allRights: "© 2025 OddsFlow. 保留所有权利。",
+    allRights: "© 2026 OddsFlow. 保留所有权利。",
+    footerDesc: "AI 驱动的足球赔率分析，助您做出更明智的预测。",
+    product: "产品",
+    company: "公司",
+    legal: "法律",
+    aboutUs: "关于我们",
+    contact: "联系我们",
+    blog: "博客",
+    termsOfService: "服务条款",
+    privacyPolicy: "隐私政策",
+    allRightsReserved: "版权所有。",
+    gamblingWarning: "博彩有风险，请理性投注。",
     liveUpdates: "实时更新",
     featuredStory: "头条",
     latestNews: "最新新闻",
     readMore: "阅读全文",
+    comments: "评论",
+    noComments: "还没有评论。成为第一个评论者！",
+    writeComment: "写评论...",
+    reply: "回复",
+    delete: "删除",
+    loginToComment: "登录后评论",
+    replying: "回复给",
+    cancel: "取消",
+    submit: "提交",
+    viewAllComments: "查看所有评论",
+    popularLeagues: "热门联赛",
+    aiPredictionsFooter: "AI 预测",
+    aiFootballPredictions: "AI 足球预测",
+    onextwoPredictions: "1x2 预测",
+    overUnderTips: "大小球建议",
+    handicapBetting: "让球盘投注",
+    aiBettingPerformance: "AI 投注表现",
+    footballTipsToday: "今日足球贴士",
+    solution: "解决方案",
+    communityFooter: "社区",
+    globalChat: "全球聊天",
+    userPredictions: "用户预测",
+    todayMatches: "今日比赛",
+    disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。我们不保证预测的准确性，也不对任何财务损失负责。博彩有风险，请理性投注。如果您或您认识的人有赌博问题，请寻求帮助。用户必须年满 18 岁。",
   },
   '繁體': {
     newsTitle: "新聞與洞察",
@@ -254,18 +539,113 @@ const translations: Record<string, Record<string, string>> = {
     home: "首頁",
     predictions: "預測",
     leagues: "聯賽",
-    performance: "分析",
+    performance: "AI表現",
     community: "社區",
     news: "新聞",
     pricing: "價格",
     login: "登入",
     getStarted: "開始使用",
     footer: "18+ | 賭博有風險，請理性參與。",
-    allRights: "© 2025 OddsFlow. 保留所有權利。",
+    allRights: "© 2026 OddsFlow. 保留所有權利。",
+    footerDesc: "AI 驅動的足球賠率分析，助您做出更明智的預測。",
+    product: "產品",
+    company: "公司",
+    legal: "法律",
+    aboutUs: "關於我們",
+    contact: "聯繫我們",
+    blog: "博客",
+    termsOfService: "服務條款",
+    privacyPolicy: "隱私政策",
+    allRightsReserved: "版權所有。",
+    gamblingWarning: "博彩有風險，請理性投注。",
     liveUpdates: "即時更新",
     featuredStory: "頭條",
     latestNews: "最新新聞",
     readMore: "閱讀全文",
+    comments: "評論",
+    noComments: "還沒有評論。成為第一個評論者！",
+    writeComment: "寫評論...",
+    reply: "回覆",
+    delete: "刪除",
+    loginToComment: "登入後評論",
+    replying: "回覆給",
+    cancel: "取消",
+    submit: "提交",
+    viewAllComments: "查看所有評論",
+    popularLeagues: "熱門聯賽",
+    aiPredictionsFooter: "AI 預測",
+    aiFootballPredictions: "AI 足球預測",
+    onextwoPredictions: "1x2 預測",
+    overUnderTips: "大小球建議",
+    handicapBetting: "讓球盤投注",
+    aiBettingPerformance: "AI 投注表現",
+    footballTipsToday: "今日足球貼士",
+    solution: "解決方案",
+    communityFooter: "社區",
+    globalChat: "全球聊天",
+    userPredictions: "用戶預測",
+    todayMatches: "今日比賽",
+    disclaimer: "免責聲明：OddsFlow 提供的 AI 預測僅供參考和娛樂目的。我們不保證預測的準確性，也不對任何財務損失負責。博彩有風險，請理性投注。如果您或您認識的人有賭博問題，請尋求幫助。用戶必須年滿 18 歲。",
+  },
+  ID: {
+    newsTitle: "Berita & Wawasan",
+    newsSubtitle: "Tetap update dengan berita sepak bola terbaru, wawasan taruhan, dan prediksi AI",
+    noNews: "Tidak ada berita tersedia",
+    readOn: "Baca di",
+    stayInLoop: "Tetap Terhubung",
+    getLatestNews: "Dapatkan berita dan prediksi terbaru ke email Anda",
+    enterEmail: "Masukkan email Anda",
+    subscribe: "Berlangganan",
+    home: "Beranda",
+    predictions: "Prediksi",
+    leagues: "Liga",
+    performance: "Performa AI",
+    community: "Komunitas",
+    news: "Berita",
+    pricing: "Harga",
+    login: "Masuk",
+    getStarted: "Mulai",
+    footer: "18+ | Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    allRights: "© 2026 OddsFlow. Hak cipta dilindungi.",
+    footerDesc: "Analisis odds sepak bola bertenaga AI untuk prediksi yang lebih cerdas.",
+    product: "Produk",
+    company: "Perusahaan",
+    legal: "Legal",
+    aboutUs: "Tentang Kami",
+    contact: "Kontak",
+    blog: "Blog",
+    termsOfService: "Ketentuan Layanan",
+    privacyPolicy: "Kebijakan Privasi",
+    allRightsReserved: "Hak cipta dilindungi.",
+    gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    liveUpdates: "UPDATE LANGSUNG",
+    featuredStory: "UTAMA",
+    latestNews: "BERITA TERBARU",
+    readMore: "Baca Artikel Lengkap",
+    comments: "Komentar",
+    noComments: "Belum ada komentar. Jadilah yang pertama berkomentar!",
+    writeComment: "Tulis komentar...",
+    reply: "Balas",
+    delete: "Hapus",
+    loginToComment: "Masuk untuk berkomentar",
+    replying: "Membalas ke",
+    cancel: "Batal",
+    submit: "Kirim",
+    viewAllComments: "Lihat Semua Komentar",
+    popularLeagues: "Liga Populer",
+    aiPredictionsFooter: "Prediksi AI",
+    aiFootballPredictions: "Prediksi Sepak Bola AI",
+    onextwoPredictions: "Prediksi 1x2",
+    overUnderTips: "Tips Over/Under",
+    handicapBetting: "Taruhan Handicap",
+    aiBettingPerformance: "Performa Taruhan AI",
+    footballTipsToday: "Tips Sepak Bola Hari Ini",
+    solution: "Solusi",
+    communityFooter: "Komunitas",
+    globalChat: "Obrolan Global",
+    userPredictions: "Prediksi Pengguna",
+    todayMatches: "Pertandingan Hari Ini",
+    disclaimer: "Penafian: OddsFlow menyediakan prediksi bertenaga AI hanya untuk tujuan informasi dan hiburan. Kami tidak menjamin keakuratan prediksi dan tidak bertanggung jawab atas kerugian finansial. Perjudian melibatkan risiko. Harap bertaruh dengan bijak. Jika Anda atau seseorang yang Anda kenal memiliki masalah perjudian, silakan cari bantuan. Pengguna harus berusia 18+ tahun.",
   },
 };
 
@@ -278,6 +658,9 @@ export default function NewsPage() {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Comment counts for display
+  const [commentCounts, setCommentCounts] = useState<Record<number, number>>({});
 
   // Check auth session
   useEffect(() => {
@@ -302,6 +685,21 @@ export default function NewsPage() {
     localStorage.setItem('oddsflow_lang', langCode);
     setLangDropdownOpen(false);
   };
+
+  // Fetch comment counts when news changes
+  useEffect(() => {
+    const fetchCommentCounts = async () => {
+      const counts: Record<number, number> = {};
+      for (const item of news) {
+        const result = await getNewsCommentCount(item.id);
+        counts[item.id] = result.count;
+      }
+      setCommentCounts(counts);
+    };
+    if (news.length > 0) {
+      fetchCommentCounts();
+    }
+  }, [news]);
 
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
@@ -373,6 +771,7 @@ export default function NewsPage() {
               <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
               <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
               <Link href="/news" className="text-emerald-400 text-sm font-medium">{t('news')}</Link>
+              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
               <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
@@ -475,6 +874,7 @@ export default function NewsPage() {
                 { href: '/performance', label: t('performance') },
                 { href: '/community', label: t('community') },
                 { href: '/news', label: t('news'), active: true },
+                { href: '/solution', label: t('solution') },
                 { href: '/pricing', label: t('pricing') },
               ].map((link) => (
                 <Link
@@ -640,72 +1040,90 @@ export default function NewsPage() {
               {/* News Grid - Broadcast Style Cards */}
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {otherNews.map((item, index) => (
-                  <a
+                  <div
                     key={item.id}
-                    href={item.source_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative"
+                    className="relative"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
-                    <div className="relative h-full rounded-xl overflow-hidden bg-[#0a0e14] border border-white/5 hover:border-emerald-500/30 transition-all duration-300">
-                      {/* Spotlight effect on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                    <a
+                      href={item.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group block"
+                    >
+                      <div className="relative rounded-xl overflow-hidden bg-[#0a0e14] border border-white/5 hover:border-emerald-500/30 transition-all duration-300">
+                        {/* Spotlight effect on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                      {/* Image */}
-                      <div className="aspect-[16/10] relative overflow-hidden">
-                        {item.image_url ? (
-                          <>
-                            <img
-                              src={item.image_url}
-                              alt={item.title}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] to-transparent" />
-                          </>
-                        ) : (
-                          <div className="absolute inset-0 bg-gradient-to-br from-[#0c1018] to-[#05080d] flex items-center justify-center">
-                            <svg className="w-12 h-12 text-white/5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                        {/* Image */}
+                        <div className="aspect-[16/10] relative overflow-hidden">
+                          {item.image_url ? (
+                            <>
+                              <img
+                                src={item.image_url}
+                                alt={item.title}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] to-transparent" />
+                            </>
+                          ) : (
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#0c1018] to-[#05080d] flex items-center justify-center">
+                              <svg className="w-12 h-12 text-white/5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                              </svg>
+                            </div>
+                          )}
+
+                          {/* Source badge overlay */}
+                          <div className="absolute top-3 left-3">
+                            <span className="px-2.5 py-1 rounded bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold tracking-wide uppercase border border-white/10">
+                              {item.source}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-5">
+                          {/* Time */}
+                          {item.published_at && (
+                            <span className="text-[11px] text-emerald-400/80 font-medium uppercase tracking-wide">
+                              {getRelativeTime(item.published_at)}
+                            </span>
+                          )}
+
+                          <h3 className="font-bold text-white mt-2 mb-3 leading-snug group-hover:text-emerald-400 transition-colors duration-300 line-clamp-2">
+                            {item.title}
+                          </h3>
+
+                          <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">
+                            {item.summary}
+                          </p>
+
+                          {/* Read indicator */}
+                          <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                            <span className="text-xs text-gray-500">{t('readOn')} {item.source}</span>
+                            <svg className="w-4 h-4 text-gray-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>
                           </div>
-                        )}
-
-                        {/* Source badge overlay */}
-                        <div className="absolute top-3 left-3">
-                          <span className="px-2.5 py-1 rounded bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold tracking-wide uppercase border border-white/10">
-                            {item.source}
-                          </span>
                         </div>
                       </div>
+                    </a>
 
-                      {/* Content */}
-                      <div className="p-5">
-                        {/* Time */}
-                        {item.published_at && (
-                          <span className="text-[11px] text-emerald-400/80 font-medium uppercase tracking-wide">
-                            {getRelativeTime(item.published_at)}
-                          </span>
-                        )}
-
-                        <h3 className="font-bold text-white mt-2 mb-3 leading-snug group-hover:text-emerald-400 transition-colors duration-300 line-clamp-2">
-                          {item.title}
-                        </h3>
-
-                        <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">
-                          {item.summary}
-                        </p>
-
-                        {/* Read indicator */}
-                        <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
-                          <span className="text-xs text-gray-500">{t('readOn')} {item.source}</span>
-                          <svg className="w-4 h-4 text-gray-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
+                    {/* Comment Button - Link to comments page */}
+                    <Link
+                      href={`/news/${item.id}/comments`}
+                      className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border bg-[#0a0e14] border-white/5 text-gray-400 hover:border-emerald-500/20 hover:text-white transition-all"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                      <span className="text-sm font-medium">{t('comments')} ({commentCounts[item.id] || 0})</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
                 ))}
               </div>
 
@@ -765,9 +1183,90 @@ export default function NewsPage() {
       </main>
 
       {/* Footer */}
-      <footer className="relative py-8 border-t border-white/5 text-center text-gray-500 text-sm">
-        <p>{t('footer')}</p>
-        <p className="mt-2">{t('allRights')}</p>
+      <footer className="relative z-10 py-16 px-4 bg-black border-t border-white/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 lg:gap-12 mb-12">
+            <div className="col-span-2">
+              <Link href="/" className="flex items-center gap-3 mb-6">
+                <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
+                <span className="text-xl font-bold">OddsFlow</span>
+              </Link>
+              <p className="text-gray-400 mb-6 leading-relaxed">{t('footerDesc')}</p>
+              <div className="flex items-center gap-4">
+                {/* Facebook */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </Link>
+                {/* Instagram */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </Link>
+                {/* Telegram */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-5 text-white">{t('product')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
+                <li><Link href="/leagues" className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
+                <li><Link href="/performance" className="hover:text-emerald-400 transition-colors">{t('performance')}</Link></li>
+                <li><Link href="/solution" className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/leagues/premier-league" className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
+                <li><Link href="/leagues/la-liga" className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
+                <li><Link href="/leagues/serie-a" className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
+                <li><Link href="/leagues/bundesliga" className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
+                <li><Link href="/leagues/ligue-1" className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
+                <li><Link href="/leagues/champions-league" className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-5 text-white">{t('communityFooter')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/community" className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
+                <li><Link href="/community/global-chat" className="hover:text-emerald-400 transition-colors">{t('globalChat')}</Link></li>
+                <li><Link href="/community/user-predictions" className="hover:text-emerald-400 transition-colors">{t('userPredictions')}</Link></li>
+              </ul>
+            </div>
+
+            <div className="relative z-10">
+              <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/about" className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+                <li><Link href="/blog" className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
+              </ul>
+            </div>
+
+            <div className="relative z-10">
+              <h4 className="font-semibold mb-5 text-white">{t('legal')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/terms-of-service" className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="mt-8 pt-8 border-t border-white/5">
+            <p className="text-gray-500 text-xs leading-relaxed">{t('disclaimer')}</p>
+          </div>
+
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 mt-8">
+            <p className="text-gray-500 text-sm">&copy; 2026 OddsFlow. {t('allRightsReserved')}</p>
+            <p className="text-gray-600 text-xs">{t('gamblingWarning')}</p>
+          </div>
+        </div>
       </footer>
     </div>
   );

@@ -15,6 +15,7 @@ const LANGUAGES = [
   { code: 'KO', name: '한국어', flag: '🇰🇷' },
   { code: '中文', name: '简体中文', flag: '🇨🇳' },
   { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
 ];
 
 const translations: Record<string, Record<string, string>> = {
@@ -26,7 +27,18 @@ const translations: Record<string, Record<string, string>> = {
     home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance", community: "Community", news: "News",
     login: "Log In", getStarted: "Get Started",
     footer: "18+ | Gambling involves risk. Please gamble responsibly.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "AI-powered football odds analysis for smarter predictions. Make data-driven decisions with real-time insights.",
+    product: "Product",
+    company: "Company",
+    legal: "Legal",
+    aboutUs: "About Us",
+    contact: "Contact",
+    blog: "Blog",
+    termsOfService: "Terms of Service",
+    privacyPolicy: "Privacy Policy",
+    allRightsReserved: "All rights reserved.",
+    gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
     // Pricing cards
     freeTrial: "Free Trial", starter: "Starter", pro: "Pro", ultimate: "Ultimate",
     perWeek: "/week", perMonth: "/month",
@@ -55,16 +67,42 @@ const translations: Record<string, Record<string, string>> = {
     valueHunter: "Value Hunter", valueHunterDesc: "Best odds value picks",
     safePlay: "Safe Play", safePlayDesc: "Highest confidence picks",
     subscribe: "Subscribe", currentPlan: "Current Plan", managePlan: "Manage Plan", upgrade: "Upgrade",
+    popularLeagues: "Popular Leagues",
+    aiPredictionsFooter: "AI Predictions",
+    aiFootballPredictions: "AI Football Predictions",
+    onextwoPredictions: "1x2 Predictions",
+    overUnderTips: "Over/Under Tips",
+    handicapBetting: "Handicap Betting",
+    aiBettingPerformance: "AI Betting Performance",
+    footballTipsToday: "Football Tips Today",
+    solution: "Solution",
+    liveOdds: "AI Performance",
+    communityFooter: "Community",
+    globalChat: "Global Chat",
+    userPredictions: "User Predictions",
+    todayMatches: "Today Matches",
+    disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
   },
   ES: {
     pricing: "Precios",
     pricingSubtitle: "Elige el plan que se adapte a tus necesidades",
     comingSoon: "Próximamente",
     comingSoonDesc: "Planes de precios flexibles estarán disponibles pronto",
-    home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Análisis", community: "Comunidad", news: "Noticias",
+    home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA", community: "Comunidad", news: "Noticias",
     login: "Iniciar Sesión", getStarted: "Comenzar",
     footer: "18+ | El juego implica riesgo. Por favor juega responsablemente.",
-    allRights: "© 2025 OddsFlow. Todos los derechos reservados.",
+    allRights: "© 2026 OddsFlow. Todos los derechos reservados.",
+    footerDesc: "Analisis de cuotas de futbol impulsado por IA para predicciones mas inteligentes.",
+    product: "Producto",
+    company: "Empresa",
+    legal: "Legal",
+    aboutUs: "Sobre Nosotros",
+    contact: "Contacto",
+    blog: "Blog",
+    termsOfService: "Terminos de Servicio",
+    privacyPolicy: "Politica de Privacidad",
+    allRightsReserved: "Todos los derechos reservados.",
+    gamblingWarning: "El juego implica riesgo. Por favor juega responsablemente.",
     freeTrial: "Prueba Gratis", starter: "Básico", pro: "Pro", ultimate: "Ultimate",
     perWeek: "/semana", perMonth: "/mes",
     choose1League: "Elige", oneLeague: "1 Liga",
@@ -92,16 +130,42 @@ const translations: Record<string, Record<string, string>> = {
     valueHunter: "Cazador de Valor", valueHunterDesc: "Mejores cuotas de valor",
     safePlay: "Juego Seguro", safePlayDesc: "Picks de mayor confianza",
     subscribe: "Suscribir", currentPlan: "Plan Actual", managePlan: "Gestionar Plan", upgrade: "Mejorar",
+    popularLeagues: "Ligas Populares",
+    aiPredictionsFooter: "Predicciones IA",
+    aiFootballPredictions: "Predicciones de Futbol IA",
+    onextwoPredictions: "Predicciones 1x2",
+    overUnderTips: "Consejos Over/Under",
+    handicapBetting: "Apuestas Handicap",
+    aiBettingPerformance: "Rendimiento de Apuestas IA",
+    footballTipsToday: "Tips de Futbol Hoy",
+    solution: "Solucion",
+    liveOdds: "Rendimiento IA",
+    communityFooter: "Comunidad",
+    globalChat: "Chat Global",
+    userPredictions: "Predicciones de Usuarios",
+    todayMatches: "Partidos de Hoy",
+    disclaimer: "Aviso legal: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento. No garantizamos la precision de las predicciones y no somos responsables de ninguna perdida financiera. El juego implica riesgo. Por favor juega responsablemente. Si usted o alguien que conoce tiene un problema con el juego, busque ayuda. Los usuarios deben tener 18+ años.",
   },
   PT: {
     pricing: "Preços",
     pricingSubtitle: "Escolha o plano que atende às suas necessidades",
     comingSoon: "Em Breve",
     comingSoonDesc: "Planos de preços flexíveis estarão disponíveis em breve",
-    home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Análise", community: "Comunidade", news: "Notícias",
+    home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho IA", community: "Comunidade", news: "Notícias",
     login: "Entrar", getStarted: "Começar",
     footer: "18+ | O jogo envolve risco. Por favor, jogue com responsabilidade.",
-    allRights: "© 2025 OddsFlow. Todos os direitos reservados.",
+    allRights: "© 2026 OddsFlow. Todos os direitos reservados.",
+    footerDesc: "Analise de odds de futebol com IA para previsoes mais inteligentes.",
+    product: "Produto",
+    company: "Empresa",
+    legal: "Legal",
+    aboutUs: "Sobre Nos",
+    contact: "Contato",
+    blog: "Blog",
+    termsOfService: "Termos de Servico",
+    privacyPolicy: "Politica de Privacidade",
+    allRightsReserved: "Todos os direitos reservados.",
+    gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
     freeTrial: "Teste Grátis", starter: "Iniciante", pro: "Pro", ultimate: "Ultimate",
     perWeek: "/semana", perMonth: "/mês",
     choose1League: "Escolha", oneLeague: "1 Liga",
@@ -129,16 +193,42 @@ const translations: Record<string, Record<string, string>> = {
     valueHunter: "Caçador de Valor", valueHunterDesc: "Melhores odds de valor",
     safePlay: "Jogo Seguro", safePlayDesc: "Picks de maior confiança",
     subscribe: "Assinar", currentPlan: "Plano Atual", managePlan: "Gerenciar Plano", upgrade: "Atualizar",
+    popularLeagues: "Ligas Populares",
+    aiPredictionsFooter: "Previsões IA",
+    aiFootballPredictions: "Previsões de Futebol IA",
+    onextwoPredictions: "Previsões 1x2",
+    overUnderTips: "Dicas Over/Under",
+    handicapBetting: "Apostas Handicap",
+    aiBettingPerformance: "Desempenho de Apostas IA",
+    footballTipsToday: "Dicas de Futebol Hoje",
+    solution: "Solucao",
+    liveOdds: "Desempenho IA",
+    communityFooter: "Comunidade",
+    globalChat: "Chat Global",
+    userPredictions: "Previsoes de Usuarios",
+    todayMatches: "Jogos de Hoje",
+    disclaimer: "Aviso legal: OddsFlow fornece previsoes baseadas em IA apenas para fins informativos e de entretenimento. Nao garantimos a precisao das previsoes e nao somos responsaveis por quaisquer perdas financeiras. Apostas envolvem risco. Por favor aposte com responsabilidade. Se voce ou alguem que conhece tem um problema com jogos, procure ajuda. Usuarios devem ter 18+ anos.",
   },
   DE: {
     pricing: "Preise",
     pricingSubtitle: "Wählen Sie den Plan, der Ihren Bedürfnissen entspricht",
     comingSoon: "Demnächst",
     comingSoonDesc: "Flexible Preispläne werden bald verfügbar sein",
-    home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "Analyse", community: "Community", news: "Nachrichten",
+    home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung", community: "Community", news: "Nachrichten",
     login: "Anmelden", getStarted: "Loslegen",
     footer: "18+ | Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
-    allRights: "© 2025 OddsFlow. Alle Rechte vorbehalten.",
+    allRights: "© 2026 OddsFlow. Alle Rechte vorbehalten.",
+    footerDesc: "KI-gestutzte Fussball-Quotenanalyse fur intelligentere Vorhersagen.",
+    product: "Produkt",
+    company: "Unternehmen",
+    legal: "Rechtliches",
+    aboutUs: "Uber Uns",
+    contact: "Kontakt",
+    blog: "Blog",
+    termsOfService: "Nutzungsbedingungen",
+    privacyPolicy: "Datenschutz",
+    allRightsReserved: "Alle Rechte vorbehalten.",
+    gamblingWarning: "Glucksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
     freeTrial: "Kostenlos Testen", starter: "Starter", pro: "Pro", ultimate: "Ultimate",
     perWeek: "/Woche", perMonth: "/Monat",
     choose1League: "Wähle", oneLeague: "1 Liga",
@@ -166,16 +256,42 @@ const translations: Record<string, Record<string, string>> = {
     valueHunter: "Wertjäger", valueHunterDesc: "Beste Quotenwert-Picks",
     safePlay: "Sicheres Spiel", safePlayDesc: "Picks mit höchster Zuversicht",
     subscribe: "Abonnieren", currentPlan: "Aktueller Plan", managePlan: "Plan Verwalten", upgrade: "Upgrade",
+    popularLeagues: "Beliebte Ligen",
+    aiPredictionsFooter: "KI-Vorhersagen",
+    aiFootballPredictions: "KI-Fussballvorhersagen",
+    onextwoPredictions: "1x2 Vorhersagen",
+    overUnderTips: "Über/Unter Tipps",
+    handicapBetting: "Handicap-Wetten",
+    aiBettingPerformance: "KI-Wettleistung",
+    footballTipsToday: "Fussballtipps Heute",
+    solution: "Losung",
+    liveOdds: "KI-Leistung",
+    communityFooter: "Community",
+    globalChat: "Globaler Chat",
+    userPredictions: "Benutzervorhersagen",
+    todayMatches: "Heutige Spiele",
+    disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestutzte Vorhersagen nur zu Informations- und Unterhaltungszwecken. Wir garantieren nicht die Genauigkeit der Vorhersagen und sind nicht verantwortlich fur finanzielle Verluste. Glucksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll. Wenn Sie oder jemand den Sie kennen ein Glucksspielproblem hat, suchen Sie Hilfe. Benutzer mussen 18+ Jahre alt sein.",
   },
   FR: {
     pricing: "Tarifs",
     pricingSubtitle: "Choisissez le plan qui correspond à vos besoins",
     comingSoon: "Bientôt Disponible",
     comingSoonDesc: "Des plans tarifaires flexibles seront bientôt disponibles",
-    home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Analyse", community: "Communauté", news: "Actualités",
+    home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance IA", community: "Communauté", news: "Actualités",
     login: "Connexion", getStarted: "Commencer",
     footer: "18+ | Les jeux d'argent comportent des risques. Jouez de manière responsable.",
-    allRights: "© 2025 OddsFlow. Tous droits réservés.",
+    allRights: "© 2026 OddsFlow. Tous droits réservés.",
+    footerDesc: "Analyse de cotes de football propulsee par l'IA pour des predictions plus intelligentes.",
+    product: "Produit",
+    company: "Entreprise",
+    legal: "Mentions Legales",
+    aboutUs: "A Propos",
+    contact: "Contact",
+    blog: "Blog",
+    termsOfService: "Conditions d'Utilisation",
+    privacyPolicy: "Politique de Confidentialite",
+    allRightsReserved: "Tous droits reserves.",
+    gamblingWarning: "Le jeu comporte des risques. Veuillez jouer de maniere responsable.",
     freeTrial: "Essai Gratuit", starter: "Débutant", pro: "Pro", ultimate: "Ultimate",
     perWeek: "/semaine", perMonth: "/mois",
     choose1League: "Choisir", oneLeague: "1 Ligue",
@@ -203,16 +319,42 @@ const translations: Record<string, Record<string, string>> = {
     valueHunter: "Chasseur de Valeur", valueHunterDesc: "Meilleures cotes de valeur",
     safePlay: "Jeu Sûr", safePlayDesc: "Picks de haute confiance",
     subscribe: "S'abonner", currentPlan: "Plan Actuel", managePlan: "Gérer le Plan", upgrade: "Mettre à niveau",
+    popularLeagues: "Ligues Populaires",
+    aiPredictionsFooter: "Prédictions IA",
+    aiFootballPredictions: "Prédictions Football IA",
+    onextwoPredictions: "Prédictions 1x2",
+    overUnderTips: "Conseils Over/Under",
+    handicapBetting: "Paris Handicap",
+    aiBettingPerformance: "Performance Paris IA",
+    footballTipsToday: "Pronostics Foot Aujourd'hui",
+    solution: "Solution",
+    liveOdds: "Performance IA",
+    communityFooter: "Communaute",
+    globalChat: "Chat Global",
+    userPredictions: "Predictions Utilisateurs",
+    todayMatches: "Matchs du Jour",
+    disclaimer: "Avertissement: OddsFlow fournit des predictions basees sur l'IA a des fins d'information et de divertissement uniquement. Nous ne garantissons pas l'exactitude des predictions et ne sommes pas responsables des pertes financieres. Le jeu comporte des risques. Veuillez jouer de maniere responsable. Si vous ou quelqu'un que vous connaissez a un probleme de jeu, veuillez chercher de l'aide. Les utilisateurs doivent avoir 18+ ans.",
   },
   JA: {
     pricing: "料金",
     pricingSubtitle: "ニーズに合ったプランをお選びください",
     comingSoon: "近日公開",
     comingSoonDesc: "柔軟な料金プランを準備中です",
-    home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "分析", community: "コミュニティ", news: "ニュース",
+    home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AIパフォーマンス", community: "コミュニティ", news: "ニュース",
     login: "ログイン", getStarted: "始める",
     footer: "18+ | ギャンブルにはリスクが伴います。責任を持ってプレイしてください。",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "よりスマートな予測のためのAI駆動フットボールオッズ分析。",
+    product: "製品",
+    company: "会社",
+    legal: "法的情報",
+    aboutUs: "私たちについて",
+    contact: "お問い合わせ",
+    blog: "ブログ",
+    termsOfService: "利用規約",
+    privacyPolicy: "プライバシーポリシー",
+    allRightsReserved: "全著作権所有。",
+    gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
     freeTrial: "無料トライアル", starter: "スターター", pro: "プロ", ultimate: "アルティメット",
     perWeek: "/週", perMonth: "/月",
     choose1League: "選択", oneLeague: "1リーグ",
@@ -240,16 +382,42 @@ const translations: Record<string, Record<string, string>> = {
     valueHunter: "バリューハンター", valueHunterDesc: "最高価値のオッズ",
     safePlay: "セーフプレイ", safePlayDesc: "最高信頼度のピック",
     subscribe: "購読する", currentPlan: "現在のプラン", managePlan: "プラン管理", upgrade: "アップグレード",
+    popularLeagues: "人気リーグ",
+    aiPredictionsFooter: "AI予測",
+    aiFootballPredictions: "AIサッカー予測",
+    onextwoPredictions: "1x2予測",
+    overUnderTips: "オーバー/アンダー予想",
+    handicapBetting: "ハンディキャップベット",
+    aiBettingPerformance: "AIベッティング実績",
+    footballTipsToday: "今日のサッカー予想",
+    solution: "ソリューション",
+    liveOdds: "AIパフォーマンス",
+    communityFooter: "コミュニティ",
+    globalChat: "グローバルチャット",
+    userPredictions: "ユーザー予測",
+    todayMatches: "今日の試合",
+    disclaimer: "免責事項: OddsFlowは情報および娯楽目的のみでAI駆動の予測を提供しています。予測の正確性を保証せず、いかなる財務損失についても責任を負いません。ギャンブルにはリスクが伴います。責任を持ってお楽しみください。あなたまたはあなたの知人がギャンブル問題を抱えている場合は、助けを求めてください。ユーザーは18歳以上である必要があります。",
   },
   KO: {
     pricing: "가격",
     pricingSubtitle: "필요에 맞는 플랜을 선택하세요",
     comingSoon: "곧 출시 예정",
     comingSoonDesc: "유연한 가격 플랜이 곧 제공될 예정입니다",
-    home: "홈", predictions: "예측", leagues: "리그", performance: "분석", community: "커뮤니티", news: "뉴스",
+    home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성능", community: "커뮤니티", news: "뉴스",
     login: "로그인", getStarted: "시작하기",
     footer: "18+ | 도박에는 위험이 따릅니다. 책임감 있게 플레이하세요.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "더 스마트한 예측을 위한 AI 기반 축구 배당률 분석.",
+    product: "제품",
+    company: "회사",
+    legal: "법적 정보",
+    aboutUs: "회사 소개",
+    contact: "문의하기",
+    blog: "블로그",
+    termsOfService: "서비스 약관",
+    privacyPolicy: "개인정보 처리방침",
+    allRightsReserved: "모든 권리 보유.",
+    gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
     freeTrial: "무료 체험", starter: "스타터", pro: "프로", ultimate: "얼티밋",
     perWeek: "/주", perMonth: "/월",
     choose1League: "선택", oneLeague: "1개 리그",
@@ -277,16 +445,42 @@ const translations: Record<string, Record<string, string>> = {
     valueHunter: "가치 헌터", valueHunterDesc: "최고 가치 배당",
     safePlay: "안전 플레이", safePlayDesc: "최고 신뢰도 픽",
     subscribe: "구독하기", currentPlan: "현재 플랜", managePlan: "플랜 관리", upgrade: "업그레이드",
+    popularLeagues: "인기 리그",
+    aiPredictionsFooter: "AI 예측",
+    aiFootballPredictions: "AI 축구 예측",
+    onextwoPredictions: "1x2 예측",
+    overUnderTips: "오버/언더 팁",
+    handicapBetting: "핸디캡 베팅",
+    aiBettingPerformance: "AI 베팅 성과",
+    footballTipsToday: "오늘의 축구 팁",
+    solution: "솔루션",
+    liveOdds: "AI 성능",
+    communityFooter: "커뮤니티",
+    globalChat: "글로벌 채팅",
+    userPredictions: "사용자 예측",
+    todayMatches: "오늘 경기",
+    disclaimer: "면책조항: OddsFlow는 정보 및 오락 목적으로만 AI 기반 예측을 제공합니다. 예측의 정확성을 보장하지 않으며 어떠한 재정적 손실에 대해서도 책임지지 않습니다. 도박에는 위험이 따릅니다. 책임감 있게 즐기세요. 본인 또는 아는 사람이 도박 문제가 있다면 도움을 구하세요. 사용자는 18세 이상이어야 합니다.",
   },
   '中文': {
     pricing: "价格",
     pricingSubtitle: "选择适合您需求的计划",
     comingSoon: "即将推出",
     comingSoonDesc: "灵活的定价计划即将上线",
-    home: "首页", predictions: "预测", leagues: "联赛", performance: "分析", community: "社区", news: "新闻",
+    home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现", community: "社区", news: "新闻",
     login: "登录", getStarted: "开始使用",
     footer: "18+ | 赌博有风险，请理性参与。",
-    allRights: "© 2025 OddsFlow. 保留所有权利。",
+    allRights: "© 2026 OddsFlow. 保留所有权利。",
+    footerDesc: "AI 驱动的足球赔率分析，助您做出更明智的预测。",
+    product: "产品",
+    company: "公司",
+    legal: "法律",
+    aboutUs: "关于我们",
+    contact: "联系我们",
+    blog: "博客",
+    termsOfService: "服务条款",
+    privacyPolicy: "隐私政策",
+    allRightsReserved: "版权所有。",
+    gamblingWarning: "博彩有风险，请理性投注。",
     freeTrial: "免费试用", starter: "入门版", pro: "专业版", ultimate: "旗舰版",
     perWeek: "/周", perMonth: "/月",
     choose1League: "选择", oneLeague: "1个联赛",
@@ -314,16 +508,42 @@ const translations: Record<string, Record<string, string>> = {
     valueHunter: "价值猎手", valueHunterDesc: "最佳赔率价值",
     safePlay: "稳妥型", safePlayDesc: "最高置信度选择",
     subscribe: "订阅", currentPlan: "当前套餐", managePlan: "管理套餐", upgrade: "升级",
+    popularLeagues: "热门联赛",
+    aiPredictionsFooter: "AI 预测",
+    aiFootballPredictions: "AI 足球预测",
+    onextwoPredictions: "1x2 预测",
+    overUnderTips: "大小球建议",
+    handicapBetting: "让球盘投注",
+    aiBettingPerformance: "AI 投注表现",
+    footballTipsToday: "今日足球贴士",
+    solution: "解决方案",
+    liveOdds: "AI表现",
+    communityFooter: "社区",
+    globalChat: "全球聊天",
+    userPredictions: "用户预测",
+    todayMatches: "今日比赛",
+    disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。我们不保证预测的准确性，也不对任何财务损失负责。博彩有风险，请理性投注。如果您或您认识的人有赌博问题，请寻求帮助。用户必须年满 18 岁。",
   },
   '繁體': {
     pricing: "價格",
     pricingSubtitle: "選擇適合您需求的計劃",
     comingSoon: "即將推出",
     comingSoonDesc: "靈活的定價計劃即將上線",
-    home: "首頁", predictions: "預測", leagues: "聯賽", performance: "分析", community: "社區", news: "新聞",
+    home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現", community: "社區", news: "新聞",
     login: "登入", getStarted: "開始使用",
     footer: "18+ | 賭博有風險，請理性參與。",
-    allRights: "© 2025 OddsFlow. 保留所有權利。",
+    allRights: "© 2026 OddsFlow. 保留所有權利。",
+    footerDesc: "AI 驅動的足球賠率分析，助您做出更明智的預測。",
+    product: "產品",
+    company: "公司",
+    legal: "法律",
+    aboutUs: "關於我們",
+    contact: "聯繫我們",
+    blog: "博客",
+    termsOfService: "服務條款",
+    privacyPolicy: "隱私政策",
+    allRightsReserved: "版權所有。",
+    gamblingWarning: "博彩有風險，請理性投注。",
     freeTrial: "免費試用", starter: "入門版", pro: "專業版", ultimate: "旗艦版",
     perWeek: "/週", perMonth: "/月",
     choose1League: "選擇", oneLeague: "1個聯賽",
@@ -351,6 +571,84 @@ const translations: Record<string, Record<string, string>> = {
     valueHunter: "價值獵手", valueHunterDesc: "最佳賠率價值",
     safePlay: "穩妥型", safePlayDesc: "最高置信度選擇",
     subscribe: "訂閱", currentPlan: "當前套餐", managePlan: "管理套餐", upgrade: "升級",
+    popularLeagues: "熱門聯賽",
+    aiPredictionsFooter: "AI 預測",
+    aiFootballPredictions: "AI 足球預測",
+    onextwoPredictions: "1x2 預測",
+    overUnderTips: "大小球建議",
+    handicapBetting: "讓球盤投注",
+    aiBettingPerformance: "AI 投注表現",
+    footballTipsToday: "今日足球貼士",
+    solution: "解決方案",
+    liveOdds: "AI表現",
+    communityFooter: "社區",
+    globalChat: "全球聊天",
+    userPredictions: "用戶預測",
+    todayMatches: "今日比賽",
+    disclaimer: "免責聲明：OddsFlow 提供的 AI 預測僅供參考和娛樂目的。我們不保證預測的準確性，也不對任何財務損失負責。博彩有風險，請理性投注。如果您或您認識的人有賭博問題，請尋求幫助。用戶必須年滿 18 歲。",
+  },
+  ID: {
+    pricing: "Harga",
+    pricingSubtitle: "Pilih paket yang sesuai untuk Anda",
+    comingSoon: "Segera Hadir",
+    comingSoonDesc: "Paket harga fleksibel akan segera tersedia",
+    home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI", community: "Komunitas", news: "Berita",
+    login: "Masuk", getStarted: "Mulai",
+    footer: "18+ | Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    allRights: "© 2026 OddsFlow. Hak cipta dilindungi.",
+    footerDesc: "Analisis odds sepak bola bertenaga AI untuk prediksi yang lebih cerdas.",
+    product: "Produk",
+    company: "Perusahaan",
+    legal: "Legal",
+    aboutUs: "Tentang Kami",
+    contact: "Kontak",
+    blog: "Blog",
+    termsOfService: "Ketentuan Layanan",
+    privacyPolicy: "Kebijakan Privasi",
+    allRightsReserved: "Hak cipta dilindungi.",
+    gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    freeTrial: "Uji Coba Gratis", starter: "Pemula", pro: "Pro", ultimate: "Ultimate",
+    perWeek: "/minggu", perMonth: "/bulan",
+    choose1League: "Pilih", oneLeague: "1 Liga",
+    daysAccess: "akses", sevenDays: "7 hari",
+    choose1Style: "Pilih", oneBettingStyle: "1 Gaya Taruhan",
+    aiPredictions: "Prediksi AI & Sinyal",
+    fromTop5: "dari Top 5 + UEFA",
+    all5Leagues: "Semua 5 Liga Utama", unlocked: "terbuka",
+    uefaFifa: "UEFA CL + FIFA 2026", included: "termasuk",
+    all5LeaguesUefa: "5 Liga + UEFA",
+    all5Styles: "5 Gaya Taruhan",
+    prioritySupport: "Dukungan prioritas",
+    choose1LeagueLabel: "Pilih 1 liga:",
+    choose1StyleLabel: "Pilih 1 gaya:",
+    everythingIncluded: "Semua termasuk:",
+    sixLeagues: "6 Liga", fiveStyles: "5 Gaya",
+    startFreeTrial: "Mulai Uji Coba Gratis",
+    trialNote: "7 hari gratis • Tanpa kartu kredit",
+    popular: "POPULER",
+    bettingStylesTitle: "Penjelasan Gaya Taruhan",
+    availableLeaguesTitle: "Liga Tersedia",
+    aggressive: "Agresif", aggressiveDesc: "Risiko tinggi, hasil tinggi",
+    conservative: "Konservatif", conservativeDesc: "Risiko rendah, hasil stabil",
+    balanced: "Seimbang", balancedDesc: "Rasio risiko-hasil optimal",
+    valueHunter: "Pemburu Nilai", valueHunterDesc: "Pilihan odds terbaik",
+    safePlay: "Aman", safePlayDesc: "Pilihan kepercayaan tertinggi",
+    subscribe: "Berlangganan", currentPlan: "Paket Saat Ini", managePlan: "Kelola Paket", upgrade: "Tingkatkan",
+    popularLeagues: "Liga Populer",
+    aiPredictionsFooter: "Prediksi AI",
+    aiFootballPredictions: "Prediksi Sepak Bola AI",
+    onextwoPredictions: "Prediksi 1x2",
+    overUnderTips: "Tips Over/Under",
+    handicapBetting: "Taruhan Handicap",
+    aiBettingPerformance: "Performa Taruhan AI",
+    footballTipsToday: "Tips Sepak Bola Hari Ini",
+    solution: "Solusi",
+    liveOdds: "Performa AI",
+    communityFooter: "Komunitas",
+    globalChat: "Obrolan Global",
+    userPredictions: "Prediksi Pengguna",
+    todayMatches: "Pertandingan Hari Ini",
+    disclaimer: "Penafian: OddsFlow menyediakan prediksi berbasis AI hanya untuk tujuan informasi dan hiburan. Kami tidak menjamin keakuratan prediksi dan tidak bertanggung jawab atas kerugian finansial apa pun. Perjudian melibatkan risiko. Harap bertaruh dengan bijak. Jika Anda atau seseorang yang Anda kenal memiliki masalah perjudian, silakan cari bantuan. Pengguna harus berusia 18+ tahun.",
   },
 };
 
@@ -455,6 +753,7 @@ export default function PricingPage() {
               <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
               <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
               <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
               <Link href="/pricing" className="text-emerald-400 text-sm font-medium">{t('pricing')}</Link>
             </div>
 
@@ -556,6 +855,7 @@ export default function PricingPage() {
                 { href: '/performance', label: t('performance') },
                 { href: '/community', label: t('community') },
                 { href: '/news', label: t('news') },
+                { href: '/solution', label: t('solution') },
                 { href: '/pricing', label: t('pricing'), active: true },
               ].map((link) => (
                 <Link
@@ -970,9 +1270,90 @@ export default function PricingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 py-8 border-t border-white/5 text-center text-gray-500 text-sm">
-        <p>{t('footer')}</p>
-        <p className="mt-2">{t('allRights')}</p>
+      <footer className="relative z-10 py-16 px-4 bg-black border-t border-white/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 lg:gap-12 mb-12">
+            <div className="col-span-2">
+              <Link href="/" className="flex items-center gap-3 mb-6">
+                <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
+                <span className="text-xl font-bold">OddsFlow</span>
+              </Link>
+              <p className="text-gray-400 mb-6 leading-relaxed">{t('footerDesc')}</p>
+              <div className="flex items-center gap-4">
+                {/* Facebook */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </Link>
+                {/* Instagram */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </Link>
+                {/* Telegram */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-5 text-white">{t('product')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
+                <li><Link href="/leagues" className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
+                <li><Link href="/performance" className="hover:text-emerald-400 transition-colors">{t('liveOdds')}</Link></li>
+                <li><Link href="/solution" className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/leagues/premier-league" className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
+                <li><Link href="/leagues/la-liga" className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
+                <li><Link href="/leagues/serie-a" className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
+                <li><Link href="/leagues/bundesliga" className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
+                <li><Link href="/leagues/ligue-1" className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
+                <li><Link href="/leagues/champions-league" className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-5 text-white">{t('communityFooter')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/community" className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
+                <li><Link href="/community/global-chat" className="hover:text-emerald-400 transition-colors">{t('globalChat')}</Link></li>
+                <li><Link href="/community/user-predictions" className="hover:text-emerald-400 transition-colors">{t('userPredictions')}</Link></li>
+              </ul>
+            </div>
+
+            <div className="relative z-10">
+              <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/about" className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+                <li><Link href="/blog" className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
+              </ul>
+            </div>
+
+            <div className="relative z-10">
+              <h4 className="font-semibold mb-5 text-white">{t('legal')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href="/terms-of-service" className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="mt-8 pt-8 border-t border-white/5">
+            <p className="text-gray-500 text-xs leading-relaxed">{t('disclaimer')}</p>
+          </div>
+
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 mt-8">
+            <p className="text-gray-500 text-sm">&copy; 2026 OddsFlow. {t('allRightsReserved')}</p>
+            <p className="text-gray-600 text-xs">{t('gamblingWarning')}</p>
+          </div>
+        </div>
       </footer>
     </div>
   );

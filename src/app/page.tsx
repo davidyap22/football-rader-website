@@ -18,6 +18,7 @@ const translations: Record<string, Record<string, string>> = {
     performance: "AI Performance",
     community: "Community",
     news: "News",
+    solution: "Solution",
     pricing: "Pricing",
     login: "Log In",
     getStarted: "Get Started",
@@ -85,6 +86,14 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "Responsible Gaming",
     allRightsReserved: "All rights reserved.",
     gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
+    // Footer SEO
+    popularLeagues: "Popular Leagues",
+    communityFooter: "Community",
+    globalChat: "Global Chat",
+    userPredictions: "User Predictions",
+    todayMatches: "Today Matches",
+    solutionFooter: "Solution",
+    disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
     // AI Predictions Section
     aiPredictions: "AI Predictions",
     upcomingMatches: "Upcoming Matches",
@@ -120,14 +129,20 @@ const translations: Record<string, Record<string, string>> = {
     predictionsDaily: "Predictions Daily",
     satisfactionRate: "Satisfaction Rate",
     testimonial1: "OddsFlow has completely changed how I approach football betting. The AI predictions are incredibly accurate!",
-    testimonial1Author: "Michael T.",
+    testimonial1Author: "Kevin L.",
     testimonial1Role: "Professional Bettor",
     testimonial2: "The real-time odds tracking saves me hours every day. Best investment I've made.",
-    testimonial2Author: "Sarah K.",
+    testimonial2Author: "Emma S.",
     testimonial2Role: "Sports Analyst",
     testimonial3: "Finally a platform that delivers on its promises. The accuracy rate is unmatched.",
-    testimonial3Author: "James L.",
+    testimonial3Author: "Marcus J.",
     testimonial3Role: "Football Enthusiast",
+    testimonial4: "I've tried many prediction platforms, but OddsFlow's AI accuracy is on another level. Highly recommended!",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "Betting Veteran",
+    testimonial5: "As a passionate football fan, OddsFlow helps me make smarter decisions. The data insights are incredible!",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "Football Fan",
     // FAQ Section
     faqTitle: "Frequently Asked Questions",
     faqSubtitle: "Everything you need to know about OddsFlow",
@@ -158,9 +173,10 @@ const translations: Record<string, Record<string, string>> = {
     predictions: "预测",
     worldcup: "世界杯",
     leagues: "联赛",
-    performance: "AI 分析",
+    performance: "AI 表现",
     community: "社区",
     news: "新闻",
+    solution: "解决方案",
     pricing: "价格",
     login: "登录",
     getStarted: "开始使用",
@@ -228,6 +244,14 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "负责任博彩",
     allRightsReserved: "版权所有。",
     gamblingWarning: "博彩有风险，请理性投注。",
+    // Footer SEO
+    popularLeagues: "热门联赛",
+    communityFooter: "社区",
+    globalChat: "全球聊天",
+    userPredictions: "用户预测",
+    todayMatches: "今日比赛",
+    solutionFooter: "解决方案",
+    disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。我们不保证预测的准确性，也不对任何财务损失负责。博彩有风险，请理性投注。如果您或您认识的人有赌博问题，请寻求帮助。用户必须年满 18 岁。",
     // AI Predictions Section
     aiPredictions: "AI 预测",
     upcomingMatches: "即将开始的比赛",
@@ -263,14 +287,20 @@ const translations: Record<string, Record<string, string>> = {
     predictionsDaily: "每日预测",
     satisfactionRate: "满意度",
     testimonial1: "OddsFlow 彻底改变了我的足球投注方式。AI 预测非常准确！",
-    testimonial1Author: "Michael T.",
+    testimonial1Author: "Kevin L.",
     testimonial1Role: "职业投注者",
     testimonial2: "实时赔率追踪每天为我节省数小时。这是我做过的最好投资。",
-    testimonial2Author: "Sarah K.",
+    testimonial2Author: "Emma S.",
     testimonial2Role: "体育分析师",
     testimonial3: "终于有一个兑现承诺的平台。准确率无与伦比。",
-    testimonial3Author: "James L.",
+    testimonial3Author: "Marcus J.",
     testimonial3Role: "足球爱好者",
+    testimonial4: "我试过很多预测平台，但OddsFlow的AI准确率是另一个级别。强烈推荐！",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "投注老手",
+    testimonial5: "作为一个狂热的足球迷，OddsFlow帮助我做出更明智的决策。数据洞察令人难以置信！",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "足球迷",
     // FAQ Section
     faqTitle: "常见问题解答",
     faqSubtitle: "关于 OddsFlow 您需要了解的一切",
@@ -301,9 +331,10 @@ const translations: Record<string, Record<string, string>> = {
     predictions: "預測",
     worldcup: "世界盃",
     leagues: "聯賽",
-    performance: "AI 分析",
+    performance: "AI 表現",
     community: "社區",
     news: "新聞",
+    solution: "解決方案",
     pricing: "價格",
     login: "登入",
     getStarted: "開始使用",
@@ -371,6 +402,14 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "負責任博彩",
     allRightsReserved: "版權所有。",
     gamblingWarning: "博彩有風險，請理性投注。",
+    // Footer SEO
+    popularLeagues: "熱門聯賽",
+    communityFooter: "社區",
+    globalChat: "全球聊天",
+    userPredictions: "用戶預測",
+    todayMatches: "今日比賽",
+    solutionFooter: "解決方案",
+    disclaimer: "免責聲明：OddsFlow 提供的 AI 預測僅供參考和娛樂目的。我們不保證預測的準確性，也不對任何財務損失負責。博彩有風險，請理性投注。如果您或您認識的人有賭博問題，請尋求幫助。用戶必須年滿 18 歲。",
     // AI Predictions Section
     aiPredictions: "AI 預測",
     upcomingMatches: "即將開始的比賽",
@@ -406,14 +445,20 @@ const translations: Record<string, Record<string, string>> = {
     predictionsDaily: "每日預測",
     satisfactionRate: "滿意度",
     testimonial1: "OddsFlow 徹底改變了我的足球投注方式。AI 預測非常準確！",
-    testimonial1Author: "Michael T.",
+    testimonial1Author: "Kevin L.",
     testimonial1Role: "職業投注者",
     testimonial2: "即時賠率追蹤每天為我節省數小時。這是我做過的最好投資。",
-    testimonial2Author: "Sarah K.",
+    testimonial2Author: "Emma S.",
     testimonial2Role: "體育分析師",
     testimonial3: "終於有一個兌現承諾的平台。準確率無與倫比。",
-    testimonial3Author: "James L.",
+    testimonial3Author: "Marcus J.",
     testimonial3Role: "足球愛好者",
+    testimonial4: "我試過很多預測平台，但OddsFlow的AI準確率是另一個級別。強烈推薦！",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "投注老手",
+    testimonial5: "作為一個狂熱的足球迷，OddsFlow幫助我做出更明智的決策。數據洞察令人難以置信！",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "足球迷",
     // FAQ Section
     faqTitle: "常見問題解答",
     faqSubtitle: "關於 OddsFlow 您需要了解的一切",
@@ -438,6 +483,164 @@ const translations: Record<string, Record<string, string>> = {
     whatIsDesc3: "每日精選中可查看最佳投注預測，AI 選出最準確的足球貼士。",
     whatIsDesc4: "關注 OddsFlow 獲取比賽貼士、詳細 AI 預測（控球率、射門、角球、H2H 報告、賠率等）。",
   },
+  ID: {
+    // Navbar
+    home: "Beranda",
+    predictions: "Prediksi",
+    worldcup: "Piala Dunia",
+    leagues: "Liga",
+    performance: "Performa AI",
+    community: "Komunitas",
+    news: "Berita",
+    solution: "Solusi",
+    pricing: "Harga",
+    login: "Masuk",
+    getStarted: "Mulai",
+    // Hero
+    heroTitle1: "Performa",
+    heroTitle2: "Odds Sepak Bola",
+    heroTitle3: "Cerdas",
+    heroSubtitle: "Manfaatkan wawasan bertenaga AI untuk menganalisis odds sepak bola secara real-time. Buat keputusan berbasis data dengan algoritma prediksi canggih kami.",
+    startAnalyzing: "Mulai Analisis Gratis",
+    viewLiveOdds: "Lihat Odds Langsung",
+    accuracyRate: "Tingkat Akurasi",
+    matchesAnalyzed: "Pertandingan Dianalisis",
+    leaguesCovered: "Liga Tercakup",
+    realtimeUpdates: "Pembaruan Real-time",
+    // Leagues Section
+    globalCoverage: "Cakupan Global",
+    topLeagues: "Liga Top yang Kami Cakup",
+    leaguesSubtitle: "Dapatkan prediksi AI untuk semua liga sepak bola utama di seluruh dunia",
+    matchesSeason: "pertandingan/musim",
+    // Features Section
+    whyOddsFlow: "Mengapa OddsFlow",
+    mostAdvanced: "Mesin Prediksi",
+    predictionEngine: "Paling Canggih",
+    featuresSubtitle: "AI kami menganalisis jutaan pertandingan historis, data real-time, dan tren pasar untuk memberikan prediksi dengan akurasi tak tertandingi.",
+    aiPoweredPerformance: "Analisis Bertenaga AI",
+    aiPoweredDesc: "Model pembelajaran mesin menganalisis ribuan titik data untuk prediksi yang tepat.",
+    realtimeTracking: "Pelacakan Real-Time",
+    realtimeTrackingDesc: "Pantau pergerakan odds di berbagai bandar taruhan dengan pembaruan instan.",
+    deepStatistics: "Statistik Mendalam",
+    deepStatisticsDesc: "Akses statistik tim, catatan pertemuan langsung, dan data performa historis.",
+    smartAlerts: "Peringatan Cerdas",
+    smartAlertsDesc: "Dapatkan notifikasi saat peluang nilai muncul atau odds berubah signifikan.",
+    aiDashboard: "Dasbor Prediksi AI",
+    live: "LANGSUNG",
+    startingIn: "Dimulai dalam 2 jam",
+    aiConfidence: "Kepercayaan AI",
+    homeWin: "Menang Kandang",
+    draw: "Seri",
+    awayWin: "Menang Tandang",
+    // Live Predictions
+    livePredictions: "Prediksi Langsung",
+    todaysTopPicks: "Pilihan Teratas Hari Ini",
+    predictionsSubtitle: "Pertandingan yang dianalisis AI dengan skor kepercayaan tertinggi",
+    viewAllPredictions: "Lihat Semua Prediksi",
+    // CTA
+    readyToMake: "Siap Membuat",
+    smarterPredictions: "Prediksi Lebih Cerdas",
+    ctaSubtitle: "Bergabunglah dengan ribuan pengguna yang mempercayai OddsFlow untuk analisis sepak bola mereka. Mulai uji coba gratis Anda hari ini - tidak perlu kartu kredit.",
+    startFreeTrial: "Mulai Uji Coba Gratis",
+    contactSales: "Hubungi Penjualan",
+    // Footer
+    footerDesc: "Analisis odds sepak bola bertenaga AI untuk prediksi yang lebih cerdas. Buat keputusan berbasis data dengan wawasan real-time.",
+    product: "Produk",
+    liveOdds: "Performa AI",
+    statistics: "Statistik",
+    apiAccess: "Akses API",
+    company: "Perusahaan",
+    aboutUs: "Tentang Kami",
+    blog: "Blog",
+    careers: "Karir",
+    contact: "Kontak",
+    legal: "Hukum",
+    privacyPolicy: "Kebijakan Privasi",
+    termsOfService: "Ketentuan Layanan",
+    responsibleGaming: "Perjudian Bertanggung Jawab",
+    allRightsReserved: "Hak cipta dilindungi.",
+    gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    // Footer SEO
+    popularLeagues: "Liga Populer",
+    communityFooter: "Komunitas",
+    globalChat: "Obrolan Global",
+    userPredictions: "Prediksi Pengguna",
+    todayMatches: "Pertandingan Hari Ini",
+    solutionFooter: "Solusi",
+    disclaimer: "Penafian: OddsFlow menyediakan prediksi bertenaga AI hanya untuk tujuan informasi dan hiburan. Kami tidak menjamin keakuratan prediksi dan tidak bertanggung jawab atas kerugian finansial. Perjudian melibatkan risiko. Harap bertaruh dengan bijak. Jika Anda atau seseorang yang Anda kenal memiliki masalah perjudian, silakan cari bantuan. Pengguna harus berusia 18+ tahun.",
+    // AI Predictions Section
+    aiPredictions: "Prediksi AI",
+    upcomingMatches: "Pertandingan Mendatang",
+    aiPredictionsSubtitle: "Prediksi bertenaga AI untuk pertandingan terjadwal",
+    dateLeague: "Tanggal / Liga",
+    fixture: "Pertandingan",
+    prediction: "Prediksi",
+    confidence: "Kepercayaan",
+    loading: "Memuat pertandingan...",
+    noMatches: "Tidak ada pertandingan terjadwal ditemukan",
+    // Why Choose Section
+    whyChooseUs: "Mengapa Memilih Kami",
+    whyChooseTitle: "Mengapa Memilih OddsFlow",
+    whyChooseSubtitle: "Rasakan perbedaan dengan platform bertenaga AI kami",
+    benefit1Title: "99.9% Uptime",
+    benefit1Desc: "Platform kami berjalan 24/7 dengan keandalan tingkat enterprise",
+    benefit2Title: "Data Real-time",
+    benefit2Desc: "Dapatkan pembaruan instan dari 50+ bandar taruhan di seluruh dunia",
+    benefit3Title: "Akurasi AI",
+    benefit3Desc: "Model kami mencapai akurasi prediksi 78%+",
+    benefit4Title: "Aman & Privat",
+    benefit4Desc: "Enkripsi tingkat bank melindungi data Anda",
+    benefit5Title: "Dukungan 24/7",
+    benefit5Desc: "Tim dukungan ahli tersedia sepanjang waktu",
+    benefit6Title: "Garansi Uang Kembali",
+    benefit6Desc: "Garansi uang kembali 30 hari, tanpa pertanyaan",
+    // Trusted Section
+    trustedBy: "Dipercaya Pengguna",
+    trustedTitle: "Dipercaya Ribuan Orang",
+    trustedSubtitle: "Bergabunglah dengan komunitas petaruh sukses kami yang terus berkembang",
+    activeUsers: "Pengguna Aktif",
+    countriesServed: "Negara Dilayani",
+    predictionsDaily: "Prediksi Harian",
+    satisfactionRate: "Tingkat Kepuasan",
+    testimonial1: "OddsFlow benar-benar mengubah cara saya mendekati taruhan sepak bola. Prediksi AI sangat akurat!",
+    testimonial1Author: "Kevin L.",
+    testimonial1Role: "Petaruh Profesional",
+    testimonial2: "Pelacakan odds real-time menghemat berjam-jam setiap hari. Investasi terbaik yang pernah saya buat.",
+    testimonial2Author: "Emma S.",
+    testimonial2Role: "Analis Olahraga",
+    testimonial3: "Akhirnya platform yang menepati janjinya. Tingkat akurasi tak tertandingi.",
+    testimonial3Author: "Marcus J.",
+    testimonial3Role: "Penggemar Sepak Bola",
+    testimonial4: "Saya sudah mencoba banyak platform prediksi, tapi akurasi AI OddsFlow berada di level lain. Sangat direkomendasikan!",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "Veteran Taruhan",
+    testimonial5: "Sebagai penggemar sepak bola yang antusias, OddsFlow membantu saya membuat keputusan yang lebih cerdas. Wawasan datanya luar biasa!",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "Penggemar Bola",
+    // FAQ Section
+    faqTitle: "Pertanyaan yang Sering Diajukan",
+    faqSubtitle: "Semua yang perlu Anda ketahui tentang OddsFlow",
+    faq1Question: "Bisakah AI memprediksi skor sepak bola?",
+    faq1Answer: "Ya! Prediktor sepak bola AI kami menganalisis jutaan pertandingan historis, statistik pemain, form tim, dan data real-time untuk memprediksi skor sepak bola dengan akurasi tinggi. Sebagai prediktor sepak bola AI paling akurat, kami mencapai akurasi 78%+ di Premier League, Bundesliga, Serie A, La Liga, dan Ligue 1.",
+    faq2Question: "Apakah taruhan AI menguntungkan?",
+    faq2Answer: "Taruhan AI bisa sangat menguntungkan saat menggunakan catatan taruhan AI terverifikasi dan situs taruhan AI transparan seperti OddsFlow. Pengguna kami telah melihat pengembalian konsisten melalui tips AI sepak bola Eropa kami, dengan pelacakan performa detail untuk membuktikan profitabilitas.",
+    faq3Question: "Apakah taruhan handicap menguntungkan?",
+    faq3Answer: "Taruhan handicap adalah salah satu strategi taruhan paling menguntungkan jika dilakukan dengan benar. AI terbaik kami untuk taruhan handicap menganalisis prediksi seri handicap dan memberikan pilihan berbasis data yang memaksimalkan nilai di semua liga Eropa.",
+    faq4Question: "Bagaimana cara menggunakan data untuk memprediksi Over/Under?",
+    faq4Answer: "AI kami menganalisis statistik over 2.5 gol Premier League, pola gol tim, catatan pertahanan, dan data historis untuk memprediksi hasil Over/Under. Sistem mempertimbangkan faktor seperti form kandang/tandang, catatan pertemuan langsung, dan tren gol terbaru.",
+    faq5Question: "Liga mana yang Anda cakup?",
+    faq5Answer: "Kami menyediakan prediksi AI untuk semua liga utama Eropa: prediksi taruhan top 5 EPL, prediksi taruhan AI Bundesliga, pilihan kecerdasan buatan Serie A, prediksi taruhan top 5 La Liga, model prediksi AI Ligue 1, dan analisis taruhan AI Liga Champions.",
+    faq6Question: "Seberapa akurat OddsFlow dibandingkan prediktor AI lain?",
+    faq6Answer: "OddsFlow diakui sebagai prediktor sepak bola AI paling akurat dengan catatan taruhan AI terverifikasi. Tidak seperti platform lain, kami menyediakan hasil taruhan AI transparan dengan riwayat performa lengkap, menjadikan kami penyedia tips sepak bola AI paling aman.",
+    faq7Question: "Jenis prediksi apa yang Anda tawarkan?",
+    faq7Answer: "Kami menawarkan prediksi 1x2 Premier League hari ini, prediksi seri English Premier League, prediksi seri handicap, statistik over 2.5 gol, dan analisis pertandingan lengkap. Tips AI sepak bola Eropa kami mencakup semua pasar taruhan utama.",
+    // What is OddsFlow
+    whatIsOddsFlow: "Apa itu OddsFlow?",
+    whatIsDesc1: "OddsFlow adalah platform yang menawarkan prediksi sepak bola AI yang dihasilkan secara eksklusif menggunakan Kecerdasan Buatan.",
+    whatIsDesc2: "Menawarkan Tips Sepak Bola AI untuk lebih dari 100+ liga sepak bola termasuk Premier League, La Liga, Serie A, Bundesliga, Liga Champions UEFA.",
+    whatIsDesc3: "Pilihan prediksi taruhan terbaik dapat dilihat di pilihan harian kami di mana AI memilih tips sepak bola paling akurat.",
+    whatIsDesc4: "Ikuti OddsFlow untuk tips pertandingan sepak bola, prediksi AI detail (penguasaan bola, tembakan ke gawang, sudut, laporan H2H, odds dll.).",
+  },
   ES: {
     home: "Inicio",
     predictions: "Predicciones",
@@ -445,6 +648,7 @@ const translations: Record<string, Record<string, string>> = {
     performance: "AI Performance",
     community: "Comunidad",
     news: "Noticias",
+    solution: "Solución",
     pricing: "Precios",
     login: "Iniciar Sesión",
     getStarted: "Comenzar",
@@ -506,6 +710,21 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "Juego Responsable",
     allRightsReserved: "Todos los derechos reservados.",
     gamblingWarning: "El juego implica riesgo. Por favor juegue responsablemente.",
+    // Footer SEO
+    popularLeagues: "Ligas Populares",
+    aiPredictionsFooter: "Predicciones IA",
+    aiFootballPredictions: "Predicciones de Fútbol IA",
+    onextwoPredictions: "Predicciones 1x2",
+    overUnderTips: "Consejos Over/Under",
+    handicapBetting: "Apuestas Hándicap",
+    aiBettingPerformance: "Rendimiento de Apuestas IA",
+    footballTipsToday: "Tips de Fútbol Hoy",
+    communityFooter: "Comunidad",
+    globalChat: "Chat Global",
+    userPredictions: "Predicciones de Usuarios",
+    todayMatches: "Partidos de Hoy",
+    solutionFooter: "Solución",
+    disclaimer: "Aviso: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento. No se garantizan ganancias. Por favor, apueste de manera responsable.",
     // AI Predictions Section
     aiPredictions: "Predicciones IA",
     upcomingMatches: "Partidos Programados",
@@ -524,6 +743,7 @@ const translations: Record<string, Record<string, string>> = {
     performance: "AI Performance",
     community: "Comunidade",
     news: "Notícias",
+    solution: "Solução",
     pricing: "Preços",
     login: "Entrar",
     getStarted: "Começar",
@@ -585,6 +805,21 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "Jogo Responsável",
     allRightsReserved: "Todos os direitos reservados.",
     gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
+    // Footer SEO
+    popularLeagues: "Ligas Populares",
+    aiPredictionsFooter: "Previsões IA",
+    aiFootballPredictions: "Previsões de Futebol IA",
+    onextwoPredictions: "Previsões 1x2",
+    overUnderTips: "Dicas Over/Under",
+    handicapBetting: "Apostas Handicap",
+    aiBettingPerformance: "Desempenho de Apostas IA",
+    footballTipsToday: "Dicas de Futebol Hoje",
+    communityFooter: "Comunidade",
+    globalChat: "Chat Global",
+    userPredictions: "Previsões de Usuários",
+    todayMatches: "Jogos de Hoje",
+    solutionFooter: "Solução",
+    disclaimer: "Aviso: OddsFlow fornece previsões baseadas em IA apenas para fins informativos e de entretenimento. Não há garantia de lucros. Por favor, aposte com responsabilidade.",
     // AI Predictions Section
     aiPredictions: "Previsoes IA",
     upcomingMatches: "Partidas Programadas",
@@ -600,9 +835,10 @@ const translations: Record<string, Record<string, string>> = {
     home: "ホーム",
     predictions: "予測",
     leagues: "リーグ",
-    performance: "AI 分析",
+    performance: "AI パフォーマンス",
     community: "コミュニティ",
     news: "ニュース",
+    solution: "ソリューション",
     pricing: "料金",
     login: "ログイン",
     getStarted: "始める",
@@ -664,6 +900,21 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "責任あるギャンブル",
     allRightsReserved: "全著作権所有。",
     gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
+    // Footer SEO
+    popularLeagues: "人気リーグ",
+    aiPredictionsFooter: "AI予測",
+    aiFootballPredictions: "AIサッカー予測",
+    onextwoPredictions: "1x2予測",
+    overUnderTips: "オーバー/アンダー予想",
+    handicapBetting: "ハンディキャップベット",
+    aiBettingPerformance: "AIベッティング実績",
+    footballTipsToday: "今日のサッカー予想",
+    communityFooter: "コミュニティ",
+    globalChat: "グローバルチャット",
+    userPredictions: "ユーザー予測",
+    todayMatches: "今日の試合",
+    solutionFooter: "ソリューション",
+    disclaimer: "免責事項：OddsFlowはAI駆動の予測を情報および娯楽目的のみで提供しています。利益を保証するものではありません。責任を持ってお楽しみください。",
     // AI Predictions Section
     aiPredictions: "AI予測",
     upcomingMatches: "予定試合",
@@ -679,9 +930,10 @@ const translations: Record<string, Record<string, string>> = {
     home: "홈",
     predictions: "예측",
     leagues: "리그",
-    performance: "AI 분석",
+    performance: "AI 성과",
     community: "커뮤니티",
     news: "뉴스",
+    solution: "솔루션",
     pricing: "가격",
     login: "로그인",
     getStarted: "시작하기",
@@ -743,6 +995,21 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "책임감 있는 게임",
     allRightsReserved: "모든 권리 보유.",
     gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
+    // Footer SEO
+    popularLeagues: "인기 리그",
+    aiPredictionsFooter: "AI 예측",
+    aiFootballPredictions: "AI 축구 예측",
+    onextwoPredictions: "1x2 예측",
+    overUnderTips: "오버/언더 팁",
+    handicapBetting: "핸디캡 베팅",
+    aiBettingPerformance: "AI 베팅 성과",
+    footballTipsToday: "오늘의 축구 팁",
+    communityFooter: "커뮤니티",
+    globalChat: "글로벌 채팅",
+    userPredictions: "사용자 예측",
+    todayMatches: "오늘의 경기",
+    solutionFooter: "솔루션",
+    disclaimer: "면책조항: OddsFlow는 정보 및 엔터테인먼트 목적으로만 AI 기반 예측을 제공합니다. 수익을 보장하지 않습니다. 책임감 있게 베팅하세요.",
     // AI Predictions Section
     aiPredictions: "AI 예측",
     upcomingMatches: "예정된 경기",
@@ -761,6 +1028,7 @@ const translations: Record<string, Record<string, string>> = {
     performance: "AI Performance",
     community: "Community",
     news: "Nachrichten",
+    solution: "Lösung",
     pricing: "Preise",
     login: "Anmelden",
     getStarted: "Loslegen",
@@ -822,6 +1090,21 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "Verantwortungsvolles Spielen",
     allRightsReserved: "Alle Rechte vorbehalten.",
     gamblingWarning: "Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
+    // Footer SEO
+    popularLeagues: "Beliebte Ligen",
+    aiPredictionsFooter: "KI-Vorhersagen",
+    aiFootballPredictions: "KI-Fußballvorhersagen",
+    onextwoPredictions: "1x2 Vorhersagen",
+    overUnderTips: "Über/Unter Tipps",
+    handicapBetting: "Handicap-Wetten",
+    aiBettingPerformance: "KI-Wettleistung",
+    footballTipsToday: "Fußballtipps Heute",
+    communityFooter: "Community",
+    globalChat: "Globaler Chat",
+    userPredictions: "Benutzer-Vorhersagen",
+    todayMatches: "Heutige Spiele",
+    solutionFooter: "Lösung",
+    disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestützte Vorhersagen nur zu Informations- und Unterhaltungszwecken. Es werden keine Gewinne garantiert. Bitte wetten Sie verantwortungsvoll.",
     // AI Predictions Section
     aiPredictions: "KI-Vorhersagen",
     upcomingMatches: "Geplante Spiele",
@@ -840,6 +1123,7 @@ const translations: Record<string, Record<string, string>> = {
     performance: "AI Performance",
     community: "Communauté",
     news: "Actualités",
+    solution: "Solution",
     pricing: "Tarifs",
     login: "Connexion",
     getStarted: "Commencer",
@@ -901,6 +1185,21 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "Jeu Responsable",
     allRightsReserved: "Tous droits réservés.",
     gamblingWarning: "Le jeu comporte des risques. Veuillez jouer de manière responsable.",
+    // Footer SEO
+    popularLeagues: "Ligues Populaires",
+    aiPredictionsFooter: "Prédictions IA",
+    aiFootballPredictions: "Prédictions Football IA",
+    onextwoPredictions: "Prédictions 1x2",
+    overUnderTips: "Conseils Over/Under",
+    handicapBetting: "Paris Handicap",
+    aiBettingPerformance: "Performance Paris IA",
+    footballTipsToday: "Pronostics Foot Aujourd'hui",
+    communityFooter: "Communauté",
+    globalChat: "Chat Global",
+    userPredictions: "Prédictions Utilisateurs",
+    todayMatches: "Matchs du Jour",
+    solutionFooter: "Solution",
+    disclaimer: "Avertissement : OddsFlow fournit des prédictions basées sur l'IA à des fins d'information et de divertissement uniquement. Aucun profit n'est garanti. Veuillez parier de manière responsable.",
     // AI Predictions Section
     aiPredictions: "Predictions IA",
     upcomingMatches: "Matchs Programmes",
@@ -970,6 +1269,7 @@ function LanguageSwitcher() {
     { code: 'KO', name: '한국어', flag: '🇰🇷' },
     { code: '中文', name: '简体中文', flag: '🇨🇳' },
     { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+    { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
   ];
 
   const currentLang = languages.find(l => l.code === lang) || languages[0];
@@ -1045,6 +1345,7 @@ function Navbar() {
     { href: '/performance', label: t('performance') },
     { href: '/community', label: t('community') },
     { href: '/news', label: t('news') },
+    { href: '/solution', label: t('solution') },
     { href: '/pricing', label: t('pricing') },
   ];
 
@@ -1361,6 +1662,16 @@ function LeaguesSection() {
   const [leagues, setLeagues] = useState<LeagueData[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Priority leagues that should always appear
+  const priorityLeagues: LeagueData[] = [
+    { league_name: 'Premier League', league_logo: 'https://media.api-sports.io/football/leagues/39.png', count: 380 },
+    { league_name: 'La Liga', league_logo: 'https://media.api-sports.io/football/leagues/140.png', count: 380 },
+    { league_name: 'Bundesliga', league_logo: 'https://media.api-sports.io/football/leagues/78.png', count: 306 },
+    { league_name: 'Serie A', league_logo: 'https://media.api-sports.io/football/leagues/135.png', count: 380 },
+    { league_name: 'Ligue 1', league_logo: 'https://media.api-sports.io/football/leagues/61.png', count: 306 },
+    { league_name: 'UEFA Champions League', league_logo: 'https://media.api-sports.io/football/leagues/2.png', count: 125 },
+  ];
+
   useEffect(() => {
     async function fetchLeagues() {
       try {
@@ -1384,19 +1695,28 @@ function LeaguesSection() {
           }
         });
 
-        // Convert to array and sort by count
-        const leagueArray: LeagueData[] = Array.from(leagueMap.entries())
-          .map(([name, data]) => ({
-            league_name: name,
-            league_logo: data.logo,
-            count: data.count
-          }))
-          .sort((a, b) => b.count - a.count)
-          .slice(0, 6); // Top 6 leagues
+        // Merge with priority leagues - use DB data if available, otherwise use defaults
+        const finalLeagues: LeagueData[] = priorityLeagues.map(priority => {
+          // Check if this priority league exists in DB results
+          for (const [name, dbData] of leagueMap.entries()) {
+            if (name.toLowerCase().includes(priority.league_name.toLowerCase()) ||
+                priority.league_name.toLowerCase().includes(name.toLowerCase())) {
+              return {
+                league_name: priority.league_name, // Use consistent naming
+                league_logo: dbData.logo || priority.league_logo,
+                count: dbData.count
+              };
+            }
+          }
+          // Use default priority league data if not in DB
+          return priority;
+        });
 
-        setLeagues(leagueArray);
+        setLeagues(finalLeagues);
       } catch (error) {
         console.error('Error fetching leagues:', error);
+        // On error, show priority leagues with default data
+        setLeagues(priorityLeagues);
       } finally {
         setLoading(false);
       }
@@ -1453,10 +1773,29 @@ function LeaguesSection() {
                 }
                 return 'AI-powered predictions & betting analysis';
               };
+              // League name to slug mapping
+              const leagueSlugMap: Record<string, string> = {
+                'Premier League': 'premier-league',
+                'La Liga': 'la-liga',
+                'Bundesliga': 'bundesliga',
+                'Serie A': 'serie-a',
+                'Ligue 1': 'ligue-1',
+                'UEFA Champions League': 'champions-league',
+                'Eredivisie': 'eredivisie',
+                'Primeira Liga': 'primeira-liga',
+                'Super Lig': 'super-lig',
+              };
+              const getLeagueSlug = (name: string) => {
+                for (const key of Object.keys(leagueSlugMap)) {
+                  if (name.toLowerCase().includes(key.toLowerCase())) return leagueSlugMap[key];
+                }
+                return name.toLowerCase().replace(/\s+/g, '-');
+              };
               return (
-              <div
+              <Link
                 key={index}
-                className="group relative flex items-center justify-between p-5 rounded-2xl bg-[#0d1117] border border-gray-800/50 hover:border-emerald-500/40 transition-all duration-300 overflow-hidden"
+                href={`/leagues/${getLeagueSlug(league.league_name)}`}
+                className="group relative flex items-center justify-between p-5 rounded-2xl bg-[#0d1117] border border-gray-800/50 hover:border-emerald-500/40 transition-all duration-300 overflow-hidden cursor-pointer"
               >
                 {/* Shimmer effect */}
                 <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -1491,7 +1830,7 @@ function LeaguesSection() {
                   <span className="text-emerald-400 font-bold text-xl group-hover:text-emerald-300 transition-colors">{league.count}+</span>
                   <p className="text-xs text-gray-500">{t('matchesSeason')}</p>
                 </div>
-              </div>
+              </Link>
               );
             })}
           </div>
@@ -1882,7 +2221,7 @@ function FeaturesSection() {
                         </div>
                       </div>
                       <div className="font-semibold text-sm">Manchester City</div>
-                      <div className="text-2xl font-bold text-emerald-400 mt-1">1.85</div>
+                      <div className="text-2xl font-bold text-cyan-400 mt-1">2</div>
                     </div>
                     <div className="px-4 text-gray-600 text-sm">VS</div>
                     {/* Arsenal with logo */}
@@ -1899,31 +2238,31 @@ function FeaturesSection() {
                         </div>
                       </div>
                       <div className="font-semibold text-sm">Arsenal</div>
-                      <div className="text-2xl font-bold text-gray-400 mt-1">4.20</div>
+                      <div className="text-2xl font-bold text-red-400 mt-1">3</div>
                     </div>
                   </div>
                   <div className="mt-4 pt-4 border-t border-white/5">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-400">{t('aiConfidence')}</span>
-                      <span className="text-emerald-400 font-semibold">87%</span>
+                      <span className="text-purple-400 font-semibold">87%</span>
                     </div>
                     <div className="h-2 bg-gray-800 rounded-full mt-2 overflow-hidden">
-                      <div className="h-full w-[87%] bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full" />
+                      <div className="h-full w-[87%] bg-gradient-to-r from-purple-500 to-violet-500 rounded-full" />
                     </div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">
                   <div className="bg-white/5 rounded-lg p-3 text-center">
-                    <div className="text-lg font-bold text-emerald-400">68%</div>
+                    <div className="text-lg font-bold text-cyan-400">68%</div>
                     <div className="text-xs text-gray-500">{t('homeWin')}</div>
                   </div>
                   <div className="bg-white/5 rounded-lg p-3 text-center">
-                    <div className="text-lg font-bold text-gray-400">18%</div>
+                    <div className="text-lg font-bold text-yellow-400">18%</div>
                     <div className="text-xs text-gray-500">{t('draw')}</div>
                   </div>
                   <div className="bg-white/5 rounded-lg p-3 text-center">
-                    <div className="text-lg font-bold text-gray-400">14%</div>
+                    <div className="text-lg font-bold text-red-400">14%</div>
                     <div className="text-xs text-gray-500">{t('awayWin')}</div>
                   </div>
                 </div>
@@ -1960,14 +2299,19 @@ function WhyChooseSection() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {benefits.map((benefit, index) => (
-            <div key={index} className="group bg-gradient-to-br from-gray-900 to-gray-950 border border-white/10 rounded-2xl p-6 hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-300">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-5 group-hover:scale-110 transition-transform">
+            <div key={index} className="group relative bg-gradient-to-br from-gray-900 to-gray-950 border border-emerald-500/20 rounded-2xl p-6 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-all duration-300 overflow-hidden cursor-pointer">
+              {/* Shimmer effect on hover - white light */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+              </div>
+
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-5 group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-emerald-500/40 group-hover:to-cyan-500/40 transition-all duration-300 relative z-10">
                 <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={benefit.icon} />
                 </svg>
               </div>
-              <h3 className="font-bold text-xl text-white mb-2">{benefit.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">{benefit.desc}</p>
+              <h3 className="font-bold text-xl text-white mb-2 relative z-10">{benefit.title}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed relative z-10">{benefit.desc}</p>
             </div>
           ))}
         </div>
@@ -2061,9 +2405,11 @@ function TrustedBySection() {
   ];
 
   const testimonials = [
-    { text: t('testimonial1'), author: t('testimonial1Author'), role: t('testimonial1Role') },
-    { text: t('testimonial2'), author: t('testimonial2Author'), role: t('testimonial2Role') },
-    { text: t('testimonial3'), author: t('testimonial3Author'), role: t('testimonial3Role') },
+    { text: t('testimonial1'), author: t('testimonial1Author'), role: t('testimonial1Role'), photo: '/homepage/profile_photo_1.png' },
+    { text: t('testimonial2'), author: t('testimonial2Author'), role: t('testimonial2Role'), photo: '/homepage/profile_photo_2.png' },
+    { text: t('testimonial3'), author: t('testimonial3Author'), role: t('testimonial3Role'), photo: '/homepage/profile_photo_3.png' },
+    { text: t('testimonial4'), author: t('testimonial4Author'), role: t('testimonial4Role'), photo: '/homepage/profile_photo_4.png' },
+    { text: t('testimonial5'), author: t('testimonial5Author'), role: t('testimonial5Role'), photo: '/homepage/profile_photo_5.png' },
   ];
 
   return (
@@ -2078,40 +2424,104 @@ function TrustedBySection() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           {stats.map((stat, index) => (
-            <div key={index} className="text-center p-6 rounded-2xl bg-gradient-to-br from-gray-900 to-gray-950 border border-white/10">
-              <div className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent mb-2">
+            <div key={index} className="group relative text-center p-6 rounded-2xl bg-gradient-to-br from-gray-900 to-gray-950 border border-emerald-500/20 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-all duration-300 overflow-hidden cursor-pointer">
+              {/* Shimmer effect on hover - white light */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+              </div>
+              <div className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent mb-2 relative z-10">
                 <AnimatedCounter end={stat.value} suffix={stat.suffix} isVisible={isVisible} duration={2000} />
               </div>
-              <div className="text-gray-400 text-sm">{stat.label}</div>
+              <div className="text-gray-400 text-sm relative z-10">{stat.label}</div>
             </div>
           ))}
         </div>
 
-        {/* Testimonials */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-gradient-to-br from-gray-900 to-gray-950 border border-white/10 rounded-2xl p-6 hover:border-emerald-500/30 transition-all duration-300">
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
-              <p className="text-gray-300 mb-6 leading-relaxed">&quot;{testimonial.text}&quot;</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-white font-bold">
-                  {testimonial.author.charAt(0)}
+        {/* Testimonials - Infinite Scroll */}
+        <div className="relative overflow-hidden">
+          {/* Gradient masks for smooth fade effect */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+
+          {/* Scrolling container - duplicate for seamless loop */}
+          <div className="flex w-max testimonial-scroll">
+            {/* First set */}
+            {testimonials.map((testimonial, index) => (
+              <div key={`first-${index}`} className="group relative flex-shrink-0 w-[400px] bg-gradient-to-br from-gray-900 to-gray-950 border border-emerald-500/20 rounded-2xl p-6 mx-3 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-all duration-300 overflow-hidden cursor-pointer">
+                {/* Shimmer effect on hover - white light */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                 </div>
-                <div>
-                  <div className="font-semibold text-white text-sm">{testimonial.author}</div>
-                  <div className="text-gray-500 text-xs">{testimonial.role}</div>
+                <div className="flex items-center gap-1 mb-4 relative z-10">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-300 mb-6 leading-relaxed relative z-10">&quot;{testimonial.text}&quot;</p>
+                <div className="flex items-center gap-3 relative z-10">
+                  <img
+                    src={testimonial.photo}
+                    alt={testimonial.author}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <div className="font-semibold text-white text-sm">{testimonial.author}</div>
+                    <div className="text-gray-500 text-xs">{testimonial.role}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+            {/* Duplicate set for seamless loop */}
+            {testimonials.map((testimonial, index) => (
+              <div key={`second-${index}`} className="group relative flex-shrink-0 w-[400px] bg-gradient-to-br from-gray-900 to-gray-950 border border-emerald-500/20 rounded-2xl p-6 mx-3 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-all duration-300 overflow-hidden cursor-pointer">
+                {/* Shimmer effect on hover - white light */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+                </div>
+                <div className="flex items-center gap-1 mb-4 relative z-10">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-300 mb-6 leading-relaxed relative z-10">&quot;{testimonial.text}&quot;</p>
+                <div className="flex items-center gap-3 relative z-10">
+                  <img
+                    src={testimonial.photo}
+                    alt={testimonial.author}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <div className="font-semibold text-white text-sm">{testimonial.author}</div>
+                    <div className="text-gray-500 text-xs">{testimonial.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* CSS for infinite scroll animation */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes testimonial-scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(calc(-406px * 5));
+          }
+        }
+        .testimonial-scroll {
+          animation: testimonial-scroll 25s linear infinite;
+        }
+        .testimonial-scroll:hover {
+          animation-play-state: paused;
+        }
+      `}} />
     </section>
   );
 }
@@ -2144,11 +2554,15 @@ function FAQSection() {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="bg-gradient-to-br from-gray-900 to-gray-950 border border-white/10 rounded-2xl overflow-hidden hover:border-emerald-500/30 transition-all duration-300"
+              className="group relative bg-gradient-to-br from-gray-900 to-gray-950 border border-emerald-500/20 rounded-2xl overflow-hidden hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-all duration-300"
             >
+              {/* Shimmer effect on hover - white light */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+              </div>
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full px-6 py-5 flex items-center justify-between text-left cursor-pointer"
+                className="w-full px-6 py-5 flex items-center justify-between text-left cursor-pointer relative z-10"
               >
                 <span className="font-semibold text-white pr-4">{faq.question}</span>
                 <svg
@@ -2160,7 +2574,7 @@ function FAQSection() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className={`overflow-hidden transition-all duration-300 ${openIndex === index ? 'max-h-96' : 'max-h-0'}`}>
+              <div className={`overflow-hidden transition-all duration-300 relative z-10 ${openIndex === index ? 'max-h-96' : 'max-h-0'}`}>
                 <div className="px-6 pb-5 text-gray-400 leading-relaxed">
                   {faq.answer}
                 </div>
@@ -2219,21 +2633,22 @@ function CTASection() {
               <li><Link href="/predictions" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
               <li><Link href="/leagues" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
               <li><Link href="/performance" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('liveOdds')}</Link></li>
+              <li><Link href="/solution" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
             </ul>
           </div>
-          <div>
+          <div className="relative z-10">
             <h4 className="text-white font-semibold mb-4 text-sm">{t('company')}</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('aboutUs')}</Link></li>
-              <li><Link href="/contact" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('contact')}</Link></li>
-              <li><Link href="/blog" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('blog')}</Link></li>
+              <li><Link href="/about" className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+              <li><Link href="/contact" className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+              <li><Link href="/blog" className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
             </ul>
           </div>
-          <div>
+          <div className="relative z-10">
             <h4 className="text-white font-semibold mb-4 text-sm">{t('legal')}</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/terms-of-service" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('termsOfService')}</Link></li>
-              <li><Link href="/privacy-policy" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('privacyPolicy')}</Link></li>
+              <li><Link href="/terms-of-service" className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+              <li><Link href="/privacy-policy" className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
             </ul>
           </div>
           <div>
@@ -2251,7 +2666,7 @@ function CTASection() {
         <div className="relative pt-6">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
-            <span className="text-gray-500">©2025 OddsFlow · {t('allRightsReserved')}</span>
+            <span className="text-gray-500">©2026 OddsFlow · {t('allRightsReserved')}</span>
             <div className="flex items-center gap-2 text-amber-400">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -2278,8 +2693,8 @@ function Footer() {
   return (
     <footer className="py-16 px-4 bg-black border-t border-white/5">
       <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-5 gap-12 mb-12">
-          <div className="md:col-span-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 lg:gap-12 mb-12">
+          <div className="col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-6">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold">OddsFlow</span>
@@ -2307,29 +2722,56 @@ function Footer() {
               <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
               <li><Link href="/leagues" className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
               <li><Link href="/performance" className="hover:text-emerald-400 transition-colors">{t('liveOdds')}</Link></li>
+              <li><Link href="/solution" className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
             </ul>
           </div>
 
           <div>
+            <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
+            <ul className="space-y-3 text-gray-400">
+              <li><Link href="/leagues/premier-league" className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
+              <li><Link href="/leagues/la-liga" className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
+              <li><Link href="/leagues/serie-a" className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
+              <li><Link href="/leagues/bundesliga" className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
+              <li><Link href="/leagues/ligue-1" className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
+              <li><Link href="/leagues/champions-league" className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold mb-5 text-white">{t('communityFooter')}</h4>
+            <ul className="space-y-3 text-gray-400">
+              <li><Link href="/community" className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
+              <li><Link href="/community/global-chat" className="hover:text-emerald-400 transition-colors">{t('globalChat')}</Link></li>
+              <li><Link href="/community/user-predictions" className="hover:text-emerald-400 transition-colors">{t('userPredictions')}</Link></li>
+            </ul>
+          </div>
+
+          <div className="relative z-10">
             <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
             <ul className="space-y-3 text-gray-400">
-              <li><Link href="/about" className="hover:text-emerald-400 transition-colors">{t('aboutUs')}</Link></li>
-              <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">{t('contact')}</Link></li>
-              <li><Link href="/blog" className="hover:text-emerald-400 transition-colors">{t('blog')}</Link></li>
+              <li><Link href="/about" className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+              <li><Link href="/contact" className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+              <li><Link href="/blog" className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
             </ul>
           </div>
 
-          <div>
+          <div className="relative z-10">
             <h4 className="font-semibold mb-5 text-white">{t('legal')}</h4>
             <ul className="space-y-3 text-gray-400">
-              <li><Link href="/terms-of-service" className="hover:text-emerald-400 transition-colors">{t('termsOfService')}</Link></li>
-              <li><Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors">{t('privacyPolicy')}</Link></li>
+              <li><Link href="/terms-of-service" className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm">&copy; 2024 OddsFlow. {t('allRightsReserved')}</p>
+        {/* Disclaimer */}
+        <div className="mt-8 pt-8 border-t border-white/5">
+          <p className="text-gray-500 text-xs leading-relaxed">{t('disclaimer')}</p>
+        </div>
+
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 mt-8">
+          <p className="text-gray-500 text-sm">&copy; 2026 OddsFlow. {t('allRightsReserved')}</p>
           <p className="text-gray-600 text-xs">{t('gamblingWarning')}</p>
         </div>
       </div>

@@ -72,12 +72,16 @@ const LANGUAGES = [
   { code: 'KO', name: '한국어', flag: '🇰🇷' },
   { code: '中文', name: '简体中文', flag: '🇨🇳' },
   { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
 ];
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
   EN: {
-    aiPredictions: "AI Football Predictions Today",
+    aiPredictions: "AI Football Predictions",
+    aiPredictionsToday: "AI Football Predictions Today",
+    aiPredictionsYesterday: "AI Football Predictions Yesterday",
+    aiPredictionsTomorrow: "AI Football Predictions Tomorrow",
     todaysMatches: "Premier League 1x2 predictions, handicap betting tips & over 2.5 goals stats from the most accurate AI football predictor",
     yesterday: "YESTERDAY",
     today: "TODAY",
@@ -91,15 +95,19 @@ const translations: Record<string, Record<string, string>> = {
     performance: "AI Performance",
     community: "Community",
     news: "News",
+    solution: "Solution",
     pricing: "Pricing",
     login: "Log In",
     getStarted: "Get Started",
     footer: "18+ | Gambling involves risk. Please gamble responsibly.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
     aiConfidence: "AI Confidence",
   },
   ES: {
     aiPredictions: "Predicciones IA",
+    aiPredictionsToday: "Predicciones IA de Hoy",
+    aiPredictionsYesterday: "Predicciones IA de Ayer",
+    aiPredictionsTomorrow: "Predicciones IA de Mañana",
     todaysMatches: "Partidos de hoy con predicciones de IA",
     yesterday: "AYER",
     today: "HOY",
@@ -110,18 +118,22 @@ const translations: Record<string, Record<string, string>> = {
     home: "Inicio",
     predictions: "Predicciones",
     leagues: "Ligas",
-    performance: "Análisis",
+    performance: "Rendimiento IA",
     community: "Comunidad",
     news: "Noticias",
+    solution: "Solución",
     pricing: "Precios",
     login: "Iniciar Sesión",
     getStarted: "Comenzar",
     footer: "18+ | El juego implica riesgo. Por favor juega responsablemente.",
-    allRights: "© 2025 OddsFlow. Todos los derechos reservados.",
+    allRights: "© 2026 OddsFlow. Todos los derechos reservados.",
     aiConfidence: "Confianza IA",
   },
   PT: {
     aiPredictions: "Previsões IA",
+    aiPredictionsToday: "Previsões IA de Hoje",
+    aiPredictionsYesterday: "Previsões IA de Ontem",
+    aiPredictionsTomorrow: "Previsões IA de Amanhã",
     todaysMatches: "Jogos de hoje com previsões de IA",
     yesterday: "ONTEM",
     today: "HOJE",
@@ -132,18 +144,22 @@ const translations: Record<string, Record<string, string>> = {
     home: "Início",
     predictions: "Previsões",
     leagues: "Ligas",
-    performance: "Análise",
+    performance: "Desempenho IA",
     community: "Comunidade",
     news: "Notícias",
+    solution: "Solução",
     pricing: "Preços",
     login: "Entrar",
     getStarted: "Começar",
     footer: "18+ | O jogo envolve risco. Por favor, jogue com responsabilidade.",
-    allRights: "© 2025 OddsFlow. Todos os direitos reservados.",
+    allRights: "© 2026 OddsFlow. Todos os direitos reservados.",
     aiConfidence: "Confiança IA",
   },
   DE: {
     aiPredictions: "KI-Vorhersagen",
+    aiPredictionsToday: "KI-Vorhersagen Heute",
+    aiPredictionsYesterday: "KI-Vorhersagen Gestern",
+    aiPredictionsTomorrow: "KI-Vorhersagen Morgen",
     todaysMatches: "Heutige Spiele mit KI-gestützten Vorhersagen",
     yesterday: "GESTERN",
     today: "HEUTE",
@@ -154,18 +170,22 @@ const translations: Record<string, Record<string, string>> = {
     home: "Startseite",
     predictions: "Vorhersagen",
     leagues: "Ligen",
-    performance: "Analyse",
+    performance: "KI-Leistung",
     community: "Community",
     news: "Nachrichten",
+    solution: "Lösung",
     pricing: "Preise",
     login: "Anmelden",
     getStarted: "Loslegen",
     footer: "18+ | Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
-    allRights: "© 2025 OddsFlow. Alle Rechte vorbehalten.",
+    allRights: "© 2026 OddsFlow. Alle Rechte vorbehalten.",
     aiConfidence: "KI-Konfidenz",
   },
   FR: {
     aiPredictions: "Prédictions IA",
+    aiPredictionsToday: "Prédictions IA Aujourd'hui",
+    aiPredictionsYesterday: "Prédictions IA Hier",
+    aiPredictionsTomorrow: "Prédictions IA Demain",
     todaysMatches: "Matchs d'aujourd'hui avec prédictions IA",
     yesterday: "HIER",
     today: "AUJOURD'HUI",
@@ -176,18 +196,22 @@ const translations: Record<string, Record<string, string>> = {
     home: "Accueil",
     predictions: "Prédictions",
     leagues: "Ligues",
-    performance: "Analyse",
+    performance: "Performance IA",
     community: "Communauté",
     news: "Actualités",
+    solution: "Solution",
     pricing: "Tarifs",
     login: "Connexion",
     getStarted: "Commencer",
     footer: "18+ | Les jeux d'argent comportent des risques. Jouez responsablement.",
-    allRights: "© 2025 OddsFlow. Tous droits réservés.",
+    allRights: "© 2026 OddsFlow. Tous droits réservés.",
     aiConfidence: "Confiance IA",
   },
   JA: {
     aiPredictions: "AI予測",
+    aiPredictionsToday: "今日のAI予測",
+    aiPredictionsYesterday: "昨日のAI予測",
+    aiPredictionsTomorrow: "明日のAI予測",
     todaysMatches: "AI予測による本日の試合",
     yesterday: "昨日",
     today: "今日",
@@ -198,18 +222,22 @@ const translations: Record<string, Record<string, string>> = {
     home: "ホーム",
     predictions: "予測",
     leagues: "リーグ",
-    performance: "分析",
+    performance: "AIパフォーマンス",
     community: "コミュニティ",
     news: "ニュース",
+    solution: "ソリューション",
     pricing: "料金",
     login: "ログイン",
     getStarted: "始める",
     footer: "18歳以上 | ギャンブルにはリスクが伴います。責任を持ってプレイしてください。",
-    allRights: "© 2025 OddsFlow. 全著作権所有。",
+    allRights: "© 2026 OddsFlow. 全著作権所有。",
     aiConfidence: "AI信頼度",
   },
   KO: {
     aiPredictions: "AI 예측",
+    aiPredictionsToday: "오늘의 AI 예측",
+    aiPredictionsYesterday: "어제의 AI 예측",
+    aiPredictionsTomorrow: "내일의 AI 예측",
     todaysMatches: "AI 기반 예측이 포함된 오늘의 경기",
     yesterday: "어제",
     today: "오늘",
@@ -220,18 +248,22 @@ const translations: Record<string, Record<string, string>> = {
     home: "홈",
     predictions: "예측",
     leagues: "리그",
-    performance: "분석",
+    performance: "AI 성능",
     community: "커뮤니티",
     news: "뉴스",
+    solution: "솔루션",
     pricing: "가격",
     login: "로그인",
     getStarted: "시작하기",
     footer: "18세 이상 | 도박에는 위험이 따릅니다. 책임감 있게 플레이하세요.",
-    allRights: "© 2025 OddsFlow. 모든 권리 보유.",
+    allRights: "© 2026 OddsFlow. 모든 권리 보유.",
     aiConfidence: "AI 신뢰도",
   },
   '中文': {
     aiPredictions: "AI预测",
+    aiPredictionsToday: "今日AI预测",
+    aiPredictionsYesterday: "昨日AI预测",
+    aiPredictionsTomorrow: "明日AI预测",
     todaysMatches: "今日AI预测比赛",
     yesterday: "昨天",
     today: "今天",
@@ -242,18 +274,22 @@ const translations: Record<string, Record<string, string>> = {
     home: "首页",
     predictions: "预测",
     leagues: "联赛",
-    performance: "分析",
+    performance: "AI表现",
     community: "社区",
     news: "新闻",
+    solution: "解决方案",
     pricing: "价格",
     login: "登录",
     getStarted: "开始使用",
     footer: "18+ | 博彩有风险，请理性投注。",
-    allRights: "© 2025 OddsFlow. 保留所有权利。",
+    allRights: "© 2026 OddsFlow. 保留所有权利。",
     aiConfidence: "AI 信心",
   },
   '繁體': {
     aiPredictions: "AI預測",
+    aiPredictionsToday: "今日AI預測",
+    aiPredictionsYesterday: "昨日AI預測",
+    aiPredictionsTomorrow: "明日AI預測",
     todaysMatches: "今日AI預測比賽",
     yesterday: "昨天",
     today: "今天",
@@ -264,15 +300,42 @@ const translations: Record<string, Record<string, string>> = {
     home: "首頁",
     predictions: "預測",
     leagues: "聯賽",
-    performance: "分析",
+    performance: "AI表現",
     community: "社區",
     news: "新聞",
+    solution: "解決方案",
     pricing: "價格",
     login: "登入",
     getStarted: "開始使用",
     footer: "18+ | 博彩有風險，請理性投注。",
-    allRights: "© 2025 OddsFlow. 保留所有權利。",
+    allRights: "© 2026 OddsFlow. 保留所有權利。",
     aiConfidence: "AI 信心",
+  },
+  ID: {
+    aiPredictions: "Prediksi AI",
+    aiPredictionsToday: "Prediksi AI Hari Ini",
+    aiPredictionsYesterday: "Prediksi AI Kemarin",
+    aiPredictionsTomorrow: "Prediksi AI Besok",
+    todaysMatches: "Prediksi bertenaga AI untuk pertandingan mendatang",
+    yesterday: "KEMARIN",
+    today: "HARI INI",
+    tomorrow: "BESOK",
+    matches: "pertandingan",
+    loading: "Memuat pertandingan...",
+    noMatches: "Tidak ada pertandingan untuk ditampilkan",
+    home: "Beranda",
+    predictions: "Prediksi",
+    leagues: "Liga",
+    performance: "Performa AI",
+    community: "Komunitas",
+    news: "Berita",
+    solution: "Solusi",
+    pricing: "Harga",
+    login: "Masuk",
+    getStarted: "Mulai",
+    footer: "18+ | Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    allRights: "© 2026 OddsFlow. Hak cipta dilindungi.",
+    aiConfidence: "Keyakinan AI",
   },
 };
 
@@ -281,6 +344,7 @@ function PredictionsContent() {
   const [selectedDate, setSelectedDate] = useState(getInitialDate);
   const [matches, setMatches] = useState<Prematch[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isDateInitialized, setIsDateInitialized] = useState(false);
   const [dates] = useState(getDateRange);
   const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -290,6 +354,25 @@ function PredictionsContent() {
   const [predictions, setPredictions] = useState<Record<number, MatchPrediction>>({});
   const today = getUTCToday();
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
+
+  // Get the appropriate prediction title based on selected date
+  const getPredictionTitle = () => {
+    const yesterday = new Date(today);
+    yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+    const tomorrow = new Date(today);
+    tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+
+    if (isSameDay(selectedDate, today)) {
+      return t('aiPredictionsToday');
+    } else if (isSameDay(selectedDate, yesterday)) {
+      return t('aiPredictionsYesterday');
+    } else if (isSameDay(selectedDate, tomorrow)) {
+      return t('aiPredictionsTomorrow');
+    } else {
+      // For other dates, show generic title with the date
+      return t('aiPredictions');
+    }
+  };
 
   // Handle match click - check if user is logged in
   const handleMatchClick = (e: React.MouseEvent, matchId: number) => {
@@ -323,6 +406,7 @@ function PredictionsContent() {
       if (!isNaN(parsedDate.getTime())) {
         setSelectedDate(parsedDate);
         sessionStorage.setItem('oddsflow_selected_date', dateParam);
+        setIsDateInitialized(true);
         return;
       }
     }
@@ -333,8 +417,13 @@ function PredictionsContent() {
       const parsedDate = new Date(savedDate + 'T00:00:00Z');
       if (!isNaN(parsedDate.getTime())) {
         setSelectedDate(parsedDate);
+        setIsDateInitialized(true);
+        return;
       }
     }
+
+    // No saved date found, use today (already set as initial state)
+    setIsDateInitialized(true);
   }, []); // Empty dependency - run once on mount
 
   // Also handle URL param changes
@@ -386,12 +475,15 @@ function PredictionsContent() {
   };
 
   useEffect(() => {
+    // Only fetch after date is initialized from sessionStorage/URL
+    if (!isDateInitialized) return;
+
     async function fetchMatches() {
       setLoading(true);
       try {
         const dateStr = formatDateForQuery(selectedDate);
         const nextDate = new Date(selectedDate);
-        nextDate.setDate(nextDate.getDate() + 1);
+        nextDate.setUTCDate(nextDate.getUTCDate() + 1);
         const nextDateStr = formatDateForQuery(nextDate);
 
         const { data, error } = await supabase
@@ -421,7 +513,7 @@ function PredictionsContent() {
     }
 
     fetchMatches();
-  }, [selectedDate]);
+  }, [selectedDate, isDateInitialized]);
 
   const formatTime = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -501,6 +593,7 @@ function PredictionsContent() {
               <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
               <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
               <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
               <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
@@ -622,6 +715,7 @@ function PredictionsContent() {
                 { href: '/performance', label: t('performance') },
                 { href: '/community', label: t('community') },
                 { href: '/news', label: t('news') },
+                { href: '/solution', label: t('solution') },
                 { href: '/pricing', label: t('pricing') },
               ].map((link) => (
                 <Link
@@ -751,7 +845,7 @@ function PredictionsContent() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              {t('aiPredictions')}
+              {getPredictionTitle()}
             </span>
           </h1>
           <p className="text-gray-400">
@@ -1014,10 +1108,11 @@ function PredictionsContent() {
         )}
       </main>
 
-      {/* Footer - Always at bottom */}
-      <footer className="relative z-10 py-8 border-t border-white/5 text-center text-gray-500 text-sm mt-auto">
-        <p>{t('footer')}</p>
-        <p className="mt-2">{t('allRights')}</p>
+      {/* Footer */}
+      <footer className="relative z-10 py-8 px-4 border-t border-white/5 mt-auto">
+        <div className="max-w-7xl mx-auto text-center text-gray-500 text-sm">
+          <p>&copy; 2026 OddsFlow. All rights reserved. Gambling involves risk. Please gamble responsibly.</p>
+        </div>
       </footer>
 
       {/* Login Modal */}

@@ -17,6 +17,7 @@ const LANGUAGES = [
   { code: 'KO', name: '한국어', flag: '🇰🇷' },
   { code: '中文', name: '简体中文', flag: '🇨🇳' },
   { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
 ];
 
 const translations: Record<string, Record<string, string>> = {
@@ -58,6 +59,19 @@ const translations: Record<string, Record<string, string>> = {
     login: "登入",
     getStarted: "開始使用",
     backToWorldCup: "返回世界盃",
+  },
+  ID: {
+    title: "Liga Piala Dunia",
+    comingSoon: "Segera Hadir",
+    description: "Klasemen grup dan tabel liga untuk Piala Dunia FIFA 2026 akan tersedia di sini.",
+    home: "Beranda",
+    predictions: "Prediksi",
+    leagues: "Liga",
+    performance: "Performa AI",
+    pricing: "Harga",
+    login: "Masuk",
+    getStarted: "Mulai",
+    backToWorldCup: "Kembali ke Piala Dunia",
   },
 };
 

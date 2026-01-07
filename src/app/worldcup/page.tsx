@@ -55,6 +55,7 @@ const LANGUAGES = [
   { code: 'KO', name: '한국어', flag: '🇰🇷' },
   { code: '中文', name: '简体中文', flag: '🇨🇳' },
   { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
 ];
 
 // World Cup specific translations
@@ -79,7 +80,7 @@ const translations: Record<string, Record<string, string>> = {
     login: "Log In",
     getStarted: "Get Started",
     footer: "18+ | Gambling involves risk. Please gamble responsibly.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
   },
   ES: {
     worldCup: "Copa Mundial FIFA 2026",
@@ -101,7 +102,7 @@ const translations: Record<string, Record<string, string>> = {
     login: "Iniciar Sesión",
     getStarted: "Comenzar",
     footer: "18+ | El juego implica riesgo. Por favor juega responsablemente.",
-    allRights: "© 2025 OddsFlow. Todos los derechos reservados.",
+    allRights: "© 2026 OddsFlow. Todos los derechos reservados.",
   },
   PT: {
     worldCup: "Copa do Mundo FIFA 2026",
@@ -123,7 +124,7 @@ const translations: Record<string, Record<string, string>> = {
     login: "Entrar",
     getStarted: "Começar",
     footer: "18+ | O jogo envolve risco. Por favor, jogue com responsabilidade.",
-    allRights: "© 2025 OddsFlow. Todos os direitos reservados.",
+    allRights: "© 2026 OddsFlow. Todos os direitos reservados.",
   },
   DE: {
     worldCup: "FIFA Weltmeisterschaft 2026",
@@ -145,7 +146,7 @@ const translations: Record<string, Record<string, string>> = {
     login: "Anmelden",
     getStarted: "Loslegen",
     footer: "18+ | Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
-    allRights: "© 2025 OddsFlow. Alle Rechte vorbehalten.",
+    allRights: "© 2026 OddsFlow. Alle Rechte vorbehalten.",
   },
   FR: {
     worldCup: "Coupe du Monde FIFA 2026",
@@ -167,7 +168,7 @@ const translations: Record<string, Record<string, string>> = {
     login: "Connexion",
     getStarted: "Commencer",
     footer: "18+ | Les jeux d'argent comportent des risques. Jouez responsablement.",
-    allRights: "© 2025 OddsFlow. Tous droits réservés.",
+    allRights: "© 2026 OddsFlow. Tous droits réservés.",
   },
   JA: {
     worldCup: "FIFAワールドカップ2026",
@@ -189,7 +190,7 @@ const translations: Record<string, Record<string, string>> = {
     login: "ログイン",
     getStarted: "始める",
     footer: "18歳以上 | ギャンブルにはリスクが伴います。責任を持ってプレイしてください。",
-    allRights: "© 2025 OddsFlow. 全著作権所有。",
+    allRights: "© 2026 OddsFlow. 全著作権所有。",
   },
   KO: {
     worldCup: "FIFA 월드컵 2026",
@@ -211,7 +212,7 @@ const translations: Record<string, Record<string, string>> = {
     login: "로그인",
     getStarted: "시작하기",
     footer: "18세 이상 | 도박에는 위험이 따릅니다. 책임감 있게 플레이하세요.",
-    allRights: "© 2025 OddsFlow. 모든 권리 보유.",
+    allRights: "© 2026 OddsFlow. 모든 권리 보유.",
   },
   '中文': {
     worldCup: "2026世界杯",
@@ -233,7 +234,7 @@ const translations: Record<string, Record<string, string>> = {
     login: "登录",
     getStarted: "开始使用",
     footer: "18+ | 博彩有风险，请理性投注。",
-    allRights: "© 2025 OddsFlow. 保留所有权利。",
+    allRights: "© 2026 OddsFlow. 保留所有权利。",
   },
   '繁體': {
     worldCup: "2026世界盃",
@@ -255,7 +256,29 @@ const translations: Record<string, Record<string, string>> = {
     login: "登入",
     getStarted: "開始使用",
     footer: "18+ | 博彩有風險，請理性投注。",
-    allRights: "© 2025 OddsFlow. 保留所有權利。",
+    allRights: "© 2026 OddsFlow. 保留所有權利。",
+  },
+  ID: {
+    worldCup: "Piala Dunia FIFA 2026",
+    worldCupSubtitle: "Prediksi AI untuk turnamen sepak bola terbesar di dunia",
+    yesterday: "KEMARIN",
+    today: "HARI INI",
+    tomorrow: "BESOK",
+    matches: "pertandingan",
+    loading: "Memuat pertandingan Piala Dunia...",
+    noMatches: "Tidak ada pertandingan Piala Dunia pada tanggal ini",
+    home: "Beranda",
+    predictions: "Prediksi",
+    worldcup: "Piala Dunia",
+    leagues: "Liga",
+    performance: "Performa AI",
+    community: "Komunitas",
+    news: "Berita",
+    pricing: "Harga",
+    login: "Masuk",
+    getStarted: "Mulai",
+    footer: "18+ | Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    allRights: "© 2026 OddsFlow. Hak cipta dilindungi.",
   },
 };
 

@@ -5,6 +5,20 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { PlayerStats, getPlayerStatsById } from '@/lib/supabase';
 
+// Language options
+const LANGUAGES = [
+  { code: 'EN', name: 'English', flag: '🇬🇧' },
+  { code: 'ES', name: 'Español', flag: '🇪🇸' },
+  { code: 'PT', name: 'Português', flag: '🇧🇷' },
+  { code: 'DE', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'FR', name: 'Français', flag: '🇫🇷' },
+  { code: 'JA', name: '日本語', flag: '🇯🇵' },
+  { code: 'KO', name: '한국어', flag: '🇰🇷' },
+  { code: '中文', name: '简体中文', flag: '🇨🇳' },
+  { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
+];
+
 // League configuration
 const LEAGUES_CONFIG: Record<string, { name: string; country: string; logo: string; dbName: string }> = {
   'premier-league': { name: 'Premier League', country: 'England', logo: 'https://media.api-sports.io/football/leagues/39.png', dbName: 'Premier League' },
@@ -23,6 +37,23 @@ export default function PlayerDetailPage() {
 
   const [player, setPlayer] = useState<PlayerStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedLang, setSelectedLang] = useState('EN');
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+
+  const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
+
+  // Handle language change
+  const handleLanguageChange = (langCode: string) => {
+    setSelectedLang(langCode);
+    localStorage.setItem('oddsflow_lang', langCode);
+    setLangDropdownOpen(false);
+  };
+
+  // Load saved language preference
+  useEffect(() => {
+    const savedLang = localStorage.getItem('oddsflow_lang');
+    if (savedLang) setSelectedLang(savedLang);
+  }, []);
 
   useEffect(() => {
     async function fetchPlayer() {
@@ -64,6 +95,53 @@ export default function PlayerDetailPage() {
               <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Predictions</Link>
               <Link href="/leagues" className="text-emerald-400 text-sm font-medium">Leagues</Link>
               <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">AI Performance</Link>
+              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">News</Link>
+              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Solution</Link>
+            </div>
+
+            {/* Language Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer"
+              >
+                <span>{currentLang.flag}</span>
+                <span className="font-medium">{currentLang.code}</span>
+                <svg
+                  className={`w-4 h-4 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {langDropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
+                    {LANGUAGES.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => handleLanguageChange(lang.code)}
+                        className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors cursor-pointer ${
+                          selectedLang === lang.code
+                            ? 'bg-emerald-500/20 text-emerald-400'
+                            : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                        }`}
+                      >
+                        <span className="text-lg">{lang.flag}</span>
+                        <span>{lang.name}</span>
+                        {selectedLang === lang.code && (
+                          <svg className="w-4 h-4 ml-auto text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -332,9 +410,10 @@ export default function PlayerDetailPage() {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 py-8 border-t border-white/5 text-center text-gray-500 text-sm">
-        <p>18+ | Gambling involves risk. Please gamble responsibly.</p>
-        <p className="mt-2">© 2025 OddsFlow. All rights reserved.</p>
+      <footer className="relative z-10 py-8 px-4 border-t border-white/5">
+        <div className="max-w-7xl mx-auto text-center text-gray-500 text-sm">
+          <p>&copy; 2026 OddsFlow. All rights reserved. Gambling involves risk. Please gamble responsibly.</p>
+        </div>
       </footer>
     </div>
   );

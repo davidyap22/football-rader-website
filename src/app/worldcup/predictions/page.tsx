@@ -18,6 +18,7 @@ const LANGUAGES = [
   { code: 'KO', name: '한국어', flag: '🇰🇷' },
   { code: '中文', name: '简体中文', flag: '🇨🇳' },
   { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
 ];
 
 // Translations
@@ -40,7 +41,7 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "Get Started",
     backToWorldCup: "Back to World Cup",
     footer: "18+ | Gambling involves risk. Please gamble responsibly.",
-    allRights: "© 2025 OddsFlow. All rights reserved.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
     allDates: "All Dates",
   },
   '中文': {
@@ -61,7 +62,7 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "开始使用",
     backToWorldCup: "返回世界杯",
     footer: "18+ | 博彩有风险，请理性投注。",
-    allRights: "© 2025 OddsFlow. 保留所有权利。",
+    allRights: "© 2026 OddsFlow. 保留所有权利。",
     allDates: "全部日期",
   },
   '繁體': {
@@ -82,8 +83,29 @@ const translations: Record<string, Record<string, string>> = {
     getStarted: "開始使用",
     backToWorldCup: "返回世界盃",
     footer: "18+ | 博彩有風險，請理性投注。",
-    allRights: "© 2025 OddsFlow. 保留所有權利。",
+    allRights: "© 2026 OddsFlow. 保留所有權利。",
     allDates: "全部日期",
+  },
+  ID: {
+    worldCupPredictions: "Prediksi Piala Dunia",
+    worldCupSubtitle: "Prediksi AI untuk pertandingan Piala Dunia FIFA 2026",
+    matches: "pertandingan",
+    loading: "Memuat pertandingan Piala Dunia...",
+    noMatches: "Tidak ada pertandingan di grup ini",
+    home: "Beranda",
+    predictions: "Prediksi",
+    worldcup: "Piala Dunia",
+    leagues: "Liga",
+    performance: "Performa AI",
+    community: "Komunitas",
+    news: "Berita",
+    pricing: "Harga",
+    login: "Masuk",
+    getStarted: "Mulai",
+    backToWorldCup: "Kembali ke Piala Dunia",
+    footer: "18+ | Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    allRights: "© 2026 OddsFlow. Hak cipta dilindungi.",
+    allDates: "Semua Tanggal",
   },
 };
 

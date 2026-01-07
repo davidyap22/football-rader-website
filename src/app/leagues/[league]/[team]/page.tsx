@@ -3,7 +3,777 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { TeamStatistics, PlayerStats, getTeamStatsByName, getPlayerStatsByTeam } from '@/lib/supabase';
+import { supabase, TeamStatistics, PlayerStats, getTeamStatsByName, getPlayerStatsByTeam } from '@/lib/supabase';
+import { User } from '@supabase/supabase-js';
+
+// Language options
+const LANGUAGES = [
+  { code: 'EN', name: 'English', flag: '🇬🇧' },
+  { code: 'ES', name: 'Español', flag: '🇪🇸' },
+  { code: 'PT', name: 'Português', flag: '🇧🇷' },
+  { code: 'DE', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'FR', name: 'Français', flag: '🇫🇷' },
+  { code: 'JA', name: '日本語', flag: '🇯🇵' },
+  { code: 'KO', name: '한국어', flag: '🇰🇷' },
+  { code: '中文', name: '简体中文', flag: '🇨🇳' },
+  { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
+  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
+];
+
+// Translations
+const translations: Record<string, Record<string, string>> = {
+  EN: {
+    home: "Home",
+    predictions: "Predictions",
+    leagues: "Leagues",
+    performance: "AI Performance",
+    community: "Community",
+    news: "News",
+    solution: "Solution",
+    pricing: "Pricing",
+    footer: "18+ | Gambling involves risk. Please gamble responsibly.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "AI-powered football odds analysis for smarter predictions. Make data-driven decisions with real-time insights.",
+    product: "Product",
+    company: "Company",
+    legal: "Legal",
+    aboutUs: "About Us",
+    contact: "Contact",
+    blog: "Blog",
+    termsOfService: "Terms of Service",
+    privacyPolicy: "Privacy Policy",
+    allRightsReserved: "All rights reserved.",
+    gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
+    popularLeagues: "Popular Leagues",
+    aiPredictionsFooter: "AI Predictions",
+    aiFootballPredictions: "AI Football Predictions",
+    onextwoPredictions: "1x2 Predictions",
+    overUnderTips: "Over/Under Tips",
+    handicapBetting: "Handicap Betting",
+    aiBettingPerformance: "AI Betting Performance",
+    footballTipsToday: "Football Tips Today",
+    // Team Page Content
+    backTo: "Back to",
+    leagueNotFound: "League not found",
+    teamNotFound: "Team not found",
+    loadingTeamData: "Loading team data...",
+    season: "Season",
+    points: "Points",
+    winRate: "Win Rate",
+    played: "Played",
+    wins: "Wins",
+    draws: "Draws",
+    losses: "Losses",
+    goalsFor: "Goals For",
+    goalsAgainst: "Goals Against",
+    teamFormation: "Team Formation",
+    allFormationsUsed: "All Formations Used",
+    performanceStats: "Performance",
+    goalDifference: "Goal Difference",
+    goalsPerMatch: "Goals/Match",
+    concededPerMatch: "Conceded/Match",
+    cleanSheets: "Clean Sheets",
+    failedToScore: "Failed to Score",
+    discipline: "Discipline",
+    yellowCards: "Yellow Cards",
+    redCards: "Red Cards",
+    cardsPerMatch: "Cards/Match",
+    recentForm: "Recent Form",
+    lastMatches: "Last {count} matches",
+    win: "Win",
+    draw: "Draw",
+    loss: "Loss",
+    squad: "Squad",
+    players: "Players",
+    player: "Player",
+    position: "Position",
+    age: "Age",
+    apps: "Apps",
+    minutes: "Minutes",
+    goals: "Goals",
+    assists: "Assists",
+    rating: "Rating",
+    viewProfile: "View Profile",
+    noPlayerData: "No player data available",
+    login: "Log In",
+    getStarted: "Get Started",
+  },
+  ES: {
+    home: "Inicio",
+    predictions: "Predicciones",
+    leagues: "Ligas",
+    performance: "Rendimiento IA",
+    community: "Comunidad",
+    news: "Noticias",
+    solution: "Solución",
+    pricing: "Precios",
+    footer: "18+ | El juego implica riesgo. Por favor juega responsablemente.",
+    allRights: "© 2026 OddsFlow. Todos los derechos reservados.",
+    footerDesc: "Analisis de cuotas de futbol impulsado por IA para predicciones mas inteligentes.",
+    product: "Producto",
+    company: "Empresa",
+    legal: "Legal",
+    aboutUs: "Sobre Nosotros",
+    contact: "Contacto",
+    blog: "Blog",
+    termsOfService: "Terminos de Servicio",
+    privacyPolicy: "Politica de Privacidad",
+    allRightsReserved: "Todos los derechos reservados.",
+    gamblingWarning: "El juego implica riesgo. Por favor juega responsablemente.",
+    popularLeagues: "Ligas Populares",
+    aiPredictionsFooter: "Predicciones IA",
+    aiFootballPredictions: "Predicciones de Futbol IA",
+    onextwoPredictions: "Predicciones 1x2",
+    overUnderTips: "Consejos Over/Under",
+    handicapBetting: "Apuestas Handicap",
+    aiBettingPerformance: "Rendimiento de Apuestas IA",
+    footballTipsToday: "Tips de Futbol Hoy",
+    backTo: "Volver a",
+    leagueNotFound: "Liga no encontrada",
+    teamNotFound: "Equipo no encontrado",
+    loadingTeamData: "Cargando datos del equipo...",
+    season: "Temporada",
+    points: "Puntos",
+    winRate: "Tasa de Victoria",
+    played: "Jugados",
+    wins: "Victorias",
+    draws: "Empates",
+    losses: "Derrotas",
+    goalsFor: "Goles a Favor",
+    goalsAgainst: "Goles en Contra",
+    teamFormation: "Formación del Equipo",
+    allFormationsUsed: "Todas las Formaciones Usadas",
+    performanceStats: "Rendimiento",
+    goalDifference: "Diferencia de Goles",
+    goalsPerMatch: "Goles/Partido",
+    concededPerMatch: "Recibidos/Partido",
+    cleanSheets: "Porterías a Cero",
+    failedToScore: "Sin Marcar",
+    discipline: "Disciplina",
+    yellowCards: "Tarjetas Amarillas",
+    redCards: "Tarjetas Rojas",
+    cardsPerMatch: "Tarjetas/Partido",
+    recentForm: "Forma Reciente",
+    lastMatches: "Últimos {count} partidos",
+    win: "Victoria",
+    draw: "Empate",
+    loss: "Derrota",
+    squad: "Plantilla",
+    players: "Jugadores",
+    player: "Jugador",
+    position: "Posición",
+    age: "Edad",
+    apps: "Partidos",
+    minutes: "Minutos",
+    goals: "Goles",
+    assists: "Asistencias",
+    rating: "Valoración",
+    viewProfile: "Ver Perfil",
+    noPlayerData: "No hay datos de jugadores disponibles",
+    login: "Iniciar Sesión",
+    getStarted: "Comenzar",
+  },
+  PT: {
+    home: "Início",
+    predictions: "Previsões",
+    leagues: "Ligas",
+    performance: "Desempenho IA",
+    community: "Comunidade",
+    news: "Notícias",
+    solution: "Solução",
+    pricing: "Preços",
+    footer: "18+ | O jogo envolve risco. Por favor, jogue com responsabilidade.",
+    allRights: "© 2026 OddsFlow. Todos os direitos reservados.",
+    footerDesc: "Analise de probabilidades de futebol com IA para previsoes mais inteligentes.",
+    product: "Produto",
+    company: "Empresa",
+    legal: "Legal",
+    aboutUs: "Sobre Nos",
+    contact: "Contato",
+    blog: "Blog",
+    termsOfService: "Termos de Servico",
+    privacyPolicy: "Politica de Privacidade",
+    allRightsReserved: "Todos os direitos reservados.",
+    gamblingWarning: "O jogo envolve risco. Por favor, jogue com responsabilidade.",
+    popularLeagues: "Ligas Populares",
+    aiPredictionsFooter: "Previsões IA",
+    aiFootballPredictions: "Previsões de Futebol IA",
+    onextwoPredictions: "Previsões 1x2",
+    overUnderTips: "Dicas Over/Under",
+    handicapBetting: "Apostas Handicap",
+    aiBettingPerformance: "Desempenho de Apostas IA",
+    footballTipsToday: "Dicas de Futebol Hoje",
+    backTo: "Voltar para",
+    leagueNotFound: "Liga não encontrada",
+    teamNotFound: "Equipe não encontrada",
+    loadingTeamData: "Carregando dados da equipe...",
+    season: "Temporada",
+    points: "Pontos",
+    winRate: "Taxa de Vitória",
+    played: "Jogados",
+    wins: "Vitórias",
+    draws: "Empates",
+    losses: "Derrotas",
+    goalsFor: "Gols Marcados",
+    goalsAgainst: "Gols Sofridos",
+    teamFormation: "Formação da Equipe",
+    allFormationsUsed: "Todas as Formações Usadas",
+    performanceStats: "Desempenho",
+    goalDifference: "Saldo de Gols",
+    goalsPerMatch: "Gols/Jogo",
+    concededPerMatch: "Sofridos/Jogo",
+    cleanSheets: "Jogos sem Sofrer Gols",
+    failedToScore: "Sem Marcar",
+    discipline: "Disciplina",
+    yellowCards: "Cartões Amarelos",
+    redCards: "Cartões Vermelhos",
+    cardsPerMatch: "Cartões/Jogo",
+    recentForm: "Forma Recente",
+    lastMatches: "Últimos {count} jogos",
+    win: "Vitória",
+    draw: "Empate",
+    loss: "Derrota",
+    squad: "Elenco",
+    players: "Jogadores",
+    player: "Jogador",
+    position: "Posição",
+    age: "Idade",
+    apps: "Jogos",
+    minutes: "Minutos",
+    goals: "Gols",
+    assists: "Assistências",
+    rating: "Avaliação",
+    viewProfile: "Ver Perfil",
+    noPlayerData: "Dados de jogadores não disponíveis",
+    login: "Entrar",
+    getStarted: "Começar",
+  },
+  DE: {
+    home: "Startseite",
+    predictions: "Vorhersagen",
+    leagues: "Ligen",
+    performance: "KI-Leistung",
+    community: "Community",
+    news: "Nachrichten",
+    solution: "Lösung",
+    pricing: "Preise",
+    footer: "18+ | Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
+    allRights: "© 2026 OddsFlow. Alle Rechte vorbehalten.",
+    footerDesc: "KI-gestutzte Fussball-Quotenanalyse fur intelligentere Vorhersagen.",
+    product: "Produkt",
+    company: "Unternehmen",
+    legal: "Rechtliches",
+    aboutUs: "Uber Uns",
+    contact: "Kontakt",
+    blog: "Blog",
+    termsOfService: "Nutzungsbedingungen",
+    privacyPolicy: "Datenschutzrichtlinie",
+    allRightsReserved: "Alle Rechte vorbehalten.",
+    gamblingWarning: "Glucksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
+    popularLeagues: "Beliebte Ligen",
+    aiPredictionsFooter: "KI-Vorhersagen",
+    aiFootballPredictions: "KI-Fussballvorhersagen",
+    onextwoPredictions: "1x2 Vorhersagen",
+    overUnderTips: "Über/Unter Tipps",
+    handicapBetting: "Handicap-Wetten",
+    aiBettingPerformance: "KI-Wettleistung",
+    footballTipsToday: "Fussballtipps Heute",
+    backTo: "Zurück zu",
+    leagueNotFound: "Liga nicht gefunden",
+    teamNotFound: "Team nicht gefunden",
+    loadingTeamData: "Lade Teamdaten...",
+    season: "Saison",
+    points: "Punkte",
+    winRate: "Siegquote",
+    played: "Gespielt",
+    wins: "Siege",
+    draws: "Unentschieden",
+    losses: "Niederlagen",
+    goalsFor: "Tore",
+    goalsAgainst: "Gegentore",
+    teamFormation: "Teamformation",
+    allFormationsUsed: "Alle verwendeten Formationen",
+    performanceStats: "Leistung",
+    goalDifference: "Tordifferenz",
+    goalsPerMatch: "Tore/Spiel",
+    concededPerMatch: "Gegentore/Spiel",
+    cleanSheets: "Zu-Null-Spiele",
+    failedToScore: "Ohne Torerfolg",
+    discipline: "Disziplin",
+    yellowCards: "Gelbe Karten",
+    redCards: "Rote Karten",
+    cardsPerMatch: "Karten/Spiel",
+    recentForm: "Aktuelle Form",
+    lastMatches: "Letzte {count} Spiele",
+    win: "Sieg",
+    draw: "Unentschieden",
+    loss: "Niederlage",
+    squad: "Kader",
+    players: "Spieler",
+    player: "Spieler",
+    position: "Position",
+    age: "Alter",
+    apps: "Einsätze",
+    minutes: "Minuten",
+    goals: "Tore",
+    assists: "Vorlagen",
+    rating: "Bewertung",
+    viewProfile: "Profil ansehen",
+    noPlayerData: "Keine Spielerdaten verfügbar",
+    login: "Anmelden",
+    getStarted: "Loslegen",
+  },
+  FR: {
+    home: "Accueil",
+    predictions: "Prédictions",
+    leagues: "Ligues",
+    performance: "Performance IA",
+    community: "Communauté",
+    news: "Actualités",
+    solution: "Solution",
+    pricing: "Tarifs",
+    footer: "18+ | Les jeux d'argent comportent des risques. Jouez de manière responsable.",
+    allRights: "© 2026 OddsFlow. Tous droits réservés.",
+    footerDesc: "Analyse des cotes de football par IA pour des predictions plus intelligentes.",
+    product: "Produit",
+    company: "Entreprise",
+    legal: "Legal",
+    aboutUs: "A Propos",
+    contact: "Contact",
+    blog: "Blog",
+    termsOfService: "Conditions d'Utilisation",
+    privacyPolicy: "Politique de Confidentialite",
+    allRightsReserved: "Tous droits reserves.",
+    gamblingWarning: "Les jeux d'argent comportent des risques. Jouez de maniere responsable.",
+    popularLeagues: "Ligues Populaires",
+    aiPredictionsFooter: "Prédictions IA",
+    aiFootballPredictions: "Prédictions Football IA",
+    onextwoPredictions: "Prédictions 1x2",
+    overUnderTips: "Conseils Over/Under",
+    handicapBetting: "Paris Handicap",
+    aiBettingPerformance: "Performance Paris IA",
+    footballTipsToday: "Pronostics Foot Aujourd'hui",
+    backTo: "Retour à",
+    leagueNotFound: "Ligue non trouvée",
+    teamNotFound: "Équipe non trouvée",
+    loadingTeamData: "Chargement des données...",
+    season: "Saison",
+    points: "Points",
+    winRate: "Taux de Victoire",
+    played: "Joués",
+    wins: "Victoires",
+    draws: "Nuls",
+    losses: "Défaites",
+    goalsFor: "Buts Marqués",
+    goalsAgainst: "Buts Encaissés",
+    teamFormation: "Formation d'Équipe",
+    allFormationsUsed: "Toutes les Formations Utilisées",
+    performanceStats: "Performance",
+    goalDifference: "Différence de Buts",
+    goalsPerMatch: "Buts/Match",
+    concededPerMatch: "Encaissés/Match",
+    cleanSheets: "Clean Sheets",
+    failedToScore: "Sans Marquer",
+    discipline: "Discipline",
+    yellowCards: "Cartons Jaunes",
+    redCards: "Cartons Rouges",
+    cardsPerMatch: "Cartons/Match",
+    recentForm: "Forme Récente",
+    lastMatches: "Derniers {count} matchs",
+    win: "Victoire",
+    draw: "Nul",
+    loss: "Défaite",
+    squad: "Effectif",
+    players: "Joueurs",
+    player: "Joueur",
+    position: "Position",
+    age: "Âge",
+    apps: "Matchs",
+    minutes: "Minutes",
+    goals: "Buts",
+    assists: "Passes Décisives",
+    rating: "Note",
+    viewProfile: "Voir le Profil",
+    noPlayerData: "Aucune donnée de joueur disponible",
+    login: "Connexion",
+    getStarted: "Commencer",
+  },
+  JA: {
+    home: "ホーム",
+    predictions: "予測",
+    leagues: "リーグ",
+    performance: "AI パフォーマンス",
+    community: "コミュニティ",
+    news: "ニュース",
+    solution: "ソリューション",
+    pricing: "料金",
+    footer: "18歳以上 | ギャンブルにはリスクが伴います。責任を持ってプレイしてください。",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "AIによるサッカーオッズ分析で、より賢い予測を。",
+    product: "製品",
+    company: "会社",
+    legal: "法的情報",
+    aboutUs: "会社概要",
+    contact: "お問い合わせ",
+    blog: "ブログ",
+    termsOfService: "利用規約",
+    privacyPolicy: "プライバシーポリシー",
+    allRightsReserved: "全著作権所有。",
+    gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってプレイしてください。",
+    popularLeagues: "人気リーグ",
+    aiPredictionsFooter: "AI予測",
+    aiFootballPredictions: "AIサッカー予測",
+    onextwoPredictions: "1x2予測",
+    overUnderTips: "オーバー/アンダー予想",
+    handicapBetting: "ハンディキャップベット",
+    aiBettingPerformance: "AIベッティング実績",
+    footballTipsToday: "今日のサッカー予想",
+    backTo: "戻る",
+    leagueNotFound: "リーグが見つかりません",
+    teamNotFound: "チームが見つかりません",
+    loadingTeamData: "チームデータを読み込み中...",
+    season: "シーズン",
+    points: "ポイント",
+    winRate: "勝率",
+    played: "試合数",
+    wins: "勝利",
+    draws: "引分",
+    losses: "敗北",
+    goalsFor: "得点",
+    goalsAgainst: "失点",
+    teamFormation: "チームフォーメーション",
+    allFormationsUsed: "使用した全フォーメーション",
+    performanceStats: "パフォーマンス",
+    goalDifference: "得失点差",
+    goalsPerMatch: "得点/試合",
+    concededPerMatch: "失点/試合",
+    cleanSheets: "クリーンシート",
+    failedToScore: "無得点",
+    discipline: "規律",
+    yellowCards: "イエローカード",
+    redCards: "レッドカード",
+    cardsPerMatch: "カード/試合",
+    recentForm: "最近の調子",
+    lastMatches: "直近{count}試合",
+    win: "勝",
+    draw: "分",
+    loss: "敗",
+    squad: "選手一覧",
+    players: "選手",
+    player: "選手",
+    position: "ポジション",
+    age: "年齢",
+    apps: "出場",
+    minutes: "分",
+    goals: "得点",
+    assists: "アシスト",
+    rating: "評価",
+    viewProfile: "プロフィール",
+    noPlayerData: "選手データがありません",
+    login: "ログイン",
+    getStarted: "始める",
+  },
+  KO: {
+    home: "홈",
+    predictions: "예측",
+    leagues: "리그",
+    performance: "AI 성과",
+    community: "커뮤니티",
+    news: "뉴스",
+    solution: "솔루션",
+    pricing: "가격",
+    footer: "18세 이상 | 도박에는 위험이 따릅니다. 책임감 있게 플레이하세요.",
+    allRights: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "AI 기반 축구 배당률 분석으로 더 스마트한 예측을.",
+    product: "제품",
+    company: "회사",
+    legal: "법적 정보",
+    aboutUs: "회사 소개",
+    contact: "연락처",
+    blog: "블로그",
+    termsOfService: "서비스 약관",
+    privacyPolicy: "개인정보 처리방침",
+    allRightsReserved: "모든 권리 보유.",
+    gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 플레이하세요.",
+    popularLeagues: "인기 리그",
+    aiPredictionsFooter: "AI 예측",
+    aiFootballPredictions: "AI 축구 예측",
+    onextwoPredictions: "1x2 예측",
+    overUnderTips: "오버/언더 팁",
+    handicapBetting: "핸디캡 베팅",
+    aiBettingPerformance: "AI 베팅 성과",
+    footballTipsToday: "오늘의 축구 팁",
+    backTo: "돌아가기",
+    leagueNotFound: "리그를 찾을 수 없습니다",
+    teamNotFound: "팀을 찾을 수 없습니다",
+    loadingTeamData: "팀 데이터 로딩 중...",
+    season: "시즌",
+    points: "포인트",
+    winRate: "승률",
+    played: "경기",
+    wins: "승",
+    draws: "무",
+    losses: "패",
+    goalsFor: "득점",
+    goalsAgainst: "실점",
+    teamFormation: "팀 포메이션",
+    allFormationsUsed: "사용된 모든 포메이션",
+    performanceStats: "성과",
+    goalDifference: "골득실",
+    goalsPerMatch: "경기당 득점",
+    concededPerMatch: "경기당 실점",
+    cleanSheets: "클린시트",
+    failedToScore: "무득점",
+    discipline: "징계",
+    yellowCards: "옐로카드",
+    redCards: "레드카드",
+    cardsPerMatch: "경기당 카드",
+    recentForm: "최근 폼",
+    lastMatches: "최근 {count}경기",
+    win: "승",
+    draw: "무",
+    loss: "패",
+    squad: "스쿼드",
+    players: "선수",
+    player: "선수",
+    position: "포지션",
+    age: "나이",
+    apps: "출전",
+    minutes: "분",
+    goals: "골",
+    assists: "도움",
+    rating: "평점",
+    viewProfile: "프로필 보기",
+    noPlayerData: "선수 데이터가 없습니다",
+    login: "로그인",
+    getStarted: "시작하기",
+  },
+  '中文': {
+    home: "首页",
+    predictions: "预测",
+    leagues: "联赛",
+    performance: "AI 表现",
+    community: "社区",
+    news: "新闻",
+    solution: "解决方案",
+    pricing: "价格",
+    footer: "18+ | 博彩有风险，请理性投注。",
+    allRights: "© 2026 OddsFlow. 保留所有权利。",
+    footerDesc: "AI驱动的足球赔率分析，助您做出更明智的预测。",
+    product: "产品",
+    company: "公司",
+    legal: "法律信息",
+    aboutUs: "关于我们",
+    contact: "联系我们",
+    blog: "博客",
+    termsOfService: "服务条款",
+    privacyPolicy: "隐私政策",
+    allRightsReserved: "保留所有权利。",
+    gamblingWarning: "博彩有风险，请理性投注。",
+    popularLeagues: "热门联赛",
+    aiPredictionsFooter: "AI 预测",
+    aiFootballPredictions: "AI 足球预测",
+    onextwoPredictions: "1x2 预测",
+    overUnderTips: "大小球建议",
+    handicapBetting: "让球盘投注",
+    aiBettingPerformance: "AI 投注表现",
+    footballTipsToday: "今日足球贴士",
+    backTo: "返回",
+    leagueNotFound: "未找到联赛",
+    teamNotFound: "未找到球队",
+    loadingTeamData: "加载球队数据中...",
+    season: "赛季",
+    points: "积分",
+    winRate: "胜率",
+    played: "已赛",
+    wins: "胜",
+    draws: "平",
+    losses: "负",
+    goalsFor: "进球",
+    goalsAgainst: "失球",
+    teamFormation: "球队阵型",
+    allFormationsUsed: "所有使用过的阵型",
+    performanceStats: "表现",
+    goalDifference: "净胜球",
+    goalsPerMatch: "场均进球",
+    concededPerMatch: "场均失球",
+    cleanSheets: "零封场次",
+    failedToScore: "未进球场次",
+    discipline: "纪律",
+    yellowCards: "黄牌",
+    redCards: "红牌",
+    cardsPerMatch: "场均卡牌",
+    recentForm: "近期状态",
+    lastMatches: "近{count}场",
+    win: "胜",
+    draw: "平",
+    loss: "负",
+    squad: "阵容",
+    players: "球员",
+    player: "球员",
+    position: "位置",
+    age: "年龄",
+    apps: "出场",
+    minutes: "分钟",
+    goals: "进球",
+    assists: "助攻",
+    rating: "评分",
+    viewProfile: "查看详情",
+    noPlayerData: "暂无球员数据",
+    login: "登录",
+    getStarted: "开始使用",
+  },
+  '繁體': {
+    home: "首頁",
+    predictions: "預測",
+    leagues: "聯賽",
+    performance: "AI 表現",
+    community: "社區",
+    news: "新聞",
+    solution: "解決方案",
+    pricing: "價格",
+    footer: "18+ | 博彩有風險，請理性投注。",
+    allRights: "© 2026 OddsFlow. 保留所有權利。",
+    footerDesc: "AI驅動的足球賠率分析，助您做出更明智的預測。",
+    product: "產品",
+    company: "公司",
+    legal: "法律資訊",
+    aboutUs: "關於我們",
+    contact: "聯繫我們",
+    blog: "部落格",
+    termsOfService: "服務條款",
+    privacyPolicy: "隱私政策",
+    allRightsReserved: "保留所有權利。",
+    gamblingWarning: "博彩有風險，請理性投注。",
+    popularLeagues: "熱門聯賽",
+    aiPredictionsFooter: "AI 預測",
+    aiFootballPredictions: "AI 足球預測",
+    onextwoPredictions: "1x2 預測",
+    overUnderTips: "大小球建議",
+    handicapBetting: "讓球盤投注",
+    aiBettingPerformance: "AI 投注表現",
+    footballTipsToday: "今日足球貼士",
+    backTo: "返回",
+    leagueNotFound: "未找到聯賽",
+    teamNotFound: "未找到球隊",
+    loadingTeamData: "載入球隊資料中...",
+    season: "賽季",
+    points: "積分",
+    winRate: "勝率",
+    played: "已賽",
+    wins: "勝",
+    draws: "平",
+    losses: "負",
+    goalsFor: "進球",
+    goalsAgainst: "失球",
+    teamFormation: "球隊陣型",
+    allFormationsUsed: "所有使用過的陣型",
+    performanceStats: "表現",
+    goalDifference: "淨勝球",
+    goalsPerMatch: "場均進球",
+    concededPerMatch: "場均失球",
+    cleanSheets: "零封場次",
+    failedToScore: "未進球場次",
+    discipline: "紀律",
+    yellowCards: "黃牌",
+    redCards: "紅牌",
+    cardsPerMatch: "場均卡牌",
+    recentForm: "近期狀態",
+    lastMatches: "近{count}場",
+    win: "勝",
+    draw: "平",
+    loss: "負",
+    squad: "陣容",
+    players: "球員",
+    player: "球員",
+    position: "位置",
+    age: "年齡",
+    apps: "出場",
+    minutes: "分鐘",
+    goals: "進球",
+    assists: "助攻",
+    rating: "評分",
+    viewProfile: "查看詳情",
+    noPlayerData: "暫無球員資料",
+    login: "登入",
+    getStarted: "開始使用",
+  },
+  ID: {
+    home: "Beranda",
+    predictions: "Prediksi",
+    leagues: "Liga",
+    performance: "Performa AI",
+    community: "Komunitas",
+    news: "Berita",
+    solution: "Solusi",
+    pricing: "Harga",
+    footer: "18+ | Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    allRights: "© 2026 OddsFlow. Hak cipta dilindungi.",
+    footerDesc: "Analisis odds sepak bola berbasis AI untuk prediksi yang lebih cerdas.",
+    product: "Produk",
+    company: "Perusahaan",
+    legal: "Hukum",
+    aboutUs: "Tentang Kami",
+    contact: "Kontak",
+    blog: "Blog",
+    termsOfService: "Syarat Layanan",
+    privacyPolicy: "Kebijakan Privasi",
+    allRightsReserved: "Hak cipta dilindungi.",
+    gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
+    popularLeagues: "Liga Populer",
+    aiPredictionsFooter: "Prediksi AI",
+    aiFootballPredictions: "Prediksi Sepak Bola AI",
+    onextwoPredictions: "Prediksi 1x2",
+    overUnderTips: "Tips Over/Under",
+    handicapBetting: "Taruhan Handicap",
+    aiBettingPerformance: "Performa Taruhan AI",
+    footballTipsToday: "Tips Sepak Bola Hari Ini",
+    backTo: "Kembali ke",
+    leagueNotFound: "Liga tidak ditemukan",
+    teamNotFound: "Tim tidak ditemukan",
+    loadingTeamData: "Memuat data tim...",
+    season: "Musim",
+    points: "Poin",
+    winRate: "Tingkat Kemenangan",
+    played: "Dimainkan",
+    wins: "Menang",
+    draws: "Seri",
+    losses: "Kalah",
+    goalsFor: "Gol Dicetak",
+    goalsAgainst: "Gol Kemasukan",
+    teamFormation: "Formasi Tim",
+    allFormationsUsed: "Semua Formasi yang Digunakan",
+    performanceStats: "Performa",
+    goalDifference: "Selisih Gol",
+    goalsPerMatch: "Gol/Pertandingan",
+    concededPerMatch: "Kemasukan/Pertandingan",
+    cleanSheets: "Clean Sheet",
+    failedToScore: "Gagal Mencetak Gol",
+    discipline: "Disiplin",
+    yellowCards: "Kartu Kuning",
+    redCards: "Kartu Merah",
+    cardsPerMatch: "Kartu/Pertandingan",
+    recentForm: "Form Terkini",
+    lastMatches: "{count} pertandingan terakhir",
+    win: "Menang",
+    draw: "Seri",
+    loss: "Kalah",
+    squad: "Skuad",
+    players: "Pemain",
+    player: "Pemain",
+    position: "Posisi",
+    age: "Usia",
+    apps: "Penampilan",
+    minutes: "Menit",
+    goals: "Gol",
+    assists: "Assist",
+    rating: "Rating",
+    viewProfile: "Lihat Profil",
+    noPlayerData: "Data pemain tidak tersedia",
+    login: "Masuk",
+    getStarted: "Mulai",
+  },
+};
 
 // League configuration
 const LEAGUES_CONFIG: Record<string, { name: string; country: string; logo: string; dbName: string }> = {
@@ -34,13 +804,58 @@ export default function TeamProfilePage() {
   const teamSlug = params.team as string;
   const leagueConfig = LEAGUES_CONFIG[leagueSlug];
 
+  const [mounted, setMounted] = useState(false);
   const [team, setTeam] = useState<TeamStatistics | null>(null);
   const [players, setPlayers] = useState<PlayerStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingPlayers, setLoadingPlayers] = useState(false);
   const [selectedFormation, setSelectedFormation] = useState<string>('');
+  const [selectedLang, setSelectedLang] = useState('EN');
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Translation helper
+  const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
+  const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
+
+  // Handle language change
+  const handleLanguageChange = (langCode: string) => {
+    setSelectedLang(langCode);
+    localStorage.setItem('oddsflow_lang', langCode);
+    setLangDropdownOpen(false);
+  };
+
+  // Wait for client-side mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Load saved language preference
+  useEffect(() => {
+    if (!mounted) return;
+    const savedLang = localStorage.getItem('oddsflow_lang');
+    if (savedLang) setSelectedLang(savedLang);
+  }, [mounted]);
+
+  // Check user authentication
+  useEffect(() => {
+    if (!mounted) return;
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [mounted]);
 
   useEffect(() => {
+    if (!mounted) return;
     async function fetchTeam() {
       if (!teamSlug || !leagueConfig) return;
 
@@ -65,7 +880,7 @@ export default function TeamProfilePage() {
     }
 
     fetchTeam();
-  }, [teamSlug, leagueConfig]);
+  }, [mounted, teamSlug, leagueConfig]);
 
   // Render formation pitch
   const renderFormationPitch = (formation: string) => {
@@ -114,7 +929,7 @@ export default function TeamProfilePage() {
   if (!leagueConfig) {
     return (
       <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
-        <p className="text-gray-400">League not found</p>
+        <p className="text-gray-400">{t('leagueNotFound')}</p>
       </div>
     );
   }
@@ -122,6 +937,21 @@ export default function TeamProfilePage() {
   const goalDiff = (team?.goals_for_total || 0) - (team?.goals_against_total || 0);
   const points = ((team?.total_wins || 0) * 3) + (team?.total_draws || 0);
   const winRate = team?.total_played ? ((team.total_wins || 0) / team.total_played * 100).toFixed(1) : '0';
+
+  // Show loading screen while waiting for client-side mount
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
+        <div className="fixed inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#0a0a0f] to-[#1a1a2e]" />
+        </div>
+        <div className="relative z-10 flex flex-col items-center gap-4">
+          <div className="w-16 h-16 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
@@ -147,14 +977,177 @@ export default function TeamProfilePage() {
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Home</Link>
-              <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Predictions</Link>
-              <Link href="/leagues" className="text-emerald-400 text-sm font-medium">Leagues</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">AI Performance</Link>
+              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
+              <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
+              <Link href="/leagues" className="text-emerald-400 text-sm font-medium">{t('leagues')}</Link>
+              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
+              <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
+              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
+              <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
+            </div>
+
+            {/* Right side - Language, Auth, FIFA, Mobile Menu */}
+            <div className="flex items-center gap-3">
+              {/* Language Selector */}
+              <div className="relative">
+                <button
+                  onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer"
+                >
+                  <span>{currentLang.flag}</span>
+                  <span className="font-medium">{currentLang.code}</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {langDropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
+                    <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
+                      {LANGUAGES.map((lang) => (
+                        <button
+                          key={lang.code}
+                          onClick={() => handleLanguageChange(lang.code)}
+                          className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors cursor-pointer ${
+                            selectedLang === lang.code
+                              ? 'bg-emerald-500/20 text-emerald-400'
+                              : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                          }`}
+                        >
+                          <span className="text-lg">{lang.flag}</span>
+                          <span>{lang.name}</span>
+                          {selectedLang === lang.code && (
+                            <svg className="w-4 h-4 ml-auto text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Auth Buttons */}
+              {user ? (
+                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                  {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
+                    <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-8 h-8 rounded-full object-cover" referrerPolicy="no-referrer" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
+                      {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                  )}
+                  <span className="text-sm font-medium hidden sm:block">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
+                </>
+              )}
+
+              {/* World Cup Special Button - Always Visible */}
+              <Link
+                href="/worldcup"
+                className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
+              >
+                {/* Shimmer effect */}
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                <img
+                  src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png"
+                  alt="FIFA World Cup 2026"
+                  className="h-5 w-auto object-contain relative z-10"
+                />
+                <span className="text-black font-semibold text-sm relative z-10">FIFA 2026</span>
+              </Link>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Menu Panel */}
+          <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+            <div className="px-4 py-4 space-y-1">
+              {/* World Cup Special Entry */}
+              <Link
+                href="/worldcup"
+                onClick={() => setMobileMenuOpen(false)}
+                className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 border-2 border-yellow-300 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
+                <img
+                  src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png"
+                  alt="FIFA World Cup 2026"
+                  className="h-8 w-auto object-contain relative z-10"
+                />
+                <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
+              </Link>
+
+              <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('home')}</Link>
+              <Link href="/predictions" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('predictions')}</Link>
+              <Link href="/leagues" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">{t('leagues')}</Link>
+              <Link href="/performance" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('performance')}</Link>
+              <Link href="/community" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('community')}</Link>
+              <Link href="/news" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('news')}</Link>
+              <Link href="/solution" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('solution')}</Link>
+              <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('pricing')}</Link>
+
+              {/* Mobile Login/Signup */}
+              {!user && (
+                <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all"
+                  >
+                    {t('login')}
+                  </Link>
+                  <Link
+                    href="/get-started"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
+                  >
+                    {t('getStarted')}
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="relative z-10 pt-24 pb-16 px-4">
@@ -164,13 +1157,13 @@ export default function TeamProfilePage() {
             <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to {leagueConfig.name}
+            {t('backTo')} {leagueConfig.name}
           </Link>
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="w-16 h-16 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
-              <p className="mt-4 text-gray-400">Loading team data...</p>
+              <p className="mt-4 text-gray-400">{t('loadingTeamData')}</p>
             </div>
           ) : !team ? (
             <div className="text-center py-20">
@@ -179,7 +1172,7 @@ export default function TeamProfilePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p className="text-gray-400 text-lg">Team not found</p>
+              <p className="text-gray-400 text-lg">{t('teamNotFound')}</p>
             </div>
           ) : (
             <>
@@ -243,14 +1236,14 @@ export default function TeamProfilePage() {
                     <div className="relative">
                       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-2xl blur-xl" />
                       <div className="relative px-8 py-6 rounded-2xl bg-black/40 backdrop-blur-sm border border-white/10 text-center">
-                        <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">Season {team.season}</p>
+                        <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">{t('season')} {team.season}</p>
                         <div className="text-6xl font-black bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                           {points}
                         </div>
-                        <p className="text-gray-400 text-sm">Points</p>
+                        <p className="text-gray-400 text-sm">{t('points')}</p>
                         <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-center gap-4 text-sm">
                           <span className="text-emerald-400 font-semibold">{winRate}%</span>
-                          <span className="text-gray-500">Win Rate</span>
+                          <span className="text-gray-500">{t('winRate')}</span>
                         </div>
                       </div>
                     </div>
@@ -261,12 +1254,12 @@ export default function TeamProfilePage() {
               {/* Stats Overview */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
                 {[
-                  { label: 'Played', value: team.total_played || 0, color: 'text-white' },
-                  { label: 'Wins', value: team.total_wins || 0, color: 'text-emerald-400' },
-                  { label: 'Draws', value: team.total_draws || 0, color: 'text-yellow-400' },
-                  { label: 'Losses', value: team.total_loses || 0, color: 'text-red-400' },
-                  { label: 'Goals For', value: team.goals_for_total || 0, color: 'text-cyan-400' },
-                  { label: 'Goals Against', value: team.goals_against_total || 0, color: 'text-purple-400' },
+                  { label: t('played'), value: team.total_played || 0, color: 'text-white' },
+                  { label: t('wins'), value: team.total_wins || 0, color: 'text-emerald-400' },
+                  { label: t('draws'), value: team.total_draws || 0, color: 'text-yellow-400' },
+                  { label: t('losses'), value: team.total_loses || 0, color: 'text-red-400' },
+                  { label: t('goalsFor'), value: team.goals_for_total || 0, color: 'text-cyan-400' },
+                  { label: t('goalsAgainst'), value: team.goals_against_total || 0, color: 'text-purple-400' },
                 ].map((stat, idx) => (
                   <div key={idx} className="group relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl blur-sm group-hover:blur-md transition-all" />
@@ -291,7 +1284,7 @@ export default function TeamProfilePage() {
                             <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
                           </svg>
                         </div>
-                        Team Formation
+                        {t('teamFormation')}
                       </h3>
 
                       {/* Formation Pitch Display */}
@@ -302,7 +1295,7 @@ export default function TeamProfilePage() {
                       {/* All Formations */}
                       {team.all_formations && (
                         <div>
-                          <p className="text-gray-400 text-xs uppercase tracking-wider mb-3">All Formations Used</p>
+                          <p className="text-gray-400 text-xs uppercase tracking-wider mb-3">{t('allFormationsUsed')}</p>
                           <div className="flex flex-wrap gap-2">
                             {team.all_formations.split(',').map((formation, idx) => {
                               const formationTrimmed = formation.trim();
@@ -346,15 +1339,15 @@ export default function TeamProfilePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                           </svg>
                         </div>
-                        Performance
+                        {t('performanceStats')}
                       </h3>
                       <div className="space-y-4">
                         {[
-                          { label: 'Goal Difference', value: goalDiff > 0 ? `+${goalDiff}` : goalDiff, color: goalDiff > 0 ? 'text-emerald-400' : goalDiff < 0 ? 'text-red-400' : 'text-gray-400' },
-                          { label: 'Goals/Match', value: team.goals_for_average?.toFixed(2) || '0.00', color: 'text-cyan-400' },
-                          { label: 'Conceded/Match', value: team.goals_against_average?.toFixed(2) || '0.00', color: 'text-orange-400' },
-                          { label: 'Clean Sheets', value: team.clean_sheets || 0, color: 'text-emerald-400' },
-                          { label: 'Failed to Score', value: team.failed_to_score || 0, color: 'text-red-400' },
+                          { label: t('goalDifference'), value: goalDiff > 0 ? `+${goalDiff}` : goalDiff, color: goalDiff > 0 ? 'text-emerald-400' : goalDiff < 0 ? 'text-red-400' : 'text-gray-400' },
+                          { label: t('goalsPerMatch'), value: team.goals_for_average?.toFixed(2) || '0.00', color: 'text-cyan-400' },
+                          { label: t('concededPerMatch'), value: team.goals_against_average?.toFixed(2) || '0.00', color: 'text-orange-400' },
+                          { label: t('cleanSheets'), value: team.clean_sheets || 0, color: 'text-emerald-400' },
+                          { label: t('failedToScore'), value: team.failed_to_score || 0, color: 'text-red-400' },
                         ].map((stat, idx) => (
                           <div key={idx} className="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
                             <span className="text-gray-400">{stat.label}</span>
@@ -375,25 +1368,25 @@ export default function TeamProfilePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                           </svg>
                         </div>
-                        Discipline
+                        {t('discipline')}
                       </h3>
                       <div className="space-y-4">
                         <div className="flex justify-between items-center py-2 border-b border-white/5">
-                          <span className="text-gray-400">Yellow Cards</span>
+                          <span className="text-gray-400">{t('yellowCards')}</span>
                           <div className="flex items-center gap-2">
                             <div className="w-4 h-5 rounded-sm bg-yellow-400" />
                             <span className="font-bold text-lg text-yellow-400">{team.yellow_cards_total || 0}</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center py-2 border-b border-white/5">
-                          <span className="text-gray-400">Red Cards</span>
+                          <span className="text-gray-400">{t('redCards')}</span>
                           <div className="flex items-center gap-2">
                             <div className="w-4 h-5 rounded-sm bg-red-500" />
                             <span className="font-bold text-lg text-red-400">{team.red_cards_total || 0}</span>
                           </div>
                         </div>
                         <div className="flex justify-between items-center py-2">
-                          <span className="text-gray-400">Cards/Match</span>
+                          <span className="text-gray-400">{t('cardsPerMatch')}</span>
                           <span className="font-bold text-lg text-orange-400">
                             {team.total_played ? (((team.yellow_cards_total || 0) + (team.red_cards_total || 0)) / team.total_played).toFixed(1) : '0'}
                           </span>
@@ -415,8 +1408,8 @@ export default function TeamProfilePage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                         </svg>
                       </div>
-                      Recent Form
-                      <span className="text-gray-500 text-sm font-normal ml-2">Last {team.form.length} matches</span>
+                      {t('recentForm')}
+                      <span className="text-gray-500 text-sm font-normal ml-2">{t('lastMatches').replace('{count}', String(team.form.length))}</span>
                     </h3>
                     <div className="flex flex-wrap items-center gap-2">
                       {team.form.split('').map((result, idx) => (
@@ -437,15 +1430,15 @@ export default function TeamProfilePage() {
                     <div className="mt-4 flex items-center gap-6 text-sm">
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded bg-emerald-500" />
-                        <span className="text-gray-400">Win: {team.form.split('').filter(r => r === 'W').length}</span>
+                        <span className="text-gray-400">{t('win')}: {team.form.split('').filter(r => r === 'W').length}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded bg-yellow-500" />
-                        <span className="text-gray-400">Draw: {team.form.split('').filter(r => r === 'D').length}</span>
+                        <span className="text-gray-400">{t('draw')}: {team.form.split('').filter(r => r === 'D').length}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded bg-red-500" />
-                        <span className="text-gray-400">Loss: {team.form.split('').filter(r => r === 'L').length}</span>
+                        <span className="text-gray-400">{t('loss')}: {team.form.split('').filter(r => r === 'L').length}</span>
                       </div>
                     </div>
                   </div>
@@ -463,10 +1456,10 @@ export default function TeamProfilePage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                       </div>
-                      Squad
+                      {t('squad')}
                     </h3>
                     <span className="px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 text-sm font-medium border border-cyan-500/20">
-                      {players.length} Players
+                      {players.length} {t('players')}
                     </span>
                   </div>
 
@@ -479,14 +1472,14 @@ export default function TeamProfilePage() {
                       <table className="w-full min-w-[800px]">
                         <thead className="bg-gray-900/95">
                           <tr className="text-[10px] text-gray-400 uppercase tracking-wider">
-                            <th className="text-left py-3 px-4 font-semibold">Player</th>
-                            <th className="text-center py-3 px-3 font-semibold">Position</th>
-                            <th className="text-center py-3 px-3 font-semibold">Age</th>
-                            <th className="text-center py-3 px-3 font-semibold">Apps</th>
-                            <th className="text-center py-3 px-3 font-semibold">Minutes</th>
-                            <th className="text-center py-3 px-3 font-semibold">Goals</th>
-                            <th className="text-center py-3 px-3 font-semibold">Assists</th>
-                            <th className="text-center py-3 px-3 font-semibold">Rating</th>
+                            <th className="text-left py-3 px-4 font-semibold">{t('player')}</th>
+                            <th className="text-center py-3 px-3 font-semibold">{t('position')}</th>
+                            <th className="text-center py-3 px-3 font-semibold">{t('age')}</th>
+                            <th className="text-center py-3 px-3 font-semibold">{t('apps')}</th>
+                            <th className="text-center py-3 px-3 font-semibold">{t('minutes')}</th>
+                            <th className="text-center py-3 px-3 font-semibold">{t('goals')}</th>
+                            <th className="text-center py-3 px-3 font-semibold">{t('assists')}</th>
+                            <th className="text-center py-3 px-3 font-semibold">{t('rating')}</th>
                             <th className="text-center py-3 px-3 font-semibold"></th>
                           </tr>
                         </thead>
@@ -558,7 +1551,7 @@ export default function TeamProfilePage() {
                                   href={`/leagues/${leagueSlug}/player/${player.id}`}
                                   className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors border border-emerald-500/20"
                                 >
-                                  View Profile
+                                  {t('viewProfile')}
                                 </Link>
                               </td>
                             </tr>
@@ -573,7 +1566,7 @@ export default function TeamProfilePage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                       </div>
-                      <p className="text-gray-500">No player data available</p>
+                      <p className="text-gray-500">{t('noPlayerData')}</p>
                     </div>
                   )}
                 </div>
@@ -584,9 +1577,10 @@ export default function TeamProfilePage() {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 py-8 border-t border-white/5 text-center text-gray-500 text-sm">
-        <p>18+ | Gambling involves risk. Please gamble responsibly.</p>
-        <p className="mt-2">© 2025 OddsFlow. All rights reserved.</p>
+      <footer className="py-8 px-4 border-t border-white/5">
+        <div className="max-w-7xl mx-auto text-center text-gray-500 text-sm">
+          <p>{t('allRights')} {t('gamblingWarning')}</p>
+        </div>
       </footer>
     </div>
   );
