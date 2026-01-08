@@ -5,20 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { supabase, TeamStatistics, getTeamStatisticsByLeague, PlayerStats, getPlayerStatsByTeam, Coach, getCoachesByTeamIds } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
-
-// Language options
-const LANGUAGES = [
-  { code: 'EN', name: 'English', flag: '🇬🇧' },
-  { code: 'ES', name: 'Español', flag: '🇪🇸' },
-  { code: 'PT', name: 'Português', flag: '🇧🇷' },
-  { code: 'DE', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'FR', name: 'Français', flag: '🇫🇷' },
-  { code: 'JA', name: '日本語', flag: '🇯🇵' },
-  { code: 'KO', name: '한국어', flag: '🇰🇷' },
-  { code: '中文', name: '简体中文', flag: '🇨🇳' },
-  { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
-  { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
-];
+import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -733,7 +720,7 @@ export default function LeagueDetailPage() {
                   onClick={() => setLangDropdownOpen(!langDropdownOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer"
                 >
-                  <span>{currentLang.flag}</span>
+                  <FlagIcon code={currentLang.code} size={20} />
                   <span className="font-medium">{currentLang.code}</span>
                   <svg
                     className={`w-4 h-4 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`}
@@ -758,7 +745,7 @@ export default function LeagueDetailPage() {
                               : 'text-gray-300 hover:bg-white/5 hover:text-white'
                           }`}
                         >
-                          <span className="text-lg">{lang.flag}</span>
+                          <FlagIcon code={lang.code} size={20} />
                           <span>{lang.name}</span>
                           {selectedLang === lang.code && (
                             <svg className="w-4 h-4 ml-auto text-emerald-400" fill="currentColor" viewBox="0 0 20 20">

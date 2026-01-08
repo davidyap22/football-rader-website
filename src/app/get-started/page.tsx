@@ -4,18 +4,19 @@ import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase, signUpWithEmail, signInWithGoogle, createFreeTrialSubscription, validatePassword, getSafeErrorMessage } from '@/lib/supabase';
+import FlagIcon from "@/components/FlagIcon";
 
 const LANGUAGES = [
-  { code: 'en', label: 'English', flag: '🇬🇧' },
-  { code: 'es', label: 'Español', flag: '🇪🇸' },
-  { code: 'pt', label: 'Português', flag: '🇧🇷' },
-  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
-  { code: 'fr', label: 'Français', flag: '🇫🇷' },
-  { code: 'ja', label: '日本語', flag: '🇯🇵' },
-  { code: 'ko', label: '한국어', flag: '🇰🇷' },
-  { code: 'zh', label: '中文', flag: '🇨🇳' },
-  { code: 'tw', label: '繁體', flag: '🇹🇼' },
-  { code: 'id', label: 'Indonesia', flag: '🇮🇩' },
+  { code: 'en', label: 'English' },
+  { code: 'es', label: 'Espanol' },
+  { code: 'pt', label: 'Portugues' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'fr', label: 'Francais' },
+  { code: 'ja', label: '日本語' },
+  { code: 'ko', label: '한국어' },
+  { code: 'zh', label: '中文' },
+  { code: 'tw', label: '繁體' },
+  { code: 'id', label: 'Indonesia' },
 ];
 
 const translations: Record<string, Record<string, string>> = {
@@ -588,7 +589,7 @@ export default function GetStartedPage() {
                   onClick={() => setLangDropdownOpen(!langDropdownOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-sm font-medium cursor-pointer"
                 >
-                  <span>{currentLang.flag}</span>
+                  <FlagIcon code={currentLang.code} size={20} />
                   <span className="hidden sm:inline">{currentLang.label}</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -602,7 +603,7 @@ export default function GetStartedPage() {
                         onClick={() => handleSetLang(lang.code)}
                         className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer ${language === lang.code ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'}`}
                       >
-                        <span>{lang.flag}</span>
+                        <FlagIcon code={lang.code} size={20} />
                         <span>{lang.label}</span>
                       </button>
                     ))}

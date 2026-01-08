@@ -6,6 +6,7 @@ import { useState, useEffect, useRef, createContext, useContext, ReactNode } fro
 import { supabase, Prematch } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import CookieConsent from "@/components/CookieConsent";
+import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 
 // ============ Translations ============
 const translations: Record<string, Record<string, string>> = {
@@ -1259,20 +1260,7 @@ function LanguageSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
   const { lang, setLang } = useLanguage();
 
-  const languages = [
-    { code: 'EN', name: 'English', flag: '🇬🇧' },
-    { code: 'ES', name: 'Español', flag: '🇪🇸' },
-    { code: 'PT', name: 'Português', flag: '🇧🇷' },
-    { code: 'DE', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'FR', name: 'Français', flag: '🇫🇷' },
-    { code: 'JA', name: '日本語', flag: '🇯🇵' },
-    { code: 'KO', name: '한국어', flag: '🇰🇷' },
-    { code: '中文', name: '简体中文', flag: '🇨🇳' },
-    { code: '繁體', name: '繁體中文', flag: '🇭🇰' },
-    { code: 'ID', name: 'Bahasa Indonesia', flag: '🇮🇩' },
-  ];
-
-  const currentLang = languages.find(l => l.code === lang) || languages[0];
+  const currentLang = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
 
   return (
     <div className="relative">
@@ -1280,7 +1268,7 @@ function LanguageSwitcher() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer"
       >
-        <span>{currentLang.flag}</span>
+        <FlagIcon code={currentLang.code} size={20} />
         <span className="font-medium">{currentLang.code}</span>
         <svg
           className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
@@ -1296,7 +1284,7 @@ function LanguageSwitcher() {
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
           <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
-            {languages.map((l) => (
+            {LANGUAGES.map((l) => (
               <button
                 key={l.code}
                 onClick={() => {
@@ -1307,7 +1295,7 @@ function LanguageSwitcher() {
                   lang === l.code ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'
                 }`}
               >
-                <span className="text-lg">{l.flag}</span>
+                <FlagIcon code={l.code} size={24} />
                 <span className="font-medium">{l.name}</span>
               </button>
             ))}
