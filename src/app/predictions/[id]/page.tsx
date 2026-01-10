@@ -1069,8 +1069,18 @@ export default function MatchDetailsPage() {
                 ) : (
                   <>
                     <span className="text-3xl font-bold text-gray-600">VS</span>
-                    <span className="mt-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400">
-                      Not Started
+                    <span className={`mt-2 px-3 py-1 rounded-full text-xs font-medium ${
+                      match.type === 'Postponed' ? 'bg-amber-500/20 text-amber-400' :
+                      match.type === 'Cancelled' ? 'bg-red-500/20 text-red-400' :
+                      match.type === 'Abandoned' ? 'bg-orange-500/20 text-orange-400' :
+                      match.type === 'Not Played' ? 'bg-gray-500/20 text-gray-400' :
+                      'bg-emerald-500/20 text-emerald-400'
+                    }`}>
+                      {match.type === 'Postponed' ? 'Postponed' :
+                       match.type === 'Cancelled' ? 'Cancelled' :
+                       match.type === 'Abandoned' ? 'Abandoned' :
+                       match.type === 'Not Played' ? 'Not Played' :
+                       'Not Started'}
                     </span>
                   </>
                 )}
