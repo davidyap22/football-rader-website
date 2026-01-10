@@ -2164,7 +2164,9 @@ export default function MatchDetailsPage() {
                             const getStake = () => {
                               const parseStake = (val: unknown) => {
                                 if (val === null || val === undefined) return '-';
-                                const num = Number(val);
+                                // Handle both numeric and string formats (e.g., "2.21%" or 2.21)
+                                const str = String(val).replace('%', '');
+                                const num = parseFloat(str);
                                 return !isNaN(num) ? `${num.toFixed(2)} units` : '-';
                               };
                               if (selectedMarket === 'moneyline') {
