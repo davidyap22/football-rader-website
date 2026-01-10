@@ -2137,11 +2137,11 @@ export default function MatchDetailsPage() {
                             };
                             const getEV = () => {
                               if (selectedMarket === 'moneyline') {
-                                return record.expected_value_1x2 !== null && !isNaN(record.expected_value_1x2) ? `+${(record.expected_value_1x2 * 100).toFixed(2)}%` : '-';
+                                return record.expected_value_1x2 !== null && !isNaN(record.expected_value_1x2) ? `+${record.expected_value_1x2.toFixed(2)}%` : '-';
                               } else if (selectedMarket === 'overunder') {
-                                return record.expected_value_ou !== null && !isNaN(record.expected_value_ou) ? `+${(record.expected_value_ou * 100).toFixed(2)}%` : '-';
+                                return record.expected_value_ou !== null && !isNaN(record.expected_value_ou) ? `+${record.expected_value_ou.toFixed(2)}%` : '-';
                               } else {
-                                return record.expected_value_hdp !== null && !isNaN(record.expected_value_hdp) ? `+${(record.expected_value_hdp * 100).toFixed(2)}%` : '-';
+                                return record.expected_value_hdp !== null && !isNaN(record.expected_value_hdp) ? `+${record.expected_value_hdp.toFixed(2)}%` : '-';
                               }
                             };
                             const getStake = () => {
