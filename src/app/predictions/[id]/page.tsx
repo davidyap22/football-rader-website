@@ -2493,7 +2493,7 @@ export default function MatchDetailsPage() {
                         <table className="w-full text-sm">
                           <thead>
                             <tr className="border-b border-white/10">
-                              <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Time</th>
+                              <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Clock</th>
                               <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Type</th>
                               <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Selection</th>
                               <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Line</th>
@@ -2510,7 +2510,7 @@ export default function MatchDetailsPage() {
                               return (
                               <tr key={record.id || index} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                                 <td className="py-2 px-2 text-gray-300 text-xs whitespace-nowrap">
-                                  {record.bet_time ? new Date(record.bet_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '-'}
+                                  {record.clock !== null ? `${record.clock}'` : '-'}
                                 </td>
                                 <td className="py-2 px-2">
                                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
@@ -2530,7 +2530,7 @@ export default function MatchDetailsPage() {
                                 </td>
                                 <td className="py-2 px-2 text-center">
                                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                                    record.status === 'won' ? 'bg-emerald-500/20 text-emerald-400' :
+                                    record.status === 'won' ? 'bg-cyan-500/20 text-cyan-400' :
                                     record.status === 'lost' ? 'bg-red-500/20 text-red-400' :
                                     record.status === 'push' ? 'bg-gray-500/20 text-gray-400' :
                                     'bg-yellow-500/20 text-yellow-400'
