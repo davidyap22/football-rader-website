@@ -918,6 +918,14 @@ function PredictionsContent() {
                             </div>
                           ) : match.type === 'Finished' ? (
                             <span className="text-gray-500 font-medium text-xs">FT</span>
+                          ) : match.type === 'Postponed' ? (
+                            <span className="text-amber-500 font-medium text-xs">PPD</span>
+                          ) : match.type === 'Cancelled' ? (
+                            <span className="text-red-500 font-medium text-xs">CAN</span>
+                          ) : match.type === 'Abandoned' ? (
+                            <span className="text-orange-500 font-medium text-xs">ABD</span>
+                          ) : match.type === 'Not Played' ? (
+                            <span className="text-gray-500 font-medium text-xs">N/P</span>
                           ) : (
                             <span className="text-emerald-400 font-mono text-sm font-medium">
                               {formatTime(match.start_date_msia)}
@@ -1009,6 +1017,14 @@ function PredictionsContent() {
                             </div>
                           ) : match.type === 'Finished' ? (
                             <span className="text-gray-500 font-medium text-xs">FT</span>
+                          ) : match.type === 'Postponed' ? (
+                            <span className="text-amber-500 font-medium text-xs">PPD</span>
+                          ) : match.type === 'Cancelled' ? (
+                            <span className="text-red-500 font-medium text-xs">CAN</span>
+                          ) : match.type === 'Abandoned' ? (
+                            <span className="text-orange-500 font-medium text-xs">ABD</span>
+                          ) : match.type === 'Not Played' ? (
+                            <span className="text-gray-500 font-medium text-xs">N/P</span>
                           ) : (
                             <span className="text-emerald-400 font-mono text-sm font-medium">
                               {formatTime(match.start_date_msia)}
