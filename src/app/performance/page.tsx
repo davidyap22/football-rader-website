@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { supabase, ProfitSummary } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import {
   LineChart,
@@ -678,6 +678,13 @@ export default function PerformancePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [leagueDropdownOpen, setLeagueDropdownOpen] = useState(false);
 
+  // Profit Details Modal state
+  const [showProfitModal, setShowProfitModal] = useState(false);
+  const [profitSummary, setProfitSummary] = useState<ProfitSummary | null>(null);
+  const [profitSummaryRecords, setProfitSummaryRecords] = useState<ProfitSummary[]>([]);
+  const [profitTypeFilter, setProfitTypeFilter] = useState<'all' | 'moneyline' | 'handicap' | 'ou'>('all');
+  const [loadingProfit, setLoadingProfit] = useState(false);
+
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
   // Get league logo map from matches
@@ -987,6 +994,39 @@ export default function PerformancePage() {
     setHistoryTab('1x2');
     setShowHistoryModal(true);
     fetchSignalHistory(match.fixture_id);
+  };
+
+  // Fetch profit summary for a match
+  const fetchProfitSummary = async (fixtureId: string) => {
+    setLoadingProfit(true);
+    try {
+      const { data, error } = await supabase
+        .from('profit_summary')
+        .select('*')
+        .eq('fixture_id', fixtureId)
+        .order('bet_time', { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        setProfitSummary(data[0]);
+        setProfitSummaryRecords(data);
+      } else {
+        setProfitSummary(null);
+        setProfitSummaryRecords([]);
+      }
+    } catch (error) {
+      console.error('Error fetching profit summary:', error);
+      setProfitSummary(null);
+      setProfitSummaryRecords([]);
+    }
+    setLoadingProfit(false);
+  };
+
+  // Open profit details modal
+  const openProfitDetails = (match: MatchSummary) => {
+    setSelectedMatch(match);
+    setProfitTypeFilter('all');
+    setShowProfitModal(true);
+    fetchProfitSummary(match.fixture_id);
   };
 
   // Custom tooltip for the chart
@@ -1881,6 +1921,15 @@ export default function PerformancePage() {
                               {match.total_profit >= 0 ? '+$' : '-$'}{formatNumber(Math.abs(match.total_profit), 0)}
                             </span>
                             <button
+                              onClick={() => openProfitDetails(match)}
+                              className="p-1.5 rounded-md bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+                              title="View Profit Details"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                              </svg>
+                            </button>
+                            <button
                               onClick={() => openSignalHistory(match)}
                               className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
                               title="View Signal History"
@@ -2104,6 +2153,218 @@ export default function PerformancePage() {
                 </table>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Profit Details Modal */}
+      {showProfitModal && selectedMatch && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowProfitModal(false)} />
+
+          {/* Modal */}
+          <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl border border-white/10 p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Background glow */}
+            <div className="absolute top-0 left-1/4 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6 relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">Profit Summary</h3>
+                  <span className="text-sm text-gray-400">{selectedMatch.home_name} vs {selectedMatch.away_name}</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowProfitModal(false)}
+                className="p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+              >
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {loadingProfit ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-500"></div>
+              </div>
+            ) : profitSummary ? (
+              <div className="relative z-10 space-y-4">
+                {/* Main Stats */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Profit</div>
+                    <div className={`text-2xl font-bold ${(profitSummary.total_profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {(profitSummary.total_profit ?? 0) >= 0 ? '+$' : '-$'}{Math.abs(profitSummary.total_profit ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">ROI</div>
+                    <div className={`text-2xl font-bold ${(profitSummary.roi_percentage ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {(profitSummary.roi_percentage ?? 0) >= 0 ? '+' : ''}{profitSummary.roi_percentage?.toFixed(2) ?? '0.00'}%
+                    </div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Invested</div>
+                    <div className="text-xl font-bold text-white">
+                      ${(profitSummary.total_invested ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Bets</div>
+                    <div className="text-xl font-bold text-white">{profitSummary.total_bets ?? 0}</div>
+                  </div>
+                </div>
+
+                {/* Market Breakdown */}
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">Profit by Market</div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-cyan-500"></div>
+                        <span className="text-gray-300 text-sm">1X2 Moneyline</span>
+                      </div>
+                      <span className={`font-bold ${(profitSummary.profit_moneyline ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {(profitSummary.profit_moneyline ?? 0) >= 0 ? '+$' : '-$'}{Math.abs(profitSummary.profit_moneyline ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                        <span className="text-gray-300 text-sm">Asian Handicap</span>
+                      </div>
+                      <span className={`font-bold ${(profitSummary.profit_handicap ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {(profitSummary.profit_handicap ?? 0) >= 0 ? '+$' : '-$'}{Math.abs(profitSummary.profit_handicap ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                        <span className="text-gray-300 text-sm">Over/Under</span>
+                      </div>
+                      <span className={`font-bold ${(profitSummary.profit_ou ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {(profitSummary.profit_ou ?? 0) >= 0 ? '+$' : '-$'}{Math.abs(profitSummary.profit_ou ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bet Details Table */}
+                {profitSummaryRecords.length > 0 && (() => {
+                  const getBetType = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
+                    if (!selection) return 'ou';
+                    const sel = selection.toLowerCase();
+                    if (sel.includes('over') || sel.includes('under')) return 'ou';
+                    if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
+                    if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
+                    return 'ou';
+                  };
+
+                  const filteredRecords = profitSummaryRecords.filter(record => {
+                    if (profitTypeFilter === 'all') return true;
+                    return getBetType(record.selection) === profitTypeFilter;
+                  });
+
+                  return (
+                    <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-xs text-gray-500 uppercase tracking-wider">Bet Details ({filteredRecords.length})</div>
+                        <div className="flex gap-1">
+                          {(['all', 'moneyline', 'handicap', 'ou'] as const).map((filter) => (
+                            <button
+                              key={filter}
+                              onClick={() => setProfitTypeFilter(filter)}
+                              className={`px-2 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
+                                profitTypeFilter === filter
+                                  ? filter === 'all' ? 'bg-white/20 text-white'
+                                    : filter === 'moneyline' ? 'bg-cyan-500/30 text-cyan-400'
+                                    : filter === 'handicap' ? 'bg-purple-500/30 text-purple-400'
+                                    : 'bg-amber-500/30 text-amber-400'
+                                  : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                              }`}
+                            >
+                              {filter === 'all' ? 'All' : filter === 'moneyline' ? '1X2' : filter === 'handicap' ? 'HDP' : 'O/U'}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-white/10">
+                            <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Clock</th>
+                            <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Type</th>
+                            <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Selection</th>
+                            <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Line</th>
+                            <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Odds</th>
+                            <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Stake</th>
+                            <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Score</th>
+                            <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Status</th>
+                            <th className="text-right py-2 px-2 text-gray-400 font-medium text-xs">Profit</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredRecords.map((record, index) => {
+                            const derivedType = getBetType(record.selection);
+                            return (
+                              <tr key={record.id || index} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td className="py-2 px-2 text-gray-300 text-xs">{record.clock !== null ? `${record.clock}'` : '-'}</td>
+                                <td className="py-2 px-2">
+                                  <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                                    derivedType === 'moneyline' ? 'bg-cyan-500/20 text-cyan-400' :
+                                    derivedType === 'handicap' ? 'bg-purple-500/20 text-purple-400' :
+                                    'bg-amber-500/20 text-amber-400'
+                                  }`}>
+                                    {derivedType === 'moneyline' ? '1X2' : derivedType === 'handicap' ? 'HDP' : 'O/U'}
+                                  </span>
+                                </td>
+                                <td className="py-2 px-2 text-white text-xs font-medium">{record.selection || '-'}</td>
+                                <td className="py-2 px-2 text-center text-amber-400 text-xs">{record.line ?? '-'}</td>
+                                <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.odds?.toFixed(2) ?? '-'}</td>
+                                <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.stake_units ?? '-'}</td>
+                                <td className="py-2 px-2 text-center text-white text-xs font-medium">
+                                  {record.home_score !== null && record.away_score !== null ? `${record.home_score}-${record.away_score}` : '-'}
+                                </td>
+                                <td className="py-2 px-2 text-center">
+                                  <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                                    record.status === 'won' ? 'bg-cyan-500/20 text-cyan-400' :
+                                    record.status === 'lost' ? 'bg-red-500/20 text-red-400' :
+                                    record.status === 'push' ? 'bg-gray-500/20 text-gray-400' :
+                                    'bg-yellow-500/20 text-yellow-400'
+                                  }`}>
+                                    {record.status?.toUpperCase() || '-'}
+                                  </span>
+                                </td>
+                                <td className={`py-2 px-2 text-right text-xs font-bold ${(record.profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                  {(record.profit ?? 0) >= 0 ? '+' : ''}{record.profit?.toFixed(2) ?? '0.00'}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                })()}
+
+                <div className="text-center text-xs text-gray-500">1 Bet = $100</div>
+              </div>
+            ) : (
+              <div className="relative z-10 text-center py-8 text-gray-500">
+                <svg className="w-12 h-12 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <p className="text-sm">No profit summary available</p>
+              </div>
+            )}
           </div>
         </div>
       )}
