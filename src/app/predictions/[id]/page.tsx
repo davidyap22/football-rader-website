@@ -2075,7 +2075,7 @@ export default function MatchDetailsPage() {
 
                 <div className="flex items-center justify-between mb-4 relative z-10">
                   <h3 className="text-xl font-bold text-white">
-                    Signal History - {showSignalHistory === 'moneyline' ? '1X2' : showSignalHistory === 'overunder' ? 'Over/Under' : showSignalHistory === 'handicap' ? 'Handicap' : '💎 Value Hunter'}
+                    Signal History - {showSignalHistory === 'moneyline' ? '1X2' : showSignalHistory === 'overunder' ? 'Over/Under' : showSignalHistory === 'handicap' ? 'Handicap' : `💎 Value Hunter (${selectedMarket === 'moneyline' ? '1X2' : selectedMarket === 'overunder' ? 'O/U' : 'HDP'})`}
                   </h3>
                   <button
                     onClick={() => setShowSignalHistory(null)}
@@ -2095,41 +2095,91 @@ export default function MatchDetailsPage() {
                           <tr>
                             <th className="text-left py-3 px-2 text-gray-400 font-medium">Clock</th>
                             <th className="text-left py-3 px-2 text-gray-400 font-medium">Score</th>
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">1X2</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">Selection</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">Fair Odds</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">Market Odds</th>
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">EV</th>
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">O/U</th>
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">EV</th>
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">HDP</th>
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">EV</th>
-                            <th className="text-left py-3 px-2 text-gray-400 font-medium">Safeguard</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">Stake</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">Status</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {liveSignalsHistory.map((record, index) => (
-                            <tr key={record.id || index} className={`border-b border-white/5 ${index === 0 ? 'bg-purple-500/10' : 'hover:bg-white/5'} transition-colors`}>
-                              <td className="py-3 px-2 text-gray-300">{record.clock !== null ? `${record.clock}'` : '-'}</td>
-                              <td className="py-3 px-2 text-white font-bold">{record.score || '-'}</td>
-                              <td className="py-3 px-2 text-center">
-                                {record.is_valuable_1x2 ? (
-                                  <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">{record.selection_1x2 === '1' ? 'Home' : record.selection_1x2 === 'X' ? 'Draw' : 'Away'}</span>
-                                ) : <span className="text-gray-500">-</span>}
-                              </td>
-                              <td className="py-3 px-2 text-center text-emerald-400 text-xs">{record.expected_value_1x2 !== null && !isNaN(record.expected_value_1x2) ? `+${(record.expected_value_1x2 * 100).toFixed(1)}%` : '-'}</td>
-                              <td className="py-3 px-2 text-center">
-                                {record.is_valuable_ou ? (
-                                  <span className="px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 text-xs font-bold">{record.selection_ou === 'over' ? 'Over' : 'Under'}</span>
-                                ) : <span className="text-gray-500">-</span>}
-                              </td>
-                              <td className="py-3 px-2 text-center text-emerald-400 text-xs">{record.expected_value_ou !== null && !isNaN(record.expected_value_ou) ? `+${(record.expected_value_ou * 100).toFixed(1)}%` : '-'}</td>
-                              <td className="py-3 px-2 text-center">
-                                {record.is_valuable_hdp ? (
-                                  <span className="px-2 py-1 rounded bg-pink-500/20 text-pink-400 text-xs font-bold">{record.selection_hdp === 'home' ? 'Home' : 'Away'}</span>
-                                ) : <span className="text-gray-500">-</span>}
-                              </td>
-                              <td className="py-3 px-2 text-center text-emerald-400 text-xs">{record.expected_value_hdp !== null && !isNaN(record.expected_value_hdp) ? `+${(record.expected_value_hdp * 100).toFixed(1)}%` : '-'}</td>
-                              <td className="py-3 px-2 text-yellow-400 text-xs">{record.safeguard || '-'}</td>
-                            </tr>
-                          ))}
+                          {liveSignalsHistory.map((record, index) => {
+                            // Get data based on selected market
+                            const getSelectionLabel = () => {
+                              if (selectedMarket === 'moneyline') {
+                                return record.selection_1x2 === '1' ? 'Home' : record.selection_1x2 === 'X' ? 'Draw' : 'Away';
+                              } else if (selectedMarket === 'overunder') {
+                                return record.selection_ou === 'over' ? 'Over' : 'Under';
+                              } else {
+                                return record.selection_hdp === 'home' ? 'Home' : 'Away';
+                              }
+                            };
+                            const getFairOdds = () => {
+                              if (selectedMarket === 'moneyline') {
+                                const idx = record.selection_1x2 === '1' ? 0 : record.selection_1x2 === 'X' ? 1 : 2;
+                                return record.fair_odds_1x2?.[idx]?.toFixed(2) ?? '-';
+                              } else if (selectedMarket === 'overunder') {
+                                return record.selection_ou === 'over' ? record.fair_odds_ou?.[0]?.toFixed(2) ?? '-' : record.fair_odds_ou?.[1]?.toFixed(2) ?? '-';
+                              } else {
+                                return record.selection_hdp === 'home' ? record.fair_odds_hdp?.[0]?.toFixed(2) ?? '-' : record.fair_odds_hdp?.[1]?.toFixed(2) ?? '-';
+                              }
+                            };
+                            const getMarketOdds = () => {
+                              if (selectedMarket === 'moneyline') {
+                                const idx = record.selection_1x2 === '1' ? 0 : record.selection_1x2 === 'X' ? 1 : 2;
+                                return record.market_odds_1x2?.[idx]?.toFixed(2) ?? '-';
+                              } else if (selectedMarket === 'overunder') {
+                                return record.selection_ou === 'over' ? record.market_odds_ou?.[0]?.toFixed(2) ?? '-' : record.market_odds_ou?.[1]?.toFixed(2) ?? '-';
+                              } else {
+                                return record.selection_hdp === 'home' ? record.market_odds_hdp?.[0]?.toFixed(2) ?? '-' : record.market_odds_hdp?.[1]?.toFixed(2) ?? '-';
+                              }
+                            };
+                            const getEV = () => {
+                              if (selectedMarket === 'moneyline') {
+                                return record.expected_value_1x2 !== null && !isNaN(record.expected_value_1x2) ? `+${(record.expected_value_1x2 * 100).toFixed(2)}%` : '-';
+                              } else if (selectedMarket === 'overunder') {
+                                return record.expected_value_ou !== null && !isNaN(record.expected_value_ou) ? `+${(record.expected_value_ou * 100).toFixed(2)}%` : '-';
+                              } else {
+                                return record.expected_value_hdp !== null && !isNaN(record.expected_value_hdp) ? `+${(record.expected_value_hdp * 100).toFixed(2)}%` : '-';
+                              }
+                            };
+                            const getStake = () => {
+                              if (selectedMarket === 'moneyline') {
+                                return record.recommended_stake_1x2 !== null && !isNaN(record.recommended_stake_1x2) ? `${record.recommended_stake_1x2.toFixed(2)} units` : '-';
+                              } else if (selectedMarket === 'overunder') {
+                                return record.recommended_stake_ou !== null && !isNaN(record.recommended_stake_ou) ? `${record.recommended_stake_ou.toFixed(2)} units` : '-';
+                              } else {
+                                return record.recommended_stake_hdp !== null && !isNaN(record.recommended_stake_hdp) ? `${record.recommended_stake_hdp.toFixed(2)} units` : '-';
+                              }
+                            };
+                            const isValuable = selectedMarket === 'moneyline' ? record.is_valuable_1x2 : selectedMarket === 'overunder' ? record.is_valuable_ou : record.is_valuable_hdp;
+
+                            return (
+                              <tr key={record.id || index} className={`border-b border-white/5 ${index === 0 ? 'bg-purple-500/10' : 'hover:bg-white/5'} transition-colors`}>
+                                <td className="py-3 px-2 text-gray-300">{record.clock !== null ? `${record.clock}'` : '-'}</td>
+                                <td className="py-3 px-2 text-white font-bold">{record.score || '-'}</td>
+                                <td className="py-3 px-2 text-center">
+                                  <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                    selectedMarket === 'moneyline' ? 'bg-emerald-500/20 text-emerald-400' :
+                                    selectedMarket === 'overunder' ? 'bg-cyan-500/20 text-cyan-400' :
+                                    'bg-pink-500/20 text-pink-400'
+                                  }`}>{getSelectionLabel()}</span>
+                                </td>
+                                <td className="py-3 px-2 text-center text-gray-400">{getFairOdds()}</td>
+                                <td className="py-3 px-2 text-center text-white font-medium">{getMarketOdds()}</td>
+                                <td className="py-3 px-2 text-center text-emerald-400 font-medium">{getEV()}</td>
+                                <td className="py-3 px-2 text-center text-yellow-400">{getStake()}</td>
+                                <td className="py-3 px-2 text-center">
+                                  {isValuable ? (
+                                    <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">VALUE</span>
+                                  ) : (
+                                    <span className="px-2 py-1 rounded bg-gray-500/20 text-gray-400 text-xs">NORMAL</span>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     ) : (
