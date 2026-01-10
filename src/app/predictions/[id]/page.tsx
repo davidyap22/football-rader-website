@@ -653,7 +653,8 @@ export default function MatchDetailsPage() {
         setLiveSignalsLoading(true);
         getLiveSignals(match.fixture_id).then(({ data, error }) => {
           console.log('[Value Hunter] Response:', { data, error });
-          setLiveSignals(parseLiveSignals(data));
+          // Use raw data directly (database has single values, not arrays)
+          setLiveSignals(data);
           setLiveSignalsLoading(false);
         }).catch((err) => {
           console.error('[Value Hunter] Error:', err);
@@ -2668,58 +2669,76 @@ export default function MatchDetailsPage() {
                     )}
                   </>
                 ) : selectedPersonality === 'value' && liveSignals ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        {liveSignals.clock !== null && (
-                          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30">
-                            <span className="text-red-400 text-sm font-bold">{liveSignals.clock}'</span>
+                  (() => {
+                    // Cast to raw record to access database values directly
+                    const raw = liveSignals as unknown as Record<string, unknown>;
+                    const selection = String(raw.selection_1x2 || '').toUpperCase();
+                    const selectionLabel = selection === 'HOME' || selection === '1' ? 'Home' : selection === 'DRAW' || selection === 'X' ? 'Draw' : 'Away';
+                    const fairOdds = raw.fair_odds_1x2 !== null && raw.fair_odds_1x2 !== undefined ? Number(raw.fair_odds_1x2).toFixed(2) : '-';
+                    const marketOdds = raw.market_odds_1x2 !== null && raw.market_odds_1x2 !== undefined ? Number(raw.market_odds_1x2).toFixed(2) : '-';
+                    const evStr = String(raw.expected_value_1x2 || '').replace('%', '');
+                    const evNum = parseFloat(evStr);
+                    const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
+                    const stakeStr = String(raw.recommended_stake_1x2 || '').replace('%', '');
+                    const stakeNum = parseFloat(stakeStr);
+                    const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)} units` : '-';
+                    const isValuable = raw.is_valuable_1x2;
+                    const score = raw.score as string | null;
+                    const clock = raw.clock;
+
+                    return (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            {clock !== null && clock !== undefined && (
+                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30">
+                                <span className="text-red-400 text-sm font-bold">{String(clock)}'</span>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30">
-                          <span className="text-purple-400 font-bold">{liveSignals.selection_1x2 === '1' ? 'Home' : liveSignals.selection_1x2 === 'X' ? 'Draw' : 'Away'}</span>
-                        </div>
-                        {liveSignals.is_valuable_1x2 && (
-                          <span className="px-3 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">VALUE BET</span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className={`rounded-xl py-3 px-3 text-center ${liveSignals.selection_1x2 === '1' ? 'bg-purple-500/20 border border-purple-500/30' : 'bg-white/5'}`}>
-                        <div className="text-xs text-gray-500 uppercase mb-1">Home</div>
-                        <div className="text-xs text-gray-400">Fair: {liveSignals.fair_odds_1x2?.[0]?.toFixed(2) ?? '-'}</div>
-                        <div className="text-lg font-bold text-white">{liveSignals.market_odds_1x2?.[0]?.toFixed(2) ?? '-'}</div>
-                      </div>
-                      <div className={`rounded-xl py-3 px-3 text-center ${liveSignals.selection_1x2 === 'X' ? 'bg-purple-500/20 border border-purple-500/30' : 'bg-white/5'}`}>
-                        <div className="text-xs text-gray-500 uppercase mb-1">Draw</div>
-                        <div className="text-xs text-gray-400">Fair: {liveSignals.fair_odds_1x2?.[1]?.toFixed(2) ?? '-'}</div>
-                        <div className="text-lg font-bold text-white">{liveSignals.market_odds_1x2?.[1]?.toFixed(2) ?? '-'}</div>
-                      </div>
-                      <div className={`rounded-xl py-3 px-3 text-center ${liveSignals.selection_1x2 === '2' ? 'bg-purple-500/20 border border-purple-500/30' : 'bg-white/5'}`}>
-                        <div className="text-xs text-gray-500 uppercase mb-1">Away</div>
-                        <div className="text-xs text-gray-400">Fair: {liveSignals.fair_odds_1x2?.[2]?.toFixed(2) ?? '-'}</div>
-                        <div className="text-lg font-bold text-white">{liveSignals.market_odds_1x2?.[2]?.toFixed(2) ?? '-'}</div>
-                      </div>
-                    </div>
-                    <div className="rounded-xl bg-purple-900/30 border border-purple-500/20 p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          {liveSignals.expected_value_1x2 !== null && !isNaN(liveSignals.expected_value_1x2) && (
-                            <div><div className="text-xs text-gray-500">EV</div><div className="text-emerald-400 font-bold">+{(liveSignals.expected_value_1x2 * 100).toFixed(1)}%</div></div>
-                          )}
-                          {liveSignals.score && (<div><div className="text-xs text-gray-500">Score</div><div className="text-white font-bold">{liveSignals.score}</div></div>)}
-                        </div>
-                        {liveSignals.recommended_stake_1x2 !== null && !isNaN(liveSignals.recommended_stake_1x2) && (
-                          <div className="px-4 py-2 rounded-lg bg-yellow-500/20 border border-yellow-500/30">
-                            <div className="text-xs text-gray-400">Stake</div>
-                            <div className="text-yellow-400 font-bold">{liveSignals.recommended_stake_1x2.toFixed(2)} units</div>
+                          <div className="flex items-center gap-3">
+                            <div className="px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30">
+                              <span className="text-purple-400 font-bold">{selectionLabel}</span>
+                            </div>
+                            {Boolean(isValuable) && (
+                              <span className="px-3 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">VALUE BET</span>
+                            )}
                           </div>
-                        )}
+                        </div>
+                        <div className="grid grid-cols-1 gap-2">
+                          <div className="rounded-xl py-3 px-4 bg-purple-500/20 border border-purple-500/30">
+                            <div className="flex items-center justify-between">
+                              <div className="text-sm text-gray-400">{selectionLabel}</div>
+                              <div className="flex items-center gap-4">
+                                <div className="text-center">
+                                  <div className="text-xs text-gray-500">Fair</div>
+                                  <div className="text-white font-medium">{fairOdds}</div>
+                                </div>
+                                <div className="text-center">
+                                  <div className="text-xs text-gray-500">Market</div>
+                                  <div className="text-lg font-bold text-white">{marketOdds}</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="rounded-xl bg-purple-900/30 border border-purple-500/20 p-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div><div className="text-xs text-gray-500">EV</div><div className="text-emerald-400 font-bold">{evDisplay}</div></div>
+                              {score && (<div><div className="text-xs text-gray-500">Score</div><div className="text-white font-bold">{score}</div></div>)}
+                            </div>
+                            {stakeDisplay !== '-' && (
+                              <div className="px-4 py-2 rounded-lg bg-yellow-500/20 border border-yellow-500/30">
+                                <div className="text-xs text-gray-400">Stake</div>
+                                <div className="text-yellow-400 font-bold">{stakeDisplay}</div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    );
+                  })()
                 ) : (
                   <div className="text-center py-8 text-gray-500">
                     {match.type === 'Scheduled' ? (
