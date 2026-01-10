@@ -653,6 +653,7 @@ export default function MatchDetailsPage() {
         setLiveSignalsLoading(true);
         getLiveSignals(match.fixture_id).then(({ data, error }) => {
           console.log('[Value Hunter] Response:', { data, error });
+          console.log('[Value Hunter] Available fields:', data ? Object.keys(data) : 'no data');
           // Use raw data directly (database has single values, not arrays)
           setLiveSignals(data);
           setLiveSignalsLoading(false);
@@ -2184,10 +2185,12 @@ export default function MatchDetailsPage() {
                             const isValuable = selectedMarket === 'moneyline' ? rawRecord.is_valuable_1x2 : selectedMarket === 'overunder' ? rawRecord.is_valuable_ou : rawRecord.is_valuable_hdp;
                             const getLine = () => {
                               if (selectedMarket === 'overunder') {
-                                const val = rawRecord.total_points_mainline;
+                                // Try multiple possible field names for O/U line
+                                const val = rawRecord.total_points_mainline ?? rawRecord.totalpoints_main_line ?? rawRecord.line_ou ?? rawRecord.line ?? null;
                                 return val !== null && val !== undefined ? String(val) : '-';
                               } else if (selectedMarket === 'handicap') {
-                                const val = rawRecord.handicap_main_line;
+                                // Try multiple possible field names for HDP line
+                                const val = rawRecord.handicap_main_line ?? rawRecord.handicap_mainline ?? rawRecord.line_hdp ?? rawRecord.line ?? null;
                                 return val !== null && val !== undefined ? String(val) : '-';
                               }
                               return '-';
@@ -2919,7 +2922,9 @@ export default function MatchDetailsPage() {
                     // Cast to raw record to access database values directly
                     const raw = liveSignals as unknown as Record<string, unknown>;
                     const selection = String(raw.selection_ou || '').toLowerCase();
-                    const line = raw.total_points_mainline !== null && raw.total_points_mainline !== undefined ? String(raw.total_points_mainline) : '';
+                    // Try multiple possible field names for O/U line
+                    const lineValue = raw.total_points_mainline ?? raw.totalpoints_main_line ?? raw.line_ou ?? raw.line ?? null;
+                    const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '';
                     const selectionLabel = selection === 'over' ? 'Over' : 'Under';
                     const fairOdds = raw.fair_odds_ou !== null && raw.fair_odds_ou !== undefined ? Number(raw.fair_odds_ou).toFixed(2) : '-';
                     const marketOdds = raw.market_odds_ou !== null && raw.market_odds_ou !== undefined ? Number(raw.market_odds_ou).toFixed(2) : '-';
@@ -3150,7 +3155,9 @@ export default function MatchDetailsPage() {
                     // Cast to raw record to access database values directly
                     const raw = liveSignals as unknown as Record<string, unknown>;
                     const selection = String(raw.selection_hdp || '').toLowerCase();
-                    const line = raw.handicap_main_line !== null && raw.handicap_main_line !== undefined ? String(raw.handicap_main_line) : '';
+                    // Try multiple possible field names for HDP line
+                    const lineValue = raw.handicap_main_line ?? raw.handicap_mainline ?? raw.line_hdp ?? raw.line ?? null;
+                    const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '';
                     const selectionLabel = selection === 'home' ? 'Home' : 'Away';
                     const fairOdds = raw.fair_odds_hdp !== null && raw.fair_odds_hdp !== undefined ? Number(raw.fair_odds_hdp).toFixed(2) : '-';
                     const marketOdds = raw.market_odds_hdp !== null && raw.market_odds_hdp !== undefined ? Number(raw.market_odds_hdp).toFixed(2) : '-';
