@@ -594,10 +594,7 @@ export default function MatchDetailsPage() {
         .order('created_at', { ascending: false });
 
       if (!error && data) {
-        console.log('[Signal History] Raw data from Supabase:', data[0]);
-        const parsed = data.map((d: unknown) => parseLiveSignals(d as LiveSignals) as LiveSignals).filter(Boolean);
-        console.log('[Signal History] Parsed data:', parsed[0]);
-        setLiveSignalsHistory(parsed);
+        setLiveSignalsHistory(data.map((d: unknown) => parseLiveSignals(d as LiveSignals) as LiveSignals).filter(Boolean));
       }
     } catch (error) {
       console.error('Error fetching value hunter history:', error);
@@ -2109,54 +2106,75 @@ export default function MatchDetailsPage() {
                         <tbody>
                           {liveSignalsHistory.map((record, index) => {
                             // Get data based on selected market
+                            // Note: Database stores selection as "HOME"/"DRAW"/"AWAY" text, and odds as single numeric values
+                            const rawRecord = record as unknown as Record<string, unknown>;
                             const getSelectionLabel = () => {
                               if (selectedMarket === 'moneyline') {
-                                return record.selection_1x2 === '1' ? 'Home' : record.selection_1x2 === 'X' ? 'Draw' : 'Away';
+                                const sel = String(rawRecord.selection_1x2 || '').toUpperCase();
+                                return sel === 'HOME' || sel === '1' ? 'Home' : sel === 'DRAW' || sel === 'X' ? 'Draw' : 'Away';
                               } else if (selectedMarket === 'overunder') {
-                                return record.selection_ou === 'over' ? 'Over' : 'Under';
+                                const sel = String(rawRecord.selection_ou || '').toLowerCase();
+                                return sel === 'over' ? 'Over' : 'Under';
                               } else {
-                                return record.selection_hdp === 'home' ? 'Home' : 'Away';
+                                const sel = String(rawRecord.selection_hdp || '').toLowerCase();
+                                return sel === 'home' ? 'Home' : 'Away';
                               }
                             };
                             const getFairOdds = () => {
                               if (selectedMarket === 'moneyline') {
-                                const idx = record.selection_1x2 === '1' ? 0 : record.selection_1x2 === 'X' ? 1 : 2;
-                                return record.fair_odds_1x2?.[idx]?.toFixed(2) ?? '-';
+                                const val = rawRecord.fair_odds_1x2;
+                                return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
                               } else if (selectedMarket === 'overunder') {
-                                return record.selection_ou === 'over' ? record.fair_odds_ou?.[0]?.toFixed(2) ?? '-' : record.fair_odds_ou?.[1]?.toFixed(2) ?? '-';
+                                const val = rawRecord.fair_odds_ou;
+                                return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
                               } else {
-                                return record.selection_hdp === 'home' ? record.fair_odds_hdp?.[0]?.toFixed(2) ?? '-' : record.fair_odds_hdp?.[1]?.toFixed(2) ?? '-';
+                                const val = rawRecord.fair_odds_hdp;
+                                return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
                               }
                             };
                             const getMarketOdds = () => {
                               if (selectedMarket === 'moneyline') {
-                                const idx = record.selection_1x2 === '1' ? 0 : record.selection_1x2 === 'X' ? 1 : 2;
-                                return record.market_odds_1x2?.[idx]?.toFixed(2) ?? '-';
+                                const val = rawRecord.market_odds_1x2;
+                                return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
                               } else if (selectedMarket === 'overunder') {
-                                return record.selection_ou === 'over' ? record.market_odds_ou?.[0]?.toFixed(2) ?? '-' : record.market_odds_ou?.[1]?.toFixed(2) ?? '-';
+                                const val = rawRecord.market_odds_ou;
+                                return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
                               } else {
-                                return record.selection_hdp === 'home' ? record.market_odds_hdp?.[0]?.toFixed(2) ?? '-' : record.market_odds_hdp?.[1]?.toFixed(2) ?? '-';
+                                const val = rawRecord.market_odds_hdp;
+                                return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
                               }
                             };
                             const getEV = () => {
+                              // EV is stored as text like "24.73%" in database
+                              const parseEV = (val: unknown) => {
+                                if (val === null || val === undefined) return '-';
+                                const str = String(val).replace('%', '');
+                                const num = parseFloat(str);
+                                return !isNaN(num) ? `+${num.toFixed(2)}%` : '-';
+                              };
                               if (selectedMarket === 'moneyline') {
-                                return record.expected_value_1x2 !== null && !isNaN(record.expected_value_1x2) ? `+${record.expected_value_1x2.toFixed(2)}%` : '-';
+                                return parseEV(rawRecord.expected_value_1x2);
                               } else if (selectedMarket === 'overunder') {
-                                return record.expected_value_ou !== null && !isNaN(record.expected_value_ou) ? `+${record.expected_value_ou.toFixed(2)}%` : '-';
+                                return parseEV(rawRecord.expected_value_ou);
                               } else {
-                                return record.expected_value_hdp !== null && !isNaN(record.expected_value_hdp) ? `+${record.expected_value_hdp.toFixed(2)}%` : '-';
+                                return parseEV(rawRecord.expected_value_hdp);
                               }
                             };
                             const getStake = () => {
+                              const parseStake = (val: unknown) => {
+                                if (val === null || val === undefined) return '-';
+                                const num = Number(val);
+                                return !isNaN(num) ? `${num.toFixed(2)} units` : '-';
+                              };
                               if (selectedMarket === 'moneyline') {
-                                return record.recommended_stake_1x2 !== null && !isNaN(record.recommended_stake_1x2) ? `${record.recommended_stake_1x2.toFixed(2)} units` : '-';
+                                return parseStake(rawRecord.recommended_stake_1x2);
                               } else if (selectedMarket === 'overunder') {
-                                return record.recommended_stake_ou !== null && !isNaN(record.recommended_stake_ou) ? `${record.recommended_stake_ou.toFixed(2)} units` : '-';
+                                return parseStake(rawRecord.recommended_stake_ou);
                               } else {
-                                return record.recommended_stake_hdp !== null && !isNaN(record.recommended_stake_hdp) ? `${record.recommended_stake_hdp.toFixed(2)} units` : '-';
+                                return parseStake(rawRecord.recommended_stake_hdp);
                               }
                             };
-                            const isValuable = selectedMarket === 'moneyline' ? record.is_valuable_1x2 : selectedMarket === 'overunder' ? record.is_valuable_ou : record.is_valuable_hdp;
+                            const isValuable = selectedMarket === 'moneyline' ? rawRecord.is_valuable_1x2 : selectedMarket === 'overunder' ? rawRecord.is_valuable_ou : rawRecord.is_valuable_hdp;
 
                             return (
                               <tr key={record.id || index} className={`border-b border-white/5 ${index === 0 ? 'bg-purple-500/10' : 'hover:bg-white/5'} transition-colors`}>
