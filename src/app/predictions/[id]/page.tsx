@@ -2919,6 +2919,7 @@ export default function MatchDetailsPage() {
                     // Cast to raw record to access database values directly
                     const raw = liveSignals as unknown as Record<string, unknown>;
                     const selection = String(raw.selection_ou || '').toLowerCase();
+                    const line = raw.total_points_mainline !== null && raw.total_points_mainline !== undefined ? String(raw.total_points_mainline) : '';
                     const selectionLabel = selection === 'over' ? 'Over' : 'Under';
                     const fairOdds = raw.fair_odds_ou !== null && raw.fair_odds_ou !== undefined ? Number(raw.fair_odds_ou).toFixed(2) : '-';
                     const marketOdds = raw.market_odds_ou !== null && raw.market_odds_ou !== undefined ? Number(raw.market_odds_ou).toFixed(2) : '-';
@@ -2960,7 +2961,7 @@ export default function MatchDetailsPage() {
                           <div className="flex items-center justify-between mb-4">
                             <div>
                               <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Recommended Bet</div>
-                              <div className="text-xl font-bold text-white">{selectionLabel}</div>
+                              <div className="text-xl font-bold text-white">{selectionLabel} {line && <span className="text-amber-400">{line}</span>}</div>
                             </div>
                             <div className="flex items-center gap-6">
                               <div className="text-center">
@@ -3149,6 +3150,7 @@ export default function MatchDetailsPage() {
                     // Cast to raw record to access database values directly
                     const raw = liveSignals as unknown as Record<string, unknown>;
                     const selection = String(raw.selection_hdp || '').toLowerCase();
+                    const line = raw.handicap_main_line !== null && raw.handicap_main_line !== undefined ? String(raw.handicap_main_line) : '';
                     const selectionLabel = selection === 'home' ? 'Home' : 'Away';
                     const fairOdds = raw.fair_odds_hdp !== null && raw.fair_odds_hdp !== undefined ? Number(raw.fair_odds_hdp).toFixed(2) : '-';
                     const marketOdds = raw.market_odds_hdp !== null && raw.market_odds_hdp !== undefined ? Number(raw.market_odds_hdp).toFixed(2) : '-';
@@ -3190,7 +3192,7 @@ export default function MatchDetailsPage() {
                           <div className="flex items-center justify-between mb-4">
                             <div>
                               <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Recommended Bet</div>
-                              <div className="text-xl font-bold text-white">{selectionLabel}</div>
+                              <div className="text-xl font-bold text-white">{selectionLabel} {line && <span className="text-amber-400">{line}</span>}</div>
                             </div>
                             <div className="flex items-center gap-6">
                               <div className="text-center">
