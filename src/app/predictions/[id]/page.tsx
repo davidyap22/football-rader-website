@@ -3,10 +3,51 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
-import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer } from '@/lib/supabase';
+import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer, LiveSignals, getLiveSignals, FixtureEvent, getFixtureEvents } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+
+// Helper function to parse LiveSignals data from database
+const parseLiveSignals = (data: LiveSignals | null): LiveSignals | null => {
+  if (!data) return null;
+  const parseArray = (val: unknown): number[] | null => {
+    if (val === null || val === undefined) return null;
+    if (Array.isArray(val)) return val.map(v => typeof v === 'number' ? v : parseFloat(String(v)));
+    if (typeof val === 'string') {
+      try {
+        const parsed = JSON.parse(val);
+        if (Array.isArray(parsed)) return parsed.map(v => typeof v === 'number' ? v : parseFloat(String(v)));
+      } catch { return null; }
+    }
+    return null;
+  };
+  const parseNumber = (val: unknown): number | null => {
+    if (val === null || val === undefined) return null;
+    if (typeof val === 'number') return val;
+    if (typeof val === 'string') {
+      const num = parseFloat(val.replace('%', ''));
+      return isNaN(num) ? null : num;
+    }
+    return null;
+  };
+  return {
+    ...data,
+    fair_odds_1x2: parseArray(data.fair_odds_1x2),
+    market_odds_1x2: parseArray(data.market_odds_1x2),
+    expected_value_1x2: parseNumber(data.expected_value_1x2),
+    recommended_stake_1x2: parseNumber(data.recommended_stake_1x2),
+    fair_odds_ou: parseArray(data.fair_odds_ou),
+    market_odds_ou: parseArray(data.market_odds_ou),
+    expected_value_ou: parseNumber(data.expected_value_ou),
+    recommended_stake_ou: parseNumber(data.recommended_stake_ou),
+    fair_odds_hdp: parseArray(data.fair_odds_hdp),
+    market_odds_hdp: parseArray(data.market_odds_hdp),
+    expected_value_hdp: parseNumber(data.expected_value_hdp),
+    recommended_stake_hdp: parseNumber(data.recommended_stake_hdp),
+    clock: parseNumber(data.clock),
+  };
+};
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -27,6 +68,10 @@ const translations: Record<string, Record<string, string>> = {
     teamLineups: "Team Lineups", startingXI: "Starting XI & Formation",
     lineupNotAvailable: "Lineup data not available yet",
     lineupNotAvailableDesc: "Team lineups are usually announced 1 hour before kick-off. Please check back closer to match time.",
+    matchEvents: "Match Events", eventsTimeline: "Goals, Cards & Substitutions",
+    noEvents: "No events yet", noEventsDesc: "Events will appear here once the match starts.",
+    goal: "Goal", yellowCard: "Yellow Card", redCard: "Red Card", substitution: "Substitution", penalty: "Penalty", ownGoal: "Own Goal", var: "VAR", missedPenalty: "Missed Penalty",
+    tabOdds: "Odds & AI", tabComparison: "Comparison", tabLineups: "Lineups", tabEvents: "Events",
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA", community: "Comunidad", news: "Noticias", solution: "Solución", pricing: "Precios",
@@ -45,6 +90,10 @@ const translations: Record<string, Record<string, string>> = {
     teamLineups: "Alineaciones", startingXI: "XI Titular y Formación",
     lineupNotAvailable: "Alineación no disponible aún",
     lineupNotAvailableDesc: "Las alineaciones se anuncian normalmente 1 hora antes del inicio. Por favor, vuelve más tarde.",
+    matchEvents: "Eventos del Partido", eventsTimeline: "Goles, Tarjetas y Sustituciones",
+    noEvents: "Sin eventos aún", noEventsDesc: "Los eventos aparecerán aquí cuando comience el partido.",
+    goal: "Gol", yellowCard: "Tarjeta Amarilla", redCard: "Tarjeta Roja", substitution: "Sustitución", penalty: "Penal", ownGoal: "Autogol", var: "VAR", missedPenalty: "Penal Fallado",
+    tabOdds: "Cuotas & IA", tabComparison: "Comparación", tabLineups: "Alineaciones", tabEvents: "Eventos",
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho IA", community: "Comunidade", news: "Notícias", solution: "Solução", pricing: "Preços",
@@ -63,6 +112,10 @@ const translations: Record<string, Record<string, string>> = {
     teamLineups: "Escalações", startingXI: "XI Titular e Formação",
     lineupNotAvailable: "Escalação ainda não disponível",
     lineupNotAvailableDesc: "As escalações são normalmente anunciadas 1 hora antes do jogo. Por favor, volte mais tarde.",
+    matchEvents: "Eventos da Partida", eventsTimeline: "Gols, Cartões e Substituições",
+    noEvents: "Sem eventos ainda", noEventsDesc: "Os eventos aparecerão aqui quando a partida começar.",
+    goal: "Gol", yellowCard: "Cartão Amarelo", redCard: "Cartão Vermelho", substitution: "Substituição", penalty: "Pênalti", ownGoal: "Gol Contra", var: "VAR", missedPenalty: "Pênalti Perdido",
+    tabOdds: "Odds & IA", tabComparison: "Comparação", tabLineups: "Escalações", tabEvents: "Eventos",
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung", community: "Community", news: "Nachrichten", solution: "Lösung", pricing: "Preise",
@@ -81,6 +134,10 @@ const translations: Record<string, Record<string, string>> = {
     teamLineups: "Aufstellungen", startingXI: "Startelf & Formation",
     lineupNotAvailable: "Aufstellung noch nicht verfügbar",
     lineupNotAvailableDesc: "Aufstellungen werden normalerweise 1 Stunde vor Anpfiff bekannt gegeben. Bitte später wiederkommen.",
+    matchEvents: "Spielereignisse", eventsTimeline: "Tore, Karten & Auswechslungen",
+    noEvents: "Noch keine Ereignisse", noEventsDesc: "Ereignisse erscheinen hier, sobald das Spiel beginnt.",
+    goal: "Tor", yellowCard: "Gelbe Karte", redCard: "Rote Karte", substitution: "Auswechslung", penalty: "Elfmeter", ownGoal: "Eigentor", var: "VAR", missedPenalty: "Verschossener Elfmeter",
+    tabOdds: "Quoten & KI", tabComparison: "Vergleich", tabLineups: "Aufstellungen", tabEvents: "Ereignisse",
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance IA", community: "Communauté", news: "Actualités", solution: "Solution", pricing: "Tarifs",
@@ -99,6 +156,10 @@ const translations: Record<string, Record<string, string>> = {
     teamLineups: "Compositions", startingXI: "XI de départ & Formation",
     lineupNotAvailable: "Composition non disponible",
     lineupNotAvailableDesc: "Les compositions sont généralement annoncées 1 heure avant le coup d'envoi. Veuillez revenir plus tard.",
+    matchEvents: "Événements du Match", eventsTimeline: "Buts, Cartons & Remplacements",
+    noEvents: "Pas d'événements encore", noEventsDesc: "Les événements apparaîtront ici une fois le match commencé.",
+    goal: "But", yellowCard: "Carton Jaune", redCard: "Carton Rouge", substitution: "Remplacement", penalty: "Pénalty", ownGoal: "But Contre Son Camp", var: "VAR", missedPenalty: "Pénalty Manqué",
+    tabOdds: "Cotes & IA", tabComparison: "Comparaison", tabLineups: "Compositions", tabEvents: "Événements",
   },
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AIパフォーマンス", community: "コミュニティ", news: "ニュース", solution: "ソリューション", pricing: "料金",
@@ -117,6 +178,10 @@ const translations: Record<string, Record<string, string>> = {
     teamLineups: "スタメン", startingXI: "先発メンバー & フォーメーション",
     lineupNotAvailable: "スタメン未発表",
     lineupNotAvailableDesc: "スタメンは通常キックオフの1時間前に発表されます。後ほどご確認ください。",
+    matchEvents: "試合イベント", eventsTimeline: "ゴール、カード、交代",
+    noEvents: "イベントはまだありません", noEventsDesc: "試合が始まるとイベントがここに表示されます。",
+    goal: "ゴール", yellowCard: "イエローカード", redCard: "レッドカード", substitution: "交代", penalty: "ペナルティ", ownGoal: "オウンゴール", var: "VAR", missedPenalty: "PK失敗",
+    tabOdds: "オッズ & AI", tabComparison: "比較", tabLineups: "スタメン", tabEvents: "イベント",
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성능", community: "커뮤니티", news: "뉴스", solution: "솔루션", pricing: "가격",
@@ -135,6 +200,10 @@ const translations: Record<string, Record<string, string>> = {
     teamLineups: "선발 라인업", startingXI: "선발 XI & 포메이션",
     lineupNotAvailable: "라인업 미발표",
     lineupNotAvailableDesc: "라인업은 일반적으로 경기 시작 1시간 전에 발표됩니다. 나중에 다시 확인해 주세요.",
+    matchEvents: "경기 이벤트", eventsTimeline: "골, 카드 & 교체",
+    noEvents: "아직 이벤트 없음", noEventsDesc: "경기가 시작되면 여기에 이벤트가 표시됩니다.",
+    goal: "골", yellowCard: "옐로 카드", redCard: "레드 카드", substitution: "교체", penalty: "페널티", ownGoal: "자책골", var: "VAR", missedPenalty: "페널티 실패",
+    tabOdds: "배당률 & AI", tabComparison: "비교", tabLineups: "라인업", tabEvents: "이벤트",
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现", community: "社区", news: "新闻", solution: "解决方案", pricing: "价格",
@@ -153,6 +222,10 @@ const translations: Record<string, Record<string, string>> = {
     teamLineups: "首发阵容", startingXI: "首发11人 & 阵型",
     lineupNotAvailable: "阵容暂未公布",
     lineupNotAvailableDesc: "首发阵容通常在开球前1小时公布，请稍后再查看。",
+    matchEvents: "比赛事件", eventsTimeline: "进球、红黄牌与换人",
+    noEvents: "暂无事件", noEventsDesc: "比赛开始后事件将在此显示。",
+    goal: "进球", yellowCard: "黄牌", redCard: "红牌", substitution: "换人", penalty: "点球", ownGoal: "乌龙球", var: "VAR", missedPenalty: "点球未进",
+    tabOdds: "赔率 & AI", tabComparison: "对比", tabLineups: "阵容", tabEvents: "事件",
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現", community: "社區", news: "新聞", solution: "解決方案", pricing: "價格",
@@ -171,6 +244,10 @@ const translations: Record<string, Record<string, string>> = {
     teamLineups: "首發陣容", startingXI: "首發11人 & 陣型",
     lineupNotAvailable: "陣容暫未公布",
     lineupNotAvailableDesc: "首發陣容通常在開球前1小時公布，請稍後再查看。",
+    matchEvents: "比賽事件", eventsTimeline: "進球、紅黃牌與換人",
+    noEvents: "暫無事件", noEventsDesc: "比賽開始後事件將在此顯示。",
+    goal: "進球", yellowCard: "黃牌", redCard: "紅牌", substitution: "換人", penalty: "點球", ownGoal: "烏龍球", var: "VAR", missedPenalty: "點球未進",
+    tabOdds: "賠率 & AI", tabComparison: "對比", tabLineups: "陣容", tabEvents: "事件",
   },
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI", community: "Komunitas", news: "Berita", solution: "Solusi", pricing: "Harga",
@@ -189,6 +266,10 @@ const translations: Record<string, Record<string, string>> = {
     teamLineups: "Susunan Pemain", startingXI: "Starting XI & Formasi",
     lineupNotAvailable: "Data susunan pemain belum tersedia",
     lineupNotAvailableDesc: "Susunan pemain biasanya diumumkan 1 jam sebelum kick-off. Silakan periksa kembali nanti.",
+    matchEvents: "Peristiwa Pertandingan", eventsTimeline: "Gol, Kartu & Pergantian Pemain",
+    noEvents: "Belum ada peristiwa", noEventsDesc: "Peristiwa akan muncul di sini saat pertandingan dimulai.",
+    goal: "Gol", yellowCard: "Kartu Kuning", redCard: "Kartu Merah", substitution: "Pergantian", penalty: "Penalti", ownGoal: "Gol Bunuh Diri", var: "VAR", missedPenalty: "Penalti Gagal",
+    tabOdds: "Odds & AI", tabComparison: "Perbandingan", tabLineups: "Susunan", tabEvents: "Peristiwa",
   },
 };
 
@@ -371,11 +452,19 @@ export default function MatchDetailsPage() {
 
   // Match Prediction (from predictions_match table)
   const [matchPrediction, setMatchPrediction] = useState<MatchPrediction | null>(null);
-  const [showComparison, setShowComparison] = useState(false);
+
+  // Live Signals state (Value Hunter)
+  const [liveSignals, setLiveSignals] = useState<LiveSignals | null>(null);
+  const [liveSignalsLoading, setLiveSignalsLoading] = useState(false);
 
   // Lineup data
   const [lineups, setLineups] = useState<TeamLineup[] | null>(null);
-  const [showLineups, setShowLineups] = useState(false);
+
+  // Events data
+  const [events, setEvents] = useState<FixtureEvent[] | null>(null);
+
+  // Section tab filter: 'odds' | 'comparison' | 'lineups' | 'events'
+  const [selectedSection, setSelectedSection] = useState<'odds' | 'comparison' | 'lineups' | 'events'>('odds');
 
   // Translation function
   const t = (key: string): string => {
@@ -399,12 +488,13 @@ export default function MatchDetailsPage() {
   const previousOddsRef = useRef<OddsHistory | null>(null);
 
   // Signal History state
-  const [showSignalHistory, setShowSignalHistory] = useState<'moneyline' | 'overunder' | 'handicap' | null>(null);
+  const [showSignalHistory, setShowSignalHistory] = useState<'moneyline' | 'overunder' | 'handicap' | 'value' | null>(null);
   const [signalHistory, setSignalHistory] = useState<{
     moneyline: Moneyline1x2Prediction[];
     overunder: OverUnderPrediction[];
     handicap: HandicapPrediction[];
   }>({ moneyline: [], overunder: [], handicap: [] });
+  const [liveSignalsHistory, setLiveSignalsHistory] = useState<LiveSignals[]>([]);
 
   // Market type filter
   const [selectedMarket, setSelectedMarket] = useState<'moneyline' | 'overunder' | 'handicap'>('moneyline');
@@ -493,9 +583,31 @@ export default function MatchDetailsPage() {
     }
   }, [match?.fixture_id, selectedPersonality]);
 
+  // Fetch Value Hunter signal history
+  const fetchValueHunterHistory = useCallback(async () => {
+    if (!match?.fixture_id) return;
+    try {
+      const { data, error } = await supabase
+        .from('live_signals_v7')
+        .select('*')
+        .eq('fixture_id', match.fixture_id)
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        setLiveSignalsHistory(data.map((d: unknown) => parseLiveSignals(d as LiveSignals) as LiveSignals).filter(Boolean));
+      }
+    } catch (error) {
+      console.error('Error fetching value hunter history:', error);
+    }
+  }, [match?.fixture_id]);
+
   // Open signal history modal
-  const openSignalHistory = (type: 'moneyline' | 'overunder' | 'handicap') => {
-    fetchSignalHistory(type);
+  const openSignalHistory = (type: 'moneyline' | 'overunder' | 'handicap' | 'value') => {
+    if (type === 'value') {
+      fetchValueHunterHistory();
+    } else {
+      fetchSignalHistory(type);
+    }
     setShowSignalHistory(type);
   };
 
@@ -534,6 +646,19 @@ export default function MatchDetailsPage() {
     const personality = PERSONALITIES.find(p => p.id === selectedPersonality);
     if (match?.fixture_id && personality) {
       fetchAIPredictions(match.fixture_id, personality.aiModel);
+
+      // Fetch live signals for Value Hunter personality
+      if (selectedPersonality === 'value') {
+        setLiveSignalsLoading(true);
+        getLiveSignals(match.fixture_id).then(({ data, error }) => {
+          console.log('[Value Hunter] Response:', { data, error });
+          setLiveSignals(parseLiveSignals(data));
+          setLiveSignalsLoading(false);
+        }).catch((err) => {
+          console.error('[Value Hunter] Error:', err);
+          setLiveSignalsLoading(false);
+        });
+      }
     }
   }, [selectedPersonality, match?.fixture_id, fetchAIPredictions]);
 
@@ -619,21 +744,30 @@ export default function MatchDetailsPage() {
   // Fetch all data (match + odds + AI predictions + lineups)
   const fetchAllData = useCallback(async (isRefresh: boolean = false) => {
     const matchData = await fetchMatch(isRefresh);
+    console.log('[fetchAllData] matchData:', matchData?.id, 'fixture_id:', matchData?.fixture_id);
     if (matchData?.fixture_id) {
-      // Fetch odds, AI predictions, match prediction, and lineups in parallel
+      // Fetch odds, AI predictions, match prediction, lineups, and events in parallel
       const personality = PERSONALITIES.find(p => p.id === selectedPersonality);
-      const [, , predictionResult, lineupsResult] = await Promise.all([
+      const [, , predictionResult, lineupsResult, eventsResult] = await Promise.all([
         fetchOdds(matchData.fixture_id, matchData.type === 'In Play'),
         personality ? fetchAIPredictions(matchData.fixture_id, personality.aiModel) : Promise.resolve(),
         getMatchPrediction(matchData.fixture_id),
         // Only fetch lineups on initial load, not on refresh
         !isRefresh ? getFixtureLineups(matchData.fixture_id) : Promise.resolve({ data: null }),
+        // Fetch events (always fetch to show live updates)
+        getFixtureEvents(matchData.fixture_id),
       ]);
       if (predictionResult?.data) {
         setMatchPrediction(predictionResult.data);
       }
       if (lineupsResult?.data) {
         setLineups(lineupsResult.data);
+      }
+      if (eventsResult?.data) {
+        console.log('[page] Setting events:', eventsResult.data.length, eventsResult.data);
+        setEvents(eventsResult.data);
+      } else {
+        console.log('[page] No events data, eventsResult:', eventsResult);
       }
     }
   }, [fetchMatch, fetchOdds, fetchAIPredictions, selectedPersonality]);
@@ -977,41 +1111,84 @@ export default function MatchDetailsPage() {
             )}
           </div>
 
+          {/* Section Tab Filter */}
+          <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
+            <button
+              onClick={() => setSelectedSection('odds')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                selectedSection === 'odds'
+                  ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/25'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              {t('tabOdds')}
+            </button>
+            <button
+              onClick={() => setSelectedSection('comparison')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                selectedSection === 'comparison'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              {t('tabComparison')}
+            </button>
+            <button
+              onClick={() => setSelectedSection('lineups')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                selectedSection === 'lineups'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/25'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              {t('tabLineups')}
+            </button>
+            <button
+              onClick={() => setSelectedSection('events')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                selectedSection === 'events'
+                  ? 'bg-gradient-to-r from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/25'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              {t('tabEvents')}
+              {match.type === 'In Play' && (
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              )}
+            </button>
+          </div>
+
           {/* Team Comparison Section - AI Analysis */}
+          {selectedSection === 'comparison' && (
           <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-white/5 p-4 sm:p-5 mb-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h2 className="text-lg font-bold text-white">{t('teamComparison')}</h2>
-                  <p className="text-xs text-gray-500">{t('aiAnalysis')}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowComparison(!showComparison)}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
-              >
-                <span className="text-sm text-gray-300">{showComparison ? 'Hide' : 'Show'}</span>
-                <svg
-                  className={`w-4 h-4 text-gray-400 transition-transform ${showComparison ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-              </button>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-white">{t('teamComparison')}</h2>
+                <p className="text-xs text-gray-500">{t('aiAnalysis')}</p>
+              </div>
             </div>
 
-            {/* Collapsible Content */}
-            <div className={`grid transition-all duration-300 ease-in-out ${showComparison ? 'grid-rows-[1fr] opacity-100 mt-6' : 'grid-rows-[0fr] opacity-0 mt-0'}`}>
-              <div className="overflow-hidden">
-                {!matchPrediction || (!matchPrediction.winner_name && !matchPrediction.prob_home && !matchPrediction.strength_home) ? (
+            {/* Content */}
+            <div>
+              {!matchPrediction || (!matchPrediction.winner_name && !matchPrediction.prob_home && !matchPrediction.strength_home) ? (
                   <div className="text-center py-12">
                     <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
                       <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1316,46 +1493,30 @@ export default function MatchDetailsPage() {
                   </div>
                   </>
                 )}
-              </div>
             </div>
           </div>
+          )}
 
           {/* Team Lineups Section */}
+          {selectedSection === 'lineups' && (
           <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-white/5 p-4 sm:p-5 mb-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h2 className="text-lg font-bold text-white">{t('teamLineups')}</h2>
-                  <p className="text-xs text-gray-500">{t('startingXI')}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowLineups(!showLineups)}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
-              >
-                <span className="text-sm text-gray-300">{showLineups ? 'Hide' : 'Show'}</span>
-                <svg
-                  className={`w-4 h-4 text-gray-400 transition-transform ${showLineups ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-              </button>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-white">{t('teamLineups')}</h2>
+                <p className="text-xs text-gray-500">{t('startingXI')}</p>
+              </div>
             </div>
 
-            {/* Collapsible Content */}
-            <div className={`grid transition-all duration-300 ease-in-out ${showLineups ? 'grid-rows-[1fr] opacity-100 mt-6' : 'grid-rows-[0fr] opacity-0 mt-0'}`}>
-              <div className="overflow-hidden">
-                {/* No lineup data message */}
-                {(!lineups || lineups.length === 0) ? (
+            {/* Content */}
+            <div>
+              {/* No lineup data message */}
+              {(!lineups || lineups.length === 0) ? (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
                     <div className="w-16 h-16 rounded-full bg-gray-800/50 flex items-center justify-center mb-4">
                       <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1518,11 +1679,160 @@ export default function MatchDetailsPage() {
                   </div>
                   </>
                 )}
-              </div>
             </div>
           </div>
+          )}
+
+          {/* Match Events Section */}
+          {selectedSection === 'events' && (
+          <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-white/5 p-4 sm:p-5 mb-6">
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-white">{t('matchEvents')}</h2>
+                  {match.type === 'In Play' && (
+                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/30">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                      <span className="text-xs font-medium text-red-400">LIVE</span>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500">{t('eventsTimeline')}</p>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div>
+                {/* No events message */}
+                {(!events || events.length === 0) ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <div className="w-16 h-16 rounded-full bg-gray-800/50 flex items-center justify-center mb-4">
+                      <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-white font-medium mb-2">{t('noEvents')}</h3>
+                    <p className="text-gray-500 text-sm max-w-md">
+                      {t('noEventsDesc')}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    {/* Timeline vertical line */}
+                    <div className="absolute left-[23px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-orange-500/50 via-amber-500/30 to-orange-500/50" />
+
+                    <div className="space-y-0">
+                      {events.map((event: FixtureEvent, index: number) => {
+                        // Determine event icon and color based on event_type and event_detail
+                        const getEventStyle = () => {
+                          const type = event.event_type?.toLowerCase() || '';
+                          const detail = event.event_detail?.toLowerCase() || '';
+
+                          if (type === 'goal') {
+                            if (detail.includes('own goal')) {
+                              return { icon: '⚽', dotColor: 'bg-red-500', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/20', textColor: 'text-red-400' };
+                            }
+                            if (detail.includes('penalty')) {
+                              return { icon: '⚽', dotColor: 'bg-emerald-500', bgColor: 'bg-emerald-500/10', borderColor: 'border-emerald-500/20', textColor: 'text-emerald-400' };
+                            }
+                            return { icon: '⚽', dotColor: 'bg-emerald-500', bgColor: 'bg-emerald-500/10', borderColor: 'border-emerald-500/20', textColor: 'text-emerald-400' };
+                          }
+                          if (type === 'card') {
+                            if (detail.includes('yellow')) {
+                              return { icon: '🟨', dotColor: 'bg-yellow-500', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/20', textColor: 'text-yellow-400' };
+                            }
+                            if (detail.includes('red')) {
+                              return { icon: '🟥', dotColor: 'bg-red-500', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/20', textColor: 'text-red-400' };
+                            }
+                            return { icon: '🟨', dotColor: 'bg-yellow-500', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/20', textColor: 'text-yellow-400' };
+                          }
+                          if (type === 'subst') {
+                            return { icon: '🔄', dotColor: 'bg-blue-500', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/20', textColor: 'text-blue-400' };
+                          }
+                          if (type === 'var') {
+                            return { icon: '📺', dotColor: 'bg-purple-500', bgColor: 'bg-purple-500/10', borderColor: 'border-purple-500/20', textColor: 'text-purple-400' };
+                          }
+                          return { icon: '⚡', dotColor: 'bg-gray-500', bgColor: 'bg-gray-500/10', borderColor: 'border-gray-500/20', textColor: 'text-gray-400' };
+                        };
+
+                        const style = getEventStyle();
+                        const isHomeTeam = match && event.team_name === match.home_name;
+                        const isFirst = index === 0;
+                        const isLast = index === events.length - 1;
+
+                        return (
+                          <div
+                            key={event.id}
+                            className={`relative flex items-start gap-4 ${isFirst ? 'pt-0' : 'pt-3'} ${isLast ? 'pb-0' : 'pb-3'}`}
+                          >
+                            {/* Timeline dot */}
+                            <div className="relative z-10 flex-shrink-0 w-12 flex flex-col items-center">
+                              <div className={`w-3 h-3 rounded-full ${style.dotColor} ring-4 ring-gray-900/80`} />
+                            </div>
+
+                            {/* Event Card */}
+                            <div className={`flex-1 flex items-center gap-3 p-3 rounded-xl ${style.bgColor} border ${style.borderColor}`}>
+                              {/* Time */}
+                              <div className="flex-shrink-0 w-14 text-center">
+                                <span className={`text-lg font-bold ${style.textColor}`}>
+                                  {event.elapsed_time || '-'}&apos;
+                                </span>
+                                {event.extra_time && (
+                                  <span className={`text-xs ${style.textColor}`}>+{event.extra_time}</span>
+                                )}
+                              </div>
+
+                              {/* Event Icon */}
+                              <div className="flex-shrink-0 text-2xl">
+                                {style.icon}
+                              </div>
+
+                              {/* Event Details */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold text-white truncate">{event.player_name || 'Unknown'}</span>
+                                  {event.assist_name && (
+                                    <span className="text-gray-400 text-sm truncate">({event.assist_name})</span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 text-sm">
+                                  <span className={`${isHomeTeam ? 'text-blue-400' : 'text-green-400'}`}>
+                                    {event.team_name || 'Unknown Team'}
+                                  </span>
+                                  {event.event_detail && (
+                                    <>
+                                      <span className="text-gray-600">•</span>
+                                      <span className="text-gray-400">{event.event_detail}</span>
+                                    </>
+                                  )}
+                                </div>
+                                {event.comments && (
+                                  <p className="text-xs text-gray-500 mt-1 truncate">{event.comments}</p>
+                                )}
+                              </div>
+
+                              {/* Team indicator */}
+                              <div className={`flex-shrink-0 w-1 h-12 rounded-full ${isHomeTeam ? 'bg-blue-500' : 'bg-green-500'}`} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+            </div>
+          </div>
+          )}
 
           {/* Odds Section */}
+          {selectedSection === 'odds' && (
+          <>
           <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-white/5 p-6 mb-6">
             <div className="flex items-center gap-2 mb-6">
               {match.type === 'In Play' && (
@@ -1755,7 +2065,7 @@ export default function MatchDetailsPage() {
 
                 <div className="flex items-center justify-between mb-4 relative z-10">
                   <h3 className="text-xl font-bold text-white">
-                    Signal History - {showSignalHistory === 'moneyline' ? '1X2' : showSignalHistory === 'overunder' ? 'Over/Under' : 'Handicap'}
+                    Signal History - {showSignalHistory === 'moneyline' ? '1X2' : showSignalHistory === 'overunder' ? 'Over/Under' : showSignalHistory === 'handicap' ? 'Handicap' : '💎 Value Hunter'}
                   </h3>
                   <button
                     onClick={() => setShowSignalHistory(null)}
@@ -1768,7 +2078,54 @@ export default function MatchDetailsPage() {
                 </div>
 
                 <div className="overflow-auto flex-1 relative z-10">
-                  {signalHistory[showSignalHistory].length > 0 ? (
+                  {showSignalHistory === 'value' ? (
+                    liveSignalsHistory.length > 0 ? (
+                      <table className="w-full text-sm border-collapse">
+                        <thead className="sticky top-0 bg-[#0d1117]">
+                          <tr>
+                            <th className="text-left py-3 px-2 text-gray-400 font-medium">Clock</th>
+                            <th className="text-left py-3 px-2 text-gray-400 font-medium">Score</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">1X2</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">EV</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">O/U</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">EV</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">HDP</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">EV</th>
+                            <th className="text-left py-3 px-2 text-gray-400 font-medium">Safeguard</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {liveSignalsHistory.map((record, index) => (
+                            <tr key={record.id || index} className={`border-b border-white/5 ${index === 0 ? 'bg-purple-500/10' : 'hover:bg-white/5'} transition-colors`}>
+                              <td className="py-3 px-2 text-gray-300">{record.clock !== null ? `${record.clock}'` : '-'}</td>
+                              <td className="py-3 px-2 text-white font-bold">{record.score || '-'}</td>
+                              <td className="py-3 px-2 text-center">
+                                {record.is_valuable_1x2 ? (
+                                  <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">{record.selection_1x2 === '1' ? 'Home' : record.selection_1x2 === 'X' ? 'Draw' : 'Away'}</span>
+                                ) : <span className="text-gray-500">-</span>}
+                              </td>
+                              <td className="py-3 px-2 text-center text-emerald-400 text-xs">{record.expected_value_1x2 !== null && !isNaN(record.expected_value_1x2) ? `+${(record.expected_value_1x2 * 100).toFixed(1)}%` : '-'}</td>
+                              <td className="py-3 px-2 text-center">
+                                {record.is_valuable_ou ? (
+                                  <span className="px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 text-xs font-bold">{record.selection_ou === 'over' ? 'Over' : 'Under'}</span>
+                                ) : <span className="text-gray-500">-</span>}
+                              </td>
+                              <td className="py-3 px-2 text-center text-emerald-400 text-xs">{record.expected_value_ou !== null && !isNaN(record.expected_value_ou) ? `+${(record.expected_value_ou * 100).toFixed(1)}%` : '-'}</td>
+                              <td className="py-3 px-2 text-center">
+                                {record.is_valuable_hdp ? (
+                                  <span className="px-2 py-1 rounded bg-pink-500/20 text-pink-400 text-xs font-bold">{record.selection_hdp === 'home' ? 'Home' : 'Away'}</span>
+                                ) : <span className="text-gray-500">-</span>}
+                              </td>
+                              <td className="py-3 px-2 text-center text-emerald-400 text-xs">{record.expected_value_hdp !== null && !isNaN(record.expected_value_hdp) ? `+${(record.expected_value_hdp * 100).toFixed(1)}%` : '-'}</td>
+                              <td className="py-3 px-2 text-yellow-400 text-xs">{record.safeguard || '-'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">No Value Hunter signal history available</div>
+                    )
+                  ) : signalHistory[showSignalHistory as 'moneyline' | 'overunder' | 'handicap']?.length > 0 ? (
                     <table className="w-full text-sm border-collapse">
                       <thead className="sticky top-0 bg-[#0d1117]">
                         <tr>
@@ -1802,7 +2159,7 @@ export default function MatchDetailsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {signalHistory[showSignalHistory].map((record, index) => (
+                        {signalHistory[showSignalHistory as 'moneyline' | 'overunder' | 'handicap'].map((record, index) => (
                           <tr key={record.id} className={`border-b border-white/5 ${index === 0 ? 'bg-emerald-500/10' : 'hover:bg-white/5'} transition-colors`}>
                             <td className="py-3 px-3 text-gray-300">
                               {record.clock !== null ? `${record.clock}'` : '-'}
@@ -2034,7 +2391,7 @@ export default function MatchDetailsPage() {
                   </button>
                 )}
                 <button
-                  onClick={() => openSignalHistory(selectedMarket)}
+                  onClick={() => openSignalHistory(selectedPersonality === 'value' ? 'value' : selectedMarket)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-400 text-xs font-medium hover:from-amber-500/30 hover:to-orange-500/30 transition-all cursor-pointer"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2226,6 +2583,59 @@ export default function MatchDetailsPage() {
                       </div>
                     )}
                   </>
+                ) : selectedPersonality === 'value' && liveSignals ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {liveSignals.clock !== null && (
+                          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30">
+                            <span className="text-red-400 text-sm font-bold">{liveSignals.clock}'</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30">
+                          <span className="text-purple-400 font-bold">{liveSignals.selection_1x2 === '1' ? 'Home' : liveSignals.selection_1x2 === 'X' ? 'Draw' : 'Away'}</span>
+                        </div>
+                        {liveSignals.is_valuable_1x2 && (
+                          <span className="px-3 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">VALUE BET</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className={`rounded-xl py-3 px-3 text-center ${liveSignals.selection_1x2 === '1' ? 'bg-purple-500/20 border border-purple-500/30' : 'bg-white/5'}`}>
+                        <div className="text-xs text-gray-500 uppercase mb-1">Home</div>
+                        <div className="text-xs text-gray-400">Fair: {liveSignals.fair_odds_1x2?.[0]?.toFixed(2) ?? '-'}</div>
+                        <div className="text-lg font-bold text-white">{liveSignals.market_odds_1x2?.[0]?.toFixed(2) ?? '-'}</div>
+                      </div>
+                      <div className={`rounded-xl py-3 px-3 text-center ${liveSignals.selection_1x2 === 'X' ? 'bg-purple-500/20 border border-purple-500/30' : 'bg-white/5'}`}>
+                        <div className="text-xs text-gray-500 uppercase mb-1">Draw</div>
+                        <div className="text-xs text-gray-400">Fair: {liveSignals.fair_odds_1x2?.[1]?.toFixed(2) ?? '-'}</div>
+                        <div className="text-lg font-bold text-white">{liveSignals.market_odds_1x2?.[1]?.toFixed(2) ?? '-'}</div>
+                      </div>
+                      <div className={`rounded-xl py-3 px-3 text-center ${liveSignals.selection_1x2 === '2' ? 'bg-purple-500/20 border border-purple-500/30' : 'bg-white/5'}`}>
+                        <div className="text-xs text-gray-500 uppercase mb-1">Away</div>
+                        <div className="text-xs text-gray-400">Fair: {liveSignals.fair_odds_1x2?.[2]?.toFixed(2) ?? '-'}</div>
+                        <div className="text-lg font-bold text-white">{liveSignals.market_odds_1x2?.[2]?.toFixed(2) ?? '-'}</div>
+                      </div>
+                    </div>
+                    <div className="rounded-xl bg-purple-900/30 border border-purple-500/20 p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          {liveSignals.expected_value_1x2 !== null && !isNaN(liveSignals.expected_value_1x2) && (
+                            <div><div className="text-xs text-gray-500">EV</div><div className="text-emerald-400 font-bold">+{(liveSignals.expected_value_1x2 * 100).toFixed(1)}%</div></div>
+                          )}
+                          {liveSignals.score && (<div><div className="text-xs text-gray-500">Score</div><div className="text-white font-bold">{liveSignals.score}</div></div>)}
+                        </div>
+                        {liveSignals.recommended_stake_1x2 !== null && !isNaN(liveSignals.recommended_stake_1x2) && (
+                          <div className="px-4 py-2 rounded-lg bg-yellow-500/20 border border-yellow-500/30">
+                            <div className="text-xs text-gray-400">Stake</div>
+                            <div className="text-yellow-400 font-bold">{liveSignals.recommended_stake_1x2.toFixed(2)} units</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
                     {match.type === 'Scheduled' ? (
@@ -2380,6 +2790,54 @@ export default function MatchDetailsPage() {
                       </div>
                     )}
                   </>
+                ) : selectedPersonality === 'value' && liveSignals ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {liveSignals.clock !== null && (
+                          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30">
+                            <span className="text-red-400 text-sm font-bold">{liveSignals.clock}'</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="px-4 py-2 rounded-lg bg-cyan-500/20 border border-cyan-500/30">
+                          <span className="text-cyan-400 font-bold">{liveSignals.selection_ou === 'over' ? 'Over' : 'Under'}</span>
+                        </div>
+                        {liveSignals.is_valuable_ou && (
+                          <span className="px-3 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">VALUE BET</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className={`rounded-xl py-3 px-3 text-center ${liveSignals.selection_ou === 'over' ? 'bg-cyan-500/20 border border-cyan-500/30' : 'bg-white/5'}`}>
+                        <div className="text-xs text-gray-500 uppercase mb-1">Over</div>
+                        <div className="text-xs text-gray-400">Fair: {liveSignals.fair_odds_ou?.[0]?.toFixed(2) ?? '-'}</div>
+                        <div className="text-lg font-bold text-white">{liveSignals.market_odds_ou?.[0]?.toFixed(2) ?? '-'}</div>
+                      </div>
+                      <div className={`rounded-xl py-3 px-3 text-center ${liveSignals.selection_ou === 'under' ? 'bg-cyan-500/20 border border-cyan-500/30' : 'bg-white/5'}`}>
+                        <div className="text-xs text-gray-500 uppercase mb-1">Under</div>
+                        <div className="text-xs text-gray-400">Fair: {liveSignals.fair_odds_ou?.[1]?.toFixed(2) ?? '-'}</div>
+                        <div className="text-lg font-bold text-white">{liveSignals.market_odds_ou?.[1]?.toFixed(2) ?? '-'}</div>
+                      </div>
+                    </div>
+                    <div className="rounded-xl bg-cyan-900/30 border border-cyan-500/20 p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          {liveSignals.expected_value_ou !== null && !isNaN(liveSignals.expected_value_ou) && (
+                            <div><div className="text-xs text-gray-500">EV</div><div className="text-emerald-400 font-bold">+{(liveSignals.expected_value_ou * 100).toFixed(1)}%</div></div>
+                          )}
+                          {liveSignals.score && (<div><div className="text-xs text-gray-500">Score</div><div className="text-white font-bold">{liveSignals.score}</div></div>)}
+                        </div>
+                        {liveSignals.recommended_stake_ou !== null && !isNaN(liveSignals.recommended_stake_ou) && (
+                          <div className="px-4 py-2 rounded-lg bg-yellow-500/20 border border-yellow-500/30">
+                            <div className="text-xs text-gray-400">Stake</div>
+                            <div className="text-yellow-400 font-bold">{liveSignals.recommended_stake_ou.toFixed(2)} units</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
                     {match.type === 'Scheduled' ? (
@@ -2534,6 +2992,54 @@ export default function MatchDetailsPage() {
                       </div>
                     )}
                   </>
+                ) : selectedPersonality === 'value' && liveSignals ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {liveSignals.clock !== null && (
+                          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30">
+                            <span className="text-red-400 text-sm font-bold">{liveSignals.clock}'</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="px-4 py-2 rounded-lg bg-pink-500/20 border border-pink-500/30">
+                          <span className="text-pink-400 font-bold">{liveSignals.selection_hdp === 'home' ? 'Home' : 'Away'}</span>
+                        </div>
+                        {liveSignals.is_valuable_hdp && (
+                          <span className="px-3 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">VALUE BET</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className={`rounded-xl py-3 px-3 text-center ${liveSignals.selection_hdp === 'home' ? 'bg-pink-500/20 border border-pink-500/30' : 'bg-white/5'}`}>
+                        <div className="text-xs text-gray-500 uppercase mb-1">Home</div>
+                        <div className="text-xs text-gray-400">Fair: {liveSignals.fair_odds_hdp?.[0]?.toFixed(2) ?? '-'}</div>
+                        <div className="text-lg font-bold text-white">{liveSignals.market_odds_hdp?.[0]?.toFixed(2) ?? '-'}</div>
+                      </div>
+                      <div className={`rounded-xl py-3 px-3 text-center ${liveSignals.selection_hdp === 'away' ? 'bg-pink-500/20 border border-pink-500/30' : 'bg-white/5'}`}>
+                        <div className="text-xs text-gray-500 uppercase mb-1">Away</div>
+                        <div className="text-xs text-gray-400">Fair: {liveSignals.fair_odds_hdp?.[1]?.toFixed(2) ?? '-'}</div>
+                        <div className="text-lg font-bold text-white">{liveSignals.market_odds_hdp?.[1]?.toFixed(2) ?? '-'}</div>
+                      </div>
+                    </div>
+                    <div className="rounded-xl bg-pink-900/30 border border-pink-500/20 p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          {liveSignals.expected_value_hdp !== null && !isNaN(liveSignals.expected_value_hdp) && (
+                            <div><div className="text-xs text-gray-500">EV</div><div className="text-emerald-400 font-bold">+{(liveSignals.expected_value_hdp * 100).toFixed(1)}%</div></div>
+                          )}
+                          {liveSignals.score && (<div><div className="text-xs text-gray-500">Score</div><div className="text-white font-bold">{liveSignals.score}</div></div>)}
+                        </div>
+                        {liveSignals.recommended_stake_hdp !== null && !isNaN(liveSignals.recommended_stake_hdp) && (
+                          <div className="px-4 py-2 rounded-lg bg-yellow-500/20 border border-yellow-500/30">
+                            <div className="text-xs text-gray-400">Stake</div>
+                            <div className="text-yellow-400 font-bold">{liveSignals.recommended_stake_hdp.toFixed(2)} units</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
                     {match.type === 'Scheduled' ? (
@@ -2579,6 +3085,8 @@ export default function MatchDetailsPage() {
               </div>
             </div>
           </div>
+          </>
+          )}
         </div>
       </main>
 

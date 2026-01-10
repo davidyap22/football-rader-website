@@ -1898,3 +1898,112 @@ export const getRecentPredictions = async (limit: number = 20) => {
     return { data: [], error: null };
   }
 };
+
+// ============================================
+// LIVE SIGNALS V7 (Value Hunter)
+// ============================================
+
+export interface LiveSignals {
+  id?: number;
+  fixture_id: number;
+  // 1X2 Market
+  fair_odds_1x2: number[] | null; // [home, draw, away]
+  market_odds_1x2: number[] | null; // [home, draw, away]
+  is_valuable_1x2: boolean | null;
+  selection_1x2: string | null; // '1', 'X', '2'
+  expected_value_1x2: number | null;
+  recommended_stake_1x2: number | null;
+  // Over/Under Market
+  fair_odds_ou: number[] | null; // [over, under]
+  market_odds_ou: number[] | null; // [over, under]
+  is_valuable_ou: boolean | null;
+  selection_ou: string | null; // 'over', 'under'
+  expected_value_ou: number | null;
+  recommended_stake_ou: number | null;
+  // Handicap Market
+  fair_odds_hdp: number[] | null; // [home, away]
+  market_odds_hdp: number[] | null; // [home, away]
+  is_valuable_hdp: boolean | null;
+  selection_hdp: string | null; // 'home', 'away'
+  expected_value_hdp: number | null;
+  recommended_stake_hdp: number | null;
+  // Match state
+  clock: number | null;
+  score: string | null; // e.g., "1-0"
+  safeguard: string | null;
+  live_stats: Record<string, unknown> | null;
+  created_at?: string;
+}
+
+// Get live signals for a fixture (Value Hunter data)
+export const getLiveSignals = async (fixtureId: number) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('live_signals_v7')
+      .select('*')
+      .eq('fixture_id', fixtureId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      return { data: null, error };
+    }
+
+    return { data: data as LiveSignals | null, error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch live signals' } };
+  }
+};
+
+// ============================================
+// FIXTURE EVENTS (Match Events)
+// ============================================
+
+export interface FixtureEvent {
+  id: string; // UUID in database
+  fixture_id: number;
+  elapsed_time: number | null;
+  extra_time: number | null;
+  team_id: number | null;
+  player_id: number | null;
+  assist_id: number | null;
+  created_at: string | null;
+  comments: string | null;
+  assist_name: string | null;
+  event_type: string | null; // Goal, Card, Subst, Var
+  team_name: string | null;
+  event_detail: string | null; // Normal Goal, Yellow Card, Red Card, Substitution 1-4, Penalty, Own Goal, etc.
+  player_name: string | null;
+}
+
+// Get events for a fixture
+export const getFixtureEvents = async (fixtureId: number) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    console.log('[getFixtureEvents] Fetching events for fixture_id:', fixtureId);
+    const { data, error } = await supabase
+      .from('fixture_events')
+      .select('*')
+      .eq('fixture_id', fixtureId)
+      .order('elapsed_time', { ascending: false });
+
+    if (error) {
+      console.error('[getFixtureEvents] Error:', error);
+      return { data: null, error };
+    }
+
+    console.log('[getFixtureEvents] Found events:', data?.length || 0, data);
+    return { data: data as FixtureEvent[] | null, error: null };
+  } catch (err) {
+    console.error('[getFixtureEvents] Exception:', err);
+    return { data: null, error: { message: 'Failed to fetch fixture events' } };
+  }
+};
