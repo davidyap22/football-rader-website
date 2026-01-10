@@ -2098,6 +2098,9 @@ export default function MatchDetailsPage() {
                             <th className="text-left py-3 px-2 text-gray-400 font-medium">Clock</th>
                             <th className="text-left py-3 px-2 text-gray-400 font-medium">Score</th>
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Selection</th>
+                            {(selectedMarket === 'overunder' || selectedMarket === 'handicap') && (
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Line</th>
+                            )}
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Fair Odds</th>
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Market Odds</th>
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">EV</th>
@@ -2179,6 +2182,16 @@ export default function MatchDetailsPage() {
                               }
                             };
                             const isValuable = selectedMarket === 'moneyline' ? rawRecord.is_valuable_1x2 : selectedMarket === 'overunder' ? rawRecord.is_valuable_ou : rawRecord.is_valuable_hdp;
+                            const getLine = () => {
+                              if (selectedMarket === 'overunder') {
+                                const val = rawRecord.total_points_mainline;
+                                return val !== null && val !== undefined ? String(val) : '-';
+                              } else if (selectedMarket === 'handicap') {
+                                const val = rawRecord.handicap_main_line;
+                                return val !== null && val !== undefined ? String(val) : '-';
+                              }
+                              return '-';
+                            };
 
                             return (
                               <tr key={record.id || index} className={`border-b border-white/5 ${index === 0 ? 'bg-purple-500/10' : 'hover:bg-white/5'} transition-colors`}>
@@ -2191,6 +2204,9 @@ export default function MatchDetailsPage() {
                                     'bg-pink-500/20 text-pink-400'
                                   }`}>{getSelectionLabel()}</span>
                                 </td>
+                                {(selectedMarket === 'overunder' || selectedMarket === 'handicap') && (
+                                  <td className="py-3 px-2 text-center text-amber-400 font-medium">{getLine()}</td>
+                                )}
                                 <td className="py-3 px-2 text-center text-gray-400">{getFairOdds()}</td>
                                 <td className="py-3 px-2 text-center text-white font-medium">{getMarketOdds()}</td>
                                 <td className="py-3 px-2 text-center text-emerald-400 font-medium">{getEV()}</td>
