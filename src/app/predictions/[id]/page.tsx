@@ -594,7 +594,8 @@ export default function MatchDetailsPage() {
         .order('created_at', { ascending: false });
 
       if (!error && data) {
-        setLiveSignalsHistory(data.map((d: unknown) => parseLiveSignals(d as LiveSignals) as LiveSignals).filter(Boolean));
+        // Use raw data directly without parsing (database has single values, not arrays)
+        setLiveSignalsHistory(data as LiveSignals[]);
       }
     } catch (error) {
       console.error('Error fetching value hunter history:', error);
