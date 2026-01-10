@@ -597,7 +597,22 @@ export interface HandicapPrediction {
 
 export interface ProfitSummary {
   id: number;
-  fixture_id: number;
+  fixture_id: string;
+  // Individual bet fields
+  bet_time: string | null;
+  odds: number | null;
+  stake_units: number | null;
+  stake_money: number | null;
+  profit: number | null;
+  home_score: number | null;
+  away_score: number | null;
+  clock: number | null;
+  line: number | null;
+  league_name: string | null;
+  selection: string | null;
+  type: string | null;
+  status: string | null;
+  // Summary fields (same values across all records for a fixture)
   total_profit: number | null;
   total_invested: number | null;
   roi_percentage: number | null;
@@ -605,7 +620,7 @@ export interface ProfitSummary {
   profit_moneyline: number | null;
   profit_handicap: number | null;
   profit_ou: number | null;
-  created_at: string;
+  created_at: string | null;
 }
 
 export interface FootballNews {

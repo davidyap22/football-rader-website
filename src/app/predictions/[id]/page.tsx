@@ -501,6 +501,7 @@ export default function MatchDetailsPage() {
 
   // Profit Summary state
   const [profitSummary, setProfitSummary] = useState<ProfitSummary | null>(null);
+  const [profitSummaryRecords, setProfitSummaryRecords] = useState<ProfitSummary[]>([]);
   const [showProfitModal, setShowProfitModal] = useState(false);
 
   const currentPersonality = PERSONALITIES.find(p => p.id === selectedPersonality) || PERSONALITIES[0];
@@ -620,17 +621,21 @@ export default function MatchDetailsPage() {
         .from('profit_summary')
         .select('*')
         .eq('fixture_id', String(fixtureId))
-        .order('created_at', { ascending: false })
-        .limit(1);
+        .order('bet_time', { ascending: false });
 
       if (!error && data && data.length > 0) {
+        // First record has the latest summary totals
         setProfitSummary(data[0]);
+        // All records for the bet details table
+        setProfitSummaryRecords(data);
       } else {
         setProfitSummary(null);
+        setProfitSummaryRecords([]);
       }
     } catch (error) {
       console.error('Error fetching profit summary:', error);
       setProfitSummary(null);
+      setProfitSummaryRecords([]);
     }
   }, []);
 
@@ -2421,6 +2426,68 @@ export default function MatchDetailsPage() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Bet Details Table */}
+                    {profitSummaryRecords.length > 0 && (
+                      <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">Bet Details</div>
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-white/10">
+                                <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Time</th>
+                                <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Type</th>
+                                <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Selection</th>
+                                <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Line</th>
+                                <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Odds</th>
+                                <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Stake</th>
+                                <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Score</th>
+                                <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Status</th>
+                                <th className="text-right py-2 px-2 text-gray-400 font-medium text-xs">Profit</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {profitSummaryRecords.map((record, index) => (
+                                <tr key={record.id || index} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                  <td className="py-2 px-2 text-gray-300 text-xs whitespace-nowrap">
+                                    {record.bet_time ? new Date(record.bet_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '-'}
+                                  </td>
+                                  <td className="py-2 px-2">
+                                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                                      record.type === 'moneyline' ? 'bg-cyan-500/20 text-cyan-400' :
+                                      record.type === 'handicap' ? 'bg-purple-500/20 text-purple-400' :
+                                      'bg-amber-500/20 text-amber-400'
+                                    }`}>
+                                      {record.type === 'moneyline' ? '1X2' : record.type === 'handicap' ? 'HDP' : 'O/U'}
+                                    </span>
+                                  </td>
+                                  <td className="py-2 px-2 text-white text-xs font-medium">{record.selection || '-'}</td>
+                                  <td className="py-2 px-2 text-center text-amber-400 text-xs">{record.line ?? '-'}</td>
+                                  <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.odds?.toFixed(2) ?? '-'}</td>
+                                  <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.stake_units ?? '-'}</td>
+                                  <td className="py-2 px-2 text-center text-white text-xs font-medium">
+                                    {record.home_score !== null && record.away_score !== null ? `${record.home_score}-${record.away_score}` : '-'}
+                                  </td>
+                                  <td className="py-2 px-2 text-center">
+                                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                                      record.status === 'won' ? 'bg-emerald-500/20 text-emerald-400' :
+                                      record.status === 'lost' ? 'bg-red-500/20 text-red-400' :
+                                      record.status === 'push' ? 'bg-gray-500/20 text-gray-400' :
+                                      'bg-yellow-500/20 text-yellow-400'
+                                    }`}>
+                                      {record.status?.toUpperCase() || '-'}
+                                    </span>
+                                  </td>
+                                  <td className={`py-2 px-2 text-right text-xs font-bold ${(record.profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                    {(record.profit ?? 0) >= 0 ? '+' : ''}{record.profit?.toFixed(2) ?? '0.00'}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Note */}
                     <div className="text-center text-xs text-gray-500">
