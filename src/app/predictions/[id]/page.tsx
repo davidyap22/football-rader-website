@@ -2429,11 +2429,32 @@ export default function MatchDetailsPage() {
                     </div>
 
                     {/* Bet Details Table */}
-                    {profitSummaryRecords.length > 0 && (
+                    {profitSummaryRecords.length > 0 && (() => {
+                      // Helper function to derive bet type from selection
+                      const getBetType = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
+                        if (!selection) return 'ou';
+                        const sel = selection.toLowerCase();
+                        // Over/Under bets
+                        if (sel.includes('over') || sel.includes('under')) return 'ou';
+                        // Handicap bets - selection contains Home/Away with a number like -0.5, +0.25
+                        if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
+                        // Pure Home/Draw/Away without numbers = 1X2 Moneyline
+                        if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
+                        // Default fallback
+                        return 'ou';
+                      };
+
+                      const filteredRecords = profitSummaryRecords.filter(record => {
+                        if (profitTypeFilter === 'all') return true;
+                        const derivedType = getBetType(record.selection);
+                        return derivedType === profitTypeFilter;
+                      });
+
+                      return (
                       <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                         {/* Header with Filter */}
                         <div className="flex items-center justify-between mb-3">
-                          <div className="text-xs text-gray-500 uppercase tracking-wider">Bet Details</div>
+                          <div className="text-xs text-gray-500 uppercase tracking-wider">Bet Details ({filteredRecords.length})</div>
                           <div className="flex gap-1">
                             <button
                               onClick={() => setProfitTypeFilter('all')}
@@ -2484,20 +2505,20 @@ export default function MatchDetailsPage() {
                             </tr>
                           </thead>
                           <tbody>
-                            {profitSummaryRecords
-                              .filter(record => profitTypeFilter === 'all' || record.type === profitTypeFilter || (profitTypeFilter === 'ou' && record.type === 'ou'))
-                              .map((record, index) => (
+                            {filteredRecords.map((record, index) => {
+                              const derivedType = getBetType(record.selection);
+                              return (
                               <tr key={record.id || index} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                                 <td className="py-2 px-2 text-gray-300 text-xs whitespace-nowrap">
                                   {record.bet_time ? new Date(record.bet_time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '-'}
                                 </td>
                                 <td className="py-2 px-2">
                                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
-                                    record.type === 'moneyline' ? 'bg-cyan-500/20 text-cyan-400' :
-                                    record.type === 'handicap' ? 'bg-purple-500/20 text-purple-400' :
+                                    derivedType === 'moneyline' ? 'bg-cyan-500/20 text-cyan-400' :
+                                    derivedType === 'handicap' ? 'bg-purple-500/20 text-purple-400' :
                                     'bg-amber-500/20 text-amber-400'
                                   }`}>
-                                    {record.type === 'moneyline' ? '1X2' : record.type === 'handicap' ? 'HDP' : 'O/U'}
+                                    {derivedType === 'moneyline' ? '1X2' : derivedType === 'handicap' ? 'HDP' : 'O/U'}
                                   </span>
                                 </td>
                                 <td className="py-2 px-2 text-white text-xs font-medium">{record.selection || '-'}</td>
@@ -2521,11 +2542,11 @@ export default function MatchDetailsPage() {
                                   {(record.profit ?? 0) >= 0 ? '+' : ''}{record.profit?.toFixed(2) ?? '0.00'}
                                 </td>
                               </tr>
-                            ))}
+                            );})}
                           </tbody>
                         </table>
                       </div>
-                    )}
+                    );})()}
 
                     {/* Note */}
                     <div className="text-center text-xs text-gray-500">
