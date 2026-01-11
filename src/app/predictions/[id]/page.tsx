@@ -2670,6 +2670,8 @@ export default function MatchDetailsPage() {
                       const getBetType = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
                         if (!selection) return 'ou';
                         const sel = selection.toLowerCase();
+                        // Handicap bets - check for HDP in selection (e.g., HOME_HDP_-0.75, AWAY_HDP_+0.5)
+                        if (sel.includes('hdp') || sel.includes('handicap')) return 'handicap';
                         // Over/Under bets
                         if (sel.includes('over') || sel.includes('under')) return 'ou';
                         // Handicap bets - selection contains Home/Away with a number like -0.5, +0.25
