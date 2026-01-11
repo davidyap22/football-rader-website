@@ -612,6 +612,7 @@ export interface ProfitSummary {
   selection: string | null;
   type: string | null;
   status: string | null;
+  bet_style: string | null;
   // Summary fields (same values across all records for a fixture)
   total_profit: number | null;
   total_invested: number | null;

@@ -683,17 +683,114 @@ export default function PerformancePage() {
   const [profitSummary, setProfitSummary] = useState<ProfitSummary | null>(null);
   const [profitSummaryRecords, setProfitSummaryRecords] = useState<ProfitSummary[]>([]);
   const [profitTypeFilter, setProfitTypeFilter] = useState<'all' | 'moneyline' | 'handicap' | 'ou'>('all');
+  const [profitBetStyleFilter, setProfitBetStyleFilter] = useState<string>('all');
   const [loadingProfit, setLoadingProfit] = useState(false);
+
+  // Bet Style filter for past matches table
+  const [selectedBetStyle, setSelectedBetStyle] = useState<string>('all');
+  const BET_STYLES = ['Aggressive', 'Conservative', 'Balanced', 'Value Hunter', 'Safe Play'];
+
+  // Chart/Stats Bet Style filter
+  const [chartBetStyle, setChartBetStyle] = useState<string>('all');
+  const [allBetRecords, setAllBetRecords] = useState<any[]>([]);
 
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
-  // Get league logo map from matches
+  // Top 5 European leagues (always show in filter)
+  const TOP_LEAGUES = [
+    { name: 'La Liga', logo: 'https://media.api-sports.io/football/leagues/140.png' },
+    { name: 'Serie A', logo: 'https://media.api-sports.io/football/leagues/135.png' },
+    { name: 'Bundesliga', logo: 'https://media.api-sports.io/football/leagues/78.png' },
+    { name: 'Premier League', logo: 'https://media.api-sports.io/football/leagues/39.png' },
+    { name: 'Ligue 1', logo: 'https://media.api-sports.io/football/leagues/61.png' },
+  ];
+
+  // Get league logo map from matches (include top leagues)
   const leagueLogoMap = matches.reduce((acc, match) => {
     if (match.league_name && match.league_logo && !acc[match.league_name]) {
       acc[match.league_name] = match.league_logo;
     }
     return acc;
-  }, {} as Record<string, string>);
+  }, TOP_LEAGUES.reduce((acc, league) => {
+    acc[league.name] = league.logo;
+    return acc;
+  }, {} as Record<string, string>));
+
+  // Helper to derive bet type from selection
+  const getBetTypeFromSelection = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
+    if (!selection) return 'ou';
+    const sel = selection.toLowerCase();
+    if (sel.includes('over') || sel.includes('under')) return 'ou';
+    if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
+    if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
+    return 'ou';
+  };
+
+  // Compute filtered stats for chart based on chartBetStyle
+  const filteredChartStats = (() => {
+    const filtered = chartBetStyle === 'all'
+      ? allBetRecords
+      : allBetRecords.filter(r => r.bet_style === chartBetStyle);
+
+    let profitMoneyline = 0;
+    let profitHandicap = 0;
+    let profitOU = 0;
+    let totalProfit = 0;
+    let totalInvested = 0;
+
+    filtered.forEach(r => {
+      const profit = r.profit || 0;
+      const invested = r.stake_money || 0;
+      totalProfit += profit;
+      totalInvested += invested;
+
+      const betType = getBetTypeFromSelection(r.selection);
+      if (betType === 'moneyline') profitMoneyline += profit;
+      else if (betType === 'handicap') profitHandicap += profit;
+      else profitOU += profit;
+    });
+
+    const roi = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
+
+    // Calculate daily cumulative data
+    const sortedRecords = [...filtered].sort((a, b) =>
+      new Date(a.bet_time).getTime() - new Date(b.bet_time).getTime()
+    );
+
+    let cumulative = 0;
+    let cumulativeML = 0;
+    let cumulativeHDP = 0;
+    let cumulativeOU = 0;
+
+    const dailyData = sortedRecords.map(r => {
+      const profit = r.profit || 0;
+      const betType = getBetTypeFromSelection(r.selection);
+      cumulative += profit;
+      if (betType === 'moneyline') cumulativeML += profit;
+      else if (betType === 'handicap') cumulativeHDP += profit;
+      else cumulativeOU += profit;
+
+      return {
+        date: r.bet_time?.split('T')[0] || '',
+        profit: profit,
+        cumulative: cumulative,
+        cumulativeMoneyline: cumulativeML,
+        cumulativeHandicap: cumulativeHDP,
+        cumulativeOU: cumulativeOU,
+      };
+    });
+
+    return {
+      profitMoneyline,
+      profitHandicap,
+      profitOU,
+      totalProfit,
+      totalInvested,
+      roi,
+      dailyData,
+      totalBets: filtered.length,
+    };
+  })();
 
   // Check auth session
   useEffect(() => {
@@ -729,13 +826,16 @@ export default function PerformancePage() {
 
       if (matchesError) throw matchesError;
 
-      // Fetch all profit_summary data
+      // Fetch all profit_summary data with individual bet details
       const { data: profitData, error: profitError } = await supabase
         .from('profit_summary')
-        .select('fixture_id, total_profit, total_invested, roi_percentage, total_bets, profit_moneyline, profit_handicap, profit_ou, bet_time')
+        .select('fixture_id, total_profit, total_invested, roi_percentage, total_bets, profit_moneyline, profit_handicap, profit_ou, bet_time, bet_style, profit, selection, stake_money')
         .order('bet_time', { ascending: true });
 
       if (profitError) throw profitError;
+
+      // Store all individual bet records for filtering
+      setAllBetRecords(profitData || []);
 
       // Create a map of profit data by fixture_id (aggregate multiple rows per fixture)
       const profitMap = new Map<string, {
@@ -792,9 +892,11 @@ export default function PerformancePage() {
 
       setMatches(combinedMatches);
 
-      // Get unique leagues
-      const leagues = [...new Set(combinedMatches.map(m => m.league_name))];
-      setAvailableLeagues(leagues);
+      // Get unique leagues - start with top 5 leagues, then add any others from data
+      const topLeagueNames = TOP_LEAGUES.map(l => l.name);
+      const otherLeagues = [...new Set(combinedMatches.map(m => m.league_name))]
+        .filter(l => !topLeagueNames.includes(l));
+      setAvailableLeagues([...topLeagueNames, ...otherLeagues]);
 
       // Calculate overall stats (only count each fixture once)
       let totalProfit = 0;
@@ -1025,6 +1127,7 @@ export default function PerformancePage() {
   const openProfitDetails = (match: MatchSummary) => {
     setSelectedMatch(match);
     setProfitTypeFilter('all');
+    setProfitBetStyleFilter('all');
     setShowProfitModal(true);
     fetchProfitSummary(match.fixture_id);
   };
@@ -1319,6 +1422,39 @@ export default function PerformancePage() {
                 </div>
               </div>
 
+              {/* Bet Style Filter for Charts */}
+              <div className="flex flex-wrap items-center gap-2 mb-6">
+                <span className="text-sm text-gray-400 mr-2">Bet Style:</span>
+                <button
+                  onClick={() => setChartBetStyle('all')}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                    chartBetStyle === 'all'
+                      ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/50'
+                      : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                  }`}
+                >
+                  All Styles
+                </button>
+                {BET_STYLES.map((style) => (
+                  <button
+                    key={style}
+                    onClick={() => setChartBetStyle(style)}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                      chartBetStyle === style
+                        ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/50'
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                    }`}
+                  >
+                    {style === 'Aggressive' && '🔥 '}
+                    {style === 'Conservative' && '🛡️ '}
+                    {style === 'Balanced' && '⚖️ '}
+                    {style === 'Value Hunter' && '💎 '}
+                    {style === 'Safe Play' && '✅ '}
+                    {style}
+                  </button>
+                ))}
+              </div>
+
               {/* Profit by Market */}
               <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-4 md:p-6 mb-8">
                 <h2 className="text-lg font-semibold text-white mb-4">{t('profitByMarket')}</h2>
@@ -1326,32 +1462,20 @@ export default function PerformancePage() {
                 <div className="md:hidden space-y-3">
                   <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                     <span className="text-gray-400 text-sm">{t('moneyline')}</span>
-                    <span className={`text-lg font-bold ${overallStats.profitMoneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      <AnimatedCounter
-                        target={Math.abs(overallStats.profitMoneyline)}
-                        prefix={overallStats.profitMoneyline >= 0 ? '+$' : '-$'}
-                        isStarted={animationStarted}
-                      />
+                    <span className={`text-lg font-bold ${filteredChartStats.profitMoneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {filteredChartStats.profitMoneyline >= 0 ? '+$' : '-$'}{Math.abs(filteredChartStats.profitMoneyline).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                     <span className="text-gray-400 text-sm">{t('handicap')}</span>
-                    <span className={`text-lg font-bold ${overallStats.profitHandicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      <AnimatedCounter
-                        target={Math.abs(overallStats.profitHandicap)}
-                        prefix={overallStats.profitHandicap >= 0 ? '+$' : '-$'}
-                        isStarted={animationStarted}
-                      />
+                    <span className={`text-lg font-bold ${filteredChartStats.profitHandicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {filteredChartStats.profitHandicap >= 0 ? '+$' : '-$'}{Math.abs(filteredChartStats.profitHandicap).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                     <span className="text-gray-400 text-sm">{t('overUnder')}</span>
-                    <span className={`text-lg font-bold ${overallStats.profitOU >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      <AnimatedCounter
-                        target={Math.abs(overallStats.profitOU)}
-                        prefix={overallStats.profitOU >= 0 ? '+$' : '-$'}
-                        isStarted={animationStarted}
-                      />
+                    <span className={`text-lg font-bold ${filteredChartStats.profitOU >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {filteredChartStats.profitOU >= 0 ? '+$' : '-$'}{Math.abs(filteredChartStats.profitOU).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                 </div>
@@ -1359,32 +1483,20 @@ export default function PerformancePage() {
                 <div className="hidden md:grid grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-white/5 rounded-lg">
                     <p className="text-gray-400 text-sm mb-1">{t('moneyline')}</p>
-                    <p className={`text-xl font-bold ${overallStats.profitMoneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      <AnimatedCounter
-                        target={Math.abs(overallStats.profitMoneyline)}
-                        prefix={overallStats.profitMoneyline >= 0 ? '+$' : '-$'}
-                        isStarted={animationStarted}
-                      />
+                    <p className={`text-xl font-bold ${filteredChartStats.profitMoneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {filteredChartStats.profitMoneyline >= 0 ? '+$' : '-$'}{Math.abs(filteredChartStats.profitMoneyline).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                   <div className="text-center p-4 bg-white/5 rounded-lg">
                     <p className="text-gray-400 text-sm mb-1">{t('handicap')}</p>
-                    <p className={`text-xl font-bold ${overallStats.profitHandicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      <AnimatedCounter
-                        target={Math.abs(overallStats.profitHandicap)}
-                        prefix={overallStats.profitHandicap >= 0 ? '+$' : '-$'}
-                        isStarted={animationStarted}
-                      />
+                    <p className={`text-xl font-bold ${filteredChartStats.profitHandicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {filteredChartStats.profitHandicap >= 0 ? '+$' : '-$'}{Math.abs(filteredChartStats.profitHandicap).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                   <div className="text-center p-4 bg-white/5 rounded-lg">
                     <p className="text-gray-400 text-sm mb-1">{t('overUnder')}</p>
-                    <p className={`text-xl font-bold ${overallStats.profitOU >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      <AnimatedCounter
-                        target={Math.abs(overallStats.profitOU)}
-                        prefix={overallStats.profitOU >= 0 ? '+$' : '-$'}
-                        isStarted={animationStarted}
-                      />
+                    <p className={`text-xl font-bold ${filteredChartStats.profitOU >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {filteredChartStats.profitOU >= 0 ? '+$' : '-$'}{Math.abs(filteredChartStats.profitOU).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                 </div>
@@ -1397,11 +1509,11 @@ export default function PerformancePage() {
                   <div>
                     <h2 className="text-lg font-semibold text-white mb-1">{t('cumulativeProfit')}</h2>
                     <div className="flex items-baseline gap-3">
-                      <span className={`text-3xl font-bold ${overallStats.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                        {overallStats.totalProfit >= 0 ? '+' : '-'}${formatNumber(Math.abs(overallStats.totalProfit))}
+                      <span className={`text-3xl font-bold ${filteredChartStats.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {filteredChartStats.totalProfit >= 0 ? '+' : '-'}${formatNumber(Math.abs(filteredChartStats.totalProfit))}
                       </span>
-                      <span className={`text-sm font-medium px-2 py-0.5 rounded ${overallStats.roi >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
-                        {overallStats.roi >= 0 ? '+' : ''}{overallStats.roi.toFixed(1)}%
+                      <span className={`text-sm font-medium px-2 py-0.5 rounded ${filteredChartStats.roi >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
+                        {filteredChartStats.roi >= 0 ? '+' : ''}{filteredChartStats.roi.toFixed(1)}%
                       </span>
                     </div>
                   </div>
@@ -1421,11 +1533,11 @@ export default function PerformancePage() {
                   </div>
                 </div>
 
-                {dailyPerformance.length > 0 ? (
+                {filteredChartStats.dailyData.length > 0 ? (
                   <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart
-                        data={dailyPerformance}
+                        data={filteredChartStats.dailyData}
                         margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                       >
                         <defs>
@@ -1681,6 +1793,49 @@ export default function PerformancePage() {
                       </div>
                     )}
                     {league}
+                  </button>
+                ))}
+              </div>
+
+              {/* Bet Style Filter - Desktop */}
+              <div className="hidden md:flex items-center gap-3 mb-6 overflow-x-auto pb-2">
+                <button
+                  onClick={() => setSelectedBetStyle('all')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
+                    selectedBetStyle === 'all'
+                      ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/50 shadow-lg shadow-amber-500/10'
+                      : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 hover:border-white/20'
+                  }`}
+                >
+                  <div className={`w-5 h-5 rounded flex items-center justify-center ${
+                    selectedBetStyle === 'all' ? 'bg-amber-500' : 'bg-white/20'
+                  }`}>
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                  </div>
+                  All Styles
+                </button>
+                {BET_STYLES.map((style) => (
+                  <button
+                    key={style}
+                    onClick={() => setSelectedBetStyle(style)}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
+                      selectedBetStyle === style
+                        ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/50 shadow-lg shadow-amber-500/10'
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 hover:border-white/20'
+                    }`}
+                  >
+                    <div className={`w-5 h-5 rounded flex items-center justify-center ${
+                      selectedBetStyle === style ? 'bg-amber-500' : 'bg-white/20'
+                    }`}>
+                      {style === 'Aggressive' && <span className="text-[10px]">🔥</span>}
+                      {style === 'Conservative' && <span className="text-[10px]">🛡️</span>}
+                      {style === 'Balanced' && <span className="text-[10px]">⚖️</span>}
+                      {style === 'Value Hunter' && <span className="text-[10px]">💎</span>}
+                      {style === 'Safe Play' && <span className="text-[10px]">✅</span>}
+                    </div>
+                    {style}
                   </button>
                 ))}
               </div>
@@ -2197,30 +2352,64 @@ export default function PerformancePage() {
                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-500"></div>
               </div>
             ) : profitSummary ? (
+              (() => {
+                // Helper function to determine bet type
+                const getBetType = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
+                  if (!selection) return 'ou';
+                  const sel = selection.toLowerCase();
+                  if (sel.includes('over') || sel.includes('under')) return 'ou';
+                  if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
+                  if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
+                  return 'ou';
+                };
+
+                // Filter records based on type and bet style
+                const filteredRecords = profitSummaryRecords.filter(record => {
+                  if (profitTypeFilter !== 'all' && getBetType(record.selection) !== profitTypeFilter) {
+                    return false;
+                  }
+                  if (profitBetStyleFilter !== 'all' && record.bet_style !== profitBetStyleFilter) {
+                    return false;
+                  }
+                  return true;
+                });
+
+                // Calculate dynamic stats from filtered records
+                const filteredTotalProfit = filteredRecords.reduce((sum, r) => sum + (r.profit ?? 0), 0);
+                const filteredTotalInvested = filteredRecords.reduce((sum, r) => sum + (r.stake_money ?? 0), 0);
+                const filteredTotalBets = filteredRecords.length;
+                const filteredROI = filteredTotalInvested > 0 ? (filteredTotalProfit / filteredTotalInvested) * 100 : 0;
+
+                // Calculate profit by market from filtered records
+                const filteredProfitMoneyline = filteredRecords.filter(r => getBetType(r.selection) === 'moneyline').reduce((sum, r) => sum + (r.profit ?? 0), 0);
+                const filteredProfitHandicap = filteredRecords.filter(r => getBetType(r.selection) === 'handicap').reduce((sum, r) => sum + (r.profit ?? 0), 0);
+                const filteredProfitOU = filteredRecords.filter(r => getBetType(r.selection) === 'ou').reduce((sum, r) => sum + (r.profit ?? 0), 0);
+
+                return (
               <div className="relative z-10 space-y-4">
                 {/* Main Stats */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                     <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Profit</div>
-                    <div className={`text-2xl font-bold ${(profitSummary.total_profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {(profitSummary.total_profit ?? 0) >= 0 ? '+$' : '-$'}{Math.abs(profitSummary.total_profit ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    <div className={`text-2xl font-bold ${filteredTotalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {filteredTotalProfit >= 0 ? '+$' : '-$'}{Math.abs(filteredTotalProfit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                   </div>
                   <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                     <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">ROI</div>
-                    <div className={`text-2xl font-bold ${(profitSummary.roi_percentage ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {(profitSummary.roi_percentage ?? 0) >= 0 ? '+' : ''}{profitSummary.roi_percentage?.toFixed(2) ?? '0.00'}%
+                    <div className={`text-2xl font-bold ${filteredROI >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {filteredROI >= 0 ? '+' : ''}{filteredROI.toFixed(2)}%
                     </div>
                   </div>
                   <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                     <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Invested</div>
                     <div className="text-xl font-bold text-white">
-                      ${(profitSummary.total_invested ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      ${filteredTotalInvested.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                   </div>
                   <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                     <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Bets</div>
-                    <div className="text-xl font-bold text-white">{profitSummary.total_bets ?? 0}</div>
+                    <div className="text-xl font-bold text-white">{filteredTotalBets}</div>
                   </div>
                 </div>
 
@@ -2233,8 +2422,8 @@ export default function PerformancePage() {
                         <div className="w-2 h-2 rounded-full bg-cyan-500"></div>
                         <span className="text-gray-300 text-sm">1X2 Moneyline</span>
                       </div>
-                      <span className={`font-bold ${(profitSummary.profit_moneyline ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                        {(profitSummary.profit_moneyline ?? 0) >= 0 ? '+$' : '-$'}{Math.abs(profitSummary.profit_moneyline ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      <span className={`font-bold ${filteredProfitMoneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {filteredProfitMoneyline >= 0 ? '+$' : '-$'}{Math.abs(filteredProfitMoneyline).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -2242,8 +2431,8 @@ export default function PerformancePage() {
                         <div className="w-2 h-2 rounded-full bg-purple-500"></div>
                         <span className="text-gray-300 text-sm">Asian Handicap</span>
                       </div>
-                      <span className={`font-bold ${(profitSummary.profit_handicap ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                        {(profitSummary.profit_handicap ?? 0) >= 0 ? '+$' : '-$'}{Math.abs(profitSummary.profit_handicap ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      <span className={`font-bold ${filteredProfitHandicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {filteredProfitHandicap >= 0 ? '+$' : '-$'}{Math.abs(filteredProfitHandicap).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -2251,30 +2440,15 @@ export default function PerformancePage() {
                         <div className="w-2 h-2 rounded-full bg-amber-500"></div>
                         <span className="text-gray-300 text-sm">Over/Under</span>
                       </div>
-                      <span className={`font-bold ${(profitSummary.profit_ou ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                        {(profitSummary.profit_ou ?? 0) >= 0 ? '+$' : '-$'}{Math.abs(profitSummary.profit_ou ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      <span className={`font-bold ${filteredProfitOU >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {filteredProfitOU >= 0 ? '+$' : '-$'}{Math.abs(filteredProfitOU).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Bet Details Table */}
-                {profitSummaryRecords.length > 0 && (() => {
-                  const getBetType = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
-                    if (!selection) return 'ou';
-                    const sel = selection.toLowerCase();
-                    if (sel.includes('over') || sel.includes('under')) return 'ou';
-                    if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
-                    if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
-                    return 'ou';
-                  };
-
-                  const filteredRecords = profitSummaryRecords.filter(record => {
-                    if (profitTypeFilter === 'all') return true;
-                    return getBetType(record.selection) === profitTypeFilter;
-                  });
-
-                  return (
+                {profitSummaryRecords.length > 0 && (
                     <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                       <div className="flex items-center justify-between mb-3">
                         <div className="text-xs text-gray-500 uppercase tracking-wider">Bet Details ({filteredRecords.length})</div>
@@ -2296,6 +2470,38 @@ export default function PerformancePage() {
                             </button>
                           ))}
                         </div>
+                      </div>
+                      {/* Bet Style Filter */}
+                      <div className="flex flex-wrap items-center gap-1 mb-3">
+                        <span className="text-xs text-gray-500 mr-2">Style:</span>
+                        <button
+                          onClick={() => setProfitBetStyleFilter('all')}
+                          className={`px-2 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
+                            profitBetStyleFilter === 'all'
+                              ? 'bg-white/20 text-white'
+                              : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                          }`}
+                        >
+                          All
+                        </button>
+                        {BET_STYLES.map((style) => (
+                          <button
+                            key={style}
+                            onClick={() => setProfitBetStyleFilter(style)}
+                            className={`px-2 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
+                              profitBetStyleFilter === style
+                                ? 'bg-amber-500/30 text-amber-400'
+                                : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                            }`}
+                          >
+                            {style === 'Aggressive' && '🔥 '}
+                            {style === 'Conservative' && '🛡️ '}
+                            {style === 'Balanced' && '⚖️ '}
+                            {style === 'Value Hunter' && '💎 '}
+                            {style === 'Safe Play' && '✅ '}
+                            {style}
+                          </button>
+                        ))}
                       </div>
                       <table className="w-full text-sm">
                         <thead>
@@ -2334,12 +2540,14 @@ export default function PerformancePage() {
                                   {record.home_score !== null && record.away_score !== null ? `${record.home_score}-${record.away_score}` : '-'}
                                 </td>
                                 <td className="py-2 px-2 text-center">
-                                  <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                                    record.status === 'won' ? 'bg-cyan-500/20 text-cyan-400' :
-                                    record.status === 'lost' ? 'bg-red-500/20 text-red-400' :
-                                    record.status === 'push' ? 'bg-gray-500/20 text-gray-400' :
-                                    'bg-yellow-500/20 text-yellow-400'
-                                  }`}>
+                                  <span
+                                    className={`px-2 py-0.5 rounded text-[10px] font-bold inline-block ${
+                                      record.status?.toLowerCase() === 'won' || record.status?.toLowerCase() === 'win' ? 'status-win-glow' :
+                                      record.status?.toLowerCase() === 'lost' || record.status?.toLowerCase() === 'loss' ? 'status-loss-glow' :
+                                      record.status?.toLowerCase() === 'push' ? 'bg-gray-500/20 text-gray-400' :
+                                      'bg-yellow-500/20 text-yellow-400'
+                                    }`}
+                                  >
                                     {record.status?.toUpperCase() || '-'}
                                   </span>
                                 </td>
@@ -2352,11 +2560,12 @@ export default function PerformancePage() {
                         </tbody>
                       </table>
                     </div>
-                  );
-                })()}
+                  )}
 
                 <div className="text-center text-xs text-gray-500">1 Bet = $100</div>
               </div>
+                );
+              })()
             ) : (
               <div className="relative z-10 text-center py-8 text-gray-500">
                 <svg className="w-12 h-12 mx-auto mb-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
