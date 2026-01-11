@@ -720,6 +720,8 @@ export default function PerformancePage() {
   const getBetTypeFromSelection = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
     if (!selection) return 'ou';
     const sel = selection.toLowerCase();
+    // Handicap bets - check for HDP in selection (e.g., HOME_HDP_-0.75, AWAY_HDP_+0.5)
+    if (sel.includes('hdp') || sel.includes('handicap')) return 'handicap';
     if (sel.includes('over') || sel.includes('under')) return 'ou';
     if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
     if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
@@ -2413,6 +2415,8 @@ export default function PerformancePage() {
                 const getBetType = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
                   if (!selection) return 'ou';
                   const sel = selection.toLowerCase();
+                  // Handicap bets - check for HDP in selection (e.g., HOME_HDP_-0.75, AWAY_HDP_+0.5)
+                  if (sel.includes('hdp') || sel.includes('handicap')) return 'handicap';
                   if (sel.includes('over') || sel.includes('under')) return 'ou';
                   if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
                   if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
