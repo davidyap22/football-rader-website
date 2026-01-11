@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
-import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer, LiveSignals, getLiveSignals, FixtureEvent, getFixtureEvents } from '@/lib/supabase';
+import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer, LiveSignals, getLiveSignals, getLiveSignalsByBetStyle, getLiveSignalsHistoryByBetStyle, FixtureEvent, getFixtureEvents, MatchStatistics, getMatchStatistics } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
@@ -71,7 +71,12 @@ const translations: Record<string, Record<string, string>> = {
     matchEvents: "Match Events", eventsTimeline: "Goals, Cards & Substitutions",
     noEvents: "No events yet", noEventsDesc: "Events will appear here once the match starts.",
     goal: "Goal", yellowCard: "Yellow Card", redCard: "Red Card", substitution: "Substitution", penalty: "Penalty", ownGoal: "Own Goal", var: "VAR", missedPenalty: "Missed Penalty",
-    tabOdds: "Odds & AI", tabComparison: "Comparison", tabLineups: "Lineups", tabEvents: "Events",
+    tabOdds: "Odds & AI", tabComparison: "Comparison", tabLineups: "Lineups", tabEvents: "Events", tabStats: "Live Stats",
+    liveStatistics: "Live Statistics", statsDescription: "Ball Possession, Shots, Corners & More",
+    noStats: "No statistics yet", noStatsDesc: "Statistics will appear here once the match starts.",
+    possession: "Ball Possession", totalShots: "Total Shots", shotsOnGoal: "Shots on Target", shotsOffGoal: "Shots off Target",
+    corners: "Corner Kicks", fouls: "Fouls", offsides: "Offsides", yellowCards: "Yellow Cards", redCards: "Red Cards",
+    saves: "Goalkeeper Saves", passes: "Total Passes", passAccuracy: "Pass Accuracy", expectedGoals: "Expected Goals (xG)",
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA", community: "Comunidad", news: "Noticias", solution: "Solución", pricing: "Precios",
@@ -93,7 +98,12 @@ const translations: Record<string, Record<string, string>> = {
     matchEvents: "Eventos del Partido", eventsTimeline: "Goles, Tarjetas y Sustituciones",
     noEvents: "Sin eventos aún", noEventsDesc: "Los eventos aparecerán aquí cuando comience el partido.",
     goal: "Gol", yellowCard: "Tarjeta Amarilla", redCard: "Tarjeta Roja", substitution: "Sustitución", penalty: "Penal", ownGoal: "Autogol", var: "VAR", missedPenalty: "Penal Fallado",
-    tabOdds: "Cuotas & IA", tabComparison: "Comparación", tabLineups: "Alineaciones", tabEvents: "Eventos",
+    tabOdds: "Cuotas & IA", tabComparison: "Comparación", tabLineups: "Alineaciones", tabEvents: "Eventos", tabStats: "Estadísticas",
+    liveStatistics: "Estadísticas en Vivo", statsDescription: "Posesión, Tiros, Córners y Más",
+    noStats: "Sin estadísticas aún", noStatsDesc: "Las estadísticas aparecerán aquí cuando comience el partido.",
+    possession: "Posesión", totalShots: "Tiros Totales", shotsOnGoal: "Tiros a Puerta", shotsOffGoal: "Tiros Fuera",
+    corners: "Córners", fouls: "Faltas", offsides: "Fueras de Juego", yellowCards: "Amarillas", redCards: "Rojas",
+    saves: "Paradas", passes: "Pases Totales", passAccuracy: "Precisión de Pases", expectedGoals: "Goles Esperados (xG)",
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho IA", community: "Comunidade", news: "Notícias", solution: "Solução", pricing: "Preços",
@@ -115,7 +125,12 @@ const translations: Record<string, Record<string, string>> = {
     matchEvents: "Eventos da Partida", eventsTimeline: "Gols, Cartões e Substituições",
     noEvents: "Sem eventos ainda", noEventsDesc: "Os eventos aparecerão aqui quando a partida começar.",
     goal: "Gol", yellowCard: "Cartão Amarelo", redCard: "Cartão Vermelho", substitution: "Substituição", penalty: "Pênalti", ownGoal: "Gol Contra", var: "VAR", missedPenalty: "Pênalti Perdido",
-    tabOdds: "Odds & IA", tabComparison: "Comparação", tabLineups: "Escalações", tabEvents: "Eventos",
+    tabOdds: "Odds & IA", tabComparison: "Comparação", tabLineups: "Escalações", tabEvents: "Eventos", tabStats: "Estatísticas",
+    liveStatistics: "Estatísticas ao Vivo", statsDescription: "Posse, Chutes, Escanteios e Mais",
+    noStats: "Sem estatísticas ainda", noStatsDesc: "As estatísticas aparecerão aqui quando a partida começar.",
+    possession: "Posse de Bola", totalShots: "Chutes Totais", shotsOnGoal: "Chutes no Gol", shotsOffGoal: "Chutes Fora",
+    corners: "Escanteios", fouls: "Faltas", offsides: "Impedimentos", yellowCards: "Amarelos", redCards: "Vermelhos",
+    saves: "Defesas", passes: "Passes Totais", passAccuracy: "Precisão de Passes", expectedGoals: "Gols Esperados (xG)",
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung", community: "Community", news: "Nachrichten", solution: "Lösung", pricing: "Preise",
@@ -137,7 +152,12 @@ const translations: Record<string, Record<string, string>> = {
     matchEvents: "Spielereignisse", eventsTimeline: "Tore, Karten & Auswechslungen",
     noEvents: "Noch keine Ereignisse", noEventsDesc: "Ereignisse erscheinen hier, sobald das Spiel beginnt.",
     goal: "Tor", yellowCard: "Gelbe Karte", redCard: "Rote Karte", substitution: "Auswechslung", penalty: "Elfmeter", ownGoal: "Eigentor", var: "VAR", missedPenalty: "Verschossener Elfmeter",
-    tabOdds: "Quoten & KI", tabComparison: "Vergleich", tabLineups: "Aufstellungen", tabEvents: "Ereignisse",
+    tabOdds: "Quoten & KI", tabComparison: "Vergleich", tabLineups: "Aufstellungen", tabEvents: "Ereignisse", tabStats: "Statistiken",
+    liveStatistics: "Live-Statistiken", statsDescription: "Ballbesitz, Schüsse, Ecken & Mehr",
+    noStats: "Noch keine Statistiken", noStatsDesc: "Statistiken erscheinen hier, sobald das Spiel beginnt.",
+    possession: "Ballbesitz", totalShots: "Schüsse Gesamt", shotsOnGoal: "Schüsse aufs Tor", shotsOffGoal: "Schüsse Vorbei",
+    corners: "Eckstöße", fouls: "Fouls", offsides: "Abseitspositionen", yellowCards: "Gelbe Karten", redCards: "Rote Karten",
+    saves: "Paraden", passes: "Pässe Gesamt", passAccuracy: "Passgenauigkeit", expectedGoals: "Erwartete Tore (xG)",
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance IA", community: "Communauté", news: "Actualités", solution: "Solution", pricing: "Tarifs",
@@ -159,7 +179,12 @@ const translations: Record<string, Record<string, string>> = {
     matchEvents: "Événements du Match", eventsTimeline: "Buts, Cartons & Remplacements",
     noEvents: "Pas d'événements encore", noEventsDesc: "Les événements apparaîtront ici une fois le match commencé.",
     goal: "But", yellowCard: "Carton Jaune", redCard: "Carton Rouge", substitution: "Remplacement", penalty: "Pénalty", ownGoal: "But Contre Son Camp", var: "VAR", missedPenalty: "Pénalty Manqué",
-    tabOdds: "Cotes & IA", tabComparison: "Comparaison", tabLineups: "Compositions", tabEvents: "Événements",
+    tabOdds: "Cotes & IA", tabComparison: "Comparaison", tabLineups: "Compositions", tabEvents: "Événements", tabStats: "Statistiques",
+    liveStatistics: "Statistiques en Direct", statsDescription: "Possession, Tirs, Corners et Plus",
+    noStats: "Pas encore de statistiques", noStatsDesc: "Les statistiques apparaîtront ici une fois le match commencé.",
+    possession: "Possession", totalShots: "Tirs Totaux", shotsOnGoal: "Tirs Cadrés", shotsOffGoal: "Tirs Non Cadrés",
+    corners: "Corners", fouls: "Fautes", offsides: "Hors-jeu", yellowCards: "Cartons Jaunes", redCards: "Cartons Rouges",
+    saves: "Arrêts", passes: "Passes Totales", passAccuracy: "Précision des Passes", expectedGoals: "Buts Attendus (xG)",
   },
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AIパフォーマンス", community: "コミュニティ", news: "ニュース", solution: "ソリューション", pricing: "料金",
@@ -181,7 +206,12 @@ const translations: Record<string, Record<string, string>> = {
     matchEvents: "試合イベント", eventsTimeline: "ゴール、カード、交代",
     noEvents: "イベントはまだありません", noEventsDesc: "試合が始まるとイベントがここに表示されます。",
     goal: "ゴール", yellowCard: "イエローカード", redCard: "レッドカード", substitution: "交代", penalty: "ペナルティ", ownGoal: "オウンゴール", var: "VAR", missedPenalty: "PK失敗",
-    tabOdds: "オッズ & AI", tabComparison: "比較", tabLineups: "スタメン", tabEvents: "イベント",
+    tabOdds: "オッズ & AI", tabComparison: "比較", tabLineups: "スタメン", tabEvents: "イベント", tabStats: "統計",
+    liveStatistics: "ライブ統計", statsDescription: "ボール支配率、シュート、コーナー等",
+    noStats: "統計はまだありません", noStatsDesc: "試合が始まると統計がここに表示されます。",
+    possession: "ボール支配率", totalShots: "総シュート数", shotsOnGoal: "枠内シュート", shotsOffGoal: "枠外シュート",
+    corners: "コーナーキック", fouls: "ファウル", offsides: "オフサイド", yellowCards: "イエローカード", redCards: "レッドカード",
+    saves: "GKセーブ", passes: "パス総数", passAccuracy: "パス成功率", expectedGoals: "期待ゴール (xG)",
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성능", community: "커뮤니티", news: "뉴스", solution: "솔루션", pricing: "가격",
@@ -203,7 +233,12 @@ const translations: Record<string, Record<string, string>> = {
     matchEvents: "경기 이벤트", eventsTimeline: "골, 카드 & 교체",
     noEvents: "아직 이벤트 없음", noEventsDesc: "경기가 시작되면 여기에 이벤트가 표시됩니다.",
     goal: "골", yellowCard: "옐로 카드", redCard: "레드 카드", substitution: "교체", penalty: "페널티", ownGoal: "자책골", var: "VAR", missedPenalty: "페널티 실패",
-    tabOdds: "배당률 & AI", tabComparison: "비교", tabLineups: "라인업", tabEvents: "이벤트",
+    tabOdds: "배당률 & AI", tabComparison: "비교", tabLineups: "라인업", tabEvents: "이벤트", tabStats: "통계",
+    liveStatistics: "라이브 통계", statsDescription: "점유율, 슈팅, 코너킥 등",
+    noStats: "아직 통계가 없습니다", noStatsDesc: "경기가 시작되면 통계가 표시됩니다.",
+    possession: "점유율", totalShots: "총 슈팅", shotsOnGoal: "유효 슈팅", shotsOffGoal: "슈팅 빗나감",
+    corners: "코너킥", fouls: "파울", offsides: "오프사이드", yellowCards: "옐로카드", redCards: "레드카드",
+    saves: "선방", passes: "총 패스", passAccuracy: "패스 성공률", expectedGoals: "기대 골 (xG)",
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现", community: "社区", news: "新闻", solution: "解决方案", pricing: "价格",
@@ -225,7 +260,12 @@ const translations: Record<string, Record<string, string>> = {
     matchEvents: "比赛事件", eventsTimeline: "进球、红黄牌与换人",
     noEvents: "暂无事件", noEventsDesc: "比赛开始后事件将在此显示。",
     goal: "进球", yellowCard: "黄牌", redCard: "红牌", substitution: "换人", penalty: "点球", ownGoal: "乌龙球", var: "VAR", missedPenalty: "点球未进",
-    tabOdds: "赔率 & AI", tabComparison: "对比", tabLineups: "阵容", tabEvents: "事件",
+    tabOdds: "赔率 & AI", tabComparison: "对比", tabLineups: "阵容", tabEvents: "事件", tabStats: "统计",
+    liveStatistics: "实时统计", statsDescription: "控球率、射门、角球等",
+    noStats: "暂无统计", noStatsDesc: "比赛开始后统计数据将在此显示。",
+    possession: "控球率", totalShots: "射门总数", shotsOnGoal: "射正", shotsOffGoal: "射偏",
+    corners: "角球", fouls: "犯规", offsides: "越位", yellowCards: "黄牌", redCards: "红牌",
+    saves: "扑救", passes: "传球总数", passAccuracy: "传球成功率", expectedGoals: "预期进球 (xG)",
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現", community: "社區", news: "新聞", solution: "解決方案", pricing: "價格",
@@ -247,7 +287,12 @@ const translations: Record<string, Record<string, string>> = {
     matchEvents: "比賽事件", eventsTimeline: "進球、紅黃牌與換人",
     noEvents: "暫無事件", noEventsDesc: "比賽開始後事件將在此顯示。",
     goal: "進球", yellowCard: "黃牌", redCard: "紅牌", substitution: "換人", penalty: "點球", ownGoal: "烏龍球", var: "VAR", missedPenalty: "點球未進",
-    tabOdds: "賠率 & AI", tabComparison: "對比", tabLineups: "陣容", tabEvents: "事件",
+    tabOdds: "賠率 & AI", tabComparison: "對比", tabLineups: "陣容", tabEvents: "事件", tabStats: "統計",
+    liveStatistics: "即時統計", statsDescription: "控球率、射門、角球等",
+    noStats: "暫無統計", noStatsDesc: "比賽開始後統計數據將在此顯示。",
+    possession: "控球率", totalShots: "射門總數", shotsOnGoal: "射正", shotsOffGoal: "射偏",
+    corners: "角球", fouls: "犯規", offsides: "越位", yellowCards: "黃牌", redCards: "紅牌",
+    saves: "撲救", passes: "傳球總數", passAccuracy: "傳球成功率", expectedGoals: "預期進球 (xG)",
   },
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI", community: "Komunitas", news: "Berita", solution: "Solusi", pricing: "Harga",
@@ -269,7 +314,12 @@ const translations: Record<string, Record<string, string>> = {
     matchEvents: "Peristiwa Pertandingan", eventsTimeline: "Gol, Kartu & Pergantian Pemain",
     noEvents: "Belum ada peristiwa", noEventsDesc: "Peristiwa akan muncul di sini saat pertandingan dimulai.",
     goal: "Gol", yellowCard: "Kartu Kuning", redCard: "Kartu Merah", substitution: "Pergantian", penalty: "Penalti", ownGoal: "Gol Bunuh Diri", var: "VAR", missedPenalty: "Penalti Gagal",
-    tabOdds: "Odds & AI", tabComparison: "Perbandingan", tabLineups: "Susunan", tabEvents: "Peristiwa",
+    tabOdds: "Odds & AI", tabComparison: "Perbandingan", tabLineups: "Susunan", tabEvents: "Peristiwa", tabStats: "Statistik",
+    liveStatistics: "Statistik Langsung", statsDescription: "Penguasaan Bola, Tembakan, Tendangan Sudut & Lainnya",
+    noStats: "Belum ada statistik", noStatsDesc: "Statistik akan muncul di sini saat pertandingan dimulai.",
+    possession: "Penguasaan Bola", totalShots: "Total Tembakan", shotsOnGoal: "Tembakan Tepat Sasaran", shotsOffGoal: "Tembakan Meleset",
+    corners: "Tendangan Sudut", fouls: "Pelanggaran", offsides: "Offside", yellowCards: "Kartu Kuning", redCards: "Kartu Merah",
+    saves: "Penyelamatan", passes: "Total Umpan", passAccuracy: "Akurasi Umpan", expectedGoals: "Gol yang Diharapkan (xG)",
   },
 };
 
@@ -463,8 +513,11 @@ export default function MatchDetailsPage() {
   // Events data
   const [events, setEvents] = useState<FixtureEvent[] | null>(null);
 
-  // Section tab filter: 'odds' | 'comparison' | 'lineups' | 'events'
-  const [selectedSection, setSelectedSection] = useState<'odds' | 'comparison' | 'lineups' | 'events'>('odds');
+  // Match statistics data
+  const [matchStats, setMatchStats] = useState<MatchStatistics[] | null>(null);
+
+  // Section tab filter: 'odds' | 'comparison' | 'lineups' | 'events' | 'stats'
+  const [selectedSection, setSelectedSection] = useState<'odds' | 'comparison' | 'lineups' | 'events' | 'stats'>('odds');
 
   // Translation function
   const t = (key: string): string => {
@@ -488,7 +541,7 @@ export default function MatchDetailsPage() {
   const previousOddsRef = useRef<OddsHistory | null>(null);
 
   // Signal History state
-  const [showSignalHistory, setShowSignalHistory] = useState<'moneyline' | 'overunder' | 'handicap' | 'value' | null>(null);
+  const [showSignalHistory, setShowSignalHistory] = useState<'moneyline' | 'overunder' | 'handicap' | 'value' | 'conservative' | null>(null);
   const [signalHistory, setSignalHistory] = useState<{
     moneyline: Moneyline1x2Prediction[];
     overunder: OverUnderPrediction[];
@@ -604,10 +657,25 @@ export default function MatchDetailsPage() {
     }
   }, [match?.fixture_id]);
 
+  // Fetch Conservative signal history
+  const fetchConservativeHistory = useCallback(async () => {
+    if (!match?.fixture_id) return;
+    try {
+      const { data, error } = await getLiveSignalsHistoryByBetStyle(match.fixture_id, 'Conservative');
+      if (!error && data) {
+        setLiveSignalsHistory(data);
+      }
+    } catch (error) {
+      console.error('Error fetching conservative history:', error);
+    }
+  }, [match?.fixture_id]);
+
   // Open signal history modal
-  const openSignalHistory = (type: 'moneyline' | 'overunder' | 'handicap' | 'value') => {
+  const openSignalHistory = (type: 'moneyline' | 'overunder' | 'handicap' | 'value' | 'conservative') => {
     if (type === 'value') {
       fetchValueHunterHistory();
+    } else if (type === 'conservative') {
+      fetchConservativeHistory();
     } else {
       fetchSignalHistory(type);
     }
@@ -615,14 +683,20 @@ export default function MatchDetailsPage() {
   };
 
   // Fetch profit summary for finished matches
-  const fetchProfitSummary = useCallback(async (fixtureId: number) => {
+  const fetchProfitSummary = useCallback(async (fixtureId: number, betStyle?: string) => {
     try {
       // fixture_id in profit_summary table is stored as string
-      const { data, error } = await supabase
+      let query = supabase
         .from('profit_summary')
         .select('*')
-        .eq('fixture_id', String(fixtureId))
-        .order('bet_time', { ascending: false });
+        .eq('fixture_id', String(fixtureId));
+
+      // Filter by bet_style if provided (for Conservative)
+      if (betStyle) {
+        query = query.eq('bet_style', betStyle);
+      }
+
+      const { data, error } = await query.order('bet_time', { ascending: false });
 
       if (!error && data && data.length > 0) {
         // First record has the latest summary totals
@@ -643,7 +717,16 @@ export default function MatchDetailsPage() {
   // Open profit summary modal
   const openProfitSummary = () => {
     if (match?.fixture_id) {
-      fetchProfitSummary(match.fixture_id);
+      // For specific personalities, filter by bet_style
+      let betStyle: string | undefined;
+      if (selectedPersonality === 'aggressive') {
+        betStyle = 'Aggressive';
+      } else if (selectedPersonality === 'conservative') {
+        betStyle = 'Conservative';
+      } else if (selectedPersonality === 'value') {
+        betStyle = 'Value Hunter';
+      }
+      fetchProfitSummary(match.fixture_id, betStyle);
       setShowProfitModal(true);
     }
   };
@@ -665,6 +748,19 @@ export default function MatchDetailsPage() {
           setLiveSignalsLoading(false);
         }).catch((err) => {
           console.error('[Value Hunter] Error:', err);
+          setLiveSignalsLoading(false);
+        });
+      }
+
+      // Fetch live signals for Conservative personality
+      if (selectedPersonality === 'conservative') {
+        setLiveSignalsLoading(true);
+        getLiveSignalsByBetStyle(match.fixture_id, 'Conservative').then(({ data, error }) => {
+          console.log('[Conservative] Response:', { data, error });
+          setLiveSignals(data);
+          setLiveSignalsLoading(false);
+        }).catch((err) => {
+          console.error('[Conservative] Error:', err);
           setLiveSignalsLoading(false);
         });
       }
@@ -755,9 +851,9 @@ export default function MatchDetailsPage() {
     const matchData = await fetchMatch(isRefresh);
     console.log('[fetchAllData] matchData:', matchData?.id, 'fixture_id:', matchData?.fixture_id);
     if (matchData?.fixture_id) {
-      // Fetch odds, AI predictions, match prediction, lineups, and events in parallel
+      // Fetch odds, AI predictions, match prediction, lineups, events, and statistics in parallel
       const personality = PERSONALITIES.find(p => p.id === selectedPersonality);
-      const [, , predictionResult, lineupsResult, eventsResult] = await Promise.all([
+      const [, , predictionResult, lineupsResult, eventsResult, statsResult] = await Promise.all([
         fetchOdds(matchData.fixture_id, matchData.type === 'In Play'),
         personality ? fetchAIPredictions(matchData.fixture_id, personality.aiModel) : Promise.resolve(),
         getMatchPrediction(matchData.fixture_id),
@@ -765,6 +861,8 @@ export default function MatchDetailsPage() {
         !isRefresh ? getFixtureLineups(matchData.fixture_id) : Promise.resolve({ data: null }),
         // Fetch events (always fetch to show live updates)
         getFixtureEvents(matchData.fixture_id),
+        // Fetch match statistics
+        getMatchStatistics(matchData.fixture_id),
       ]);
       if (predictionResult?.data) {
         setMatchPrediction(predictionResult.data);
@@ -777,6 +875,9 @@ export default function MatchDetailsPage() {
         setEvents(eventsResult.data);
       } else {
         console.log('[page] No events data, eventsResult:', eventsResult);
+      }
+      if (statsResult?.data) {
+        setMatchStats(statsResult.data);
       }
     }
   }, [fetchMatch, fetchOdds, fetchAIPredictions, selectedPersonality]);
@@ -1183,6 +1284,22 @@ export default function MatchDetailsPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
               {t('tabEvents')}
+              {match.type === 'In Play' && (
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              )}
+            </button>
+            <button
+              onClick={() => setSelectedSection('stats')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+                selectedSection === 'stats'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              {t('tabStats')}
               {match.type === 'In Play' && (
                 <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
               )}
@@ -1849,6 +1966,125 @@ export default function MatchDetailsPage() {
           </div>
           )}
 
+          {/* Live Statistics Section */}
+          {selectedSection === 'stats' && (
+          <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-white/5 p-4 sm:p-5 mb-6">
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-white">{t('liveStatistics')}</h2>
+                  {match.type === 'In Play' && (
+                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/20 border border-red-500/30">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                      <span className="text-xs font-medium text-red-400">LIVE</span>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500">{t('statsDescription')}</p>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div>
+              {(!matchStats || matchStats.length < 2) ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="w-16 h-16 rounded-full bg-gray-800/50 flex items-center justify-center mb-4">
+                    <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-white font-medium mb-2">{t('noStats')}</h3>
+                  <p className="text-gray-500 text-sm max-w-md">
+                    {t('noStatsDesc')}
+                  </p>
+                </div>
+              ) : (() => {
+                // Find home and away team stats
+                const homeStats = matchStats.find(s => s.team_name === match.home_name) || matchStats[0];
+                const awayStats = matchStats.find(s => s.team_name === match.away_name) || matchStats[1];
+
+                // Helper to render a stat bar
+                const StatBar = ({ label, homeValue, awayValue, isPercentage = false }: { label: string; homeValue: number | string; awayValue: number | string; isPercentage?: boolean }) => {
+                  const homeNum = typeof homeValue === 'string' ? parseFloat(homeValue) || 0 : homeValue;
+                  const awayNum = typeof awayValue === 'string' ? parseFloat(awayValue) || 0 : awayValue;
+                  const total = homeNum + awayNum;
+                  const homePercent = total > 0 ? (homeNum / total) * 100 : 50;
+                  const awayPercent = total > 0 ? (awayNum / total) * 100 : 50;
+
+                  return (
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-1.5">
+                        <span className="text-sm font-bold text-blue-400">{isPercentage ? homeValue : homeNum}</span>
+                        <span className="text-xs text-gray-400 font-medium">{label}</span>
+                        <span className="text-sm font-bold text-green-400">{isPercentage ? awayValue : awayNum}</span>
+                      </div>
+                      <div className="flex h-2 rounded-full overflow-hidden bg-gray-800/50">
+                        <div
+                          className="bg-blue-500 transition-all duration-500"
+                          style={{ width: `${homePercent}%` }}
+                        />
+                        <div
+                          className="bg-green-500 transition-all duration-500"
+                          style={{ width: `${awayPercent}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                };
+
+                return (
+                  <div>
+                    {/* Team Headers */}
+                    <div className="flex justify-between items-center mb-6 pb-4 border-b border-white/5">
+                      <div className="flex items-center gap-3">
+                        {match.home_logo && (
+                          <div className="w-10 h-10 rounded-full bg-white/10 p-1.5 flex items-center justify-center">
+                            <img src={match.home_logo} alt={match.home_name} className="w-full h-full object-contain" />
+                          </div>
+                        )}
+                        <span className="text-sm font-bold text-blue-400">{match.home_name}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-bold text-green-400">{match.away_name}</span>
+                        {match.away_logo && (
+                          <div className="w-10 h-10 rounded-full bg-white/10 p-1.5 flex items-center justify-center">
+                            <img src={match.away_logo} alt={match.away_name} className="w-full h-full object-contain" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Statistics Bars */}
+                    <div className="space-y-1">
+                      <StatBar label={t('possession')} homeValue={homeStats.ball_possession || '0%'} awayValue={awayStats.ball_possession || '0%'} isPercentage />
+                      <StatBar label={t('totalShots')} homeValue={homeStats.total_shots} awayValue={awayStats.total_shots} />
+                      <StatBar label={t('shotsOnGoal')} homeValue={homeStats.shots_on_goal} awayValue={awayStats.shots_on_goal} />
+                      <StatBar label={t('shotsOffGoal')} homeValue={homeStats.shots_off_goal} awayValue={awayStats.shots_off_goal} />
+                      <StatBar label={t('corners')} homeValue={homeStats.corner_kicks} awayValue={awayStats.corner_kicks} />
+                      <StatBar label={t('fouls')} homeValue={homeStats.fouls} awayValue={awayStats.fouls} />
+                      <StatBar label={t('offsides')} homeValue={homeStats.offsides} awayValue={awayStats.offsides} />
+                      <StatBar label={t('yellowCards')} homeValue={homeStats.yellow_cards} awayValue={awayStats.yellow_cards} />
+                      <StatBar label={t('redCards')} homeValue={homeStats.red_cards} awayValue={awayStats.red_cards} />
+                      <StatBar label={t('saves')} homeValue={homeStats.goalkeeper_saves} awayValue={awayStats.goalkeeper_saves} />
+                      <StatBar label={t('passes')} homeValue={homeStats.total_passes} awayValue={awayStats.total_passes} />
+                      <StatBar label={t('passAccuracy')} homeValue={homeStats.passes_pct || '0%'} awayValue={awayStats.passes_pct || '0%'} isPercentage />
+                      {(homeStats.expected_goals !== null || awayStats.expected_goals !== null) && (
+                        <StatBar label={t('expectedGoals')} homeValue={homeStats.expected_goals?.toFixed(2) || '0.00'} awayValue={awayStats.expected_goals?.toFixed(2) || '0.00'} />
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+          )}
+
           {/* Odds Section */}
           {selectedSection === 'odds' && (
           <>
@@ -2084,7 +2320,7 @@ export default function MatchDetailsPage() {
 
                 <div className="flex items-center justify-between mb-4 relative z-10">
                   <h3 className="text-xl font-bold text-white">
-                    Signal History - {showSignalHistory === 'moneyline' ? '1X2' : showSignalHistory === 'overunder' ? 'Over/Under' : showSignalHistory === 'handicap' ? 'Handicap' : `💎 Value Hunter (${selectedMarket === 'moneyline' ? '1X2' : selectedMarket === 'overunder' ? 'O/U' : 'HDP'})`}
+                    Signal History - {showSignalHistory === 'moneyline' ? '1X2' : showSignalHistory === 'overunder' ? 'Over/Under' : showSignalHistory === 'handicap' ? 'Handicap' : showSignalHistory === 'conservative' ? `🛡️ Conservative (${selectedMarket === 'moneyline' ? '1X2' : selectedMarket === 'overunder' ? 'O/U' : 'HDP'})` : `💎 Value Hunter (${selectedMarket === 'moneyline' ? '1X2' : selectedMarket === 'overunder' ? 'O/U' : 'HDP'})`}
                   </h3>
                   <button
                     onClick={() => setShowSignalHistory(null)}
@@ -2097,7 +2333,7 @@ export default function MatchDetailsPage() {
                 </div>
 
                 <div className="overflow-auto flex-1 relative z-10">
-                  {showSignalHistory === 'value' ? (
+                  {(showSignalHistory === 'value' || showSignalHistory === 'conservative') ? (
                     liveSignalsHistory.length > 0 ? (
                       <table className="w-full text-sm border-collapse">
                         <thead className="sticky top-0 bg-[#0d1117]">
@@ -2345,7 +2581,7 @@ export default function MatchDetailsPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold text-white">Profit Summary</h3>
+                    <h3 className="text-xl font-bold text-white">{selectedPersonality === 'aggressive' ? 'Aggressive Profit Summary' : selectedPersonality === 'conservative' ? 'Conservative Profit Summary' : selectedPersonality === 'value' ? 'Value Hunter Profit Summary' : 'Profit Summary'}</h3>
                   </div>
                   <button
                     onClick={() => setShowProfitModal(false)}
@@ -2621,7 +2857,7 @@ export default function MatchDetailsPage() {
                   </button>
                 )}
                 <button
-                  onClick={() => openSignalHistory(selectedPersonality === 'value' ? 'value' : selectedMarket)}
+                  onClick={() => openSignalHistory(selectedPersonality === 'value' ? 'value' : selectedPersonality === 'conservative' ? 'conservative' : selectedMarket)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-400 text-xs font-medium hover:from-amber-500/30 hover:to-orange-500/30 transition-all cursor-pointer"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2813,7 +3049,7 @@ export default function MatchDetailsPage() {
                       </div>
                     )}
                   </>
-                ) : selectedPersonality === 'value' && liveSignals ? (
+                ) : (selectedPersonality === 'value' || selectedPersonality === 'conservative') && liveSignals ? (
                   (() => {
                     // Cast to raw record to access database values directly
                     const raw = liveSignals as unknown as Record<string, unknown>;
@@ -2830,9 +3066,10 @@ export default function MatchDetailsPage() {
                     const isValuable = raw.is_valuable_1x2;
                     const score = raw.score as string | null;
                     const clock = raw.clock;
+                    const isConservative = selectedPersonality === 'conservative';
 
                     return (
-                      <div className="rounded-xl bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-500/20 overflow-hidden">
+                      <div className={`rounded-xl bg-gradient-to-br ${isConservative ? 'from-blue-900/40 to-cyan-900/40 border-blue-500/20' : 'from-purple-900/40 to-indigo-900/40 border-purple-500/20'} border overflow-hidden`}>
                         {/* Header with Clock and Status */}
                         <div className="flex items-center justify-between px-4 py-3 bg-black/20">
                           <div className="flex items-center gap-3">
@@ -2847,8 +3084,8 @@ export default function MatchDetailsPage() {
                             )}
                           </div>
                           {Boolean(isValuable) && (
-                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40">
-                              <span className="text-emerald-400 text-xs font-bold">💎 VALUE BET</span>
+                            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full ${isConservative ? 'bg-blue-500/20 border-blue-500/40' : 'bg-emerald-500/20 border-emerald-500/40'} border`}>
+                              <span className={`${isConservative ? 'text-blue-400' : 'text-emerald-400'} text-xs font-bold`}>{isConservative ? '🛡️ SAFE BET' : '💎 VALUE BET'}</span>
                             </div>
                           )}
                         </div>
@@ -2878,7 +3115,7 @@ export default function MatchDetailsPage() {
                           <div className="grid grid-cols-2 gap-3">
                             <div className="bg-black/20 rounded-lg p-3">
                               <div className="text-[10px] text-gray-500 uppercase tracking-wider">Expected Value</div>
-                              <div className="text-lg font-bold text-emerald-400">{evDisplay}</div>
+                              <div className={`text-lg font-bold ${isConservative ? 'text-blue-400' : 'text-emerald-400'}`}>{evDisplay}</div>
                             </div>
                             <div className="bg-black/20 rounded-lg p-3">
                               <div className="text-[10px] text-gray-500 uppercase tracking-wider">Stake</div>
@@ -3043,7 +3280,7 @@ export default function MatchDetailsPage() {
                       </div>
                     )}
                   </>
-                ) : selectedPersonality === 'value' && liveSignals ? (
+                ) : (selectedPersonality === 'value' || selectedPersonality === 'conservative') && liveSignals ? (
                   (() => {
                     // Cast to raw record to access database values directly
                     const raw = liveSignals as unknown as Record<string, unknown>;
@@ -3063,9 +3300,10 @@ export default function MatchDetailsPage() {
                     const isValuable = raw.is_valuable_ou;
                     const score = raw.score as string | null;
                     const clock = raw.clock;
+                    const isConservative = selectedPersonality === 'conservative';
 
                     return (
-                      <div className="rounded-xl bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border border-cyan-500/20 overflow-hidden">
+                      <div className={`rounded-xl bg-gradient-to-br ${isConservative ? 'from-blue-900/40 to-cyan-900/40 border-blue-500/20' : 'from-cyan-900/40 to-blue-900/40 border-cyan-500/20'} border overflow-hidden`}>
                         {/* Header with Clock and Status */}
                         <div className="flex items-center justify-between px-4 py-3 bg-black/20">
                           <div className="flex items-center gap-3">
@@ -3080,8 +3318,8 @@ export default function MatchDetailsPage() {
                             )}
                           </div>
                           {Boolean(isValuable) && (
-                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40">
-                              <span className="text-emerald-400 text-xs font-bold">💎 VALUE BET</span>
+                            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full ${isConservative ? 'bg-blue-500/20 border-blue-500/40' : 'bg-emerald-500/20 border-emerald-500/40'} border`}>
+                              <span className={`${isConservative ? 'text-blue-400' : 'text-emerald-400'} text-xs font-bold`}>{isConservative ? '🛡️ SAFE BET' : '💎 VALUE BET'}</span>
                             </div>
                           )}
                         </div>
@@ -3276,7 +3514,7 @@ export default function MatchDetailsPage() {
                       </div>
                     )}
                   </>
-                ) : selectedPersonality === 'value' && liveSignals ? (
+                ) : (selectedPersonality === 'value' || selectedPersonality === 'conservative') && liveSignals ? (
                   (() => {
                     // Cast to raw record to access database values directly
                     const raw = liveSignals as unknown as Record<string, unknown>;
@@ -3296,9 +3534,10 @@ export default function MatchDetailsPage() {
                     const isValuable = raw.is_valuable_hdp;
                     const score = raw.score as string | null;
                     const clock = raw.clock;
+                    const isConservative = selectedPersonality === 'conservative';
 
                     return (
-                      <div className="rounded-xl bg-gradient-to-br from-pink-900/40 to-purple-900/40 border border-pink-500/20 overflow-hidden">
+                      <div className={`rounded-xl bg-gradient-to-br ${isConservative ? 'from-blue-900/40 to-cyan-900/40 border-blue-500/20' : 'from-pink-900/40 to-purple-900/40 border-pink-500/20'} border overflow-hidden`}>
                         {/* Header with Clock and Status */}
                         <div className="flex items-center justify-between px-4 py-3 bg-black/20">
                           <div className="flex items-center gap-3">
@@ -3313,8 +3552,8 @@ export default function MatchDetailsPage() {
                             )}
                           </div>
                           {Boolean(isValuable) && (
-                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40">
-                              <span className="text-emerald-400 text-xs font-bold">💎 VALUE BET</span>
+                            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full ${isConservative ? 'bg-blue-500/20 border-blue-500/40' : 'bg-emerald-500/20 border-emerald-500/40'} border`}>
+                              <span className={`${isConservative ? 'text-blue-400' : 'text-emerald-400'} text-xs font-bold`}>{isConservative ? '🛡️ SAFE BET' : '💎 VALUE BET'}</span>
                             </div>
                           )}
                         </div>

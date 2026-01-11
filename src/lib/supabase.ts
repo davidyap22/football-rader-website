@@ -1949,6 +1949,10 @@ export interface LiveSignals {
   safeguard: string | null;
   live_stats: Record<string, unknown> | null;
   created_at?: string;
+  bet_style?: string | null;
+  // Mainlines
+  handicap_main_line?: number | null;
+  total_points_mainline?: number | null;
 }
 
 // Get live signals for a fixture (Value Hunter data)
@@ -1976,6 +1980,56 @@ export const getLiveSignals = async (fixtureId: number) => {
   }
 };
 
+// Get live signals by bet style (e.g., Conservative)
+export const getLiveSignalsByBetStyle = async (fixtureId: number, betStyle: string) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('live_signals_v7')
+      .select('*')
+      .eq('fixture_id', fixtureId)
+      .eq('bet_style', betStyle)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      return { data: null, error };
+    }
+
+    return { data: data as LiveSignals | null, error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch live signals by bet style' } };
+  }
+};
+
+// Get live signals history by bet style
+export const getLiveSignalsHistoryByBetStyle = async (fixtureId: number, betStyle: string) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('live_signals_v7')
+      .select('*')
+      .eq('fixture_id', fixtureId)
+      .eq('bet_style', betStyle)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data: data as LiveSignals[] | null, error: null };
+  } catch (err) {
+    return { data: null, error: { message: 'Failed to fetch live signals history' } };
+  }
+};
+
 // ============================================
 // FIXTURE EVENTS (Match Events)
 // ============================================
@@ -1996,6 +2050,56 @@ export interface FixtureEvent {
   event_detail: string | null; // Normal Goal, Yellow Card, Red Card, Substitution 1-4, Penalty, Own Goal, etc.
   player_name: string | null;
 }
+
+export interface MatchStatistics {
+  id: number;
+  fixture_id: string;
+  team_id: number;
+  team_name: string;
+  ball_possession: string | null;
+  shots_on_goal: number;
+  shots_off_goal: number;
+  total_shots: number;
+  blocked_shots: number;
+  shots_insidebox: number;
+  shots_outsidebox: number;
+  fouls: number;
+  corner_kicks: number;
+  offsides: number;
+  yellow_cards: number;
+  red_cards: number;
+  goalkeeper_saves: number;
+  total_passes: number;
+  passes_accurate: number;
+  passes_pct: string | null;
+  expected_goals: number | null;
+  goals_prevented: number | null;
+  created_at: string;
+}
+
+// Get match statistics for a fixture
+export const getMatchStatistics = async (fixtureId: number) => {
+  if (!supabase) {
+    return { data: null, error: { message: 'Supabase client not initialized' } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('match_statistics')
+      .select('*')
+      .eq('fixture_id', String(fixtureId));
+
+    if (error) {
+      console.error('[getMatchStatistics] Error:', error);
+      return { data: null, error };
+    }
+
+    return { data: data as MatchStatistics[] | null, error: null };
+  } catch (err) {
+    console.error('[getMatchStatistics] Exception:', err);
+    return { data: null, error: { message: 'Failed to fetch match statistics' } };
+  }
+};
 
 // Get events for a fixture
 export const getFixtureEvents = async (fixtureId: number) => {
