@@ -792,6 +792,50 @@ export default function PerformancePage() {
     };
   })();
 
+  // Compute per-match profits filtered by selectedBetStyle (for table)
+  const matchProfitsByStyle = (() => {
+    const profitMap = new Map<string, {
+      profit_moneyline: number;
+      profit_handicap: number;
+      profit_ou: number;
+      total_profit: number;
+      total_invested: number;
+    }>();
+
+    // Filter records by selected bet style
+    const filtered = selectedBetStyle === 'all'
+      ? allBetRecords
+      : allBetRecords.filter(r => r.bet_style === selectedBetStyle);
+
+    // Group by fixture_id and calculate profits
+    filtered.forEach(r => {
+      const fixtureId = String(r.fixture_id);
+      const profit = r.profit || 0;
+      const invested = r.stake_money || 0;
+      const betType = getBetTypeFromSelection(r.selection);
+
+      if (!profitMap.has(fixtureId)) {
+        profitMap.set(fixtureId, {
+          profit_moneyline: 0,
+          profit_handicap: 0,
+          profit_ou: 0,
+          total_profit: 0,
+          total_invested: 0,
+        });
+      }
+
+      const current = profitMap.get(fixtureId)!;
+      current.total_profit += profit;
+      current.total_invested += invested;
+
+      if (betType === 'moneyline') current.profit_moneyline += profit;
+      else if (betType === 'handicap') current.profit_handicap += profit;
+      else current.profit_ou += profit;
+    });
+
+    return profitMap;
+  })();
+
   // Check auth session
   useEffect(() => {
     const checkUser = async () => {
@@ -1866,6 +1910,18 @@ export default function PerformancePage() {
                       const dateInfo = formatMatchDate(match.match_date);
                       const isHotMatch = dateInfo.isHot;
 
+                      // Get filtered profits for this match based on selectedBetStyle
+                      const filteredProfits = matchProfitsByStyle.get(match.fixture_id) || {
+                        profit_moneyline: 0,
+                        profit_handicap: 0,
+                        profit_ou: 0,
+                        total_profit: 0,
+                        total_invested: 0,
+                      };
+                      const filteredROI = filteredProfits.total_invested > 0
+                        ? (filteredProfits.total_profit / filteredProfits.total_invested) * 100
+                        : 0;
+
                       return (
                       <div key={match.fixture_id}>
                         {/* Mobile Card Layout */}
@@ -1938,20 +1994,20 @@ export default function PerformancePage() {
                             <div className="flex items-center gap-3 text-xs">
                               <div>
                                 <span className="text-gray-500">1x2: </span>
-                                <span className={match.profit_moneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}>
-                                  {match.profit_moneyline >= 0 ? '+' : ''}{formatNumber(match.profit_moneyline, 0)}
+                                <span className={filteredProfits.profit_moneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}>
+                                  {filteredProfits.profit_moneyline >= 0 ? '+' : ''}{formatNumber(filteredProfits.profit_moneyline, 0)}
                                 </span>
                               </div>
                               <div>
                                 <span className="text-gray-500">HDP: </span>
-                                <span className={match.profit_handicap >= 0 ? 'text-emerald-400' : 'text-red-400'}>
-                                  {match.profit_handicap >= 0 ? '+' : ''}{formatNumber(match.profit_handicap, 0)}
+                                <span className={filteredProfits.profit_handicap >= 0 ? 'text-emerald-400' : 'text-red-400'}>
+                                  {filteredProfits.profit_handicap >= 0 ? '+' : ''}{formatNumber(filteredProfits.profit_handicap, 0)}
                                 </span>
                               </div>
                               <div>
                                 <span className="text-gray-500">O/U: </span>
-                                <span className={match.profit_ou >= 0 ? 'text-emerald-400' : 'text-red-400'}>
-                                  {match.profit_ou >= 0 ? '+' : ''}{formatNumber(match.profit_ou, 0)}
+                                <span className={filteredProfits.profit_ou >= 0 ? 'text-emerald-400' : 'text-red-400'}>
+                                  {filteredProfits.profit_ou >= 0 ? '+' : ''}{formatNumber(filteredProfits.profit_ou, 0)}
                                 </span>
                               </div>
                             </div>
@@ -1960,14 +2016,14 @@ export default function PerformancePage() {
                           {/* Row 4: Total Profit & ROI */}
                           <div className="flex items-center justify-between">
                             <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold ${
-                              match.total_profit >= 0
+                              filteredProfits.total_profit >= 0
                                 ? 'bg-emerald-500/10 text-emerald-400'
                                 : 'bg-red-500/10 text-red-400'
                             }`}>
-                              Total: {match.total_profit >= 0 ? '+$' : '-$'}{formatNumber(Math.abs(match.total_profit), 0)}
+                              Total: {filteredProfits.total_profit >= 0 ? '+$' : '-$'}{formatNumber(Math.abs(filteredProfits.total_profit), 0)}
                             </span>
-                            <span className={`text-sm font-medium ${match.roi_percentage >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                              ROI: {match.roi_percentage >= 0 ? '+' : ''}{match.roi_percentage.toFixed(0)}%
+                            <span className={`text-sm font-medium ${filteredROI >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                              ROI: {filteredROI >= 0 ? '+' : ''}{filteredROI.toFixed(0)}%
                             </span>
                           </div>
                         </div>
@@ -2047,33 +2103,33 @@ export default function PerformancePage() {
                           </div>
 
                           {/* 1x2 */}
-                          <div className={`col-span-1 text-right text-sm font-medium ${match.profit_moneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {match.profit_moneyline >= 0 ? '+' : ''}{formatNumber(match.profit_moneyline, 0)}
+                          <div className={`col-span-1 text-right text-sm font-medium ${filteredProfits.profit_moneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {filteredProfits.profit_moneyline >= 0 ? '+' : ''}{formatNumber(filteredProfits.profit_moneyline, 0)}
                           </div>
 
                           {/* HDP */}
-                          <div className={`col-span-1 text-right text-sm font-medium ${match.profit_handicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {match.profit_handicap >= 0 ? '+' : ''}{formatNumber(match.profit_handicap, 0)}
+                          <div className={`col-span-1 text-right text-sm font-medium ${filteredProfits.profit_handicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {filteredProfits.profit_handicap >= 0 ? '+' : ''}{formatNumber(filteredProfits.profit_handicap, 0)}
                           </div>
 
                           {/* O/U */}
-                          <div className={`col-span-1 text-right text-sm font-medium ${match.profit_ou >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {match.profit_ou >= 0 ? '+' : ''}{formatNumber(match.profit_ou, 0)}
+                          <div className={`col-span-1 text-right text-sm font-medium ${filteredProfits.profit_ou >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {filteredProfits.profit_ou >= 0 ? '+' : ''}{formatNumber(filteredProfits.profit_ou, 0)}
                           </div>
 
                           {/* ROI */}
-                          <div className={`col-span-1 text-right text-sm font-medium ${match.roi_percentage >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {match.roi_percentage >= 0 ? '+' : ''}{match.roi_percentage.toFixed(0)}%
+                          <div className={`col-span-1 text-right text-sm font-medium ${filteredROI >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {filteredROI >= 0 ? '+' : ''}{filteredROI.toFixed(0)}%
                           </div>
 
                           {/* Total + View Button */}
                           <div className="col-span-2 flex items-center justify-end gap-2">
                             <span className={`inline-flex items-center justify-center px-3 py-1 rounded-md text-sm font-bold min-w-[80px] ${
-                              match.total_profit >= 0
+                              filteredProfits.total_profit >= 0
                                 ? 'bg-emerald-500/10 text-emerald-400'
                                 : 'bg-red-500/10 text-red-400'
                             }`}>
-                              {match.total_profit >= 0 ? '+$' : '-$'}{formatNumber(Math.abs(match.total_profit), 0)}
+                              {filteredProfits.total_profit >= 0 ? '+$' : '-$'}{formatNumber(Math.abs(filteredProfits.total_profit), 0)}
                             </span>
                             <button
                               onClick={() => openProfitDetails(match)}
