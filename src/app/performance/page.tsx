@@ -883,7 +883,7 @@ export default function PerformancePage() {
       // Store all individual bet records for filtering
       setAllBetRecords(profitData || []);
 
-      // Create a map of profit data by fixture_id (aggregate multiple rows per fixture)
+      // Create a map of profit data by fixture_id (aggregate individual bets per fixture)
       const profitMap = new Map<string, {
         total_profit: number;
         total_invested: number;
@@ -894,19 +894,42 @@ export default function PerformancePage() {
         bet_time: string;
       }>();
 
+      // Helper function for bet type detection
+      const getBetTypeLocal = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
+        if (!selection) return 'ou';
+        const sel = selection.toLowerCase();
+        if (sel.includes('hdp') || sel.includes('handicap')) return 'handicap';
+        if (sel.includes('over') || sel.includes('under')) return 'ou';
+        if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
+        if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
+        return 'ou';
+      };
+
       profitData?.forEach((p: any) => {
         const key = String(p.fixture_id);
+        const profit = p.profit || 0;
+        const invested = p.stake_money || 0;
+        const betType = getBetTypeLocal(p.selection);
+
         if (!profitMap.has(key)) {
           profitMap.set(key, {
-            total_profit: p.total_profit || 0,
-            total_invested: p.total_invested || 0,
-            total_bets: p.total_bets || 0,
-            profit_moneyline: p.profit_moneyline || 0,
-            profit_handicap: p.profit_handicap || 0,
-            profit_ou: p.profit_ou || 0,
+            total_profit: 0,
+            total_invested: 0,
+            total_bets: 0,
+            profit_moneyline: 0,
+            profit_handicap: 0,
+            profit_ou: 0,
             bet_time: p.bet_time,
           });
         }
+
+        const current = profitMap.get(key)!;
+        current.total_profit += profit;
+        current.total_invested += invested;
+        current.total_bets += 1;
+        if (betType === 'moneyline') current.profit_moneyline += profit;
+        else if (betType === 'handicap') current.profit_handicap += profit;
+        else current.profit_ou += profit;
       });
 
       // Combine match data with profit data
@@ -944,25 +967,39 @@ export default function PerformancePage() {
         .filter(l => !topLeagueNames.includes(l));
       setAvailableLeagues([...topLeagueNames, ...otherLeagues]);
 
-      // Calculate overall stats (only count each fixture once)
+      // Calculate overall stats from individual bet records (more accurate)
       let totalProfit = 0;
-      let totalBets = 0;
+      let totalBets = profitData?.length || 0;
       let totalInvested = 0;
-      let wins = 0;
       let profitMoneyline = 0;
       let profitHandicap = 0;
       let profitOU = 0;
 
-      combinedMatches.forEach((m) => {
-        totalProfit += m.total_profit;
-        totalBets += m.total_bets;
-        totalInvested += m.total_invested;
-        profitMoneyline += m.profit_moneyline;
-        profitHandicap += m.profit_handicap;
-        profitOU += m.profit_ou;
-        if (m.total_profit > 0) wins++;
+      // Helper to derive bet type from selection
+      const deriveBetType = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
+        if (!selection) return 'ou';
+        const sel = selection.toLowerCase();
+        if (sel.includes('hdp') || sel.includes('handicap')) return 'handicap';
+        if (sel.includes('over') || sel.includes('under')) return 'ou';
+        if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
+        if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
+        return 'ou';
+      };
+
+      profitData?.forEach((p: any) => {
+        const profit = p.profit || 0;
+        const invested = p.stake_money || 0;
+        totalProfit += profit;
+        totalInvested += invested;
+
+        const betType = deriveBetType(p.selection);
+        if (betType === 'moneyline') profitMoneyline += profit;
+        else if (betType === 'handicap') profitHandicap += profit;
+        else profitOU += profit;
       });
 
+      // Win rate still based on matches (fixtures)
+      const wins = combinedMatches.filter(m => m.total_profit > 0).length;
       const winRate = combinedMatches.length > 0 ? (wins / combinedMatches.length) * 100 : 0;
       const roi = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
 
