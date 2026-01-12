@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "title": "OddsFlow - Most Accurate AI Football Predictor | European Football AI Tips",
+    "description": "Most accurate AI football predictor for Premier League, Bundesliga, Serie A, La Liga & Ligue 1. Get 1x2 predictions, handicap betting tips, over/under analysis."
+  },
+  "nav": {
+    "home": "Home",
+    "predictions": "Predictions",
+    "leagues": "Leagues",
+    "performance": "Performance",
+    "pricing": "Pricing",
+    "news": "News",
+    "community": "Community",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "getStarted": "Get Started",
+    "dashboard": "Dashboard",
+    "logout": "Logout"
+  },
+  "home": {
+    "hero": {
+      "title": "AI-Powered Football Predictions",
+      "subtitle": "Get accurate predictions for European football leagues using advanced machine learning",
+      "cta": "Start Predicting"
+    },
+    "features": {
+      "title": "Why Choose OddsFlow?",
+      "accuracy": {
+        "title": "High Accuracy",
+        "description": "Our AI model achieves industry-leading prediction accuracy"
+      },
+      "transparent": {
+        "title": "Fully Transparent",
+        "description": "All predictions are tracked and verified publicly"
+      },
+      "realtime": {
+        "title": "Real-time Updates",
+        "description": "Get predictions as soon as odds are available"
+      }
+    },
+    "leagues": {
+      "title": "Supported Leagues",
+      "premierLeague": "Premier League",
+      "bundesliga": "Bundesliga",
+      "serieA": "Serie A",
+      "laLiga": "La Liga",
+      "ligue1": "Ligue 1"
+    }
+  },
+  "predictions": {
+    "title": "AI Predictions",
+    "filters": {
+      "all": "All",
+      "moneyline": "1X2",
+      "handicap": "Handicap",
+      "overUnder": "Over/Under"
+    },
+    "betStyles": {
+      "aggressive": "Aggressive",
+      "balanced": "Balanced",
+      "conservative": "Conservative",
+      "valueHunter": "Value Hunter",
+      "safePlay": "Safe Play"
+    },
+    "table": {
+      "match": "Match",
+      "prediction": "Prediction",
+      "odds": "Odds",
+      "confidence": "Confidence",
+      "result": "Result"
+    },
+    "profitSummary": "Profit Summary",
+    "viewDetails": "View Details"
+  },
+  "performance": {
+    "title": "AI Performance",
+    "totalProfit": "Total Profit",
+    "winRate": "Win Rate",
+    "totalBets": "Total Bets",
+    "roi": "ROI"
+  },
+  "pricing": {
+    "title": "Pricing Plans",
+    "free": {
+      "name": "Free",
+      "price": "$0",
+      "period": "forever",
+      "features": ["Limited predictions", "Basic leagues", "Community access"]
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "per month",
+      "features": ["Unlimited predictions", "All leagues", "Priority support", "Advanced analytics"]
+    }
+  },
+  "footer": {
+    "description": "AI-powered football predictions for European leagues",
+    "quickLinks": "Quick Links",
+    "legal": "Legal",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "responsibleGaming": "Responsible Gaming",
+    "copyright": "© {year} OddsFlow. All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "noData": "No data available",
+    "seeMore": "See More",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
+  }
+}

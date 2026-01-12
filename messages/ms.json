@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "title": "OddsFlow - Ramalan Bola Sepak AI Paling Tepat | Tips AI Bola Sepak Eropah",
+    "description": "Ramalan bola sepak AI paling tepat untuk Liga Perdana, Bundesliga, Serie A, La Liga & Ligue 1. Dapatkan ramalan 1x2, tips handicap, analisis over/under."
+  },
+  "nav": {
+    "home": "Laman Utama",
+    "predictions": "Ramalan",
+    "leagues": "Liga",
+    "performance": "Prestasi",
+    "pricing": "Harga",
+    "news": "Berita",
+    "community": "Komuniti",
+    "about": "Tentang",
+    "contact": "Hubungi",
+    "login": "Log Masuk",
+    "getStarted": "Mula",
+    "dashboard": "Papan Pemuka",
+    "logout": "Log Keluar"
+  },
+  "home": {
+    "hero": {
+      "title": "Ramalan Bola Sepak Berkuasa AI",
+      "subtitle": "Dapatkan ramalan tepat untuk liga bola sepak Eropah menggunakan pembelajaran mesin canggih",
+      "cta": "Mula Meramal"
+    },
+    "features": {
+      "title": "Mengapa Pilih OddsFlow?",
+      "accuracy": {
+        "title": "Ketepatan Tinggi",
+        "description": "Model AI kami mencapai ketepatan ramalan terkemuka dalam industri"
+      },
+      "transparent": {
+        "title": "Sepenuhnya Telus",
+        "description": "Semua ramalan dijejak dan disahkan secara terbuka"
+      },
+      "realtime": {
+        "title": "Kemas Kini Masa Nyata",
+        "description": "Dapatkan ramalan sebaik sahaja odds tersedia"
+      }
+    },
+    "leagues": {
+      "title": "Liga Yang Disokong",
+      "premierLeague": "Liga Perdana",
+      "bundesliga": "Bundesliga",
+      "serieA": "Serie A",
+      "laLiga": "La Liga",
+      "ligue1": "Ligue 1"
+    }
+  },
+  "predictions": {
+    "title": "Ramalan AI",
+    "filters": {
+      "all": "Semua",
+      "moneyline": "1X2",
+      "handicap": "Handicap",
+      "overUnder": "Over/Under"
+    },
+    "betStyles": {
+      "aggressive": "Agresif",
+      "balanced": "Seimbang",
+      "conservative": "Konservatif",
+      "valueHunter": "Pemburu Nilai",
+      "safePlay": "Main Selamat"
+    },
+    "table": {
+      "match": "Perlawanan",
+      "prediction": "Ramalan",
+      "odds": "Odds",
+      "confidence": "Keyakinan",
+      "result": "Keputusan"
+    },
+    "profitSummary": "Ringkasan Keuntungan",
+    "viewDetails": "Lihat Butiran"
+  },
+  "performance": {
+    "title": "Prestasi AI",
+    "totalProfit": "Jumlah Keuntungan",
+    "winRate": "Kadar Kemenangan",
+    "totalBets": "Jumlah Pertaruhan",
+    "roi": "ROI"
+  },
+  "pricing": {
+    "title": "Pakej Harga",
+    "free": {
+      "name": "Percuma",
+      "price": "$0",
+      "period": "selama-lamanya",
+      "features": ["Ramalan terhad", "Liga asas", "Akses komuniti"]
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "sebulan",
+      "features": ["Ramalan tanpa had", "Semua liga", "Sokongan keutamaan", "Analitik lanjutan"]
+    }
+  },
+  "footer": {
+    "description": "Ramalan bola sepak berkuasa AI untuk liga Eropah",
+    "quickLinks": "Pautan Pantas",
+    "legal": "Undang-undang",
+    "termsOfService": "Terma Perkhidmatan",
+    "privacyPolicy": "Dasar Privasi",
+    "responsibleGaming": "Perjudian Bertanggungjawab",
+    "copyright": "© {year} OddsFlow. Hak cipta terpelihara."
+  },
+  "common": {
+    "loading": "Memuatkan...",
+    "error": "Ralat berlaku",
+    "retry": "Cuba Lagi",
+    "noData": "Tiada data",
+    "seeMore": "Lihat Lagi",
+    "back": "Kembali",
+    "next": "Seterusnya",
+    "previous": "Sebelumnya",
+    "submit": "Hantar",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "delete": "Padam",
+    "edit": "Sunting",
+    "close": "Tutup"
+  }
+}

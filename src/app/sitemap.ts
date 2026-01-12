@@ -1,142 +1,66 @@
 import { MetadataRoute } from 'next';
 
+const locales = ['en', 'zh', 'id', 'ms'] as const;
+const baseUrl = 'https://www.oddsflow.ai';
+
+// Helper to generate alternates for a path
+function generateAlternates(path: string) {
+  const languages: Record<string, string> = {};
+  locales.forEach((locale) => {
+    languages[locale] = locale === 'en' ? `${baseUrl}${path}` : `${baseUrl}/${locale}${path}`;
+  });
+  languages['x-default'] = `${baseUrl}${path}`;
+  return { languages };
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.oddsflow.ai';
   const currentDate = new Date().toISOString();
 
-  // Static pages
-  const staticPages = [
-    {
-      url: baseUrl,
-      lastModified: currentDate,
-      changeFrequency: 'daily' as const,
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/predictions`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly' as const,
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/leagues`,
-      lastModified: currentDate,
-      changeFrequency: 'daily' as const,
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/performance`,
-      lastModified: currentDate,
-      changeFrequency: 'daily' as const,
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/community`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/community/global-chat`,
-      lastModified: currentDate,
-      changeFrequency: 'always' as const,
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/community/user-predictions`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly' as const,
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/news`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly' as const,
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/pricing`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.75,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/solution`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/get-started`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/terms-of-service`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/privacy-policy`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/responsible-gaming`,
-      lastModified: currentDate,
-      changeFrequency: 'yearly' as const,
-      priority: 0.4,
-    },
+  // Static pages with their configurations
+  const staticPagesConfig = [
+    { path: '', changeFrequency: 'daily' as const, priority: 1.0 },
+    { path: '/predictions', changeFrequency: 'hourly' as const, priority: 0.95 },
+    { path: '/leagues', changeFrequency: 'daily' as const, priority: 0.9 },
+    { path: '/performance', changeFrequency: 'daily' as const, priority: 0.85 },
+    { path: '/community', changeFrequency: 'hourly' as const, priority: 0.8 },
+    { path: '/community/global-chat', changeFrequency: 'always' as const, priority: 0.7 },
+    { path: '/community/user-predictions', changeFrequency: 'hourly' as const, priority: 0.7 },
+    { path: '/news', changeFrequency: 'hourly' as const, priority: 0.85 },
+    { path: '/blog', changeFrequency: 'weekly' as const, priority: 0.8 },
+    { path: '/pricing', changeFrequency: 'monthly' as const, priority: 0.75 },
+    { path: '/about', changeFrequency: 'monthly' as const, priority: 0.6 },
+    { path: '/contact', changeFrequency: 'monthly' as const, priority: 0.6 },
+    { path: '/solution', changeFrequency: 'monthly' as const, priority: 0.7 },
+    { path: '/get-started', changeFrequency: 'monthly' as const, priority: 0.8 },
+    { path: '/terms-of-service', changeFrequency: 'yearly' as const, priority: 0.3 },
+    { path: '/privacy-policy', changeFrequency: 'yearly' as const, priority: 0.3 },
+    { path: '/responsible-gaming', changeFrequency: 'yearly' as const, priority: 0.4 },
     // World Cup pages
-    {
-      url: `${baseUrl}/worldcup`,
-      lastModified: currentDate,
-      changeFrequency: 'daily' as const,
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/worldcup/predictions`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly' as const,
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/worldcup/leagues`,
-      lastModified: currentDate,
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/worldcup/ai_performance`,
-      lastModified: currentDate,
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
+    { path: '/worldcup', changeFrequency: 'daily' as const, priority: 0.9 },
+    { path: '/worldcup/predictions', changeFrequency: 'hourly' as const, priority: 0.9 },
+    { path: '/worldcup/leagues', changeFrequency: 'daily' as const, priority: 0.8 },
+    { path: '/worldcup/ai_performance', changeFrequency: 'daily' as const, priority: 0.8 },
   ];
 
+  // Generate sitemap entries for all locales
+  const staticPages: MetadataRoute.Sitemap = [];
+
+  staticPagesConfig.forEach((page) => {
+    // Add entry for each locale
+    locales.forEach((locale) => {
+      const url = locale === 'en' ? `${baseUrl}${page.path || '/'}` : `${baseUrl}/${locale}${page.path}`;
+      staticPages.push({
+        url,
+        lastModified: currentDate,
+        changeFrequency: page.changeFrequency,
+        priority: page.priority,
+        alternates: generateAlternates(page.path || '/'),
+      });
+    });
+  });
+
   // Blog posts
-  const blogPosts = [
+  const blogSlugs = [
     'getting-started-oddsflow',
     'understanding-odds-formats',
     'bankroll-management',
@@ -146,27 +70,47 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'new-features-jan-2026',
     'fifa-world-cup-2026',
     'community-features',
-  ].map((slug) => ({
-    url: `${baseUrl}/blog/${slug}`,
-    lastModified: currentDate,
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }));
+  ];
+
+  const blogPosts: MetadataRoute.Sitemap = [];
+  blogSlugs.forEach((slug) => {
+    locales.forEach((locale) => {
+      const path = `/blog/${slug}`;
+      const url = locale === 'en' ? `${baseUrl}${path}` : `${baseUrl}/${locale}${path}`;
+      blogPosts.push({
+        url,
+        lastModified: currentDate,
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+        alternates: generateAlternates(path),
+      });
+    });
+  });
 
   // League pages
-  const leagues = [
+  const leagueSlugs = [
     'premier-league',
     'la-liga',
     'bundesliga',
     'serie-a',
     'ligue-1',
     'champions-league',
-  ].map((league) => ({
-    url: `${baseUrl}/leagues/${encodeURIComponent(league)}`,
-    lastModified: currentDate,
-    changeFrequency: 'daily' as const,
-    priority: 0.85,
-  }));
+  ];
+
+  const leagues: MetadataRoute.Sitemap = [];
+  leagueSlugs.forEach((league) => {
+    locales.forEach((locale) => {
+      const path = `/leagues/${encodeURIComponent(league)}`;
+      const url = locale === 'en' ? `${baseUrl}${path}` : `${baseUrl}/${locale}${path}`;
+      leagues.push({
+        url,
+        lastModified: currentDate,
+        changeFrequency: 'daily' as const,
+        priority: 0.85,
+        alternates: generateAlternates(path),
+      });
+    });
+  });
 
   return [...staticPages, ...blogPosts, ...leagues];
 }
