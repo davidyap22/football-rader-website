@@ -102,6 +102,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
+    {
+      url: `${baseUrl}/responsible-gaming`,
+      lastModified: currentDate,
+      changeFrequency: 'yearly' as const,
+      priority: 0.4,
+    },
     // World Cup pages
     {
       url: `${baseUrl}/worldcup`,
