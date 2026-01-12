@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://oddsflow.ai';
+  const baseUrl = 'https://www.oddsflow.ai';
 
   return {
     rules: [
@@ -9,53 +9,49 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         disallow: [
-          '/dashboard',
-          '/checkout',
-          '/auth/',
           '/api/',
-          '/_next/',
-          '/login',
           '/admin/',
           '/user/',
+          '/dashboard/',
+          '/auth/',
+          '/login/',
+          '/checkout/',
+          '/_next/',
           '/private/',
         ],
       },
-      // Googlebot specific rules
+      // Googlebot
       {
         userAgent: 'Googlebot',
         allow: '/',
-        disallow: [
-          '/dashboard',
-          '/checkout',
-          '/auth/',
-          '/api/',
-        ],
+        disallow: ['/api/', '/admin/', '/user/', '/dashboard/', '/auth/', '/login/', '/checkout/'],
       },
-      // AI crawlers for Generative Engine Optimization (GEO)
+      // Bingbot
+      {
+        userAgent: 'Bingbot',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/user/', '/dashboard/', '/auth/', '/login/', '/checkout/'],
+      },
+      // AI crawlers for GEO (Generative Engine Optimization)
       {
         userAgent: 'GPTBot',
         allow: '/',
-        disallow: ['/api/', '/dashboard', '/auth/'],
+        disallow: ['/api/', '/admin/', '/user/', '/dashboard/', '/auth/'],
       },
       {
         userAgent: 'ChatGPT-User',
         allow: '/',
-        disallow: ['/api/', '/dashboard', '/auth/'],
+        disallow: ['/api/', '/admin/', '/user/', '/dashboard/', '/auth/'],
       },
       {
         userAgent: 'PerplexityBot',
         allow: '/',
-        disallow: ['/api/', '/dashboard', '/auth/'],
+        disallow: ['/api/', '/admin/', '/user/', '/dashboard/', '/auth/'],
       },
       {
         userAgent: 'ClaudeBot',
         allow: '/',
-        disallow: ['/api/', '/dashboard', '/auth/'],
-      },
-      {
-        userAgent: 'Bingbot',
-        allow: '/',
-        disallow: ['/api/', '/dashboard', '/auth/'],
+        disallow: ['/api/', '/admin/', '/user/', '/dashboard/', '/auth/'],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

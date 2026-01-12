@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://oddsflow.ai';
+  const baseUrl = 'https://www.oddsflow.ai';
   const currentDate = new Date().toISOString();
 
   // Static pages
