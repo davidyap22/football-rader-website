@@ -1194,19 +1194,18 @@ export default function PerformancePage() {
     fetchSignalHistory(match.fixture_id);
   };
 
-  // Fetch profit summary for a match
-  const fetchProfitSummary = async (fixtureId: string) => {
+  // Fetch profit summary for a match (use allBetRecords for consistency with table)
+  const fetchProfitSummary = (fixtureId: string) => {
     setLoadingProfit(true);
     try {
-      const { data, error } = await supabase
-        .from('profit_summary')
-        .select('*')
-        .eq('fixture_id', fixtureId)
-        .order('bet_time', { ascending: false });
+      // Filter from allBetRecords to ensure consistency with table data
+      const filteredData = allBetRecords
+        .filter(r => String(r.fixture_id) === fixtureId)
+        .sort((a, b) => new Date(b.bet_time).getTime() - new Date(a.bet_time).getTime());
 
-      if (!error && data && data.length > 0) {
-        setProfitSummary(data[0]);
-        setProfitSummaryRecords(data);
+      if (filteredData.length > 0) {
+        setProfitSummary(filteredData[0]);
+        setProfitSummaryRecords(filteredData);
       } else {
         setProfitSummary(null);
         setProfitSummaryRecords([]);
