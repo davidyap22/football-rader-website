@@ -1223,7 +1223,8 @@ export default function PerformancePage() {
   const openProfitDetails = (match: MatchSummary) => {
     setSelectedMatch(match);
     setProfitTypeFilter('all');
-    setProfitBetStyleFilter('all');
+    // Auto-select the currently active bet style filter
+    setProfitBetStyleFilter(selectedBetStyle);
     setShowProfitModal(true);
     fetchProfitSummary(match.fixture_id);
   };
