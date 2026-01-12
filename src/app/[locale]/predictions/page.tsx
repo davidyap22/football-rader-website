@@ -2,9 +2,10 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useParams } from 'next/navigation';
 import { supabase, Prematch, MatchPrediction, getMatchPredictions } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
+import { locales, localeNames, localeFlags, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 // Date helper functions - All using UTC
 function getUTCToday() {
@@ -61,7 +62,7 @@ function getInitialDate() {
   return getUTCToday();
 }
 
-import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import FlagIcon from "@/components/FlagIcon";
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -329,19 +330,33 @@ const translations: Record<string, Record<string, string>> = {
 
 function PredictionsContent() {
   const searchParams = useSearchParams();
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
+  const selectedLang = localeToTranslationCode[locale] || 'EN';
+
   const [selectedDate, setSelectedDate] = useState(getInitialDate);
   const [matches, setMatches] = useState<Prematch[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDateInitialized, setIsDateInitialized] = useState(false);
   const [dates] = useState(getDateRange);
-  const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [predictions, setPredictions] = useState<Record<number, MatchPrediction>>({});
   const today = getUTCToday();
-  const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
+
+  // Simple URL builder for language switching
+  const getLocaleUrl = (targetLocale: Locale): string => {
+    // For predictions page, always go to /predictions or /{locale}/predictions
+    return targetLocale === 'en' ? '/predictions' : `/${targetLocale}/predictions`;
+  };
+
+  // Helper function to create locale-aware paths
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
 
   // Get the appropriate prediction title based on selected date
   const getPredictionTitle = () => {
@@ -425,21 +440,6 @@ function PredictionsContent() {
       }
     }
   }, [searchParams]);
-
-  // Load language from localStorage on mount
-  useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_lang');
-    if (savedLang) {
-      setSelectedLang(savedLang);
-    }
-  }, []);
-
-  // Save language to localStorage when changed
-  const handleLanguageChange = (langCode: string) => {
-    setSelectedLang(langCode);
-    localStorage.setItem('oddsflow_lang', langCode);
-    setLangDropdownOpen(false);
-  };
 
   // Translation function
   const t = (key: string): string => {
@@ -569,20 +569,20 @@ function PredictionsContent() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
-              <Link href="/predictions" className="text-emerald-400 text-sm font-medium">{t('predictions')}</Link>
-              <Link href="/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
-              <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
-              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
-              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
-              <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
+              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
+              <Link href={localePath('/predictions')} className="text-emerald-400 text-sm font-medium">{t('predictions')}</Link>
+              <Link href={localePath('/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
+              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
+              <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
+              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
+              <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
@@ -592,8 +592,8 @@ function PredictionsContent() {
                   onClick={() => setLangDropdownOpen(!langDropdownOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer"
                 >
-                  <FlagIcon code={currentLang.code} size={20} />
-                  <span className="font-medium">{currentLang.code}</span>
+                  <FlagIcon code={locale} size={20} />
+                  <span className="font-medium uppercase">{locale === 'zh' ? '中文' : locale.toUpperCase()}</span>
                   <svg
                     className={`w-4 h-4 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`}
                     fill="none"
@@ -605,27 +605,24 @@ function PredictionsContent() {
                 </button>
 
                 {langDropdownOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
-                    <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
-                      {LANGUAGES.map((l) => (
-                        <button
-                          key={l.code}
-                          onClick={() => handleLanguageChange(l.code)}
-                          className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-left cursor-pointer ${
-                            selectedLang === l.code ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'
-                          }`}
-                        >
-                          <FlagIcon code={l.code} size={20} />
-                          <span className="font-medium">{l.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </>
+                  <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
+                    {locales.map((loc) => (
+                      <Link
+                        key={loc}
+                        href={getLocaleUrl(loc)}
+                        className={`block w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-left cursor-pointer ${
+                          locale === loc ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'
+                        }`}
+                      >
+                        <FlagIcon code={loc} size={20} />
+                        <span className="font-medium">{localeNames[loc]}</span>
+                      </Link>
+                    ))}
+                  </div>
                 )}
               </div>
               {user ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
                   {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
                     <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-8 h-8 rounded-full object-cover" referrerPolicy="no-referrer" />
                   ) : (
@@ -637,14 +634,14 @@ function PredictionsContent() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
                 </>
               )}
 
               {/* World Cup Special Button */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
@@ -687,7 +684,7 @@ function PredictionsContent() {
             <div className="px-4 py-4 space-y-1">
               {/* World Cup Special Entry */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 onClick={() => setMobileMenuOpen(false)}
                 className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden"
               >
@@ -697,14 +694,14 @@ function PredictionsContent() {
               </Link>
 
               {[
-                { href: '/', label: t('home') },
-                { href: '/predictions', label: t('predictions'), active: true },
-                { href: '/leagues', label: t('leagues') },
-                { href: '/performance', label: t('performance') },
-                { href: '/community', label: t('community') },
-                { href: '/news', label: t('news') },
-                { href: '/solution', label: t('solution') },
-                { href: '/pricing', label: t('pricing') },
+                { href: localePath('/'), label: t('home') },
+                { href: localePath('/predictions'), label: t('predictions'), active: true },
+                { href: localePath('/leagues'), label: t('leagues') },
+                { href: localePath('/performance'), label: t('performance') },
+                { href: localePath('/community'), label: t('community') },
+                { href: localePath('/news'), label: t('news') },
+                { href: localePath('/solution'), label: t('solution') },
+                { href: localePath('/pricing'), label: t('pricing') },
               ].map((link) => (
                 <Link
                   key={link.href}
@@ -724,14 +721,14 @@ function PredictionsContent() {
               {!user && (
                 <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
                   <Link
-                    href="/login"
+                    href={localePath('/login')}
                     onClick={() => setMobileMenuOpen(false)}
                     className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all"
                   >
                     {t('login')}
                   </Link>
                   <Link
-                    href="/get-started"
+                    href={localePath('/get-started')}
                     onClick={() => setMobileMenuOpen(false)}
                     className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold hover:shadow-lg transition-all"
                   >
@@ -1176,7 +1173,7 @@ function PredictionsContent() {
             {/* Buttons */}
             <div className="space-y-3">
               <Link
-                href="/get-started"
+                href={localePath('/get-started')}
                 className="block w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-center hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
                 onClick={() => setShowLoginModal(false)}
               >
@@ -1191,7 +1188,7 @@ function PredictionsContent() {
                  'Sign Up Free'}
               </Link>
               <Link
-                href="/login"
+                href={localePath('/login')}
                 className="block w-full py-3 px-4 rounded-xl border border-white/20 text-white font-semibold text-center hover:bg-white/10 transition-all"
                 onClick={() => setShowLoginModal(false)}
               >

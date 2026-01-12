@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 
@@ -13,10 +13,17 @@ const PLAN_DETAILS: Record<string, { name: string; price: number; period: string
 };
 
 export default function CheckoutPage() {
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
   const searchParams = useSearchParams();
   const router = useRouter();
   const plan = searchParams.get('plan') || 'starter';
   const planInfo = PLAN_DETAILS[plan] || PLAN_DETAILS.starter;
+
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
 
   const [user, setUser] = useState<User | null>(null);
   const [code, setCode] = useState('');
@@ -28,7 +35,7 @@ export default function CheckoutPage() {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
-        router.push('/login');
+        router.push(localePath('/login'));
         return;
       }
       setUser(session.user);
@@ -102,7 +109,7 @@ export default function CheckoutPage() {
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           {/* Back Link */}
-          <Link href="/pricing" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
+          <Link href={localePath('/pricing')} className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -122,7 +129,7 @@ export default function CheckoutPage() {
                 Your {planInfo.name} plan is now active. Enjoy your premium features!
               </p>
               <Link
-                href="/pricing"
+                href={localePath('/pricing')}
                 className="inline-block w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-center hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
               >
                 Back to Pricing
@@ -152,7 +159,7 @@ export default function CheckoutPage() {
                 Try Again
               </button>
               <Link
-                href="/pricing"
+                href={localePath('/pricing')}
                 className="inline-block w-full py-3 px-4 rounded-xl border border-white/20 text-white font-semibold text-center hover:bg-white/10 transition-all"
               >
                 Back to Pricing

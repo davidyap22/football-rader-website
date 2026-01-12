@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { supabase, signUpWithEmail, signInWithGoogle, createFreeTrialSubscription, validatePassword, getSafeErrorMessage } from '@/lib/supabase';
 import FlagIcon from "@/components/FlagIcon";
 
@@ -424,6 +424,14 @@ const translations: Record<string, Record<string, string>> = {
 
 export default function GetStartedPage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
+
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -452,7 +460,7 @@ export default function GetStartedPage() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
-        router.push('/');
+        router.push(localePath('/'));
       } else {
         setCheckingAuth(false);
       }
@@ -522,7 +530,7 @@ export default function GetStartedPage() {
 
         setSuccess(t.accountCreated);
         setTimeout(() => {
-          router.push('/login');
+          router.push(localePath('/login'));
         }, 3000);
       }
     } catch (err) {
@@ -566,20 +574,20 @@ export default function GetStartedPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3">
+            <Link href={localePath('/')} className="flex items-center gap-3">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.home}</Link>
-              <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.predictions}</Link>
-              <Link href="/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.leagues}</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.aiPerformance}</Link>
-              <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.community}</Link>
-              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.news}</Link>
-              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.solution}</Link>
-              <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.pricing}</Link>
+              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.home}</Link>
+              <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.predictions}</Link>
+              <Link href={localePath('/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.leagues}</Link>
+              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.aiPerformance}</Link>
+              <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.community}</Link>
+              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.news}</Link>
+              <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.solution}</Link>
+              <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.pricing}</Link>
             </div>
 
             <div className="flex items-center gap-3">
@@ -613,15 +621,15 @@ export default function GetStartedPage() {
 
               {/* FIFA 2026 Button */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500/20 to-rose-500/20 border border-amber-500/30 hover:border-amber-500/50 transition-all text-sm font-medium"
               >
                 <span>⚽</span>
                 <span className="bg-gradient-to-r from-amber-400 to-rose-400 bg-clip-text text-transparent font-bold">{t.fifa2026}</span>
               </Link>
 
-              <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t.login}</Link>
-              <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t.getStarted}</Link>
+              <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t.login}</Link>
+              <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t.getStarted}</Link>
 
               {/* Mobile Menu Button */}
               <button
@@ -643,24 +651,24 @@ export default function GetStartedPage() {
           {mobileMenuOpen && (
             <div className="md:hidden py-4 border-t border-white/10">
               <div className="flex flex-col gap-4">
-                <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.home}</Link>
-                <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.predictions}</Link>
-                <Link href="/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.leagues}</Link>
-                <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.aiPerformance}</Link>
-                <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.community}</Link>
-                <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.news}</Link>
-                <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.solution}</Link>
-                <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.pricing}</Link>
+                <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.home}</Link>
+                <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.predictions}</Link>
+                <Link href={localePath('/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.leagues}</Link>
+                <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.aiPerformance}</Link>
+                <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.community}</Link>
+                <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.news}</Link>
+                <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.solution}</Link>
+                <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.pricing}</Link>
                 <Link
-                  href="/worldcup"
+                  href={localePath('/worldcup')}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500/20 to-rose-500/20 border border-amber-500/30 text-sm font-medium w-fit"
                 >
                   <span>⚽</span>
                   <span className="bg-gradient-to-r from-amber-400 to-rose-400 bg-clip-text text-transparent font-bold">{t.fifa2026}</span>
                 </Link>
                 <div className="flex gap-3 pt-2">
-                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium cursor-pointer">{t.login}</Link>
-                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm cursor-pointer">{t.getStarted}</Link>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium cursor-pointer">{t.login}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm cursor-pointer">{t.getStarted}</Link>
                 </div>
               </div>
             </div>
@@ -759,11 +767,11 @@ export default function GetStartedPage() {
                   <input type="checkbox" className="w-4 h-4 mt-1 rounded border-white/10 bg-white/5 text-emerald-500 focus:ring-emerald-500/50 cursor-pointer" required />
                   <span className="text-sm text-gray-400">
                     {t.agreeTo}{' '}
-                    <Link href="/terms-of-service" className="text-emerald-400 hover:text-emerald-300 transition-colors">
+                    <Link href={localePath('/terms-of-service')} className="text-emerald-400 hover:text-emerald-300 transition-colors">
                       {t.termsOfService}
                     </Link>
                     {' '}{t.and}{' '}
-                    <Link href="/privacy-policy" className="text-emerald-400 hover:text-emerald-300 transition-colors">
+                    <Link href={localePath('/privacy-policy')} className="text-emerald-400 hover:text-emerald-300 transition-colors">
                       {t.privacyPolicy}
                     </Link>
                   </span>
@@ -806,7 +814,7 @@ export default function GetStartedPage() {
             <div className="mt-6 text-center">
               <p className="text-gray-400 text-sm">
                 {t.alreadyHaveAccount}{' '}
-                <Link href="/login" className="text-emerald-400 hover:text-emerald-300 transition-colors">
+                <Link href={localePath('/login')} className="text-emerald-400 hover:text-emerald-300 transition-colors">
                   {t.signIn}
                 </Link>
               </p>

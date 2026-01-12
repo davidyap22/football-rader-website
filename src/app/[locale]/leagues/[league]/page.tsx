@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { supabase, TeamStatistics, getTeamStatisticsByLeague, PlayerStats, getPlayerStatsByTeam, Coach, getCoachesByTeamIds } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -439,8 +440,23 @@ const LEAGUES_CONFIG: Record<string, { name: string; country: string; logo: stri
 
 export default function LeagueDetailPage() {
   const params = useParams();
+  const urlLocale = (params.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
+  const selectedLang = localeToTranslationCode[locale as Locale] || 'EN';
   const leagueSlug = params.league as string;
   const leagueConfig = LEAGUES_CONFIG[leagueSlug];
+
+  // Helper function for locale-aware paths
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
+  // Helper for language dropdown URLs
+  const getLocaleUrl = (targetLocale: Locale): string => {
+    const currentPath = `/leagues/${leagueSlug}`;
+    return targetLocale === 'en' ? currentPath : `/${targetLocale}${currentPath}`;
+  };
 
   const [mounted, setMounted] = useState(false);
   const [teamStats, setTeamStats] = useState<TeamWithStats[]>([]);
@@ -451,7 +467,6 @@ export default function LeagueDetailPage() {
   const [playerStats, setPlayerStats] = useState<Record<number, PlayerStats[]>>({});
   const [loadingPlayers, setLoadingPlayers] = useState<number | null>(null);
   const [coaches, setCoaches] = useState<Record<number, Coach>>({});
-  const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
@@ -462,22 +477,6 @@ export default function LeagueDetailPage() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  // Load language from localStorage
-  useEffect(() => {
-    if (!mounted) return;
-    const savedLang = localStorage.getItem('oddsflow_lang');
-    if (savedLang) {
-      setSelectedLang(savedLang);
-    }
-  }, [mounted]);
-
-  // Save language to localStorage when changed
-  const handleLanguageChange = (langCode: string) => {
-    setSelectedLang(langCode);
-    localStorage.setItem('oddsflow_lang', langCode);
-    setLangDropdownOpen(false);
-  };
 
   // Check auth session
   useEffect(() => {
@@ -657,7 +656,7 @@ export default function LeagueDetailPage() {
       <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">{t('leagueNotFound')}</h1>
-          <Link href="/leagues" className="text-emerald-400 hover:underline">
+          <Link href={localePath('/leagues')} className="text-emerald-400 hover:underline">
             {t('backToLeagues')}
           </Link>
         </div>
@@ -697,20 +696,20 @@ export default function LeagueDetailPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
-              <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
-              <Link href="/leagues" className="text-emerald-400 text-sm font-medium">{t('leagues')}</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
-              <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
-              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
-              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
-              <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
+              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
+              <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
+              <Link href={localePath('/leagues')} className="text-emerald-400 text-sm font-medium">{t('leagues')}</Link>
+              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
+              <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
+              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
+              <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
@@ -735,24 +734,25 @@ export default function LeagueDetailPage() {
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
                     <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
-                      {LANGUAGES.map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => handleLanguageChange(lang.code)}
+                      {locales.map((loc) => (
+                        <Link
+                          key={loc}
+                          href={getLocaleUrl(loc)}
                           className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors cursor-pointer ${
-                            selectedLang === lang.code
+                            locale === loc
                               ? 'bg-emerald-500/20 text-emerald-400'
                               : 'text-gray-300 hover:bg-white/5 hover:text-white'
                           }`}
+                          onClick={() => setLangDropdownOpen(false)}
                         >
-                          <FlagIcon code={lang.code} size={20} />
-                          <span>{lang.name}</span>
-                          {selectedLang === lang.code && (
+                          <FlagIcon code={loc} size={20} />
+                          <span>{localeNames[loc]}</span>
+                          {locale === loc && (
                             <svg className="w-4 h-4 ml-auto text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>
                           )}
-                        </button>
+                        </Link>
                       ))}
                     </div>
                   </>
@@ -760,7 +760,7 @@ export default function LeagueDetailPage() {
               </div>
 
               {user ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
                     {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
@@ -768,14 +768,14 @@ export default function LeagueDetailPage() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
                 </>
               )}
 
               {/* World Cup Button */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
@@ -791,7 +791,7 @@ export default function LeagueDetailPage() {
       <main className="relative z-10 pt-24 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Back Button */}
-          <Link href="/leagues" className="inline-flex items-center gap-2 text-emerald-400 hover:text-white transition-colors mb-6">
+          <Link href={localePath('/leagues')} className="inline-flex items-center gap-2 text-emerald-400 hover:text-white transition-colors mb-6">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -810,7 +810,7 @@ export default function LeagueDetailPage() {
               </div>
             </div>
             <Link
-              href={`/leagues/${leagueSlug}/player`}
+              href={localePath(`/leagues/${leagueSlug}/player`)}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-400 font-medium hover:from-emerald-500/30 hover:to-cyan-500/30 transition-all border border-emerald-500/30"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -929,7 +929,7 @@ export default function LeagueDetailPage() {
                           </td>
                           <td className="py-4 px-4 text-center">
                             <Link
-                              href={`/leagues/${leagueSlug}/${team.team_name?.toLowerCase().replace(/\s+/g, '-')}`}
+                              href={localePath(`/leagues/${leagueSlug}/${team.team_name?.toLowerCase().replace(/\s+/g, '-')}`)}
                               onClick={(e) => e.stopPropagation()}
                               className="px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/30 transition-colors border border-cyan-500/30"
                             >
@@ -1131,7 +1131,7 @@ export default function LeagueDetailPage() {
                                                 </td>
                                                 <td className="text-center py-2.5 px-2">
                                                   <Link
-                                                    href={`/leagues/${leagueSlug}/player/${player.id}`}
+                                                    href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
                                                     onClick={(e) => e.stopPropagation()}
                                                     className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/30 transition-colors"
                                                   >
@@ -1184,7 +1184,7 @@ export default function LeagueDetailPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 lg:gap-12 mb-12">
             <div className="col-span-2">
-              <Link href="/" className="flex items-center gap-3 mb-6">
+              <Link href={localePath('/')} className="flex items-center gap-3 mb-6">
                 <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
                 <span className="text-xl font-bold">OddsFlow</span>
               </Link>
@@ -1208,48 +1208,48 @@ export default function LeagueDetailPage() {
             <div>
               <h4 className="font-semibold mb-5 text-white">{t('product')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
-                <li><Link href="/leagues" className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
-                <li><Link href="/performance" className="hover:text-emerald-400 transition-colors">{t('performance')}</Link></li>
-                <li><Link href="/solution" className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
+                <li><Link href={localePath('/predictions')} className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
+                <li><Link href={localePath('/leagues')} className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
+                <li><Link href={localePath('/performance')} className="hover:text-emerald-400 transition-colors">{t('performance')}</Link></li>
+                <li><Link href={localePath('/solution')} className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/leagues/premier-league" className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
-                <li><Link href="/leagues/la-liga" className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
-                <li><Link href="/leagues/serie-a" className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
-                <li><Link href="/leagues/bundesliga" className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
-                <li><Link href="/leagues/ligue-1" className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
-                <li><Link href="/leagues/champions-league" className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
+                <li><Link href={localePath('/leagues/premier-league')} className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
+                <li><Link href={localePath('/leagues/la-liga')} className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
+                <li><Link href={localePath('/leagues/serie-a')} className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
+                <li><Link href={localePath('/leagues/bundesliga')} className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
+                <li><Link href={localePath('/leagues/ligue-1')} className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
+                <li><Link href={localePath('/leagues/champions-league')} className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-5 text-white">{t('communityFooter')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/community" className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
-                <li><Link href="/community/global-chat" className="hover:text-emerald-400 transition-colors">{t('globalChat')}</Link></li>
-                <li><Link href="/community/user-predictions" className="hover:text-emerald-400 transition-colors">{t('userPredictions')}</Link></li>
+                <li><Link href={localePath('/community')} className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
+                <li><Link href={localePath('/community/global-chat')} className="hover:text-emerald-400 transition-colors">{t('globalChat')}</Link></li>
+                <li><Link href={localePath('/community/user-predictions')} className="hover:text-emerald-400 transition-colors">{t('userPredictions')}</Link></li>
               </ul>
             </div>
 
             <div className="relative z-10">
               <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/about" className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
-                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
-                <li><Link href="/blog" className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
+                <li><Link href={localePath('/about')} className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+                <li><Link href={localePath('/contact')} className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+                <li><Link href={localePath('/blog')} className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
               </ul>
             </div>
 
             <div className="relative z-10">
               <h4 className="font-semibold mb-5 text-white">{t('legal')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/terms-of-service" className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
-                <li><Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+                <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+                <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
               </ul>
             </div>
           </div>

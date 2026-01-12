@@ -2,9 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { supabase, chatSupabase, Prematch, MatchComment, ChatMessage, ChatReaction, CommentReaction, UserMatchPrediction, getMatchComments, addComment, toggleCommentLike, deleteComment, getCommentStats, getChatMessages, sendChatMessage, subscribeToChatMessages, getMessageReactions, toggleMessageReaction, getCommentReactions, toggleCommentReaction, getMatchUserPredictions, submitUserPrediction, deleteUserPrediction, getRecentPredictions } from '@/lib/supabase';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 const translations: Record<string, Record<string, string>> = {
   EN: {
@@ -1071,13 +1073,15 @@ function ChatRoom({
   user,
   t,
   matchInfo,
-  onClose
+  onClose,
+  localePath
 }: {
   fixtureId: number | null;
   user: User | null;
   t: (key: string) => string;
   matchInfo?: { home: string; away: string; league: string };
   onClose?: () => void;
+  localePath: (path: string) => string;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -1540,7 +1544,7 @@ function ChatRoom({
             </button>
           </div>
         ) : (
-          <Link href="/login" className="block w-full py-2 text-center rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 transition-all text-sm">
+          <Link href={localePath('/login')} className="block w-full py-2 text-center rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 transition-all text-sm">
             {t('loginToChat')}
           </Link>
         )}
@@ -1550,7 +1554,22 @@ function ChatRoom({
 }
 
 export default function CommunityPage() {
-  const [selectedLang, setSelectedLang] = useState('EN');
+  const params = useParams();
+  const urlLocale = (params.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
+  const selectedLang = localeToTranslationCode[locale as Locale] || 'EN';
+
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
+  // Helper function to get locale URL for language dropdown
+  const getLocaleUrl = (targetLocale: Locale): string => {
+    const currentPath = '/community';
+    return targetLocale === 'en' ? currentPath : `/${targetLocale}${currentPath}`;
+  };
+
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -1585,7 +1604,6 @@ export default function CommunityPage() {
 
   const COMMENT_REACTIONS = ['👍', '❤️', '😂', '😮', '😢', '😡'];
 
-  const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
 
   // Generate date options (yesterday, today, tomorrow, +4 more days)
@@ -1608,11 +1626,6 @@ export default function CommunityPage() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Load language
-  useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_lang');
-    if (savedLang) setSelectedLang(savedLang);
-  }, []);
 
   // Load stats
   useEffect(() => {
@@ -1890,11 +1903,6 @@ export default function CommunityPage() {
     }
   };
 
-  const handleSetLang = (newLang: string) => {
-    setSelectedLang(newLang);
-    localStorage.setItem('oddsflow_lang', newLang);
-    setLangDropdownOpen(false);
-  };
 
   // Format date label
   const formatDateLabel = (date: Date) => {
@@ -1967,28 +1975,28 @@ export default function CommunityPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
-              <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
-              <Link href="/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
-              <Link href="/community" className="text-emerald-400 font-medium text-sm">{t('community')}</Link>
-              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
-              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
-              <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
+              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
+              <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
+              <Link href={localePath('/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
+              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
+              <Link href={localePath('/community')} className="text-emerald-400 font-medium text-sm">{t('community')}</Link>
+              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
+              <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               {/* Language Selector */}
               <div className="relative">
                 <button onClick={() => setLangDropdownOpen(!langDropdownOpen)} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer">
-                  <FlagIcon code={currentLang.code} size={20} />
-                  <span className="font-medium">{currentLang.code}</span>
+                  <FlagIcon code={locale} size={20} />
+                  <span className="font-medium">{selectedLang}</span>
                   <svg className={`w-4 h-4 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
@@ -1997,11 +2005,11 @@ export default function CommunityPage() {
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
                     <div className="absolute right-0 top-full mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-50 max-h-80 overflow-y-auto">
-                      {LANGUAGES.map((language) => (
-                        <button key={language.code} onClick={() => handleSetLang(language.code)} className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-white/5 transition-colors cursor-pointer ${selectedLang === language.code ? 'bg-emerald-500/10 text-emerald-400' : 'text-gray-300'}`}>
-                          <FlagIcon code={language.code} size={20} />
-                          <span className="font-medium">{language.name}</span>
-                        </button>
+                      {locales.map((loc) => (
+                        <Link key={loc} href={getLocaleUrl(loc)} className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-white/5 transition-colors cursor-pointer ${locale === loc ? 'bg-emerald-500/10 text-emerald-400' : 'text-gray-300'}`}>
+                          <FlagIcon code={loc} size={20} />
+                          <span className="font-medium">{localeNames[loc]}</span>
+                        </Link>
                       ))}
                     </div>
                   </>
@@ -2010,7 +2018,7 @@ export default function CommunityPage() {
 
               {/* Auth buttons */}
               {user ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
                   {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
                     <img
                       src={user.user_metadata?.avatar_url || user.user_metadata?.picture}
@@ -2030,14 +2038,14 @@ export default function CommunityPage() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="hidden sm:block px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium">{t('login')}</Link>
-                  <Link href="/get-started" className="hidden sm:block px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} className="hidden sm:block px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="hidden sm:block px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm">{t('getStarted')}</Link>
                 </>
               )}
 
               {/* World Cup Special Button */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
@@ -2063,21 +2071,21 @@ export default function CommunityPage() {
           <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10">
             <div className="px-4 py-4 space-y-1">
               {/* World Cup Special Entry */}
-              <Link href="/worldcup" onClick={() => setMobileMenuOpen(false)} className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
+              <Link href={localePath('/worldcup')} onClick={() => setMobileMenuOpen(false)} className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
                 <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-8 w-auto object-contain relative z-10" />
                 <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
               </Link>
 
-              {[{ href: '/', label: t('home') }, { href: '/predictions', label: t('predictions') }, { href: '/leagues', label: t('leagues') }, { href: '/performance', label: t('performance') }, { href: '/community', label: t('community') }, { href: '/news', label: t('news') }, { href: '/pricing', label: t('pricing') }].map((link) => (
+              {[{ href: localePath('/'), label: t('home') }, { href: localePath('/predictions'), label: t('predictions') }, { href: localePath('/leagues'), label: t('leagues') }, { href: localePath('/performance'), label: t('performance') }, { href: localePath('/community'), label: t('community') }, { href: localePath('/news'), label: t('news') }, { href: localePath('/pricing'), label: t('pricing') }].map((link) => (
                 <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-white/5">
                   {link.label}
                 </Link>
               ))}
               {!user && (
                 <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium">{t('login')}</Link>
-                  <Link href="/get-started" onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold">{t('getStarted')}</Link>
                 </div>
               )}
             </div>
@@ -2241,7 +2249,7 @@ export default function CommunityPage() {
 
               {/* News Button */}
               <Link
-                href="/news"
+                href={localePath('/news')}
                 className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500/40 to-orange-600/40 backdrop-blur-md border border-amber-400/50 p-5 md:p-6 text-center hover:border-amber-300/70 hover:from-amber-500/50 hover:to-orange-600/50 transition-all duration-300 cursor-pointer shadow-lg shadow-amber-500/20"
               >
                 <div className="relative">
@@ -2276,7 +2284,7 @@ export default function CommunityPage() {
             <div className="grid md:grid-cols-3 gap-4">
               {/* Global Chat - Full width on mobile, 2/3 on desktop */}
               <div className="md:col-span-2 bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 overflow-hidden h-[500px] md:h-[600px]">
-                <ChatRoom fixtureId={null} user={user} t={t} />
+                <ChatRoom fixtureId={null} user={user} t={t} localePath={localePath} />
               </div>
 
               {/* Stats Sidebar */}
@@ -2455,7 +2463,7 @@ export default function CommunityPage() {
                                 {t('makePrediction')}
                               </button>
                             ) : (
-                              <Link href="/login" className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all text-sm font-medium text-gray-400 border border-white/10 hover:border-white/20">
+                              <Link href={localePath('/login')} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all text-sm font-medium text-gray-400 border border-white/10 hover:border-white/20">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                                 </svg>
@@ -2872,7 +2880,7 @@ export default function CommunityPage() {
                                 </div>
                               </div>
                             ) : (
-                              <Link href="/login" className="block w-full py-3 mb-4 text-center rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 transition-all">
+                              <Link href={localePath('/login')} className="block w-full py-3 mb-4 text-center rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 transition-all">
                                 {t('loginToComment')}
                               </Link>
                             )}
@@ -3099,6 +3107,7 @@ export default function CommunityPage() {
               t={t}
               matchInfo={getMatchInfo(matchChatOpen)}
               onClose={() => setMatchChatOpen(null)}
+              localePath={localePath}
             />
           </div>
         </div>
@@ -3449,7 +3458,7 @@ export default function CommunityPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 lg:gap-12 mb-12">
             <div className="col-span-2">
-              <Link href="/" className="flex items-center gap-3 mb-6">
+              <Link href={localePath('/')} className="flex items-center gap-3 mb-6">
                 <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
                 <span className="text-xl font-bold">OddsFlow</span>
               </Link>
@@ -3473,48 +3482,48 @@ export default function CommunityPage() {
             <div>
               <h4 className="font-semibold mb-5 text-white">{t('product')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
-                <li><Link href="/leagues" className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
-                <li><Link href="/performance" className="hover:text-emerald-400 transition-colors">{t('liveOdds')}</Link></li>
-                <li><Link href="/solution" className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
+                <li><Link href={localePath('/predictions')} className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
+                <li><Link href={localePath('/leagues')} className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
+                <li><Link href={localePath('/performance')} className="hover:text-emerald-400 transition-colors">{t('liveOdds')}</Link></li>
+                <li><Link href={localePath('/solution')} className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/leagues/premier-league" className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
-                <li><Link href="/leagues/la-liga" className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
-                <li><Link href="/leagues/serie-a" className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
-                <li><Link href="/leagues/bundesliga" className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
-                <li><Link href="/leagues/ligue-1" className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
-                <li><Link href="/leagues/champions-league" className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
+                <li><Link href={localePath('/leagues/premier-league')} className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
+                <li><Link href={localePath('/leagues/la-liga')} className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
+                <li><Link href={localePath('/leagues/serie-a')} className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
+                <li><Link href={localePath('/leagues/bundesliga')} className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
+                <li><Link href={localePath('/leagues/ligue-1')} className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
+                <li><Link href={localePath('/leagues/champions-league')} className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-5 text-white">{t('communityFooter')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/community" className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
-                <li><Link href="/community/global-chat" className="hover:text-emerald-400 transition-colors">{t('globalChatFooter')}</Link></li>
-                <li><Link href="/community/user-predictions" className="hover:text-emerald-400 transition-colors">{t('userPredictionsFooter')}</Link></li>
+                <li><Link href={localePath('/community')} className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
+                <li><Link href={localePath('/community/global-chat')} className="hover:text-emerald-400 transition-colors">{t('globalChatFooter')}</Link></li>
+                <li><Link href={localePath('/community/user-predictions')} className="hover:text-emerald-400 transition-colors">{t('userPredictionsFooter')}</Link></li>
               </ul>
             </div>
 
             <div className="relative z-10">
               <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/about" className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
-                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
-                <li><Link href="/blog" className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
+                <li><Link href={localePath('/about')} className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+                <li><Link href={localePath('/contact')} className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+                <li><Link href={localePath('/blog')} className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
               </ul>
             </div>
 
             <div className="relative z-10">
               <h4 className="font-semibold mb-5 text-white">{t('legal')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href="/terms-of-service" className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
-                <li><Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+                <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+                <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
               </ul>
             </div>
           </div>

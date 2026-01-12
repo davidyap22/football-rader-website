@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 import { supabase, chatSupabase, Prematch, ChatMessage, ChatReaction, getChatMessages, sendChatMessage, subscribeToChatMessages, getMessageReactions, toggleMessageReaction, getCommentStats } from '@/lib/supabase';
@@ -100,7 +101,7 @@ const translations: Record<string, Record<string, string>> = {
 };
 
 // ChatRoom Component
-function ChatRoom({ user, t }: { user: User | null; t: (key: string) => string }) {
+function ChatRoom({ user, t, localePath }: { user: User | null; t: (key: string) => string; localePath: (path: string) => string }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
@@ -220,7 +221,7 @@ function ChatRoom({ user, t }: { user: User | null; t: (key: string) => string }
             </button>
           </div>
         ) : (
-          <Link href="/login" className="block text-center py-3 bg-white/5 rounded-xl text-gray-400 hover:bg-white/10 transition-all">
+          <Link href={localePath('/login')} className="block text-center py-3 bg-white/5 rounded-xl text-gray-400 hover:bg-white/10 transition-all">
             {t('loginToChat')}
           </Link>
         )}
@@ -230,6 +231,8 @@ function ChatRoom({ user, t }: { user: User | null; t: (key: string) => string }
 }
 
 export default function GlobalChatPage() {
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
   const [language, setLanguage] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -239,6 +242,11 @@ export default function GlobalChatPage() {
 
   const currentLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
   const t = (key: string) => translations[language]?.[key] || translations['EN'][key] || key;
+
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
 
   const handleSetLang = (newLang: string) => {
     setLanguage(newLang);
@@ -293,21 +301,21 @@ export default function GlobalChatPage() {
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('home')}</Link>
-              <Link href="/predictions" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('predictions')}</Link>
-              <Link href="/leagues" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('leagues')}</Link>
-              <Link href="/performance" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('performance')}</Link>
-              <Link href="/community" className="text-sm font-medium text-emerald-400 transition-colors">{t('community')}</Link>
-              <Link href="/news" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('news')}</Link>
-              <Link href="/solution" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('solution')}</Link>
-              <Link href="/pricing" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('pricing')}</Link>
+              <Link href={localePath('/')} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('home')}</Link>
+              <Link href={localePath('/predictions')} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('predictions')}</Link>
+              <Link href={localePath('/leagues')} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('leagues')}</Link>
+              <Link href={localePath('/performance')} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('performance')}</Link>
+              <Link href={localePath('/community')} className="text-sm font-medium text-emerald-400 transition-colors">{t('community')}</Link>
+              <Link href={localePath('/news')} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('news')}</Link>
+              <Link href={localePath('/solution')} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('solution')}</Link>
+              <Link href={localePath('/pricing')} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">{t('pricing')}</Link>
             </div>
 
             {/* Right Side */}
@@ -338,7 +346,7 @@ export default function GlobalChatPage() {
 
               {/* Auth buttons */}
               {user ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
                   {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
                     <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-6 h-6 rounded-full object-cover" referrerPolicy="no-referrer" />
                   ) : (
@@ -350,14 +358,14 @@ export default function GlobalChatPage() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="hidden sm:block px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium">{t('login')}</Link>
-                  <Link href="/get-started" className="hidden sm:block px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} className="hidden sm:block px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="hidden sm:block px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm">{t('getStarted')}</Link>
                 </>
               )}
 
               {/* World Cup Special Button */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
@@ -383,21 +391,21 @@ export default function GlobalChatPage() {
           <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10">
             <div className="px-4 py-4 space-y-1">
               {/* World Cup Special Entry */}
-              <Link href="/worldcup" onClick={() => setMobileMenuOpen(false)} className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
+              <Link href={localePath('/worldcup')} onClick={() => setMobileMenuOpen(false)} className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
                 <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-8 w-auto object-contain relative z-10" />
                 <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
               </Link>
 
               {[{ href: '/', label: t('home') }, { href: '/predictions', label: t('predictions') }, { href: '/leagues', label: t('leagues') }, { href: '/performance', label: t('performance') }, { href: '/community', label: t('community') }, { href: '/news', label: t('news') }, { href: '/pricing', label: t('pricing') }].map((link) => (
-                <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-white/5">
+                <Link key={link.href} href={localePath(link.href)} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-white/5">
                   {link.label}
                 </Link>
               ))}
               {!user && (
                 <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium">{t('login')}</Link>
-                  <Link href="/get-started" onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold">{t('getStarted')}</Link>
                 </div>
               )}
             </div>
@@ -411,7 +419,7 @@ export default function GlobalChatPage() {
           {/* Navigation Buttons */}
           <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
             <Link
-              href="/community"
+              href={localePath('/community')}
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white transition-all text-sm"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -421,13 +429,13 @@ export default function GlobalChatPage() {
             </Link>
             <div className="hidden sm:flex items-center gap-2">
               <Link
-                href="/community/global-chat"
+                href={localePath('/community/global-chat')}
                 className="px-4 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-sm font-medium"
               >
                 {t('globalChat')}
               </Link>
               <Link
-                href="/community/user-predictions"
+                href={localePath('/community/user-predictions')}
                 className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white transition-all text-sm"
               >
                 {t('userPredictions')}
@@ -446,7 +454,7 @@ export default function GlobalChatPage() {
           <div className="grid md:grid-cols-3 gap-4">
             {/* Global Chat */}
             <div className="md:col-span-2 bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 overflow-hidden h-[600px]">
-              <ChatRoom user={user} t={t} />
+              <ChatRoom user={user} t={t} localePath={localePath} />
             </div>
 
             {/* Stats Sidebar */}

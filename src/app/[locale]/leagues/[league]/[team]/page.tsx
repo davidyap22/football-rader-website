@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { supabase, TeamStatistics, PlayerStats, getTeamStatsByName, getPlayerStatsByTeam } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -787,9 +788,24 @@ const FORMATION_POSITIONS: Record<string, number[][]> = {
 
 export default function TeamProfilePage() {
   const params = useParams();
+  const urlLocale = (params.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
+  const selectedLang = localeToTranslationCode[locale as Locale] || 'EN';
   const leagueSlug = params.league as string;
   const teamSlug = params.team as string;
   const leagueConfig = LEAGUES_CONFIG[leagueSlug];
+
+  // Helper function for locale-aware paths
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
+  // Helper for language dropdown URLs
+  const getLocaleUrl = (targetLocale: Locale): string => {
+    const currentPath = `/leagues/${leagueSlug}/${teamSlug}`;
+    return targetLocale === 'en' ? currentPath : `/${targetLocale}${currentPath}`;
+  };
 
   const [mounted, setMounted] = useState(false);
   const [team, setTeam] = useState<TeamStatistics | null>(null);
@@ -797,7 +813,6 @@ export default function TeamProfilePage() {
   const [loading, setLoading] = useState(true);
   const [loadingPlayers, setLoadingPlayers] = useState(false);
   const [selectedFormation, setSelectedFormation] = useState<string>('');
-  const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -806,24 +821,10 @@ export default function TeamProfilePage() {
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
-  // Handle language change
-  const handleLanguageChange = (langCode: string) => {
-    setSelectedLang(langCode);
-    localStorage.setItem('oddsflow_lang', langCode);
-    setLangDropdownOpen(false);
-  };
-
   // Wait for client-side mount
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  // Load saved language preference
-  useEffect(() => {
-    if (!mounted) return;
-    const savedLang = localStorage.getItem('oddsflow_lang');
-    if (savedLang) setSelectedLang(savedLang);
-  }, [mounted]);
 
   // Check user authentication
   useEffect(() => {
@@ -958,20 +959,20 @@ export default function TeamProfilePage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
-              <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
-              <Link href="/leagues" className="text-emerald-400 text-sm font-medium">{t('leagues')}</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
-              <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
-              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
-              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
-              <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
+              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
+              <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
+              <Link href={localePath('/leagues')} className="text-emerald-400 text-sm font-medium">{t('leagues')}</Link>
+              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
+              <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
+              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
+              <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
             {/* Right side - Language, Auth, FIFA, Mobile Menu */}
@@ -997,24 +998,25 @@ export default function TeamProfilePage() {
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
                     <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
-                      {LANGUAGES.map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => handleLanguageChange(lang.code)}
+                      {locales.map((loc) => (
+                        <Link
+                          key={loc}
+                          href={getLocaleUrl(loc)}
                           className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors cursor-pointer ${
-                            selectedLang === lang.code
+                            locale === loc
                               ? 'bg-emerald-500/20 text-emerald-400'
                               : 'text-gray-300 hover:bg-white/5 hover:text-white'
                           }`}
+                          onClick={() => setLangDropdownOpen(false)}
                         >
-                          <FlagIcon code={lang.code} size={20} />
-                          <span>{lang.name}</span>
-                          {selectedLang === lang.code && (
+                          <FlagIcon code={loc} size={20} />
+                          <span>{localeNames[loc]}</span>
+                          {locale === loc && (
                             <svg className="w-4 h-4 ml-auto text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>
                           )}
-                        </button>
+                        </Link>
                       ))}
                     </div>
                   </>
@@ -1023,7 +1025,7 @@ export default function TeamProfilePage() {
 
               {/* Auth Buttons */}
               {user ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
                   {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
                     <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-8 h-8 rounded-full object-cover" referrerPolicy="no-referrer" />
                   ) : (
@@ -1035,14 +1037,14 @@ export default function TeamProfilePage() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
                 </>
               )}
 
               {/* World Cup Special Button - Always Visible */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
               >
                 {/* Shimmer effect */}
@@ -1090,7 +1092,7 @@ export default function TeamProfilePage() {
             <div className="px-4 py-4 space-y-1">
               {/* World Cup Special Entry */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 onClick={() => setMobileMenuOpen(false)}
                 className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 border-2 border-yellow-300 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden"
               >
@@ -1103,27 +1105,27 @@ export default function TeamProfilePage() {
                 <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
               </Link>
 
-              <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('home')}</Link>
-              <Link href="/predictions" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('predictions')}</Link>
-              <Link href="/leagues" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">{t('leagues')}</Link>
-              <Link href="/performance" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('performance')}</Link>
-              <Link href="/community" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('community')}</Link>
-              <Link href="/news" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('news')}</Link>
-              <Link href="/solution" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('solution')}</Link>
-              <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('pricing')}</Link>
+              <Link href={localePath('/')} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('home')}</Link>
+              <Link href={localePath('/predictions')} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('predictions')}</Link>
+              <Link href={localePath('/leagues')} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">{t('leagues')}</Link>
+              <Link href={localePath('/performance')} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('performance')}</Link>
+              <Link href={localePath('/community')} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('community')}</Link>
+              <Link href={localePath('/news')} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('news')}</Link>
+              <Link href={localePath('/solution')} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('solution')}</Link>
+              <Link href={localePath('/pricing')} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium transition-all text-gray-300 hover:bg-white/5 hover:text-white">{t('pricing')}</Link>
 
               {/* Mobile Login/Signup */}
               {!user && (
                 <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
                   <Link
-                    href="/login"
+                    href={localePath('/login')}
                     onClick={() => setMobileMenuOpen(false)}
                     className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all"
                   >
                     {t('login')}
                   </Link>
                   <Link
-                    href="/get-started"
+                    href={localePath('/get-started')}
                     onClick={() => setMobileMenuOpen(false)}
                     className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
                   >
@@ -1140,7 +1142,7 @@ export default function TeamProfilePage() {
       <main className="relative z-10 pt-24 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Back Button */}
-          <Link href={`/leagues/${leagueSlug}`} className="inline-flex items-center gap-2 text-emerald-400 hover:text-white transition-colors mb-6 group">
+          <Link href={localePath(`/leagues/${leagueSlug}`)} className="inline-flex items-center gap-2 text-emerald-400 hover:text-white transition-colors mb-6 group">
             <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -1535,7 +1537,7 @@ export default function TeamProfilePage() {
                               </td>
                               <td className="text-center py-3 px-3">
                                 <Link
-                                  href={`/leagues/${leagueSlug}/player/${player.id}`}
+                                  href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
                                   className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors border border-emerald-500/20"
                                 >
                                   {t('viewProfile')}

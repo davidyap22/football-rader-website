@@ -10,6 +10,9 @@ export default createMiddleware({
 
   // Don't redirect default locale to /en prefix (cleaner URLs)
   localePrefix: 'as-needed',
+
+  // Disable automatic locale detection so users can manually switch languages
+  localeDetection: false,
 });
 
 export const config = {

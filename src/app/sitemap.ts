@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const locales = ['en', 'zh', 'id', 'ms'] as const;
+const locales = ['en', 'es', 'pt', 'de', 'fr', 'ja', 'ko', 'zh', 'tw', 'id'] as const;
 const baseUrl = 'https://www.oddsflow.ai';
 
 // Helper to generate alternates for a path

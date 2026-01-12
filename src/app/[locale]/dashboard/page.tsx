@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase, signOut, getUserSubscription, UserSubscription } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
@@ -10,6 +10,14 @@ type MenuSection = 'profile' | 'subscription' | 'calculator' | 'settings';
 
 export default function DashboardPage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
+
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
   const [user, setUser] = useState<User | null>(null);
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,7 +34,7 @@ export default function DashboardPage() {
       const { data: { session } } = await supabase.auth.getSession();
 
       if (!session?.user) {
-        router.push('/login');
+        router.push(localePath('/login'));
         return;
       }
 
@@ -44,7 +52,7 @@ export default function DashboardPage() {
     const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange(
       async (event: any, session: any) => {
         if (event === 'SIGNED_OUT') {
-          router.push('/login');
+          router.push(localePath('/login'));
         } else if (session?.user) {
           setUser(session.user);
         }
@@ -58,7 +66,7 @@ export default function DashboardPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    router.push('/');
+    router.push(localePath('/'));
   };
 
   const getDaysRemaining = () => {
@@ -164,23 +172,23 @@ export default function DashboardPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Home</Link>
-              <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Predictions</Link>
-              <Link href="/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Leagues</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">AI Performance</Link>
-              <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Community</Link>
-              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">News</Link>
-              <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Pricing</Link>
+              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Home</Link>
+              <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Predictions</Link>
+              <Link href={localePath('/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Leagues</Link>
+              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">AI Performance</Link>
+              <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Community</Link>
+              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">News</Link>
+              <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Pricing</Link>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-              <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-emerald-500/30 hover:bg-white/10 transition-all cursor-pointer">
+              <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-emerald-500/30 hover:bg-white/10 transition-all cursor-pointer">
                 {getAvatarUrl() ? (
                   <img src={getAvatarUrl()!} alt="" className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
                 ) : (
@@ -193,7 +201,7 @@ export default function DashboardPage() {
 
               {/* World Cup Special Button */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
@@ -235,21 +243,21 @@ export default function DashboardPage() {
           <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
             <div className="px-4 py-4 space-y-1">
               {/* World Cup Special Entry */}
-              <Link href="/worldcup" onClick={() => setMobileMenuOpen(false)} className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
+              <Link href={localePath('/worldcup')} onClick={() => setMobileMenuOpen(false)} className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
                 <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-8 w-auto object-contain relative z-10" />
                 <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
               </Link>
 
               {[
-                { href: '/', label: 'Home' },
-                { href: '/predictions', label: 'Predictions' },
-                { href: '/leagues', label: 'Leagues' },
-                { href: '/performance', label: 'AI Performance' },
-                { href: '/community', label: 'Community' },
-                { href: '/news', label: 'News' },
-                { href: '/pricing', label: 'Pricing' },
-                { href: '/dashboard', label: 'Dashboard', active: true },
+                { href: localePath('/'), label: 'Home' },
+                { href: localePath('/predictions'), label: 'Predictions' },
+                { href: localePath('/leagues'), label: 'Leagues' },
+                { href: localePath('/performance'), label: 'AI Performance' },
+                { href: localePath('/community'), label: 'Community' },
+                { href: localePath('/news'), label: 'News' },
+                { href: localePath('/pricing'), label: 'Pricing' },
+                { href: localePath('/dashboard'), label: 'Dashboard', active: true },
               ].map((link) => (
                 <Link
                   key={link.href}
@@ -384,7 +392,7 @@ export default function DashboardPage() {
                   <div className="bg-gradient-to-br from-gray-900/90 to-gray-950/90 rounded-2xl border border-white/10 p-6">
                     <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                      <Link href="/predictions" className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all group">
+                      <Link href={localePath('/predictions')} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all group">
                         <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                           <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -396,7 +404,7 @@ export default function DashboardPage() {
                         </div>
                       </Link>
 
-                      <Link href="/leagues" className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-cyan-500/10 border border-transparent hover:border-cyan-500/20 transition-all group">
+                      <Link href={localePath('/leagues')} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-cyan-500/10 border border-transparent hover:border-cyan-500/20 transition-all group">
                         <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                           <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
@@ -408,7 +416,7 @@ export default function DashboardPage() {
                         </div>
                       </Link>
 
-                      <Link href="/performance" className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-purple-500/10 border border-transparent hover:border-purple-500/20 transition-all group">
+                      <Link href={localePath('/performance')} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-purple-500/10 border border-transparent hover:border-purple-500/20 transition-all group">
                         <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                           <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -420,7 +428,7 @@ export default function DashboardPage() {
                         </div>
                       </Link>
 
-                      <Link href="/pricing" className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-yellow-500/10 border border-transparent hover:border-yellow-500/20 transition-all group">
+                      <Link href={localePath('/pricing')} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-yellow-500/10 border border-transparent hover:border-yellow-500/20 transition-all group">
                         <div className="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                           <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -591,7 +599,7 @@ export default function DashboardPage() {
                           {/* Action Buttons - Smaller */}
                           <div className="relative flex gap-3">
                             <Link
-                              href="/pricing"
+                              href={localePath('/pricing')}
                               className={`group/btn flex-1 relative py-2.5 rounded-xl font-semibold text-center text-sm overflow-hidden transition-all hover:shadow-lg ${
                                 subscription.package_type === 'ultimate'
                                   ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-400 text-black hover:shadow-purple-500/20'
@@ -671,7 +679,7 @@ export default function DashboardPage() {
                         <h3 className="text-lg font-semibold mb-2">No Active Subscription</h3>
                         <p className="text-gray-400 text-sm mb-4">Subscribe to unlock premium features</p>
                         <Link
-                          href="/pricing"
+                          href={localePath('/pricing')}
                           className="inline-block px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
                         >
                           Subscribe Now

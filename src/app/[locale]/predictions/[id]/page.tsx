@@ -7,6 +7,7 @@ import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPredi
 import { User } from '@supabase/supabase-js';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 // Helper function to parse LiveSignals data from database
 const parseLiveSignals = (data: LiveSignals | null): LiveSignals | null => {
@@ -405,13 +406,28 @@ interface AIPredictions {
 
 export default function MatchDetailsPage() {
   const params = useParams();
+  const urlLocale = (params.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
+  const selectedLang = localeToTranslationCode[locale as Locale] || 'EN';
   const searchParams = useSearchParams();
   const router = useRouter();
   const dateParam = searchParams.get('date');
+  const matchId = params.id as string;
+
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
+  // Helper for language dropdown URLs
+  const getLocaleUrl = (targetLocale: Locale): string => {
+    const currentPath = `/predictions/${matchId}${dateParam ? `?date=${dateParam}` : ''}`;
+    return targetLocale === 'en' ? currentPath : `/${targetLocale}${currentPath}`;
+  };
+
   const [match, setMatch] = useState<Prematch | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedPersonality, setSelectedPersonality] = useState('aggressive');
-  const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
@@ -424,7 +440,7 @@ export default function MatchDetailsPage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
         // Not logged in - redirect to login
-        router.push('/login');
+        router.push(localePath('/login'));
         return;
       }
       setUser(session.user);
@@ -434,7 +450,7 @@ export default function MatchDetailsPage() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       if (!session?.user) {
-        router.push('/login');
+        router.push(localePath('/login'));
         return;
       }
       setUser(session.user);
@@ -477,20 +493,6 @@ export default function MatchDetailsPage() {
     return false;
   };
 
-  // Load language from localStorage on mount
-  useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_lang');
-    if (savedLang) {
-      setSelectedLang(savedLang);
-    }
-  }, []);
-
-  // Save language to localStorage when changed
-  const handleLanguageChange = (langCode: string) => {
-    setSelectedLang(langCode);
-    localStorage.setItem('oddsflow_lang', langCode);
-    setLangDropdownOpen(false);
-  };
 
   // AI Predictions state
   const [aiPredictions, setAiPredictions] = useState<AIPredictions>({
@@ -996,7 +998,7 @@ export default function MatchDetailsPage() {
     return (
       <div className="min-h-screen bg-[#0a0a0f] text-white flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-4">Match not found</h1>
-        <Link href={dateParam ? `/predictions?date=${dateParam}` : '/predictions'} className="text-emerald-400 hover:underline">
+        <Link href={dateParam ? localePath(`/predictions?date=${dateParam}`) : localePath('/predictions')} className="text-emerald-400 hover:underline">
           ← {t('backToPredictions')}
         </Link>
       </div>
@@ -1009,20 +1011,20 @@ export default function MatchDetailsPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
-              <Link href="/predictions" className="text-emerald-400 text-sm font-medium">{t('predictions')}</Link>
-              <Link href="/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
-              <Link href="/community" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
-              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
-              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
-              <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
+              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
+              <Link href={localePath('/predictions')} className="text-emerald-400 text-sm font-medium">{t('predictions')}</Link>
+              <Link href={localePath('/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
+              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
+              <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
+              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
+              <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
@@ -1048,24 +1050,25 @@ export default function MatchDetailsPage() {
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
                     <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
-                      {LANGUAGES.map((l) => (
-                        <button
-                          key={l.code}
-                          onClick={() => handleLanguageChange(l.code)}
+                      {locales.map((loc) => (
+                        <Link
+                          key={loc}
+                          href={getLocaleUrl(loc)}
                           className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-left cursor-pointer ${
-                            selectedLang === l.code ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'
+                            locale === loc ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'
                           }`}
+                          onClick={() => setLangDropdownOpen(false)}
                         >
-                          <FlagIcon code={l.code} size={20} />
-                          <span className="font-medium">{l.name}</span>
-                        </button>
+                          <FlagIcon code={loc} size={20} />
+                          <span className="font-medium">{localeNames[loc]}</span>
+                        </Link>
                       ))}
                     </div>
                   </>
                 )}
               </div>
               {user ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
                   {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
                     <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-8 h-8 rounded-full" />
                   ) : (
@@ -1077,14 +1080,14 @@ export default function MatchDetailsPage() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer">{t('getStarted')}</Link>
                 </>
               )}
 
               {/* World Cup Special Button */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
@@ -1100,7 +1103,7 @@ export default function MatchDetailsPage() {
       <main className="pt-24 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
           {/* Back Button */}
-          <Link href={dateParam ? `/predictions?date=${dateParam}` : '/predictions'} className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
+          <Link href={dateParam ? localePath(`/predictions?date=${dateParam}`) : localePath('/predictions')} className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>

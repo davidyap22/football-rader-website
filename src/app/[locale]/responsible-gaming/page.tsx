@@ -7,23 +7,33 @@ export const metadata: Metadata = {
   keywords: ['responsible gaming', 'responsible gambling', 'gambling help', 'self exclusion', 'problem gambling resources'],
 };
 
-export default function ResponsibleGamingPage() {
+export default async function ResponsibleGamingPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Home</Link>
-              <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Predictions</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">AI Performance</Link>
+              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Home</Link>
+              <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Predictions</Link>
+              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">AI Performance</Link>
             </div>
-            <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer">
+            <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer">
               Get Started
             </Link>
           </div>
@@ -176,9 +186,9 @@ export default function ResponsibleGamingPage() {
               <span className="font-bold">OddsFlow</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-gray-400">
-              <Link href="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link>
-              <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
-              <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
+              <Link href={localePath('/terms-of-service')} className="hover:text-white transition-colors">Terms of Service</Link>
+              <Link href={localePath('/privacy-policy')} className="hover:text-white transition-colors">Privacy Policy</Link>
+              <Link href={localePath('/contact')} className="hover:text-white transition-colors">Contact</Link>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-white/5 text-center">

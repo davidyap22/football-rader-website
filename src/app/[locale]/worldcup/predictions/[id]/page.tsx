@@ -6,7 +6,8 @@ import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
-import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import FlagIcon from "@/components/FlagIcon";
+import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -276,18 +277,34 @@ export default function MatchDetailsPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const urlLocale = (params.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
+  const selectedLang = localeToTranslationCode[locale as Locale] || 'EN';
   const dateParam = searchParams.get('date');
   const groupParam = searchParams.get('group');
+
+  // Helper for locale-aware paths
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
+  const getLocaleUrl = (targetLocale: Locale): string => {
+    // Preserve current match ID in URL
+    const matchId = params.id as string;
+    const currentPath = `/worldcup/predictions/${matchId}`;
+    const queryString = dateParam ? `?date=${dateParam}` : (groupParam ? `?group=${groupParam}` : '');
+    return targetLocale === 'en' ? `${currentPath}${queryString}` : `/${targetLocale}${currentPath}${queryString}`;
+  };
+
   const [match, setMatch] = useState<Prematch | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedPersonality, setSelectedPersonality] = useState('aggressive');
-  const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [fifaDropdownOpen, setFifaDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [userSubscription, setUserSubscription] = useState<UserSubscription | null>(null);
-  const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
   // Check auth session and redirect if not logged in
   useEffect(() => {
@@ -295,7 +312,7 @@ export default function MatchDetailsPage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
         // Not logged in - redirect to login
-        router.push('/login');
+        router.push(localePath('/login'));
         return;
       }
       setUser(session.user);
@@ -305,7 +322,7 @@ export default function MatchDetailsPage() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       if (!session?.user) {
-        router.push('/login');
+        router.push(localePath('/login'));
         return;
       }
       setUser(session.user);
@@ -348,20 +365,6 @@ export default function MatchDetailsPage() {
     return false;
   };
 
-  // Load language from localStorage on mount
-  useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_lang');
-    if (savedLang) {
-      setSelectedLang(savedLang);
-    }
-  }, []);
-
-  // Save language to localStorage when changed
-  const handleLanguageChange = (langCode: string) => {
-    setSelectedLang(langCode);
-    localStorage.setItem('oddsflow_lang', langCode);
-    setLangDropdownOpen(false);
-  };
 
   // AI Predictions state
   const [aiPredictions, setAiPredictions] = useState<AIPredictions>({
@@ -754,7 +757,7 @@ export default function MatchDetailsPage() {
     return (
       <div className="min-h-screen bg-[#0a0a0f] text-white flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-4">Match not found</h1>
-        <Link href={`/worldcup/predictions${groupParam ? `?group=${encodeURIComponent(groupParam)}` : ''}`} className="text-amber-400 hover:underline">
+        <Link href={localePath(`/worldcup/predictions${groupParam ? `?group=${encodeURIComponent(groupParam)}` : ''}`)} className="text-amber-400 hover:underline">
           ← {t('backToPredictions')}
         </Link>
       </div>
@@ -767,16 +770,16 @@ export default function MatchDetailsPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/worldcup" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
-              <Link href="/worldcup/predictions" className="text-amber-400 text-sm font-medium">{t('predictions')}</Link>
-              <Link href="/worldcup/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
-              <Link href="/worldcup/ai_performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
+              <Link href={localePath('/worldcup')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
+              <Link href={localePath('/worldcup/predictions')} className="text-amber-400 text-sm font-medium">{t('predictions')}</Link>
+              <Link href={localePath('/worldcup/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
+              <Link href={localePath('/worldcup/ai_performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
@@ -786,8 +789,8 @@ export default function MatchDetailsPage() {
                   onClick={() => setLangDropdownOpen(!langDropdownOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer"
                 >
-                  <FlagIcon code={currentLang.code} size={20} />
-                  <span className="font-medium">{currentLang.code}</span>
+                  <FlagIcon code={selectedLang} size={20} />
+                  <span className="font-medium">{selectedLang}</span>
                   <svg
                     className={`w-4 h-4 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`}
                     fill="none"
@@ -802,24 +805,25 @@ export default function MatchDetailsPage() {
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
                     <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
-                      {LANGUAGES.map((l) => (
-                        <button
-                          key={l.code}
-                          onClick={() => handleLanguageChange(l.code)}
+                      {locales.map((loc) => (
+                        <Link
+                          key={loc}
+                          href={getLocaleUrl(loc)}
+                          onClick={() => setLangDropdownOpen(false)}
                           className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-left cursor-pointer ${
-                            selectedLang === l.code ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'
+                            locale === loc ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'
                           }`}
                         >
-                          <FlagIcon code={l.code} size={20} />
-                          <span className="font-medium">{l.name}</span>
-                        </button>
+                          <FlagIcon code={localeToTranslationCode[loc]} size={20} />
+                          <span className="font-medium">{localeNames[loc]}</span>
+                        </Link>
                       ))}
                     </div>
                   </>
                 )}
               </div>
               {user ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
                   {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
                     <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-8 h-8 rounded-full" />
                   ) : (
@@ -831,8 +835,8 @@ export default function MatchDetailsPage() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer">{t('getStarted')}</Link>
                 </>
               )}
 
@@ -852,25 +856,25 @@ export default function MatchDetailsPage() {
 
                 {fifaDropdownOpen && (
                   <div className="absolute right-0 top-full mt-2 w-56 bg-gray-900/95 backdrop-blur-xl border border-amber-500/30 rounded-xl shadow-xl shadow-amber-500/20 overflow-hidden z-50">
-                    <Link href="/" onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors border-b border-white/10">
+                    <Link href={localePath('/')} onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors border-b border-white/10">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                       </svg>
                       <span className="font-medium">Back to OddsFlow</span>
                     </Link>
-                    <Link href="/worldcup/predictions" onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-amber-400 bg-amber-500/10">
+                    <Link href={localePath('/worldcup/predictions')} onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-amber-400 bg-amber-500/10">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
                       <span className="font-medium">{t('predictions')}</span>
                     </Link>
-                    <Link href="/worldcup/leagues" onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors">
+                    <Link href={localePath('/worldcup/leagues')} onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                       </svg>
                       <span className="font-medium">{t('leagues')}</span>
                     </Link>
-                    <Link href="/worldcup/ai_performance" onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors">
+                    <Link href={localePath('/worldcup/ai_performance')} onClick={() => setFifaDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                       </svg>
@@ -888,7 +892,7 @@ export default function MatchDetailsPage() {
       <main className="pt-24 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
           {/* Back Button */}
-          <Link href={`/worldcup/predictions${groupParam ? `?group=${encodeURIComponent(groupParam)}` : ''}`} className="inline-flex items-center gap-2 text-amber-400 hover:text-white transition-colors mb-6">
+          <Link href={localePath(`/worldcup/predictions${groupParam ? `?group=${encodeURIComponent(groupParam)}` : ''}`)} className="inline-flex items-center gap-2 text-amber-400 hover:text-white transition-colors mb-6">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -2622,24 +2626,24 @@ export default function MatchDetailsPage() {
             <div>
               <h4 className="font-semibold mb-4 text-white text-sm">Popular Leagues</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><Link href="/leagues/premier-league" className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
-                <li><Link href="/leagues/la-liga" className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
-                <li><Link href="/leagues/serie-a" className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
-                <li><Link href="/leagues/bundesliga" className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
-                <li><Link href="/leagues/ligue-1" className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
-                <li><Link href="/leagues/champions-league" className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
-                <li><Link href="/leagues/europa-league" className="hover:text-emerald-400 transition-colors">Europa League</Link></li>
+                <li><Link href={localePath('/leagues/premier-league')} className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
+                <li><Link href={localePath('/leagues/la-liga')} className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
+                <li><Link href={localePath('/leagues/serie-a')} className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
+                <li><Link href={localePath('/leagues/bundesliga')} className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
+                <li><Link href={localePath('/leagues/ligue-1')} className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
+                <li><Link href={localePath('/leagues/champions-league')} className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
+                <li><Link href={localePath('/leagues/europa-league')} className="hover:text-emerald-400 transition-colors">Europa League</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4 text-white text-sm">AI Predictions</h4>
               <ul className="space-y-2 text-gray-400 text-sm">
-                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">AI Football Predictions</Link></li>
-                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">1x2 Predictions</Link></li>
-                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">Over/Under Tips</Link></li>
-                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">Handicap Betting</Link></li>
-                <li><Link href="/performance" className="hover:text-emerald-400 transition-colors">AI Betting Performance</Link></li>
-                <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">Football Tips Today</Link></li>
+                <li><Link href={localePath('/predictions')} className="hover:text-emerald-400 transition-colors">AI Football Predictions</Link></li>
+                <li><Link href={localePath('/predictions')} className="hover:text-emerald-400 transition-colors">1x2 Predictions</Link></li>
+                <li><Link href={localePath('/predictions')} className="hover:text-emerald-400 transition-colors">Over/Under Tips</Link></li>
+                <li><Link href={localePath('/predictions')} className="hover:text-emerald-400 transition-colors">Handicap Betting</Link></li>
+                <li><Link href={localePath('/performance')} className="hover:text-emerald-400 transition-colors">AI Betting Performance</Link></li>
+                <li><Link href={localePath('/predictions')} className="hover:text-emerald-400 transition-colors">Football Tips Today</Link></li>
               </ul>
             </div>
           </div>

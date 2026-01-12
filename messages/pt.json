@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "title": "OddsFlow - Previsões de Futebol IA Mais Precisas | Dicas IA Futebol Europeu",
+    "description": "Previsões de futebol IA mais precisas para Premier League, Bundesliga, Serie A, La Liga e Ligue 1. Obtenha previsões 1x2, dicas de handicap, análise over/under."
+  },
+  "nav": {
+    "home": "Início",
+    "predictions": "Previsões",
+    "leagues": "Ligas",
+    "performance": "Desempenho",
+    "pricing": "Preços",
+    "news": "Notícias",
+    "community": "Comunidade",
+    "about": "Sobre",
+    "contact": "Contato",
+    "login": "Entrar",
+    "getStarted": "Começar",
+    "dashboard": "Painel",
+    "logout": "Sair"
+  },
+  "home": {
+    "hero": {
+      "title": "Previsões de Futebol com IA",
+      "subtitle": "Obtenha previsões precisas para ligas europeias usando aprendizado de máquina avançado",
+      "cta": "Começar a Prever"
+    },
+    "features": {
+      "title": "Por Que Escolher OddsFlow?",
+      "accuracy": {
+        "title": "Alta Precisão",
+        "description": "Nosso modelo IA alcança precisão líder na indústria"
+      },
+      "transparent": {
+        "title": "Totalmente Transparente",
+        "description": "Todas as previsões são rastreadas e verificadas publicamente"
+      },
+      "realtime": {
+        "title": "Atualizações em Tempo Real",
+        "description": "Obtenha previsões assim que as odds estiverem disponíveis"
+      }
+    },
+    "leagues": {
+      "title": "Ligas Suportadas",
+      "premierLeague": "Premier League",
+      "bundesliga": "Bundesliga",
+      "serieA": "Serie A",
+      "laLiga": "La Liga",
+      "ligue1": "Ligue 1"
+    }
+  },
+  "predictions": {
+    "title": "Previsões IA",
+    "filters": {
+      "all": "Todos",
+      "moneyline": "1X2",
+      "handicap": "Handicap",
+      "overUnder": "Over/Under"
+    },
+    "betStyles": {
+      "aggressive": "Agressivo",
+      "balanced": "Equilibrado",
+      "conservative": "Conservador",
+      "valueHunter": "Caçador de Valor",
+      "safePlay": "Jogo Seguro"
+    },
+    "table": {
+      "match": "Partida",
+      "prediction": "Previsão",
+      "odds": "Odds",
+      "confidence": "Confiança",
+      "result": "Resultado"
+    },
+    "profitSummary": "Resumo de Lucros",
+    "viewDetails": "Ver Detalhes"
+  },
+  "performance": {
+    "title": "Desempenho IA",
+    "totalProfit": "Lucro Total",
+    "winRate": "Taxa de Vitórias",
+    "totalBets": "Total de Apostas",
+    "roi": "ROI"
+  },
+  "pricing": {
+    "title": "Planos de Preços",
+    "free": {
+      "name": "Grátis",
+      "price": "$0",
+      "period": "para sempre",
+      "features": ["Previsões limitadas", "Ligas básicas", "Acesso à comunidade"]
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "por mês",
+      "features": ["Previsões ilimitadas", "Todas as ligas", "Suporte prioritário", "Análise avançada"]
+    }
+  },
+  "footer": {
+    "description": "Previsões de futebol com IA para ligas europeias",
+    "quickLinks": "Links Rápidos",
+    "legal": "Legal",
+    "termsOfService": "Termos de Serviço",
+    "privacyPolicy": "Política de Privacidade",
+    "responsibleGaming": "Jogo Responsável",
+    "copyright": "© {year} OddsFlow. Todos os direitos reservados."
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Ocorreu um erro",
+    "retry": "Tentar Novamente",
+    "noData": "Sem dados disponíveis",
+    "seeMore": "Ver Mais",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar"
+  }
+}

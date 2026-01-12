@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "title": "OddsFlow - 가장 정확한 AI 축구 예측 | 유럽 축구 AI 팁",
+    "description": "프리미어리그, 분데스리가, 세리에A, 라리가, 리그1을 위한 가장 정확한 AI 축구 예측. 1x2 예측, 핸디캡 팁, 오버/언더 분석."
+  },
+  "nav": {
+    "home": "홈",
+    "predictions": "예측",
+    "leagues": "리그",
+    "performance": "성과",
+    "pricing": "요금",
+    "news": "뉴스",
+    "community": "커뮤니티",
+    "about": "소개",
+    "contact": "문의",
+    "login": "로그인",
+    "getStarted": "시작하기",
+    "dashboard": "대시보드",
+    "logout": "로그아웃"
+  },
+  "home": {
+    "hero": {
+      "title": "AI 기반 축구 예측",
+      "subtitle": "고급 머신러닝을 사용하여 유럽 축구 리그의 정확한 예측을 받으세요",
+      "cta": "예측 시작"
+    },
+    "features": {
+      "title": "왜 OddsFlow를 선택해야 하나요?",
+      "accuracy": {
+        "title": "높은 정확도",
+        "description": "AI 모델은 업계 최고의 예측 정확도를 달성합니다"
+      },
+      "transparent": {
+        "title": "완전한 투명성",
+        "description": "모든 예측은 공개적으로 추적 및 검증됩니다"
+      },
+      "realtime": {
+        "title": "실시간 업데이트",
+        "description": "배당률이 제공되는 즉시 예측을 받으세요"
+      }
+    },
+    "leagues": {
+      "title": "지원 리그",
+      "premierLeague": "프리미어리그",
+      "bundesliga": "분데스리가",
+      "serieA": "세리에A",
+      "laLiga": "라리가",
+      "ligue1": "리그1"
+    }
+  },
+  "predictions": {
+    "title": "AI 예측",
+    "filters": {
+      "all": "전체",
+      "moneyline": "1X2",
+      "handicap": "핸디캡",
+      "overUnder": "오버/언더"
+    },
+    "betStyles": {
+      "aggressive": "공격적",
+      "balanced": "균형",
+      "conservative": "보수적",
+      "valueHunter": "가치 추구",
+      "safePlay": "안전 플레이"
+    },
+    "table": {
+      "match": "경기",
+      "prediction": "예측",
+      "odds": "배당률",
+      "confidence": "신뢰도",
+      "result": "결과"
+    },
+    "profitSummary": "수익 요약",
+    "viewDetails": "상세 보기"
+  },
+  "performance": {
+    "title": "AI 성과",
+    "totalProfit": "총 수익",
+    "winRate": "승률",
+    "totalBets": "총 베팅",
+    "roi": "ROI"
+  },
+  "pricing": {
+    "title": "요금제",
+    "free": {
+      "name": "무료",
+      "price": "$0",
+      "period": "영구",
+      "features": ["제한된 예측", "기본 리그", "커뮤니티 접근"]
+    },
+    "pro": {
+      "name": "프로",
+      "price": "$29",
+      "period": "월",
+      "features": ["무제한 예측", "모든 리그", "우선 지원", "고급 분석"]
+    }
+  },
+  "footer": {
+    "description": "유럽 리그를 위한 AI 기반 축구 예측",
+    "quickLinks": "빠른 링크",
+    "legal": "법적 정보",
+    "termsOfService": "서비스 약관",
+    "privacyPolicy": "개인정보 보호정책",
+    "responsibleGaming": "책임감 있는 게임",
+    "copyright": "© {year} OddsFlow. All rights reserved."
+  },
+  "common": {
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다",
+    "retry": "다시 시도",
+    "noData": "데이터 없음",
+    "seeMore": "더 보기",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "submit": "제출",
+    "cancel": "취소",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집",
+    "close": "닫기"
+  }
+}

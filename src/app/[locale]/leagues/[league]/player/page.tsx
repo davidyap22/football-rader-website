@@ -96,8 +96,15 @@ const leagueNameMap: Record<string, string> = {
 
 export default function AllPlayersPage() {
   const params = useParams();
+  const locale = params.locale as string;
   const leagueSlug = params.league as string;
   const leagueName = leagueNameMap[leagueSlug] || leagueSlug;
+
+  // Helper function for locale-aware paths
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
 
   const [players, setPlayers] = useState<PlayerStats[]>([]);
   const [loading, setLoading] = useState(true);
@@ -166,12 +173,12 @@ export default function AllPlayersPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-6">
-          <Link href="/leagues" className="hover:text-white transition-colors">
+          <Link href={localePath('/leagues')} className="hover:text-white transition-colors">
             Leagues
           </Link>
           <span>/</span>
           <Link
-            href={`/leagues/${leagueSlug}`}
+            href={localePath(`/leagues/${leagueSlug}`)}
             className="hover:text-white transition-colors"
           >
             {leagueName}
@@ -278,7 +285,7 @@ export default function AllPlayersPage() {
               return (
                 <Link
                   key={player.id}
-                  href={`/leagues/${leagueSlug}/player/${player.id}`}
+                  href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
                   className={`group relative p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/50 border transition-all hover:shadow-lg overflow-hidden ${
                     isTop5
                       ? "border-amber-500/50 hover:border-amber-400/70 hover:shadow-amber-500/20"
@@ -408,7 +415,7 @@ export default function AllPlayersPage() {
         {/* Back Button */}
         <div className="mt-8">
           <Link
-            href={`/leagues/${leagueSlug}`}
+            href={localePath(`/leagues/${leagueSlug}`)}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
           >
             <svg

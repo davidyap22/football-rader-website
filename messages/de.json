@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "title": "OddsFlow - Genauester KI-Fussball-Vorhersager | Europaische Fussball-KI-Tipps",
+    "description": "Genauester KI-Fussball-Vorhersager fur Premier League, Bundesliga, Serie A, La Liga & Ligue 1. Erhalten Sie 1x2-Vorhersagen, Handicap-Tipps, Over/Under-Analyse."
+  },
+  "nav": {
+    "home": "Startseite",
+    "predictions": "Vorhersagen",
+    "leagues": "Ligen",
+    "performance": "Leistung",
+    "pricing": "Preise",
+    "news": "Nachrichten",
+    "community": "Community",
+    "about": "Uber uns",
+    "contact": "Kontakt",
+    "login": "Anmelden",
+    "getStarted": "Loslegen",
+    "dashboard": "Dashboard",
+    "logout": "Abmelden"
+  },
+  "home": {
+    "hero": {
+      "title": "KI-gestutzte Fussballvorhersagen",
+      "subtitle": "Erhalten Sie genaue Vorhersagen fur europaische Fussballligen mit fortschrittlichem maschinellem Lernen",
+      "cta": "Jetzt vorhersagen"
+    },
+    "features": {
+      "title": "Warum OddsFlow wahlen?",
+      "accuracy": {
+        "title": "Hohe Genauigkeit",
+        "description": "Unser KI-Modell erreicht branchenfuhrende Vorhersagegenauigkeit"
+      },
+      "transparent": {
+        "title": "Vollig transparent",
+        "description": "Alle Vorhersagen werden offentlich verfolgt und verifiziert"
+      },
+      "realtime": {
+        "title": "Echtzeit-Updates",
+        "description": "Erhalten Sie Vorhersagen, sobald Quoten verfugbar sind"
+      }
+    },
+    "leagues": {
+      "title": "Unterstutzte Ligen",
+      "premierLeague": "Premier League",
+      "bundesliga": "Bundesliga",
+      "serieA": "Serie A",
+      "laLiga": "La Liga",
+      "ligue1": "Ligue 1"
+    }
+  },
+  "predictions": {
+    "title": "KI-Vorhersagen",
+    "filters": {
+      "all": "Alle",
+      "moneyline": "1X2",
+      "handicap": "Handicap",
+      "overUnder": "Over/Under"
+    },
+    "betStyles": {
+      "aggressive": "Aggressiv",
+      "balanced": "Ausgewogen",
+      "conservative": "Konservativ",
+      "valueHunter": "Wertjager",
+      "safePlay": "Sicheres Spiel"
+    },
+    "table": {
+      "match": "Spiel",
+      "prediction": "Vorhersage",
+      "odds": "Quoten",
+      "confidence": "Vertrauen",
+      "result": "Ergebnis"
+    },
+    "profitSummary": "Gewinnubersicht",
+    "viewDetails": "Details anzeigen"
+  },
+  "performance": {
+    "title": "KI-Leistung",
+    "totalProfit": "Gesamtgewinn",
+    "winRate": "Gewinnrate",
+    "totalBets": "Gesamtwetten",
+    "roi": "ROI"
+  },
+  "pricing": {
+    "title": "Preisplane",
+    "free": {
+      "name": "Kostenlos",
+      "price": "$0",
+      "period": "fur immer",
+      "features": ["Begrenzte Vorhersagen", "Grundlegende Ligen", "Community-Zugang"]
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$29",
+      "period": "pro Monat",
+      "features": ["Unbegrenzte Vorhersagen", "Alle Ligen", "Prioritatssupport", "Erweiterte Analysen"]
+    }
+  },
+  "footer": {
+    "description": "KI-gestutzte Fussballvorhersagen fur europaische Ligen",
+    "quickLinks": "Schnelllinks",
+    "legal": "Rechtliches",
+    "termsOfService": "Nutzungsbedingungen",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "responsibleGaming": "Verantwortungsvolles Spielen",
+    "copyright": "© {year} OddsFlow. Alle Rechte vorbehalten."
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "retry": "Erneut versuchen",
+    "noData": "Keine Daten verfugbar",
+    "seeMore": "Mehr sehen",
+    "back": "Zuruck",
+    "next": "Weiter",
+    "previous": "Vorherige",
+    "submit": "Absenden",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Loschen",
+    "edit": "Bearbeiten",
+    "close": "Schliessen"
+  }
+}

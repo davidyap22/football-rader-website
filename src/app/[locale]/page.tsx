@@ -3,10 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef, createContext, useContext, ReactNode } from "react";
+import { useParams } from "next/navigation";
 import { supabase, Prematch } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import CookieConsent from "@/components/CookieConsent";
-import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import FlagIcon from "@/components/FlagIcon";
+import { locales, localeNames, localeFlags, localeToTranslationCode, type Locale } from "@/i18n/config";
 
 // ============ Translations ============
 const translations: Record<string, Record<string, string>> = {
@@ -736,6 +738,68 @@ const translations: Record<string, Record<string, string>> = {
     confidence: "Confianza",
     loading: "Cargando partidos...",
     noMatches: "No se encontraron partidos programados",
+    // Why Choose Section
+    whyChooseUs: "Por qué Elegirnos",
+    whyChooseTitle: "Por qué Elegir OddsFlow",
+    whyChooseSubtitle: "Experimente la diferencia con nuestra plataforma impulsada por IA",
+    benefit1Title: "99.9% Disponibilidad",
+    benefit1Desc: "Nuestra plataforma funciona 24/7 con fiabilidad empresarial",
+    benefit2Title: "Datos en Tiempo Real",
+    benefit2Desc: "Obtenga actualizaciones instantáneas de más de 50 casas de apuestas",
+    benefit3Title: "Precisión IA",
+    benefit3Desc: "Nuestros modelos logran más del 78% de precisión",
+    benefit4Title: "Seguro y Privado",
+    benefit4Desc: "Encriptación de nivel bancario protege sus datos",
+    benefit5Title: "Soporte 24/7",
+    benefit5Desc: "Equipo de soporte experto disponible todo el tiempo",
+    benefit6Title: "Garantía de Devolución",
+    benefit6Desc: "Garantía de devolución de 30 días, sin preguntas",
+    // Trusted Section
+    trustedBy: "Confianza de Usuarios",
+    trustedTitle: "Confiado por Miles",
+    trustedSubtitle: "Únase a nuestra comunidad creciente de apostadores exitosos",
+    activeUsers: "Usuarios Activos",
+    countriesServed: "Países Atendidos",
+    predictionsDaily: "Predicciones Diarias",
+    satisfactionRate: "Tasa de Satisfacción",
+    testimonial1: "OddsFlow ha cambiado completamente mi enfoque en las apuestas de fútbol. ¡Las predicciones de IA son increíblemente precisas!",
+    testimonial1Author: "Kevin L.",
+    testimonial1Role: "Apostador Profesional",
+    testimonial2: "El seguimiento de cuotas en tiempo real me ahorra horas cada día. La mejor inversión que he hecho.",
+    testimonial2Author: "Emma S.",
+    testimonial2Role: "Analista Deportivo",
+    testimonial3: "Finalmente una plataforma que cumple sus promesas. La tasa de precisión es inigualable.",
+    testimonial3Author: "Marcus J.",
+    testimonial3Role: "Entusiasta del Fútbol",
+    testimonial4: "He probado muchas plataformas de predicción, pero la precisión de IA de OddsFlow está en otro nivel. ¡Muy recomendado!",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "Veterano de Apuestas",
+    testimonial5: "Como apasionado del fútbol, OddsFlow me ayuda a tomar decisiones más inteligentes. ¡Los datos son increíbles!",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "Fanático del Fútbol",
+    // FAQ Section
+    faqTitle: "Preguntas Frecuentes",
+    faqSubtitle: "Todo lo que necesita saber sobre OddsFlow",
+    faq1Question: "¿Puede la IA predecir resultados de fútbol?",
+    faq1Answer: "¡Sí! Nuestro predictor de fútbol IA analiza millones de partidos históricos, estadísticas de jugadores, forma del equipo y datos en tiempo real para predecir resultados con alta precisión.",
+    faq2Question: "¿Son rentables las apuestas con IA?",
+    faq2Answer: "Las apuestas con IA pueden ser muy rentables cuando se usan registros verificados y sitios transparentes como OddsFlow.",
+    faq3Question: "¿Son rentables las apuestas hándicap?",
+    faq3Answer: "Las apuestas hándicap son una de las estrategias más rentables cuando se hacen correctamente con análisis de IA.",
+    faq4Question: "¿Cómo usar datos para predecir Over/Under?",
+    faq4Answer: "Nuestra IA analiza patrones de goles, registros defensivos y datos históricos para predecir resultados Over/Under.",
+    faq5Question: "¿Qué ligas cubren?",
+    faq5Answer: "Cubrimos todas las principales ligas europeas: Premier League, Bundesliga, Serie A, La Liga, Ligue 1 y Champions League.",
+    faq6Question: "¿Qué tan preciso es OddsFlow?",
+    faq6Answer: "OddsFlow es reconocido como el predictor de fútbol IA más preciso con registros verificados y resultados transparentes.",
+    faq7Question: "¿Qué tipos de predicciones ofrecen?",
+    faq7Answer: "Ofrecemos predicciones 1x2, predicciones de empate, hándicap, over 2.5 goles y análisis completo de partidos.",
+    // What is OddsFlow
+    whatIsOddsFlow: "¿Qué es OddsFlow?",
+    whatIsDesc1: "OddsFlow es una plataforma que ofrece predicciones de fútbol generadas exclusivamente con Inteligencia Artificial.",
+    whatIsDesc2: "Ofrece consejos de fútbol IA para más de 100 ligas incluyendo Premier League, La Liga, Serie A, Bundesliga.",
+    whatIsDesc3: "La mejor selección de predicciones se puede ver en nuestras selecciones diarias donde la IA elige los consejos más precisos.",
+    whatIsDesc4: "Siga OddsFlow para consejos de partidos, predicciones detalladas de IA y análisis completos.",
   },
   PT: {
     home: "Início",
@@ -831,6 +895,68 @@ const translations: Record<string, Record<string, string>> = {
     confidence: "Confianca",
     loading: "Carregando partidas...",
     noMatches: "Nenhuma partida programada encontrada",
+    // Why Choose Section
+    whyChooseUs: "Por que Nos Escolher",
+    whyChooseTitle: "Por que Escolher OddsFlow",
+    whyChooseSubtitle: "Experimente a diferença com nossa plataforma impulsionada por IA",
+    benefit1Title: "99.9% Disponibilidade",
+    benefit1Desc: "Nossa plataforma funciona 24/7 com confiabilidade empresarial",
+    benefit2Title: "Dados em Tempo Real",
+    benefit2Desc: "Obtenha atualizações instantâneas de mais de 50 casas de apostas",
+    benefit3Title: "Precisão IA",
+    benefit3Desc: "Nossos modelos alcançam mais de 78% de precisão",
+    benefit4Title: "Seguro e Privado",
+    benefit4Desc: "Criptografia de nível bancário protege seus dados",
+    benefit5Title: "Suporte 24/7",
+    benefit5Desc: "Equipe de suporte especializada disponível o tempo todo",
+    benefit6Title: "Garantia de Devolução",
+    benefit6Desc: "Garantia de devolução de 30 dias, sem perguntas",
+    // Trusted Section
+    trustedBy: "Confiança dos Usuários",
+    trustedTitle: "Confiado por Milhares",
+    trustedSubtitle: "Junte-se à nossa comunidade crescente de apostadores de sucesso",
+    activeUsers: "Usuários Ativos",
+    countriesServed: "Países Atendidos",
+    predictionsDaily: "Previsões Diárias",
+    satisfactionRate: "Taxa de Satisfação",
+    testimonial1: "OddsFlow mudou completamente minha abordagem nas apostas de futebol. As previsões de IA são incrivelmente precisas!",
+    testimonial1Author: "Kevin L.",
+    testimonial1Role: "Apostador Profissional",
+    testimonial2: "O rastreamento de odds em tempo real me economiza horas todos os dias. O melhor investimento que fiz.",
+    testimonial2Author: "Emma S.",
+    testimonial2Role: "Analista Esportivo",
+    testimonial3: "Finalmente uma plataforma que cumpre suas promessas. A taxa de precisão é incomparável.",
+    testimonial3Author: "Marcus J.",
+    testimonial3Role: "Entusiasta do Futebol",
+    testimonial4: "Já testei muitas plataformas de previsão, mas a precisão da IA do OddsFlow está em outro nível. Muito recomendado!",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "Veterano de Apostas",
+    testimonial5: "Como apaixonado por futebol, OddsFlow me ajuda a tomar decisões mais inteligentes. Os dados são incríveis!",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "Fã de Futebol",
+    // FAQ Section
+    faqTitle: "Perguntas Frequentes",
+    faqSubtitle: "Tudo o que você precisa saber sobre OddsFlow",
+    faq1Question: "A IA pode prever resultados de futebol?",
+    faq1Answer: "Sim! Nossa IA analisa milhões de jogos históricos, estatísticas de jogadores, forma do time e dados em tempo real para prever resultados com alta precisão.",
+    faq2Question: "Apostas com IA são lucrativas?",
+    faq2Answer: "Apostas com IA podem ser muito lucrativas quando se usam registros verificados e sites transparentes como OddsFlow.",
+    faq3Question: "Apostas handicap são lucrativas?",
+    faq3Answer: "Apostas handicap são uma das estratégias mais lucrativas quando feitas corretamente com análise de IA.",
+    faq4Question: "Como usar dados para prever Over/Under?",
+    faq4Answer: "Nossa IA analisa padrões de gols, registros defensivos e dados históricos para prever resultados Over/Under.",
+    faq5Question: "Quais ligas vocês cobrem?",
+    faq5Answer: "Cobrimos todas as principais ligas europeias: Premier League, Bundesliga, Serie A, La Liga, Ligue 1 e Champions League.",
+    faq6Question: "Quão preciso é o OddsFlow?",
+    faq6Answer: "OddsFlow é reconhecido como o previsor de futebol IA mais preciso com registros verificados e resultados transparentes.",
+    faq7Question: "Que tipos de previsões vocês oferecem?",
+    faq7Answer: "Oferecemos previsões 1x2, previsões de empate, handicap, over 2.5 gols e análise completa de jogos.",
+    // What is OddsFlow
+    whatIsOddsFlow: "O que é OddsFlow?",
+    whatIsDesc1: "OddsFlow é uma plataforma que oferece previsões de futebol geradas exclusivamente com Inteligência Artificial.",
+    whatIsDesc2: "Oferece dicas de futebol IA para mais de 100 ligas incluindo Premier League, La Liga, Serie A, Bundesliga.",
+    whatIsDesc3: "A melhor seleção de previsões pode ser vista em nossas escolhas diárias onde a IA seleciona as dicas mais precisas.",
+    whatIsDesc4: "Siga OddsFlow para dicas de jogos, previsões detalhadas de IA e análises completas.",
   },
   JA: {
     home: "ホーム",
@@ -926,6 +1052,68 @@ const translations: Record<string, Record<string, string>> = {
     confidence: "信頼度",
     loading: "試合を読み込み中...",
     noMatches: "予定試合が見つかりません",
+    // Why Choose Section
+    whyChooseUs: "選ばれる理由",
+    whyChooseTitle: "OddsFlowを選ぶ理由",
+    whyChooseSubtitle: "AI搭載プラットフォームで違いを体験",
+    benefit1Title: "99.9% 稼働率",
+    benefit1Desc: "24時間365日、企業レベルの信頼性で稼働",
+    benefit2Title: "リアルタイムデータ",
+    benefit2Desc: "50以上のブックメーカーから即時更新",
+    benefit3Title: "AI精度",
+    benefit3Desc: "78%以上の予測精度を達成",
+    benefit4Title: "安全＆プライベート",
+    benefit4Desc: "銀行レベルの暗号化でデータを保護",
+    benefit5Title: "24時間サポート",
+    benefit5Desc: "専門サポートチームが常時対応",
+    benefit6Title: "返金保証",
+    benefit6Desc: "30日間返金保証、質問不要",
+    // Trusted Section
+    trustedBy: "ユーザーからの信頼",
+    trustedTitle: "数千人に信頼されています",
+    trustedSubtitle: "成功したベッターの成長するコミュニティに参加",
+    activeUsers: "アクティブユーザー",
+    countriesServed: "対応国",
+    predictionsDaily: "日間予測数",
+    satisfactionRate: "満足度",
+    testimonial1: "OddsFlowはサッカーベッティングへのアプローチを完全に変えました。AI予測は驚くほど正確です！",
+    testimonial1Author: "Kevin L.",
+    testimonial1Role: "プロベッター",
+    testimonial2: "リアルタイムのオッズ追跡で毎日数時間節約。最高の投資でした。",
+    testimonial2Author: "Emma S.",
+    testimonial2Role: "スポーツアナリスト",
+    testimonial3: "約束を守るプラットフォーム。精度は比類なし。",
+    testimonial3Author: "Marcus J.",
+    testimonial3Role: "サッカーファン",
+    testimonial4: "多くの予測プラットフォームを試しましたが、OddsFlowのAI精度は別格。強くお勧め！",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "ベテランベッター",
+    testimonial5: "サッカーファンとして、OddsFlowでより賢い判断ができます。データの洞察は素晴らしい！",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "サッカーファン",
+    // FAQ Section
+    faqTitle: "よくある質問",
+    faqSubtitle: "OddsFlowについて知っておくべきこと",
+    faq1Question: "AIはサッカーの結果を予測できますか？",
+    faq1Answer: "はい！AIは数百万の過去の試合、選手統計、チームの調子、リアルタイムデータを分析して高精度で結果を予測します。",
+    faq2Question: "AIベッティングは利益が出ますか？",
+    faq2Answer: "検証済みの記録と透明なサイトを使用すれば、AIベッティングは非常に利益が出る可能性があります。",
+    faq3Question: "ハンディキャップベッティングは利益が出ますか？",
+    faq3Answer: "AI分析を正しく使用すれば、ハンディキャップベッティングは最も利益の出る戦略の一つです。",
+    faq4Question: "Over/Underを予測するためにデータをどう使いますか？",
+    faq4Answer: "AIはゴールパターン、守備記録、過去のデータを分析してOver/Under結果を予測します。",
+    faq5Question: "どのリーグをカバーしていますか？",
+    faq5Answer: "主要な欧州リーグすべて：プレミアリーグ、ブンデスリーガ、セリエA、ラ・リーガ、リーグ1、チャンピオンズリーグ。",
+    faq6Question: "OddsFlowはどれくらい正確ですか？",
+    faq6Answer: "OddsFlowは検証済みの記録と透明な結果を持つ最も正確なAIサッカー予測として認められています。",
+    faq7Question: "どんな種類の予測を提供していますか？",
+    faq7Answer: "1x2予測、ドロー予測、ハンディキャップ、2.5オーバー、完全な試合分析を提供しています。",
+    // What is OddsFlow
+    whatIsOddsFlow: "OddsFlowとは？",
+    whatIsDesc1: "OddsFlowは人工知能のみを使用して生成されたサッカー予測を提供するプラットフォームです。",
+    whatIsDesc2: "プレミアリーグ、ラ・リーガ、セリエA、ブンデスリーガを含む100以上のリーグのAIサッカーヒントを提供。",
+    whatIsDesc3: "最高の予測セレクションは、AIが最も正確なヒントを選ぶ日次ピックで確認できます。",
+    whatIsDesc4: "OddsFlowをフォローして試合のヒント、詳細なAI予測、完全な分析を入手。",
   },
   KO: {
     home: "홈",
@@ -1021,6 +1209,68 @@ const translations: Record<string, Record<string, string>> = {
     confidence: "신뢰도",
     loading: "경기 로딩 중...",
     noMatches: "예정된 경기가 없습니다",
+    // Why Choose Section
+    whyChooseUs: "선택 이유",
+    whyChooseTitle: "OddsFlow를 선택하는 이유",
+    whyChooseSubtitle: "AI 기반 플랫폼으로 차이를 경험하세요",
+    benefit1Title: "99.9% 가동률",
+    benefit1Desc: "24시간 연중무휴 엔터프라이즈급 안정성으로 운영",
+    benefit2Title: "실시간 데이터",
+    benefit2Desc: "50개 이상의 북메이커에서 즉시 업데이트",
+    benefit3Title: "AI 정확도",
+    benefit3Desc: "78% 이상의 예측 정확도 달성",
+    benefit4Title: "안전 & 개인정보",
+    benefit4Desc: "은행 수준의 암호화로 데이터 보호",
+    benefit5Title: "24시간 지원",
+    benefit5Desc: "전문 지원팀이 항상 대기",
+    benefit6Title: "환불 보장",
+    benefit6Desc: "30일 환불 보장, 질문 없음",
+    // Trusted Section
+    trustedBy: "사용자 신뢰",
+    trustedTitle: "수천 명이 신뢰합니다",
+    trustedSubtitle: "성공적인 베터들의 성장하는 커뮤니티에 참여하세요",
+    activeUsers: "활성 사용자",
+    countriesServed: "서비스 국가",
+    predictionsDaily: "일일 예측",
+    satisfactionRate: "만족도",
+    testimonial1: "OddsFlow는 축구 베팅에 대한 접근 방식을 완전히 바꿨습니다. AI 예측이 놀랍도록 정확합니다!",
+    testimonial1Author: "Kevin L.",
+    testimonial1Role: "프로 베터",
+    testimonial2: "실시간 배당률 추적으로 매일 몇 시간을 절약합니다. 최고의 투자였습니다.",
+    testimonial2Author: "Emma S.",
+    testimonial2Role: "스포츠 분석가",
+    testimonial3: "약속을 지키는 플랫폼. 정확도는 비교할 수 없습니다.",
+    testimonial3Author: "Marcus J.",
+    testimonial3Role: "축구 애호가",
+    testimonial4: "많은 예측 플랫폼을 시도했지만 OddsFlow의 AI 정확도는 다른 수준입니다. 강력 추천!",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "베팅 베테랑",
+    testimonial5: "열정적인 축구 팬으로서 OddsFlow로 더 현명한 결정을 내립니다. 데이터 인사이트가 놀랍습니다!",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "축구 팬",
+    // FAQ Section
+    faqTitle: "자주 묻는 질문",
+    faqSubtitle: "OddsFlow에 대해 알아야 할 모든 것",
+    faq1Question: "AI가 축구 결과를 예측할 수 있나요?",
+    faq1Answer: "네! AI는 수백만 경기, 선수 통계, 팀 상태, 실시간 데이터를 분석하여 높은 정확도로 결과를 예측합니다.",
+    faq2Question: "AI 베팅은 수익성이 있나요?",
+    faq2Answer: "검증된 기록과 투명한 사이트를 사용하면 AI 베팅은 매우 수익성이 있을 수 있습니다.",
+    faq3Question: "핸디캡 베팅은 수익성이 있나요?",
+    faq3Answer: "AI 분석을 올바르게 사용하면 핸디캡 베팅은 가장 수익성 있는 전략 중 하나입니다.",
+    faq4Question: "Over/Under를 예측하기 위해 데이터를 어떻게 사용하나요?",
+    faq4Answer: "AI는 골 패턴, 수비 기록, 과거 데이터를 분석하여 Over/Under 결과를 예측합니다.",
+    faq5Question: "어떤 리그를 다루나요?",
+    faq5Answer: "모든 주요 유럽 리그: 프리미어리그, 분데스리가, 세리에A, 라리가, 리그1, 챔피언스리그.",
+    faq6Question: "OddsFlow는 얼마나 정확한가요?",
+    faq6Answer: "OddsFlow는 검증된 기록과 투명한 결과를 가진 가장 정확한 AI 축구 예측기로 인정받고 있습니다.",
+    faq7Question: "어떤 종류의 예측을 제공하나요?",
+    faq7Answer: "1x2 예측, 무승부 예측, 핸디캡, 오버 2.5골, 완전한 경기 분석을 제공합니다.",
+    // What is OddsFlow
+    whatIsOddsFlow: "OddsFlow란?",
+    whatIsDesc1: "OddsFlow는 인공지능만을 사용하여 생성된 축구 예측을 제공하는 플랫폼입니다.",
+    whatIsDesc2: "프리미어리그, 라리가, 세리에A, 분데스리가를 포함한 100개 이상의 리그에 대한 AI 축구 팁을 제공합니다.",
+    whatIsDesc3: "AI가 가장 정확한 팁을 선택하는 일일 픽에서 최고의 예측 선택을 확인할 수 있습니다.",
+    whatIsDesc4: "경기 팁, 상세한 AI 예측, 완전한 분석을 위해 OddsFlow를 팔로우하세요.",
   },
   DE: {
     home: "Startseite",
@@ -1116,6 +1366,68 @@ const translations: Record<string, Record<string, string>> = {
     confidence: "Konfidenz",
     loading: "Spiele werden geladen...",
     noMatches: "Keine geplanten Spiele gefunden",
+    // Why Choose Section
+    whyChooseUs: "Warum uns wählen",
+    whyChooseTitle: "Warum OddsFlow wählen",
+    whyChooseSubtitle: "Erleben Sie den Unterschied mit unserer KI-gestützten Plattform",
+    benefit1Title: "99.9% Verfügbarkeit",
+    benefit1Desc: "Unsere Plattform läuft 24/7 mit Enterprise-Grade-Zuverlässigkeit",
+    benefit2Title: "Echtzeit-Daten",
+    benefit2Desc: "Sofortige Updates von über 50 Buchmachern",
+    benefit3Title: "KI-Genauigkeit",
+    benefit3Desc: "Unsere Modelle erreichen über 78% Genauigkeit",
+    benefit4Title: "Sicher & Privat",
+    benefit4Desc: "Bank-Level-Verschlüsselung schützt Ihre Daten",
+    benefit5Title: "24/7 Support",
+    benefit5Desc: "Experten-Support-Team rund um die Uhr verfügbar",
+    benefit6Title: "Geld-zurück-Garantie",
+    benefit6Desc: "30 Tage Geld-zurück-Garantie, keine Fragen",
+    // Trusted Section
+    trustedBy: "Nutzervertrauen",
+    trustedTitle: "Von Tausenden vertraut",
+    trustedSubtitle: "Treten Sie unserer wachsenden Community erfolgreicher Wetter bei",
+    activeUsers: "Aktive Nutzer",
+    countriesServed: "Bediente Länder",
+    predictionsDaily: "Tägliche Vorhersagen",
+    satisfactionRate: "Zufriedenheitsrate",
+    testimonial1: "OddsFlow hat meine Herangehensweise an Fußballwetten komplett verändert. Die KI-Vorhersagen sind unglaublich genau!",
+    testimonial1Author: "Kevin L.",
+    testimonial1Role: "Profiwetter",
+    testimonial2: "Die Echtzeit-Quoten-Verfolgung spart mir jeden Tag Stunden. Beste Investition.",
+    testimonial2Author: "Emma S.",
+    testimonial2Role: "Sportanalyst",
+    testimonial3: "Endlich eine Plattform, die ihre Versprechen hält. Die Genauigkeit ist unübertroffen.",
+    testimonial3Author: "Marcus J.",
+    testimonial3Role: "Fußball-Enthusiast",
+    testimonial4: "Ich habe viele Vorhersage-Plattformen getestet, aber OddsFlows KI-Genauigkeit ist auf einem anderen Level. Sehr empfohlen!",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "Wett-Veteran",
+    testimonial5: "Als leidenschaftlicher Fußballfan hilft mir OddsFlow, klügere Entscheidungen zu treffen. Die Daten-Insights sind unglaublich!",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "Fußballfan",
+    // FAQ Section
+    faqTitle: "Häufig gestellte Fragen",
+    faqSubtitle: "Alles, was Sie über OddsFlow wissen müssen",
+    faq1Question: "Kann KI Fußballergebnisse vorhersagen?",
+    faq1Answer: "Ja! Unsere KI analysiert Millionen historischer Spiele, Spielerstatistiken, Teamform und Echtzeitdaten, um Ergebnisse mit hoher Genauigkeit vorherzusagen.",
+    faq2Question: "Sind KI-Wetten profitabel?",
+    faq2Answer: "KI-Wetten können sehr profitabel sein, wenn verifizierte Aufzeichnungen und transparente Seiten wie OddsFlow verwendet werden.",
+    faq3Question: "Sind Handicap-Wetten profitabel?",
+    faq3Answer: "Handicap-Wetten sind eine der profitabelsten Strategien, wenn sie mit KI-Analyse richtig durchgeführt werden.",
+    faq4Question: "Wie nutzt man Daten für Over/Under-Vorhersagen?",
+    faq4Answer: "Unsere KI analysiert Tormuster, Defensivrekorde und historische Daten, um Over/Under-Ergebnisse vorherzusagen.",
+    faq5Question: "Welche Ligen decken Sie ab?",
+    faq5Answer: "Alle großen europäischen Ligen: Premier League, Bundesliga, Serie A, La Liga, Ligue 1 und Champions League.",
+    faq6Question: "Wie genau ist OddsFlow?",
+    faq6Answer: "OddsFlow ist als genauester KI-Fußballprediktor mit verifizierten Aufzeichnungen und transparenten Ergebnissen anerkannt.",
+    faq7Question: "Welche Arten von Vorhersagen bieten Sie an?",
+    faq7Answer: "Wir bieten 1x2-Vorhersagen, Unentschieden-Vorhersagen, Handicap, über 2.5 Tore und vollständige Spielanalysen.",
+    // What is OddsFlow
+    whatIsOddsFlow: "Was ist OddsFlow?",
+    whatIsDesc1: "OddsFlow ist eine Plattform, die ausschließlich mit Künstlicher Intelligenz generierte Fußballvorhersagen anbietet.",
+    whatIsDesc2: "Bietet KI-Fußballtipps für über 100 Ligen einschließlich Premier League, La Liga, Serie A, Bundesliga.",
+    whatIsDesc3: "Die beste Auswahl an Vorhersagen finden Sie in unseren täglichen Picks, wo die KI die genauesten Tipps auswählt.",
+    whatIsDesc4: "Folgen Sie OddsFlow für Spieltipps, detaillierte KI-Vorhersagen und vollständige Analysen.",
   },
   FR: {
     home: "Accueil",
@@ -1211,39 +1523,250 @@ const translations: Record<string, Record<string, string>> = {
     confidence: "Confiance",
     loading: "Chargement des matchs...",
     noMatches: "Aucun match programme trouve",
+    // Why Choose Section
+    whyChooseUs: "Pourquoi Nous Choisir",
+    whyChooseTitle: "Pourquoi Choisir OddsFlow",
+    whyChooseSubtitle: "Découvrez ce qui différencie notre plateforme alimentée par l'IA",
+    benefit1Title: "99,9% de disponibilité",
+    benefit1Desc: "Notre plateforme fonctionne 24/7 avec une fiabilité de niveau entreprise",
+    benefit2Title: "Données en temps réel",
+    benefit2Desc: "Obtenez des mises à jour instantanées de plus de 50 bookmakers dans le monde",
+    benefit3Title: "Précision IA",
+    benefit3Desc: "Nos modèles atteignent plus de 78% de précision de prédiction",
+    benefit4Title: "Sécurité et confidentialité",
+    benefit4Desc: "Cryptage de niveau bancaire pour protéger vos données",
+    benefit5Title: "Support 24/7",
+    benefit5Desc: "L'équipe de support dédiée est toujours disponible pour vous aider",
+    benefit6Title: "Garantie de remboursement",
+    benefit6Desc: "Garantie de remboursement de 30 jours, sans questions",
+    // Trusted Section
+    trustedBy: "Ils Nous Font Confiance",
+    trustedTitle: "Approuvé par des Milliers",
+    trustedSubtitle: "Rejoignez notre communauté grandissante de parieurs à succès",
+    activeUsers: "Utilisateurs Actifs",
+    countriesServed: "Pays Desservis",
+    predictionsDaily: "Prédictions Quotidiennes",
+    satisfactionRate: "Taux de Satisfaction",
+    testimonial1: "OddsFlow a transformé ma façon de parier sur le football. Les prédictions IA sont incroyablement précises !",
+    testimonial1Author: "Kevin L.",
+    testimonial1Role: "Parieur Professionnel",
+    testimonial2: "Le suivi des cotes en temps réel me fait économiser des heures chaque jour. Meilleur investissement que j'ai fait.",
+    testimonial2Author: "Emma S.",
+    testimonial2Role: "Analyste Sportif",
+    testimonial3: "Enfin une plateforme qui tient ses promesses. La précision est inégalée.",
+    testimonial3Author: "Marcus J.",
+    testimonial3Role: "Passionné de Football",
+    testimonial4: "J'ai essayé de nombreuses plateformes de prédiction, mais la précision de l'IA d'OddsFlow est d'un autre niveau. Fortement recommandé !",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "Parieur Expérimenté",
+    testimonial5: "En tant que fan de football passionné, OddsFlow m'aide à prendre des décisions plus intelligentes. Les données sont incroyables !",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "Fan de Football",
+    // FAQ Section
+    faqTitle: "Questions Fréquentes",
+    faqSubtitle: "Tout ce que vous devez savoir sur OddsFlow",
+    faq1Question: "L'IA peut-elle prédire les scores de football ?",
+    faq1Answer: "Oui ! Notre prédicteur IA de football analyse des millions de matchs historiques, de données de joueurs, de forme d'équipe et de données en temps réel pour prédire les scores. En tant que prédicteur IA de football le plus précis, nous atteignons plus de 78% de précision dans les ligues EPL, Bundesliga, Serie A, La Liga et Ligue 1.",
+    faq2Question: "Les paris IA sont-ils rentables ?",
+    faq2Answer: "Avec des résultats vérifiés et des plateformes transparentes comme OddsFlow, les paris IA peuvent être très rentables. Nos utilisateurs obtiennent des rendements constants avec nos conseils IA de football européen, avec un suivi détaillé des performances.",
+    faq3Question: "Les paris handicap sont-ils rentables ?",
+    faq3Answer: "Les paris handicap sont l'une des stratégies les plus rentables si bien exécutée. Notre système d'analyse IA des handicaps fournit des sélections basées sur les données qui maximisent la valeur dans toutes les ligues européennes.",
+    faq4Question: "Comment utilisez-vous les données pour prédire les buts ?",
+    faq4Answer: "Notre IA analyse les données de plus de 2,5 buts EPL, les tendances de buts des équipes, les records défensifs et les données historiques pour prédire les résultats over/under. Le système considère la forme domicile/extérieur, les records face à face et les tendances récentes.",
+    faq5Question: "Quelles ligues couvrez-vous ?",
+    faq5Answer: "Nous fournissons des prédictions IA pour toutes les grandes ligues européennes : EPL, Bundesliga, Serie A, La Liga, Ligue 1 et Ligue des Champions.",
+    faq6Question: "Comment OddsFlow se compare-t-il aux autres prédicteurs IA ?",
+    faq6Answer: "OddsFlow est reconnu comme le prédicteur IA de football le plus précis avec des résultats vérifiés. Contrairement à d'autres plateformes, nous fournissons des résultats transparents et un historique complet des performances.",
+    faq7Question: "Quels types de prédictions proposez-vous ?",
+    faq7Answer: "Nous proposons des prédictions 1x2 pour aujourd'hui, prédictions de matchs nuls, prédictions handicap, données de plus de 2,5 buts et analyses complètes de matchs. Nos conseils IA couvrent tous les marchés de paris majeurs.",
+    // What is OddsFlow
+    whatIsOddsFlow: "Qu'est-ce que OddsFlow ?",
+    whatIsDesc1: "OddsFlow est une plateforme qui génère des prédictions de football entièrement par intelligence artificielle.",
+    whatIsDesc2: "Fournit des prédictions IA pour plus de 100 ligues de football, y compris la Premier League, La Liga, Serie A, Bundesliga, Ligue des Champions et plus.",
+    whatIsDesc3: "Consultez les meilleures prédictions de paris dans nos sélections quotidiennes, avec les conseils de football les plus précis sélectionnés par l'IA.",
+    whatIsDesc4: "Suivez OddsFlow pour des conseils de match, des prédictions IA détaillées (possession, tirs, corners, rapports H2H, cotes et plus).",
+  },
+  ID: {
+    // Navbar
+    home: "Beranda",
+    predictions: "Prediksi",
+    worldcup: "Piala Dunia",
+    leagues: "Liga",
+    performance: "Performa AI",
+    community: "Komunitas",
+    news: "Berita",
+    solution: "Solusi",
+    pricing: "Harga",
+    login: "Masuk",
+    getStarted: "Mulai",
+    // Hero
+    heroTitle1: "Analisis",
+    heroTitle2: "Odds Sepak Bola",
+    heroTitle3: "Cerdas",
+    heroSubtitle: "Gunakan wawasan bertenaga AI untuk menganalisis odds sepak bola secara real-time. Buat keputusan berbasis data dengan algoritma prediksi canggih kami.",
+    startAnalyzing: "Mulai Analisis Gratis",
+    viewLiveOdds: "Lihat Odds Live",
+    accuracyRate: "Tingkat Akurasi",
+    matchesAnalyzed: "Pertandingan Dianalisis",
+    leaguesCovered: "Liga Tercakup",
+    realtimeUpdates: "Update Real-time",
+    // Features
+    whyOddsFlow: "Mengapa OddsFlow",
+    mostAdvanced: "Mesin Prediksi",
+    predictionEngine: "Paling Canggih",
+    featuresSubtitle: "AI kami menganalisis jutaan pertandingan historis, data real-time, dan tren pasar untuk memberikan prediksi dengan akurasi tak tertandingi.",
+    aiPoweredPerformance: "Performa Bertenaga AI",
+    aiPoweredDesc: "Model machine learning menganalisis ribuan titik data untuk prediksi presisi.",
+    realtimeTracking: "Pelacakan Real-time",
+    realtimeTrackingDesc: "Pantau pergerakan odds di seluruh bandar dengan update live instan.",
+    deepStatistics: "Statistik Mendalam",
+    deepStatisticsDesc: "Akses statistik tim, rekor head-to-head, dan data performa historis.",
+    smartAlerts: "Notifikasi Pintar",
+    smartAlertsDesc: "Dapatkan notifikasi ketika peluang nilai muncul atau odds bergeser signifikan.",
+    // Footer
+    footerDesc: "Analisis odds sepak bola bertenaga AI untuk prediksi lebih cerdas.",
+    product: "Produk",
+    company: "Perusahaan",
+    legal: "Legal",
+    aboutUs: "Tentang Kami",
+    blog: "Blog",
+    contact: "Kontak",
+    privacyPolicy: "Kebijakan Privasi",
+    termsOfService: "Syarat Layanan",
+    responsibleGaming: "Perjudian Bertanggung Jawab",
+    allRightsReserved: "Hak cipta dilindungi.",
+    gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh secara bertanggung jawab.",
+    globalCoverage: "Cakupan Global",
+    topLeagues: "Liga Teratas yang Kami Liput",
+    leaguesSubtitle: "Dapatkan prediksi AI untuk semua liga sepak bola utama di seluruh dunia",
+    matchesSeason: "pertandingan/musim",
+    livePredictions: "Prediksi Live",
+    todaysTopPicks: "Pilihan Teratas Hari Ini",
+    predictionsSubtitle: "Pertandingan yang dianalisis AI dengan skor kepercayaan tertinggi",
+    viewAllPredictions: "Lihat Semua Prediksi",
+    readyToMake: "Siap Membuat",
+    smarterPredictions: "Prediksi Lebih Cerdas",
+    ctaSubtitle: "Bergabung dengan ribuan pengguna yang mempercayai OddsFlow untuk analisis sepak bola mereka.",
+    startFreeTrial: "Mulai Uji Coba Gratis",
+    contactSales: "Hubungi Sales",
+    liveOdds: "Performa AI",
+    statistics: "Statistik",
+    apiAccess: "Akses API",
+    careers: "Karir",
+    popularLeagues: "Liga Populer",
+    communityFooter: "Komunitas",
+    globalChat: "Chat Global",
+    userPredictions: "Prediksi Pengguna",
+    todayMatches: "Pertandingan Hari Ini",
+    solutionFooter: "Solusi",
+    disclaimer: "Penafian: OddsFlow menyediakan prediksi bertenaga AI untuk tujuan informasi dan hiburan saja. Kami tidak menjamin akurasi prediksi. Perjudian melibatkan risiko. Harap bertaruh secara bertanggung jawab.",
+    aiPredictions: "Prediksi AI",
+    upcomingMatches: "Pertandingan Mendatang",
+    aiPredictionsSubtitle: "Prediksi bertenaga AI untuk pertandingan yang dijadwalkan",
+    dateLeague: "Tanggal / Liga",
+    fixture: "Pertandingan",
+    prediction: "Prediksi",
+    confidence: "Kepercayaan",
+    loading: "Memuat pertandingan...",
+    noMatches: "Tidak ada pertandingan yang dijadwalkan",
+    aiDashboard: "Dashboard Prediksi AI",
+    live: "LIVE",
+    startingIn: "Dimulai dalam 2j",
+    aiConfidence: "Kepercayaan AI",
+    homeWin: "Menang Kandang",
+    draw: "Seri",
+    awayWin: "Menang Tandang",
+    // Why Choose Section
+    whyChooseUs: "Mengapa Memilih Kami",
+    whyChooseTitle: "Mengapa Memilih OddsFlow",
+    whyChooseSubtitle: "Rasakan apa yang membedakan platform bertenaga AI kami",
+    benefit1Title: "99,9% Uptime",
+    benefit1Desc: "Platform kami berjalan 24/7 dengan keandalan tingkat enterprise",
+    benefit2Title: "Data Real-time",
+    benefit2Desc: "Dapatkan update instan dari 50+ bandar taruhan di seluruh dunia",
+    benefit3Title: "Akurasi AI",
+    benefit3Desc: "Model kami mencapai 78%+ akurasi prediksi",
+    benefit4Title: "Keamanan & Privasi",
+    benefit4Desc: "Enkripsi tingkat bank untuk melindungi data Anda",
+    benefit5Title: "Dukungan 24/7",
+    benefit5Desc: "Tim dukungan berdedikasi selalu siap membantu Anda",
+    benefit6Title: "Jaminan Uang Kembali",
+    benefit6Desc: "Jaminan uang kembali 30 hari, tanpa pertanyaan",
+    // Trusted Section
+    trustedBy: "Dipercaya Oleh",
+    trustedTitle: "Dipercaya oleh Ribuan Orang",
+    trustedSubtitle: "Bergabunglah dengan komunitas petaruh sukses kami yang terus berkembang",
+    activeUsers: "Pengguna Aktif",
+    countriesServed: "Negara Dilayani",
+    predictionsDaily: "Prediksi Harian",
+    satisfactionRate: "Tingkat Kepuasan",
+    testimonial1: "OddsFlow mengubah cara saya bertaruh pada sepak bola. Prediksi AI sangat akurat!",
+    testimonial1Author: "Kevin L.",
+    testimonial1Role: "Petaruh Profesional",
+    testimonial2: "Pelacakan odds real-time menghemat waktu saya berjam-jam setiap hari. Investasi terbaik yang pernah saya buat.",
+    testimonial2Author: "Emma S.",
+    testimonial2Role: "Analis Olahraga",
+    testimonial3: "Akhirnya platform yang memenuhi janjinya. Akurasinya tidak tertandingi.",
+    testimonial3Author: "Marcus J.",
+    testimonial3Role: "Penggemar Sepak Bola",
+    testimonial4: "Saya sudah mencoba banyak platform prediksi, tapi akurasi AI OddsFlow berbeda level. Sangat direkomendasikan!",
+    testimonial4Author: "Robert M.",
+    testimonial4Role: "Petaruh Berpengalaman",
+    testimonial5: "Sebagai penggemar sepak bola, OddsFlow membantu saya membuat keputusan lebih cerdas. Datanya luar biasa!",
+    testimonial5Author: "Carlos R.",
+    testimonial5Role: "Penggemar Sepak Bola",
+    // FAQ Section
+    faqTitle: "Pertanyaan yang Sering Diajukan",
+    faqSubtitle: "Semua yang perlu Anda ketahui tentang OddsFlow",
+    faq1Question: "Bisakah AI memprediksi skor sepak bola?",
+    faq1Answer: "Ya! Prediktor AI sepak bola kami menganalisis jutaan pertandingan historis, data pemain, form tim, dan data real-time untuk memprediksi skor. Sebagai prediktor AI sepak bola paling akurat, kami mencapai 78%+ akurasi di liga EPL, Bundesliga, Serie A, La Liga, dan Ligue 1.",
+    faq2Question: "Apakah taruhan AI menguntungkan?",
+    faq2Answer: "Dengan hasil terverifikasi dan platform transparan seperti OddsFlow, taruhan AI bisa sangat menguntungkan. Pengguna kami mendapatkan return konsisten dengan tips AI sepak bola Eropa kami, dengan pelacakan performa detail.",
+    faq3Question: "Apakah taruhan handicap menguntungkan?",
+    faq3Answer: "Taruhan handicap adalah salah satu strategi paling menguntungkan jika dilakukan dengan benar. Sistem analisis AI handicap kami menyediakan pilihan berbasis data yang memaksimalkan nilai di semua liga Eropa.",
+    faq4Question: "Bagaimana Anda menggunakan data untuk memprediksi gol?",
+    faq4Answer: "AI kami menganalisis data over 2.5 gol EPL, tren gol tim, catatan pertahanan, dan data historis untuk memprediksi hasil over/under. Sistem mempertimbangkan form home/away, rekor head-to-head, dan tren gol terkini.",
+    faq5Question: "Liga apa saja yang Anda cover?",
+    faq5Answer: "Kami menyediakan prediksi AI untuk semua liga besar Eropa: EPL, Bundesliga, Serie A, La Liga, Ligue 1, dan Liga Champions.",
+    faq6Question: "Bagaimana OddsFlow dibandingkan dengan prediktor AI lainnya?",
+    faq6Answer: "OddsFlow diakui sebagai prediktor AI sepak bola paling akurat dengan hasil terverifikasi. Berbeda dengan platform lain, kami menyediakan hasil transparan dan riwayat performa lengkap.",
+    faq7Question: "Jenis prediksi apa yang Anda tawarkan?",
+    faq7Answer: "Kami menawarkan prediksi 1x2 hari ini, prediksi seri, prediksi handicap, data over 2.5 gol, dan analisis pertandingan lengkap. Tips AI kami mencakup semua pasar taruhan utama.",
+    // What is OddsFlow
+    whatIsOddsFlow: "Apa itu OddsFlow?",
+    whatIsDesc1: "OddsFlow adalah platform yang menghasilkan prediksi sepak bola sepenuhnya oleh kecerdasan buatan.",
+    whatIsDesc2: "Menyediakan prediksi AI untuk 100+ liga sepak bola, termasuk Premier League, La Liga, Serie A, Bundesliga, Liga Champions, dan lainnya.",
+    whatIsDesc3: "Lihat prediksi taruhan terbaik di pilihan harian kami, dengan tips sepak bola paling akurat yang dipilih oleh AI.",
+    whatIsDesc4: "Ikuti OddsFlow untuk tips pertandingan, prediksi AI detail (penguasaan bola, tembakan, sudut, laporan H2H, odds, dan lainnya).",
   },
 };
 
 // ============ Language Context ============
 type LanguageContextType = {
   lang: string;
-  setLang: (lang: string) => void;
+  locale: string;
   t: (key: string) => string;
+  localePath: (path: string) => string;
 };
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
-function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState("EN");
-
-  // Load language from localStorage on mount
-  useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_lang');
-    if (savedLang) setLang(savedLang);
-  }, []);
-
-  // Save language to localStorage when changed
-  const handleSetLang = (newLang: string) => {
-    setLang(newLang);
-    localStorage.setItem('oddsflow_lang', newLang);
-  };
+function LanguageProvider({ children, locale }: { children: ReactNode; locale: string }) {
+  // Map URL locale to translation code
+  const lang = localeToTranslationCode[locale] || 'EN';
 
   const t = (key: string): string => {
     return translations[lang]?.[key] || translations["EN"]?.[key] || key;
   };
 
+  // Helper function to create locale-aware paths
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
   return (
-    <LanguageContext.Provider value={{ lang, setLang: handleSetLang, t }}>
+    <LanguageContext.Provider value={{ lang, locale, t, localePath }}>
       {children}
     </LanguageContext.Provider>
   );
@@ -1258,9 +1781,7 @@ function useLanguage() {
 // ============ Language Switcher ============
 function LanguageSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
-  const { lang, setLang } = useLanguage();
-
-  const currentLang = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
+  const { locale: currentLocale } = useLanguage();
 
   return (
     <div className="relative">
@@ -1268,8 +1789,8 @@ function LanguageSwitcher() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer"
       >
-        <FlagIcon code={currentLang.code} size={20} />
-        <span className="font-medium">{currentLang.code}</span>
+        <FlagIcon code={currentLocale} size={20} />
+        <span className="font-medium uppercase">{currentLocale === 'zh' ? '中文' : currentLocale.toUpperCase()}</span>
         <svg
           className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
@@ -1281,26 +1802,24 @@ function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
-            {LANGUAGES.map((l) => (
-              <button
-                key={l.code}
-                onClick={() => {
-                  setLang(l.code);
-                  setIsOpen(false);
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-left cursor-pointer ${
-                  lang === l.code ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'
+        <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
+          {locales.map((loc) => {
+            // English uses root /, others use /locale
+            const href = loc === 'en' ? '/' : `/${loc}`;
+            return (
+              <Link
+                key={loc}
+                href={href}
+                className={`block w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-left cursor-pointer ${
+                  currentLocale === loc ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'
                 }`}
               >
-                <FlagIcon code={l.code} size={24} />
-                <span className="font-medium">{l.name}</span>
-              </button>
-            ))}
-          </div>
-        </>
+                <FlagIcon code={loc} size={24} />
+                <span className="font-medium">{localeNames[loc]}</span>
+              </Link>
+            );
+          })}
+        </div>
       )}
     </div>
   );
@@ -1308,7 +1827,7 @@ function LanguageSwitcher() {
 
 // ============ Navigation ============
 function Navbar() {
-  const { t } = useLanguage();
+  const { t, localePath } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -1327,14 +1846,14 @@ function Navbar() {
   }, []);
 
   const navLinks = [
-    { href: '/', label: t('home'), active: true },
-    { href: '/predictions', label: t('predictions') },
-    { href: '/leagues', label: t('leagues') },
-    { href: '/performance', label: t('performance') },
-    { href: '/community', label: t('community') },
-    { href: '/news', label: t('news') },
-    { href: '/solution', label: t('solution') },
-    { href: '/pricing', label: t('pricing') },
+    { href: localePath('/'), label: t('home'), active: true },
+    { href: localePath('/predictions'), label: t('predictions') },
+    { href: localePath('/leagues'), label: t('leagues') },
+    { href: localePath('/performance'), label: t('performance') },
+    { href: localePath('/community'), label: t('community') },
+    { href: localePath('/news'), label: t('news') },
+    { href: localePath('/solution'), label: t('solution') },
+    { href: localePath('/pricing'), label: t('pricing') },
   ];
 
   return (
@@ -1343,7 +1862,7 @@ function Navbar() {
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
             {/* Logo - Left */}
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
@@ -1366,7 +1885,7 @@ function Navbar() {
               <LanguageSwitcher />
 
               {user ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
                   {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
                     <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-8 h-8 rounded-full object-cover" referrerPolicy="no-referrer" />
                   ) : (
@@ -1378,14 +1897,14 @@ function Navbar() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
                 </>
               )}
 
               {/* World Cup Special Button - Always Visible */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
               >
                 {/* Shimmer effect */}
@@ -1433,7 +1952,7 @@ function Navbar() {
             <div className="px-4 py-4 space-y-1">
               {/* World Cup Special Entry */}
               <Link
-                href="/worldcup"
+                href={localePath('/worldcup')}
                 onClick={() => setMobileMenuOpen(false)}
                 className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 border-2 border-yellow-300 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden"
               >
@@ -1465,14 +1984,14 @@ function Navbar() {
               {!user && (
                 <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
                   <Link
-                    href="/login"
+                    href={localePath('/login')}
                     onClick={() => setMobileMenuOpen(false)}
                     className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all"
                   >
                     {t('login')}
                   </Link>
                   <Link
-                    href="/get-started"
+                    href={localePath('/get-started')}
                     onClick={() => setMobileMenuOpen(false)}
                     className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold hover:shadow-lg transition-all"
                   >
@@ -1490,7 +2009,7 @@ function Navbar() {
 
 // ============ Hero Section ============
 function HeroSection() {
-  const { t } = useLanguage();
+  const { t, localePath } = useLanguage();
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -1531,8 +2050,8 @@ function HeroSection() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/get-started" className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-bold text-lg hover:shadow-2xl hover:shadow-emerald-500/30 hover:scale-105 transition-all duration-300 cursor-pointer text-center">{t('startAnalyzing')}</Link>
-          <Link href="/predictions" className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 text-white font-semibold text-lg hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer text-center">{t('viewLiveOdds')}</Link>
+          <Link href={localePath('/get-started')} className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-bold text-lg hover:shadow-2xl hover:shadow-emerald-500/30 hover:scale-105 transition-all duration-300 cursor-pointer text-center">{t('startAnalyzing')}</Link>
+          <Link href={localePath('/predictions')} className="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 text-white font-semibold text-lg hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer text-center">{t('viewLiveOdds')}</Link>
         </div>
       </div>
 
@@ -1830,7 +2349,7 @@ function LeaguesSection() {
 
 // ============ AI Predictions Section ============
 function AIPredictionsSection() {
-  const { t } = useLanguage();
+  const { t, localePath } = useLanguage();
   const [matches, setMatches] = useState<Prematch[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -2117,7 +2636,7 @@ function AIPredictionsSection() {
 
         {/* View All Button */}
         <div className="text-center mt-6">
-          <Link href="/predictions" className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer inline-block">
+          <Link href={localePath('/predictions')} className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer inline-block">
             {t('viewAllPredictions')}
           </Link>
         </div>
@@ -2577,7 +3096,7 @@ function FAQSection() {
 
 // ============ CTA Section ============
 function CTASection() {
-  const { t } = useLanguage();
+  const { t, localePath } = useLanguage();
 
   return (
     <section className="relative overflow-hidden bg-[#0d0d14]">
@@ -2591,7 +3110,7 @@ function CTASection() {
       <div className="max-w-7xl mx-auto px-4 py-12 relative z-10">
         {/* Top row: Logo + Social Icons */}
         <div className="flex items-center justify-between mb-10">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href={localePath('/')} className="flex items-center gap-3">
             <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
             <span className="text-xl font-bold text-white">OddsFlow</span>
           </Link>
@@ -2618,25 +3137,25 @@ function CTASection() {
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm">{t('product')}</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/predictions" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
-              <li><Link href="/leagues" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
-              <li><Link href="/performance" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('liveOdds')}</Link></li>
-              <li><Link href="/solution" className="text-gray-400 hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
+              <li><Link href={localePath('/predictions')} className="text-gray-400 hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
+              <li><Link href={localePath('/leagues')} className="text-gray-400 hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
+              <li><Link href={localePath('/performance')} className="text-gray-400 hover:text-emerald-400 transition-colors">{t('liveOdds')}</Link></li>
+              <li><Link href={localePath('/solution')} className="text-gray-400 hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
             </ul>
           </div>
           <div className="relative z-10">
             <h4 className="text-white font-semibold mb-4 text-sm">{t('company')}</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/about" className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
-              <li><Link href="/contact" className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
-              <li><Link href="/blog" className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
+              <li><Link href={localePath('/about')} className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+              <li><Link href={localePath('/contact')} className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+              <li><Link href={localePath('/blog')} className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
             </ul>
           </div>
           <div className="relative z-10">
             <h4 className="text-white font-semibold mb-4 text-sm">{t('legal')}</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/terms-of-service" className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
-              <li><Link href="/privacy-policy" className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+              <li><Link href={localePath('/terms-of-service')} className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+              <li><Link href={localePath('/privacy-policy')} className="text-gray-400 hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
             </ul>
           </div>
           <div>
@@ -2676,14 +3195,14 @@ function CookieConsentWrapper() {
 
 // ============ Footer ============
 function Footer() {
-  const { t } = useLanguage();
+  const { t, localePath } = useLanguage();
 
   return (
     <footer className="py-16 px-4 bg-black border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 lg:gap-12 mb-12">
           <div className="col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-6">
+            <Link href={localePath('/')} className="flex items-center gap-3 mb-6">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold">OddsFlow</span>
             </Link>
@@ -2707,48 +3226,48 @@ function Footer() {
           <div>
             <h4 className="font-semibold mb-5 text-white">{t('product')}</h4>
             <ul className="space-y-3 text-gray-400">
-              <li><Link href="/predictions" className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
-              <li><Link href="/leagues" className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
-              <li><Link href="/performance" className="hover:text-emerald-400 transition-colors">{t('liveOdds')}</Link></li>
-              <li><Link href="/solution" className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
+              <li><Link href={localePath('/predictions')} className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
+              <li><Link href={localePath('/leagues')} className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
+              <li><Link href={localePath('/performance')} className="hover:text-emerald-400 transition-colors">{t('liveOdds')}</Link></li>
+              <li><Link href={localePath('/solution')} className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
             <ul className="space-y-3 text-gray-400">
-              <li><Link href="/leagues/premier-league" className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
-              <li><Link href="/leagues/la-liga" className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
-              <li><Link href="/leagues/serie-a" className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
-              <li><Link href="/leagues/bundesliga" className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
-              <li><Link href="/leagues/ligue-1" className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
-              <li><Link href="/leagues/champions-league" className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
+              <li><Link href={localePath('/leagues/premier-league')} className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
+              <li><Link href={localePath('/leagues/la-liga')} className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
+              <li><Link href={localePath('/leagues/serie-a')} className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
+              <li><Link href={localePath('/leagues/bundesliga')} className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
+              <li><Link href={localePath('/leagues/ligue-1')} className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
+              <li><Link href={localePath('/leagues/champions-league')} className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-semibold mb-5 text-white">{t('communityFooter')}</h4>
             <ul className="space-y-3 text-gray-400">
-              <li><Link href="/community" className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
-              <li><Link href="/community/global-chat" className="hover:text-emerald-400 transition-colors">{t('globalChat')}</Link></li>
-              <li><Link href="/community/user-predictions" className="hover:text-emerald-400 transition-colors">{t('userPredictions')}</Link></li>
+              <li><Link href={localePath('/community')} className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
+              <li><Link href={localePath('/community/global-chat')} className="hover:text-emerald-400 transition-colors">{t('globalChat')}</Link></li>
+              <li><Link href={localePath('/community/user-predictions')} className="hover:text-emerald-400 transition-colors">{t('userPredictions')}</Link></li>
             </ul>
           </div>
 
           <div className="relative z-10">
             <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
             <ul className="space-y-3 text-gray-400">
-              <li><Link href="/about" className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
-              <li><Link href="/contact" className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
-              <li><Link href="/blog" className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
+              <li><Link href={localePath('/about')} className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+              <li><Link href={localePath('/contact')} className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+              <li><Link href={localePath('/blog')} className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
             </ul>
           </div>
 
           <div className="relative z-10">
             <h4 className="font-semibold mb-5 text-white">{t('legal')}</h4>
             <ul className="space-y-3 text-gray-400">
-              <li><Link href="/terms-of-service" className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
-              <li><Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+              <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+              <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
             </ul>
           </div>
         </div>
@@ -2769,8 +3288,11 @@ function Footer() {
 
 // ============ Main Page ============
 export default function Home() {
+  const params = useParams();
+  const locale = (params.locale as string) || 'en';
+
   return (
-    <LanguageProvider>
+    <LanguageProvider locale={locale}>
       <div className="min-h-screen bg-black text-white">
         <Navbar />
         <HeroSection />

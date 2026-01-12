@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { PlayerStats, getPlayerStatsById } from '@/lib/supabase';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 // League configuration
 const LEAGUES_CONFIG: Record<string, { name: string; country: string; logo: string; dbName: string }> = {
@@ -18,29 +19,30 @@ const LEAGUES_CONFIG: Record<string, { name: string; country: string; logo: stri
 
 export default function PlayerDetailPage() {
   const params = useParams();
+  const urlLocale = (params.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
+  const selectedLang = localeToTranslationCode[locale as Locale] || 'EN';
   const leagueSlug = params.league as string;
   const playerId = params.id as string;
   const leagueConfig = LEAGUES_CONFIG[leagueSlug];
 
+  // Helper function for locale-aware paths
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
+  // Helper for language dropdown URLs
+  const getLocaleUrl = (targetLocale: Locale): string => {
+    const currentPath = `/leagues/${leagueSlug}/player/${playerId}`;
+    return targetLocale === 'en' ? currentPath : `/${targetLocale}${currentPath}`;
+  };
+
   const [player, setPlayer] = useState<PlayerStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
 
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
-
-  // Handle language change
-  const handleLanguageChange = (langCode: string) => {
-    setSelectedLang(langCode);
-    localStorage.setItem('oddsflow_lang', langCode);
-    setLangDropdownOpen(false);
-  };
-
-  // Load saved language preference
-  useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_lang');
-    if (savedLang) setSelectedLang(savedLang);
-  }, []);
 
   useEffect(() => {
     async function fetchPlayer() {
@@ -72,18 +74,18 @@ export default function PlayerDetailPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Home</Link>
-              <Link href="/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Predictions</Link>
-              <Link href="/leagues" className="text-emerald-400 text-sm font-medium">Leagues</Link>
-              <Link href="/performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">AI Performance</Link>
-              <Link href="/news" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">News</Link>
-              <Link href="/solution" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Solution</Link>
+              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Home</Link>
+              <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Predictions</Link>
+              <Link href={localePath('/leagues')} className="text-emerald-400 text-sm font-medium">Leagues</Link>
+              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">AI Performance</Link>
+              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">News</Link>
+              <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Solution</Link>
             </div>
 
             {/* Language Selector */}
@@ -107,24 +109,25 @@ export default function PlayerDetailPage() {
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
                   <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
-                    {LANGUAGES.map((lang) => (
-                      <button
-                        key={lang.code}
-                        onClick={() => handleLanguageChange(lang.code)}
+                    {locales.map((loc) => (
+                      <Link
+                        key={loc}
+                        href={getLocaleUrl(loc)}
                         className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors cursor-pointer ${
-                          selectedLang === lang.code
+                          locale === loc
                             ? 'bg-emerald-500/20 text-emerald-400'
                             : 'text-gray-300 hover:bg-white/5 hover:text-white'
                         }`}
+                        onClick={() => setLangDropdownOpen(false)}
                       >
-                        <FlagIcon code={lang.code} size={20} />
-                        <span>{lang.name}</span>
-                        {selectedLang === lang.code && (
+                        <FlagIcon code={loc} size={20} />
+                        <span>{localeNames[loc]}</span>
+                        {locale === loc && (
                           <svg className="w-4 h-4 ml-auto text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         )}
-                      </button>
+                      </Link>
                     ))}
                   </div>
                 </>
@@ -138,7 +141,7 @@ export default function PlayerDetailPage() {
       <main className="relative z-10 pt-24 pb-16 px-4">
         <div className="max-w-5xl mx-auto">
           {/* Back Button */}
-          <Link href={`/leagues/${leagueSlug}`} className="inline-flex items-center gap-2 text-emerald-400 hover:text-white transition-colors mb-6">
+          <Link href={localePath(`/leagues/${leagueSlug}`)} className="inline-flex items-center gap-2 text-emerald-400 hover:text-white transition-colors mb-6">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>

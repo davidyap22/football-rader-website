@@ -2,11 +2,12 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useParams } from 'next/navigation';
 import { supabase, Prematch, MatchPrediction, getMatchPredictions } from '@/lib/supabase';
 import WorldCupFooter from '@/components/WorldCupFooter';
 import { User } from '@supabase/supabase-js';
-import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import FlagIcon from "@/components/FlagIcon";
+import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 // Date helper functions - All using UTC
 function getUTCToday() {
@@ -271,11 +272,25 @@ const translations: Record<string, Record<string, string>> = {
 
 function WorldCupContent() {
   const searchParams = useSearchParams();
+  const params = useParams();
+  const urlLocale = (params?.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
+  const selectedLang = localeToTranslationCode[locale as Locale] || 'EN';
+
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
+  const getLocaleUrl = (targetLocale: Locale): string => {
+    const currentPath = '/worldcup';
+    return targetLocale === 'en' ? currentPath : `/${targetLocale}${currentPath}`;
+  };
+
   const [selectedDate, setSelectedDate] = useState(getInitialDate);
   const [matches, setMatches] = useState<Prematch[]>([]);
   const [loading, setLoading] = useState(true);
   const [dates] = useState(getDateRange);
-  const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -304,7 +319,6 @@ function WorldCupContent() {
       clearTimeout(videoTimer);
     };
   }, []);
-  const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
   const handleMatchClick = (e: React.MouseEvent, matchId: number) => {
     if (!user) {
@@ -358,18 +372,6 @@ function WorldCupContent() {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_lang');
-    if (savedLang) {
-      setSelectedLang(savedLang);
-    }
-  }, []);
-
-  const handleLanguageChange = (langCode: string) => {
-    setSelectedLang(langCode);
-    localStorage.setItem('oddsflow_lang', langCode);
-    setLangDropdownOpen(false);
-  };
 
   const t = (key: string): string => {
     return translations[selectedLang]?.[key] || translations['EN']?.[key] || key;
@@ -488,17 +490,17 @@ function WorldCupContent() {
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/worldcup" className="text-amber-400 text-sm font-medium">{t('home')}</Link>
-              <Link href="/worldcup/predictions" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
-              <Link href="/worldcup/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
-              <Link href="/worldcup/ai_performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
+              <Link href={localePath('/worldcup')} className="text-amber-400 text-sm font-medium">{t('home')}</Link>
+              <Link href={localePath('/worldcup/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
+              <Link href={localePath('/worldcup/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
+              <Link href={localePath('/worldcup/ai_performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
             </div>
 
             {/* Right Side - Language, User, Menu Button */}
@@ -509,8 +511,8 @@ function WorldCupContent() {
                   onClick={() => setLangDropdownOpen(!langDropdownOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer"
                 >
-                  <FlagIcon code={currentLang.code} size={20} />
-                  <span className="font-medium">{currentLang.code}</span>
+                  <FlagIcon code={selectedLang} size={20} />
+                  <span className="font-medium">{selectedLang}</span>
                   <svg className={`w-4 h-4 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
@@ -520,17 +522,18 @@ function WorldCupContent() {
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
                     <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
-                      {LANGUAGES.map((l) => (
-                        <button
-                          key={l.code}
-                          onClick={() => handleLanguageChange(l.code)}
+                      {locales.map((loc) => (
+                        <Link
+                          key={loc}
+                          href={getLocaleUrl(loc)}
+                          onClick={() => setLangDropdownOpen(false)}
                           className={`w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-left cursor-pointer ${
-                            selectedLang === l.code ? 'bg-amber-500/20 text-amber-400' : 'text-gray-300'
+                            locale === loc ? 'bg-amber-500/20 text-amber-400' : 'text-gray-300'
                           }`}
                         >
-                          <FlagIcon code={l.code} size={20} />
-                          <span className="font-medium">{l.name}</span>
-                        </button>
+                          <FlagIcon code={localeToTranslationCode[loc]} size={20} />
+                          <span className="font-medium">{localeNames[loc]}</span>
+                        </Link>
                       ))}
                     </div>
                   </>
@@ -538,7 +541,7 @@ function WorldCupContent() {
               </div>
 
               {user ? (
-                <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
                   {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
                     <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
                   ) : (
@@ -550,8 +553,8 @@ function WorldCupContent() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-amber-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-amber-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
                 </>
               )}
 
@@ -572,7 +575,7 @@ function WorldCupContent() {
                 {fifaDropdownOpen && (
                   <div className="absolute right-0 top-full mt-2 w-56 bg-gray-900/95 backdrop-blur-xl border border-amber-500/30 rounded-xl shadow-xl shadow-amber-500/20 overflow-hidden z-50">
                     <Link
-                      href="/"
+                      href={localePath('/')}
                       onClick={() => setFifaDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors border-b border-white/10"
                     >
@@ -582,7 +585,7 @@ function WorldCupContent() {
                       <span className="font-medium">Back to OddsFlow</span>
                     </Link>
                     <Link
-                      href="/worldcup/predictions"
+                      href={localePath('/worldcup/predictions')}
                       onClick={() => setFifaDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors"
                     >
@@ -592,7 +595,7 @@ function WorldCupContent() {
                       <span className="font-medium">{t('predictions')}</span>
                     </Link>
                     <Link
-                      href="/worldcup/leagues"
+                      href={localePath('/worldcup/leagues')}
                       onClick={() => setFifaDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors"
                     >
@@ -602,7 +605,7 @@ function WorldCupContent() {
                       <span className="font-medium">{t('leagues')}</span>
                     </Link>
                     <Link
-                      href="/worldcup/ai_performance"
+                      href={localePath('/worldcup/ai_performance')}
                       onClick={() => setFifaDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors"
                     >
@@ -650,13 +653,13 @@ function WorldCupContent() {
               </div>
 
               {[
-                { href: '/', label: t('home') },
-                { href: '/predictions', label: t('predictions') },
-                { href: '/leagues', label: t('leagues') },
-                { href: '/performance', label: t('performance') },
-                { href: '/community', label: t('community') },
-                { href: '/news', label: t('news') },
-                { href: '/pricing', label: t('pricing') },
+                { href: localePath('/'), label: t('home') },
+                { href: localePath('/predictions'), label: t('predictions') },
+                { href: localePath('/leagues'), label: t('leagues') },
+                { href: localePath('/performance'), label: t('performance') },
+                { href: localePath('/community'), label: t('community') },
+                { href: localePath('/news'), label: t('news') },
+                { href: localePath('/pricing'), label: t('pricing') },
               ].map((link) => (
                 <Link
                   key={link.href}
@@ -670,10 +673,10 @@ function WorldCupContent() {
 
               {!user && (
                 <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all">
+                  <Link href={localePath('/login')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all">
                     {t('login')}
                   </Link>
-                  <Link href="/get-started" onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 text-black text-center font-semibold hover:shadow-lg transition-all">
+                  <Link href={localePath('/get-started')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 text-black text-center font-semibold hover:shadow-lg transition-all">
                     {t('getStarted')}
                   </Link>
                 </div>
@@ -792,7 +795,7 @@ function WorldCupContent() {
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-12">
             {/* Predictions Card */}
-            <Link href="/worldcup/predictions" className="group relative bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-amber-500/20 p-6 hover:border-amber-500/40 transition-all hover:scale-[1.02] overflow-hidden">
+            <Link href={localePath('/worldcup/predictions')} className="group relative bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-amber-500/20 p-6 hover:border-amber-500/40 transition-all hover:scale-[1.02] overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative">
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border border-amber-500/30 flex items-center justify-center mb-4">
@@ -812,7 +815,7 @@ function WorldCupContent() {
             </Link>
 
             {/* Teams & Groups Card */}
-            <Link href="/worldcup/leagues" className="group relative bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-blue-500/20 p-6 hover:border-blue-500/40 transition-all hover:scale-[1.02] overflow-hidden">
+            <Link href={localePath('/worldcup/leagues')} className="group relative bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-blue-500/20 p-6 hover:border-blue-500/40 transition-all hover:scale-[1.02] overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative">
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center mb-4">
@@ -832,7 +835,7 @@ function WorldCupContent() {
             </Link>
 
             {/* AI Performance Card */}
-            <Link href="/worldcup/ai_performance" className="group relative bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-emerald-500/20 p-6 hover:border-emerald-500/40 transition-all hover:scale-[1.02] overflow-hidden">
+            <Link href={localePath('/worldcup/ai_performance')} className="group relative bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-2xl border border-emerald-500/20 p-6 hover:border-emerald-500/40 transition-all hover:scale-[1.02] overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative">
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center mb-4">
@@ -928,7 +931,7 @@ function WorldCupContent() {
               <div className="divide-y divide-white/5">
                 {matches.slice(0, visibleMatches).map((match) => (
                   <Link
-                    href={`/worldcup/predictions/${match.id}?date=${match.start_date_msia ? match.start_date_msia.split('T')[0] : ''}`}
+                    href={localePath(`/worldcup/predictions/${match.id}?date=${match.start_date_msia ? match.start_date_msia.split('T')[0] : ''}`)}
                     key={match.id}
                     onClick={(e) => handleMatchClick(e, match.id)}
                     className={`block transition-all duration-300 group cursor-pointer relative overflow-hidden ${
@@ -1145,10 +1148,10 @@ function WorldCupContent() {
             </p>
 
             <div className="space-y-3">
-              <Link href="/get-started" className="block w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-semibold text-center hover:shadow-lg hover:shadow-amber-500/25 transition-all" onClick={() => setShowLoginModal(false)}>
+              <Link href={localePath('/get-started')} className="block w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-semibold text-center hover:shadow-lg hover:shadow-amber-500/25 transition-all" onClick={() => setShowLoginModal(false)}>
                 Sign Up Free
               </Link>
-              <Link href="/login" className="block w-full py-3 px-4 rounded-xl border border-white/20 text-white font-semibold text-center hover:bg-white/10 transition-all" onClick={() => setShowLoginModal(false)}>
+              <Link href={localePath('/login')} className="block w-full py-3 px-4 rounded-xl border border-white/20 text-white font-semibold text-center hover:bg-white/10 transition-all" onClick={() => setShowLoginModal(false)}>
                 Already have an account? Log In
               </Link>
             </div>

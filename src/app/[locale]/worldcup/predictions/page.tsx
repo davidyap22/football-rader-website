@@ -2,11 +2,12 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useParams } from 'next/navigation';
 import { supabase, Prematch, MatchPrediction, getMatchPredictions } from '@/lib/supabase';
 import WorldCupFooter from '@/components/WorldCupFooter';
 import { User } from '@supabase/supabase-js';
-import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import FlagIcon from "@/components/FlagIcon";
+import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -99,11 +100,24 @@ const translations: Record<string, Record<string, string>> = {
 function WorldCupPredictionsContent() {
   const searchParams = useSearchParams();
   const groupFromUrl = searchParams.get('group');
+  const params = useParams();
+  const urlLocale = (params.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
+  const selectedLang = localeToTranslationCode[locale as Locale] || 'EN';
+
+  const localePath = (path: string): string => {
+    if (locale === 'en') return path;
+    return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
+  const getLocaleUrl = (targetLocale: Locale): string => {
+    const currentPath = '/worldcup/predictions';
+    return targetLocale === 'en' ? currentPath : `/${targetLocale}${currentPath}`;
+  };
 
   const [allMatches, setAllMatches] = useState<Prematch[]>([]);
   const [filteredMatches, setFilteredMatches] = useState<Prematch[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedLang, setSelectedLang] = useState('EN');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -112,7 +126,6 @@ function WorldCupPredictionsContent() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(groupFromUrl);
   const [fifaDropdownOpen, setFifaDropdownOpen] = useState(false);
 
-  const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
   const t = (key: string): string => {
     return translations[selectedLang]?.[key] || translations['EN']?.[key] || key;
@@ -139,18 +152,6 @@ function WorldCupPredictionsContent() {
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_lang');
-    if (savedLang) {
-      setSelectedLang(savedLang);
-    }
-  }, []);
-
-  const handleLanguageChange = (langCode: string) => {
-    setSelectedLang(langCode);
-    localStorage.setItem('oddsflow_lang', langCode);
-    setLangDropdownOpen(false);
-  };
 
   // Fetch ALL World Cup matches and extract unique groups
   useEffect(() => {
@@ -248,16 +249,16 @@ function WorldCupPredictionsContent() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <Link href={localePath('/')} className="flex items-center gap-3 flex-shrink-0">
               <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
               <span className="text-xl font-bold tracking-tight">OddsFlow</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/worldcup" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
-              <Link href="/worldcup/predictions" className="text-amber-400 text-sm font-medium">{t('predictions')}</Link>
-              <Link href="/worldcup/leagues" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
-              <Link href="/worldcup/ai_performance" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
+              <Link href={localePath('/worldcup')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
+              <Link href={localePath('/worldcup/predictions')} className="text-amber-400 text-sm font-medium">{t('predictions')}</Link>
+              <Link href={localePath('/worldcup/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
+              <Link href={localePath('/worldcup/ai_performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
@@ -267,8 +268,8 @@ function WorldCupPredictionsContent() {
                   onClick={() => setLangDropdownOpen(!langDropdownOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer"
                 >
-                  <FlagIcon code={currentLang.code} size={20} />
-                  <span className="font-medium">{currentLang.code}</span>
+                  <FlagIcon code={selectedLang} size={20} />
+                  <span className="font-medium">{selectedLang}</span>
                   <svg className={`w-4 h-4 text-gray-400 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
@@ -276,15 +277,16 @@ function WorldCupPredictionsContent() {
 
                 {langDropdownOpen && (
                   <div className="absolute right-0 top-full mt-2 w-48 bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
-                    {LANGUAGES.map((lang) => (
-                      <button
-                        key={lang.code}
-                        onClick={() => handleLanguageChange(lang.code)}
-                        className={`w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-white/5 transition-colors ${selectedLang === lang.code ? 'bg-amber-500/10 text-amber-400' : 'text-gray-300'}`}
+                    {locales.map((loc) => (
+                      <Link
+                        key={loc}
+                        href={getLocaleUrl(loc)}
+                        onClick={() => setLangDropdownOpen(false)}
+                        className={`w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-white/5 transition-colors ${locale === loc ? 'bg-amber-500/10 text-amber-400' : 'text-gray-300'}`}
                       >
-                        <FlagIcon code={lang.code} size={20} />
-                        <span className="font-medium">{lang.name}</span>
-                      </button>
+                        <FlagIcon code={localeToTranslationCode[loc]} size={20} />
+                        <span className="font-medium">{localeNames[loc]}</span>
+                      </Link>
                     ))}
                   </div>
                 )}
@@ -292,7 +294,7 @@ function WorldCupPredictionsContent() {
 
               {/* User/Login */}
               {user ? (
-                <Link href="/dashboard" className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+                <Link href={localePath('/dashboard')} className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
                   <div className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center text-black font-bold text-sm">
                     {user.user_metadata?.full_name?.[0] || user.email?.[0]?.toUpperCase() || 'U'}
                   </div>
@@ -300,8 +302,8 @@ function WorldCupPredictionsContent() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login" className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-                  <Link href="/get-started" className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-amber-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-amber-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
                 </>
               )}
 
@@ -322,7 +324,7 @@ function WorldCupPredictionsContent() {
                 {fifaDropdownOpen && (
                   <div className="absolute right-0 top-full mt-2 w-56 bg-gray-900/95 backdrop-blur-xl border border-amber-500/30 rounded-xl shadow-xl shadow-amber-500/20 overflow-hidden z-50">
                     <Link
-                      href="/"
+                      href={localePath('/')}
                       onClick={() => setFifaDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors border-b border-white/10"
                     >
@@ -332,7 +334,7 @@ function WorldCupPredictionsContent() {
                       <span className="font-medium">Back to OddsFlow</span>
                     </Link>
                     <Link
-                      href="/worldcup/predictions"
+                      href={localePath('/worldcup/predictions')}
                       onClick={() => setFifaDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 text-amber-400 bg-amber-500/10"
                     >
@@ -342,7 +344,7 @@ function WorldCupPredictionsContent() {
                       <span className="font-medium">{t('predictions')}</span>
                     </Link>
                     <Link
-                      href="/worldcup/leagues"
+                      href={localePath('/worldcup/leagues')}
                       onClick={() => setFifaDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors"
                     >
@@ -352,7 +354,7 @@ function WorldCupPredictionsContent() {
                       <span className="font-medium">{t('leagues')}</span>
                     </Link>
                     <Link
-                      href="/worldcup/ai_performance"
+                      href={localePath('/worldcup/ai_performance')}
                       onClick={() => setFifaDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-amber-500/10 hover:text-amber-400 transition-colors"
                     >
@@ -374,7 +376,7 @@ function WorldCupPredictionsContent() {
 
       {/* Header */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-8">
-        <Link href="/worldcup" className="inline-flex items-center gap-2 text-amber-400 hover:text-white transition-colors mb-6">
+        <Link href={localePath('/worldcup')} className="inline-flex items-center gap-2 text-amber-400 hover:text-white transition-colors mb-6">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
@@ -479,7 +481,7 @@ function WorldCupPredictionsContent() {
               <div className="divide-y divide-white/5">
                 {filteredMatches.map((match) => (
                   <Link
-                    href={`/worldcup/predictions/${match.id}?group=${encodeURIComponent(selectedGroup || '')}`}
+                    href={localePath(`/worldcup/predictions/${match.id}?group=${encodeURIComponent(selectedGroup || '')}`)}
                     key={match.id}
                     onClick={(e) => handleMatchClick(e, match.id)}
                     className={`block transition-all duration-300 group cursor-pointer relative overflow-hidden ${
@@ -603,13 +605,13 @@ function WorldCupPredictionsContent() {
 
             <div className="space-y-3">
               <Link
-                href="/login"
+                href={localePath('/login')}
                 className="block w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-black text-center font-semibold hover:shadow-lg transition-all"
               >
                 Sign In
               </Link>
               <Link
-                href="/get-started"
+                href={localePath('/get-started')}
                 className="block w-full py-3 rounded-xl border border-amber-500/30 text-amber-400 text-center font-semibold hover:bg-amber-500/10 transition-all"
               >
                 Create Free Account
