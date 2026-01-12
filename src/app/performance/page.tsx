@@ -1060,9 +1060,22 @@ export default function PerformancePage() {
 
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
 
-  const filteredMatches = selectedLeague === 'all'
-    ? matches
-    : matches.filter(m => m.league_name === selectedLeague);
+  const filteredMatches = (() => {
+    let result = selectedLeague === 'all'
+      ? matches
+      : matches.filter(m => m.league_name === selectedLeague);
+
+    // Also filter by bet style - only show matches that have at least one bet of the selected style
+    if (selectedBetStyle !== 'all') {
+      result = result.filter(m => {
+        const profits = matchProfitsByStyle.get(m.fixture_id);
+        // Check if this match has any profits (bets) for the selected style
+        return profits && (profits.total_profit !== 0 || profits.total_invested > 0);
+      });
+    }
+
+    return result;
+  })();
 
   // Pagination
   const totalPages = Math.ceil(filteredMatches.length / ITEMS_PER_PAGE);
@@ -1071,10 +1084,10 @@ export default function PerformancePage() {
     currentPage * ITEMS_PER_PAGE
   );
 
-  // Reset to page 1 when league filter changes
+  // Reset to page 1 when league or bet style filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedLeague]);
+  }, [selectedLeague, selectedBetStyle]);
 
   // Format match date as "X days ago" or actual date
   const formatMatchDate = (dateStr: string) => {
