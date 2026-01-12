@@ -875,7 +875,7 @@ export default function PerformancePage() {
       // Fetch all profit_summary data with individual bet details
       const { data: profitData, error: profitError } = await supabase
         .from('profit_summary')
-        .select('fixture_id, total_profit, total_invested, roi_percentage, total_bets, profit_moneyline, profit_handicap, profit_ou, bet_time, bet_style, profit, selection, stake_money')
+        .select('fixture_id, total_profit, total_invested, roi_percentage, total_bets, profit_moneyline, profit_handicap, profit_ou, bet_time, bet_style, profit, selection, stake_money, clock, line, odds, home_score, away_score, status')
         .order('bet_time', { ascending: true });
 
       if (profitError) throw profitError;
