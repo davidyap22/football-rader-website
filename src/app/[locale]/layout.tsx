@@ -143,6 +143,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       },
     },
     category: 'sports betting',
+    verification: {
+      google: 'kGpqnHhRuZVUTgfiOxkLfmhtYt1jDcX0FAji3Hx0edU',
+    },
   };
 }
 
