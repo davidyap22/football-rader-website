@@ -332,7 +332,7 @@ function PredictionsContent() {
   const searchParams = useSearchParams();
   const params = useParams();
   const locale = (params.locale as string) || 'en';
-  const selectedLang = localeToTranslationCode[locale] || 'EN';
+  const selectedLang = localeToTranslationCode[locale as keyof typeof localeToTranslationCode] || 'EN';
 
   const [selectedDate, setSelectedDate] = useState(getInitialDate);
   const [matches, setMatches] = useState<Prematch[]>([]);
