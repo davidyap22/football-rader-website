@@ -885,14 +885,33 @@ export default function PerformancePage() {
 
       if (matchesError) throw matchesError;
 
-      // Fetch all profit_summary data with individual bet details (increase limit from default 1000)
-      const { data: profitData, error: profitError } = await supabase
-        .from('profit_summary')
-        .select('fixture_id, total_profit, total_invested, roi_percentage, total_bets, profit_moneyline, profit_handicap, profit_ou, bet_time, bet_style, profit, selection, stake_money, clock, line, odds, home_score, away_score, status')
-        .order('bet_time', { ascending: true })
-        .limit(50000);
+      // Fetch all profit_summary data using pagination (Supabase default limit is 1000)
+      let allProfitData: any[] = [];
+      let page = 0;
+      const pageSize = 1000;
+      let hasMore = true;
 
-      if (profitError) throw profitError;
+      while (hasMore) {
+        const { data: pageData, error: pageError } = await supabase
+          .from('profit_summary')
+          .select('fixture_id, total_profit, total_invested, roi_percentage, total_bets, profit_moneyline, profit_handicap, profit_ou, bet_time, bet_style, profit, selection, stake_money, clock, line, odds, home_score, away_score, status, league_name')
+          .order('bet_time', { ascending: true })
+          .range(page * pageSize, (page + 1) * pageSize - 1);
+
+        if (pageError) throw pageError;
+
+        if (pageData && pageData.length > 0) {
+          allProfitData = [...allProfitData, ...pageData];
+          page++;
+          hasMore = pageData.length === pageSize;
+        } else {
+          hasMore = false;
+        }
+      }
+
+      const profitData = allProfitData;
+      console.log('Total pages fetched:', page);
+      console.log('Total profitData after pagination:', profitData.length);
 
       // Debug: Check what we got from Supabase
       console.log('=== FETCH DEBUG ===');
