@@ -1086,15 +1086,26 @@ export default function PerformancePage() {
       ? matches
       : matches.filter(m => m.league_name === selectedLeague);
 
+    // Debug logging
+    console.log('=== FILTER DEBUG ===');
+    console.log('chartBetStyle:', chartBetStyle);
+    console.log('Total matches in state:', matches.length);
+    console.log('matchProfitsByStyle size:', matchProfitsByStyle.size);
+    console.log('matchProfitsByStyle keys:', Array.from(matchProfitsByStyle.keys()).slice(0, 10));
+
     // Also filter by bet style - only show matches that have at least one bet of the selected style
     if (chartBetStyle !== 'all') {
       result = result.filter(m => {
         const profits = matchProfitsByStyle.get(String(m.fixture_id));
-        // Check if this match has any profits (bets) for the selected style
-        return profits && (profits.total_profit !== 0 || profits.total_invested > 0);
+        const hasProfit = profits && (profits.total_profit !== 0 || profits.total_invested > 0);
+        if (!hasProfit && matchProfitsByStyle.size < 20) {
+          console.log(`Match ${m.fixture_id} excluded: profits=`, profits);
+        }
+        return hasProfit;
       });
     }
 
+    console.log('Filtered result count:', result.length);
     return result;
   })();
 
