@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 import { locales, localeToTranslationCode, type Locale } from '@/i18n/config';
+import { supabase } from "@/lib/supabase";
+import { User, AuthChangeEvent, Session } from "@supabase/supabase-js";
 
 const translations: Record<string, Record<string, string>> = {
   EN: {
@@ -767,6 +769,22 @@ export default function BlogPage() {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'tutorial' | 'insight' | 'update'>('all');
+  const [user, setUser] = useState<User | null>(null);
+
+  // Check auth state
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
@@ -823,6 +841,7 @@ export default function BlogPage() {
               <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
               <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
               <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
               <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
@@ -836,7 +855,7 @@ export default function BlogPage() {
                   </svg>
                 </button>
                 {langDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
                     {locales.map((loc) => {
                       const langCode = localeToTranslationCode[loc];
                       const language = LANGUAGES.find(l => l.code === langCode);
@@ -851,8 +870,23 @@ export default function BlogPage() {
                   </div>
                 )}
               </div>
-              <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
-              <Link href={localePath('/get-started')} className="hidden sm:block px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer">{t('getStarted')}</Link>
+              {user ? (
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                  {user.user_metadata?.avatar_url ? (
+                    <img src={user.user_metadata.avatar_url} alt="Avatar" className="w-8 h-8 rounded-full object-cover" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
+                      {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                  )}
+                  <span className="text-sm font-medium hidden sm:block">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
+                </Link>
+              ) : (
+                <>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
+                </>
+              )}
 
               {/* World Cup Special Button */}
               <Link
@@ -903,6 +937,7 @@ export default function BlogPage() {
                 { href: localePath('/performance'), label: t('performance') },
                 { href: localePath('/community'), label: t('community') },
                 { href: localePath('/news'), label: t('news') },
+                { href: localePath('/solution'), label: t('solution') },
                 { href: localePath('/pricing'), label: t('pricing') },
               ].map((link) => (
                 <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white transition-all">
@@ -910,8 +945,27 @@ export default function BlogPage() {
                 </Link>
               ))}
               <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
-                <Link href={localePath('/login')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all">{t('login')}</Link>
-                <Link href={localePath('/get-started')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold hover:shadow-lg transition-all">{t('getStarted')}</Link>
+                {user ? (
+                  <Link
+                    href={localePath('/dashboard')}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center gap-3 w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all"
+                  >
+                    {user.user_metadata?.avatar_url ? (
+                      <img src={user.user_metadata.avatar_url} alt="Avatar" className="w-8 h-8 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
+                        {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                      </div>
+                    )}
+                    <span className="text-white font-medium">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
+                  </Link>
+                ) : (
+                  <>
+                    <Link href={localePath('/login')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all">{t('login')}</Link>
+                    <Link href={localePath('/get-started')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold hover:shadow-lg transition-all">{t('getStarted')}</Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -961,7 +1015,11 @@ export default function BlogPage() {
       {selectedCategory === 'all' && (
         <section className="px-4 pb-12">
           <div className="max-w-6xl mx-auto">
-            <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 overflow-hidden group hover:border-emerald-500/30 transition-all">
+            <Link href={localePath(`/blog/${featuredPost.id}`)} className="relative block bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 overflow-hidden group hover:border-emerald-500/30 transition-all cursor-pointer">
+              {/* Shine effect overlay */}
+              <div className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out bg-gradient-to-r from-transparent via-white/15 to-transparent skew-x-12" />
+              </div>
               <div className="absolute top-4 left-4 z-10">
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500 text-black">
                   {t('featured')}
@@ -989,15 +1047,15 @@ export default function BlogPage() {
                   <p className="text-gray-400 mb-6 line-clamp-3">
                     {featuredPost.excerpt[selectedLang] || featuredPost.excerpt['EN']}
                   </p>
-                  <Link href={localePath(`/blog/${featuredPost.id}`)} className="inline-flex items-center gap-2 text-emerald-400 font-medium hover:text-emerald-300 transition-colors cursor-pointer">
+                  <span className="inline-flex items-center gap-2 text-emerald-400 font-medium group-hover:text-emerald-300 transition-colors">
                     {t('readMore')}
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                  </Link>
+                  </span>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         </section>
       )}
@@ -1010,8 +1068,12 @@ export default function BlogPage() {
               <Link
                 key={post.id}
                 href={localePath(`/blog/${post.id}`)}
-                className="group bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 overflow-hidden hover:border-emerald-500/30 transition-all cursor-pointer block"
+                className="group relative bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 overflow-hidden hover:border-emerald-500/30 transition-all cursor-pointer block"
               >
+                {/* Shine effect overlay */}
+                <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden">
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
+                </div>
                 <div className="aspect-video overflow-hidden">
                   <img
                     src={post.image}

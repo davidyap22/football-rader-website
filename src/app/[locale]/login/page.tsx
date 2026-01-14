@@ -119,6 +119,20 @@ const translations: Record<string, Record<string, string>> = {
   },
 };
 
+// Map URL locale to translation key
+const localeToTranslationKey: Record<string, string> = {
+  en: 'EN',
+  es: 'ES',
+  pt: 'PT',
+  de: 'DE',
+  fr: 'FR',
+  ja: 'JA',
+  ko: 'KO',
+  zh: '中文',
+  tw: '繁體',
+  id: 'ID',
+};
+
 export default function LoginPage() {
   const router = useRouter();
   const params = useParams();
@@ -129,7 +143,9 @@ export default function LoginPage() {
     return path === '/' ? `/${locale}` : `/${locale}${path}`;
   };
 
-  const [language, setLanguage] = useState('EN');
+  // Initialize language from URL locale
+  const initialLang = localeToTranslationKey[locale] || 'EN';
+  const [language, setLanguage] = useState(initialLang);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [email, setEmail] = useState('');
@@ -147,13 +163,17 @@ export default function LoginPage() {
     setLangDropdownOpen(false);
   };
 
+  // Sync language from URL locale
+  useEffect(() => {
+    const langKey = localeToTranslationKey[locale];
+    if (langKey && LANGUAGES.some(l => l.code === langKey)) {
+      setLanguage(langKey);
+      localStorage.setItem('oddsflow_language', langKey);
+    }
+  }, [locale]);
+
   // Check if user is already logged in
   useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_language');
-    if (savedLang && LANGUAGES.some(l => l.code === savedLang)) {
-      setLanguage(savedLang);
-    }
-
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {

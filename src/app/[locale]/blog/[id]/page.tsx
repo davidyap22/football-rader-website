@@ -1,8 +1,120 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
+import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
+
+// Markdown parser function
+const parseMarkdown = (text: string): string => {
+  let html = text;
+
+  // Escape HTML first
+  html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // Restore > for blockquotes at start of line
+  html = html.replace(/^&gt;/gm, '>');
+
+  // Horizontal rules
+  html = html.replace(/^---$/gm, '<hr class="my-8 border-white/10" />');
+
+  // Headers (must be before bold processing)
+  html = html.replace(/^### (.+)$/gm, '<h3 class="text-xl font-bold text-white mt-10 mb-4 flex items-center gap-3"><span class="w-1 h-6 bg-gradient-to-b from-emerald-400 to-cyan-400 rounded-full"></span>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2 class="text-2xl font-bold text-white mt-12 mb-6 pb-3 border-b border-white/10">$1</h2>');
+
+  // Bold text
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
+
+  // Links [text](url)
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-emerald-400 hover:text-emerald-300 underline underline-offset-4 transition-colors">$1</a>');
+
+  // Blockquotes
+  html = html.replace(/^> (.+)$/gm, '<blockquote class="my-6 pl-6 py-4 border-l-4 border-emerald-500 bg-gradient-to-r from-emerald-500/10 to-transparent rounded-r-lg italic text-gray-300">$1</blockquote>');
+
+  // Ordered lists (1. 2. etc)
+  html = html.replace(/^(\d+)\. (.+)$/gm, '<li class="flex gap-4 items-start my-3"><span class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">$1</span><span class="pt-1">$2</span></li>');
+
+  // Unordered lists with dash
+  html = html.replace(/^- (.+)$/gm, '<li class="flex gap-3 items-start my-2"><span class="flex-shrink-0 w-2 h-2 rounded-full bg-emerald-400 mt-2.5"></span><span>$1</span></li>');
+
+  // Tables - basic support
+  html = html.replace(/\|(.+)\|/g, (match, content) => {
+    const cells = content.split('|').map((cell: string) => cell.trim());
+    if (cells.every((cell: string) => cell.match(/^-+$/))) {
+      return ''; // Skip separator row
+    }
+    const isHeader = cells.some((cell: string) => cell.includes('**'));
+    const cellTag = isHeader ? 'th' : 'td';
+    const cellClass = isHeader
+      ? 'px-4 py-3 bg-white/5 font-semibold text-white border border-white/10'
+      : 'px-4 py-3 border border-white/10 text-gray-300';
+    return '<tr>' + cells.map((cell: string) => `<${cellTag} class="${cellClass}">${cell}</${cellTag}>`).join('') + '</tr>';
+  });
+
+  // Wrap consecutive table rows
+  html = html.replace(/(<tr>.*<\/tr>\n?)+/g, '<div class="overflow-x-auto my-8"><table class="w-full border-collapse rounded-lg overflow-hidden">$&</table></div>');
+
+  // Code inline `code`
+  html = html.replace(/`([^`]+)`/g, '<code class="px-2 py-1 bg-white/10 rounded text-emerald-400 text-sm font-mono">$1</code>');
+
+  // Emoji indicators
+  html = html.replace(/📖/g, '<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/20 mr-2">📖</span>');
+  html = html.replace(/💡/g, '<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-500/20 mr-2">💡</span>');
+  html = html.replace(/⚠️/g, '<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-orange-500/20 mr-2">⚠️</span>');
+  html = html.replace(/✅/g, '<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-500/20 mr-2">✅</span>');
+
+  // Paragraphs - wrap remaining text blocks
+  html = html.split('\n\n').map(block => {
+    if (block.startsWith('<h') || block.startsWith('<blockquote') || block.startsWith('<li') || block.startsWith('<hr') || block.startsWith('<div')) {
+      return block;
+    }
+    if (block.trim()) {
+      return `<p class="text-gray-300 leading-relaxed my-4">${block.replace(/\n/g, '<br/>')}</p>`;
+    }
+    return '';
+  }).join('\n');
+
+  // Wrap list items in ul
+  html = html.replace(/(<li class="flex gap-[34][^"]*".*?<\/li>\n?)+/g, '<ul class="my-6 space-y-1">$&</ul>');
+
+  return html;
+};
+
+// Animated content section component
+const AnimatedSection = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => setIsVisible(true), delay);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [delay]);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      }`}
+    >
+      {children}
+    </div>
+  );
+};
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 import { locales, localeToTranslationCode, type Locale } from '@/i18n/config';
 
@@ -187,11 +299,13 @@ const blogPostsContent: Record<string, {
     relatedPosts: ['what-are-football-odds', 'decimal-vs-fractional-vs-american-odds', 'implied-probability-explained'],
     title: {
       EN: 'How to Interpret Football Odds: Turn Prices Into Probabilities',
+      JA: 'サッカーオッズの読み方：価格を確率に変換する方法',
       '中文': '如何解读足球赔率：将价格转化为概率',
       '繁體': '如何解讀足球賠率：將價格轉化為概率',
     },
     excerpt: {
       EN: 'The complete guide to understanding football odds. Learn to convert odds to implied probability, identify value bets, and use AI predictions effectively.',
+      JA: 'サッカーオッズを理解するための完全ガイド。オッズを暗示確率に変換し、バリューベットを見つけ、AI予測を効果的に活用する方法を学びます。',
       '中文': '理解足球赔率的完整指南。学习如何将赔率转换为隐含概率，识别价值投注。',
       '繁體': '理解足球賠率的完整指南。學習如何將賠率轉換為隱含概率，識別價值投注。',
     },
@@ -503,6 +617,94 @@ This pillar guide introduced the fundamentals. Dive deeper with our specialized 
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## なぜサッカーオッズを理解することが重要なのか
+
+**サッカーオッズ**は単なる数字ではありません。ベッティング市場が試合で何が起こると信じているかを示す窓です。初心者でも経験者でも、オッズの解釈をマスターすることが利益を上げるベッティングの基礎となります。
+
+このガイドで学べること：
+- オッズが実際に何を表しているか
+- デシマル、フラクショナル、アメリカン形式の変換方法
+- 隠れた鍵：**暗示確率**
+- オッズがあなたに有利な**バリューベット**の見つけ方
+- OddsFlowのようなAIモデルがオッズデータをどう活用するか
+
+---
+
+## サッカーオッズとは？
+
+**ベッティングオッズ**は2つのことを表します：
+1. **確率** - ブックメーカーが推定する結果の発生確率
+2. **配当** - ベットが的中した場合の払い戻し額
+
+マンチェスター・ユナイテッドがチェルシーに勝つオッズが**2.50**の場合、ブックメーカーはユナイテッドの勝率を約40%と見積もっており、的中すれば1ドルあたり2.50ドルが支払われます。
+
+> **重要な洞察：** オッズは予測ではなく、価格です。そして他の市場価格と同様に、間違っている可能性があります。
+
+---
+
+## 3つのオッズ形式
+
+### デシマルオッズ（ヨーロッパ式）
+最も直感的な形式で、ヨーロッパとほとんどのオンラインブックメーカーで広く使用されています。
+
+**計算式：** 総リターン = 賭け金 × デシマルオッズ
+
+### フラクショナルオッズ（イギリス式）
+イギリスで人気の伝統的な形式で、賭け金に対する利益を示します。
+
+### アメリカンオッズ（マネーライン）
+100ドルを基準に正（+）と負（-）の数字を使用します。
+
+---
+
+## 暗示確率：隠れた鍵
+
+**暗示確率**はカジュアルベッターとプロベッターを分けるものです。オッズをブックメーカーが各結果に割り当てる確率に変換します。
+
+### 計算式
+暗示確率 = (1 / デシマルオッズ) × 100%
+
+---
+
+## バリューベットの見つけ方
+
+**バリューベット**は、あなたが推定する確率がオッズの暗示確率を上回る場合に発生します。
+
+### 期待値の計算式
+期待値 = (あなたの確率 × オッズ) - 1
+
+期待値 > 0 の場合、それはバリューベットです。
+
+---
+
+## AI予測がオッズ分析をどう強化するか
+
+OddsFlowのような最新の**AIサッカー予測モデル**は、従来の方法よりも正確に試合確率を推定するために数千のデータポイントを分析します：
+
+- **過去のパフォーマンスデータ**（50,000試合以上）
+- **期待ゴール（xG）**と高度な指標
+- **チームの調子**、怪我、スタメン分析
+- **直接対決の記録**とホーム/アウェイ要因
+- シャープマネーを示す**オッズ変動パターン**
+
+---
+
+## 重要なポイント
+
+1. **オッズは価格であり、予測ではない** - 間違っている可能性がある
+2. **暗示確率**はブックメーカーの本当の考えを明らかにする
+3. **バリューベッティング**は正の期待値を持つ結果に賭けること
+4. **ブックメーカーのマージン**があなたのリターンを減らす
+5. **AIモデル**は人間が見逃すバリューを特定できる
+6. **オッズの動き**はストーリーを語る
+
+---
+
+**理論を実践する準備はできましたか？** [OddsFlowの無料トライアルを開始](/get-started)して、AI搭載の予測を実際に体験してください。
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -518,11 +720,13 @@ This pillar guide introduced the fundamentals. Dive deeper with our specialized 
     relatedPosts: ['how-to-interpret-football-odds', 'decimal-vs-fractional-vs-american-odds', 'implied-probability-explained'],
     title: {
       EN: 'What Are Football Odds? A Beginner\'s Guide to Betting Numbers',
+      JA: 'サッカーオッズとは？初心者向けベッティング入門',
       '中文': '什么是足球赔率？新手入门指南',
       '繁體': '什麼是足球賠率？新手入門指南',
     },
     excerpt: {
       EN: 'New to football betting? Learn what odds represent, how bookmakers set them, and why understanding odds is crucial for making informed bets.',
+      JA: 'サッカーベッティング初心者ですか？オッズが何を表すか、ブックメーカーがどう設定するか、理解することが重要な理由を学びましょう。',
       '中文': '足球投注新手？了解赔率代表什么以及博彩公司如何设置它们。',
       '繁體': '足球投注新手？了解賠率代表什麼以及博彩公司如何設置它們。',
     },
@@ -649,6 +853,83 @@ The lower Liverpool's odds (1.90) means bookmakers see them as favorites. Chelse
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## はじめに：サッカーベッティングへの第一歩
+
+ベッティングサイトを見て数字に戸惑ったことはありませんか？あなただけではありません。**サッカーオッズ**は最初は複雑に見えるかもしれませんが、基本を理解すれば実はとてもシンプルです。
+
+このガイドでは、初心者が知っておくべきベッティングオッズのすべてを説明します。
+
+---
+
+## オッズが実際に表すもの
+
+オッズは市場における**価格**と考えてください。お店の商品に価格タグがついているように、ベッティングの結果にもオッズがあります。これらのオッズは2つの重要なことを教えてくれます：
+
+### 1. いくら勝てるか
+高いオッズ = より大きな潜在的配当（ただし確率は低い）
+低いオッズ = より小さな潜在的配当（ただし確率は高い）
+
+### 2. 結果の確率
+オッズはブックメーカーがその結果がどの程度起こりやすいと考えているかを反映しています。
+
+---
+
+## ブックメーカーがオッズを設定する方法
+
+ブックメーカー（または「ブッキー」）はアナリストチームを雇い、高度なアルゴリズムを使用してオッズを設定します。以下はそのプロセスの簡略版です：
+
+1. **データ分析：** チームの調子、対戦成績、怪我、会場
+2. **確率計算：** 各結果の可能性を見積もる
+3. **マージン追加：** 利益を組み込む（通常3-8%）
+4. **オッズ公開：** 市場にリリース
+5. **調整：** ベッティングパターンに基づいてオッズを変更
+
+> **重要：** ブックメーカーは結果を予測しようとしているわけではありません—リスクを管理し、利益を確保しているのです。
+
+---
+
+## シンプルな例
+
+**試合: リバプール vs チェルシー**
+
+| 結果 | デシマルオッズ | 意味 |
+|---------|--------------|---------------|
+| リバプール勝利 | 1.90 | $10を賭けて$19が戻る（$9の利益） |
+| 引き分け | 3.50 | $10を賭けて$35が戻る（$25の利益） |
+| チェルシー勝利 | 4.00 | $10を賭けて$40が戻る（$30の利益） |
+
+リバプールのオッズが低い（1.90）ことは、ブックメーカーが彼らを本命と見なしていることを意味します。チェルシーのオッズが高い（4.00）ことは、彼らがアンダードッグであることを示しています。
+
+---
+
+## オッズを理解することが重要な理由
+
+### カジュアルベッターにとって
+- 勝ち負けの金額を把握できる
+- より情報に基づいた決定ができる
+- よくある間違いを避けられる
+
+### 本格的なベッターにとって
+- オッズが誤っている**バリューベット**を特定できる
+- 賭けの**期待値**を計算できる
+- 長期的に利益を出す戦略を構築できる
+
+---
+
+## 重要なポイント
+
+1. オッズは確率と配当を反映した**価格**
+2. ブックメーカーはデータを使ってオッズを設定し、マージンを追加する
+3. 低いオッズ = 本命、高いオッズ = アンダードッグ
+4. オッズの理解はスマートなベッティングに**不可欠**
+
+---
+
+📖 **学習を続ける：** [サッカーオッズの読み方（完全ガイド）](/blog/how-to-interpret-football-odds)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -664,11 +945,13 @@ The lower Liverpool's odds (1.90) means bookmakers see them as favorites. Chelse
     relatedPosts: ['how-to-interpret-football-odds', 'what-are-football-odds', 'implied-probability-explained'],
     title: {
       EN: 'Decimal vs Fractional vs American Odds: Complete Conversion Guide',
+      JA: 'デシマル vs フラクショナル vs アメリカンオッズ：完全変換ガイド',
       '中文': '小数 vs 分数 vs 美式赔率：完整转换指南',
       '繁體': '小數 vs 分數 vs 美式賠率：完整轉換指南',
     },
     excerpt: {
       EN: 'Master all three odds formats used worldwide. Step-by-step conversion formulas, examples, and tips for comparing prices across bookmakers.',
+      JA: '世界中で使われる3つのオッズ形式をマスター。ステップバイステップの変換公式と、ブックメーカー間の価格比較のコツを解説。',
       '中文': '掌握全球使用的三种赔率格式。分步转换公式和示例。',
       '繁體': '掌握全球使用的三種賠率格式。分步轉換公式和示例。',
     },
@@ -843,6 +1126,123 @@ If American negative: Decimal = (100 / |American|) + 1
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## はじめに：なぜ複数のオッズ形式が存在するのか
+
+異なる地域がそれぞれ独自のベッティングオッズの表現方法を発展させてきました。今日、ほとんどのオンラインブックメーカーは好みの形式を選択できますが、3つすべてを理解することで以下が可能になります：
+
+- 国際的なブックメーカー間でオッズを比較
+- 様々なソースからのベッティングコンテンツを理解
+- 必要に応じてオッズを変換
+
+---
+
+## デシマルオッズ（ヨーロッパ形式）
+
+**デシマルオッズ**はグローバルスタンダードで、ほとんどのオンラインブックメーカーで使用されています。
+
+### 仕組み
+数字は賭け金1単位あたりの**総リターン**を表します。
+
+**計算式：** 総リターン = 賭け金 × デシマルオッズ
+
+### 例
+| デシマルオッズ | $10の賭け | 総リターン | 利益 |
+|--------------|-----------|--------------|--------|
+| 1.50 | $10 | $15.00 | $5.00 |
+| 2.00 | $10 | $20.00 | $10.00 |
+| 3.50 | $10 | $35.00 | $25.00 |
+
+### メリット
+- 直感的な計算
+- 比較しやすい
+- 総リターンが即座にわかる
+
+---
+
+## フラクショナルオッズ（イギリス形式）
+
+**フラクショナルオッズ**は賭け金に対する利益を示し、イギリスで伝統的に使用されています。
+
+### 仕組み
+分数は**利益/賭け金**を示します。5/2のオッズは$2を賭けると$5の利益を意味します。
+
+### 例
+| フラクショナル | デシマル相当 | $10の賭けの利益 |
+|------------|--------------------|------------------|
+| 1/2 | 1.50 | $5.00 |
+| イーブン (1/1) | 2.00 | $10.00 |
+| 5/2 | 3.50 | $25.00 |
+| 4/1 | 5.00 | $40.00 |
+
+---
+
+## アメリカンオッズ（マネーライン）
+
+**アメリカンオッズ**は正（+）と負（-）の数字を使用します。
+
+### 仕組み
+- **正（+）：** $100を賭けた場合の利益を表示
+- **負（-）：** $100の利益を得るために必要な賭け金を表示
+
+### 例
+| アメリカン | デシマル | 解釈 |
+|----------|---------|----------------|
+| -200 | 1.50 | $200を賭けて$100の利益 |
+| +100 | 2.00 | $100を賭けて$100の利益 |
+| +250 | 3.50 | $100を賭けて$250の利益 |
+
+---
+
+## 変換公式
+
+### デシマルからフラクショナル
+\`\`\`
+フラクショナル = (デシマル - 1) / 1
+例: 2.50 = (2.50 - 1) = 1.5 = 3/2
+\`\`\`
+
+### デシマルからアメリカン
+\`\`\`
+デシマル >= 2.00の場合: アメリカン = (デシマル - 1) × 100
+デシマル < 2.00の場合: アメリカン = -100 / (デシマル - 1)
+\`\`\`
+
+### アメリカンからデシマル
+\`\`\`
+正の場合: デシマル = (アメリカン / 100) + 1
+負の場合: デシマル = (100 / |アメリカン|) + 1
+\`\`\`
+
+---
+
+## クイックリファレンス表
+
+| デシマル | フラクショナル | アメリカン | 暗示確率 |
+|---------|------------|----------|---------------------|
+| 1.50 | 1/2 | -200 | 66.67% |
+| 2.00 | 1/1 | +100 | 50.00% |
+| 2.50 | 3/2 | +150 | 40.00% |
+| 3.00 | 2/1 | +200 | 33.33% |
+| 4.00 | 3/1 | +300 | 25.00% |
+| 5.00 | 4/1 | +400 | 20.00% |
+
+---
+
+## 重要なポイント
+
+1. **デシマル**が最も直感的—総リターンを表示
+2. **フラクショナル**は利益のみを表示—イギリスの伝統的な形式
+3. **アメリカン**は+/-システムを使用—アメリカの標準
+4. すべての形式は**同じ確率**を表現している—ただし形式が異なる
+5. ほとんどのブックメーカーは設定で形式を切り替えられる
+
+---
+
+📖 **次へ：** [暗示確率の解説](/blog/implied-probability-explained)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -858,11 +1258,13 @@ If American negative: Decimal = (100 / |American|) + 1
     relatedPosts: ['how-to-interpret-football-odds', 'how-bookmakers-calculate-margins', 'decimal-vs-fractional-vs-american-odds'],
     title: {
       EN: 'Implied Probability Explained: The Hidden Key to Value Betting',
+      JA: '暗示確率の解説：バリューベッティングの隠された鍵',
       '中文': '隐含概率详解：价值投注的隐藏关键',
       '繁體': '隱含概率詳解：價值投注的隱藏關鍵',
     },
     excerpt: {
       EN: 'Learn to calculate implied probability from any odds format. Discover how to find value bets by comparing your estimates to bookmaker odds.',
+      JA: 'あらゆるオッズ形式から暗示確率を計算する方法を学びましょう。自分の見積もりとブックメーカーのオッズを比較してバリューベットを見つける方法を解説。',
       '中文': '学习从任何赔率格式计算隐含概率。了解如何找到价值投注。',
       '繁體': '學習從任何賠率格式計算隱含概率。了解如何找到價值投注。',
     },
@@ -981,6 +1383,80 @@ This is a strong value bet!
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## 暗示確率とは？
+
+**暗示確率**は、ベッティングオッズに反映された結果の確率です。オッズが直接パーセンテージを示さないため「暗示」と呼ばれ、計算する必要があります。
+
+---
+
+## 基本公式
+
+### デシマルオッズから
+\`\`\`
+暗示確率 = (1 / デシマルオッズ) × 100%
+\`\`\`
+
+### 例
+| デシマルオッズ | 計算 | 暗示確率 |
+|--------------|-------------|---------------------|
+| 2.00 | 1/2.00 | 50.00% |
+| 1.50 | 1/1.50 | 66.67% |
+| 3.00 | 1/3.00 | 33.33% |
+| 4.00 | 1/4.00 | 25.00% |
+
+---
+
+## なぜ暗示確率が重要なのか
+
+### 1. ブックメーカーの真の見解を明らかにする
+チームに2.50のオッズがある場合、ブックメーカーはそのチームが勝つ確率を約40%と見なしています。
+
+### 2. バリューベットを特定する
+あなたがチームに50%の勝率があると信じているが、オッズが40%しか示していない場合、**正の期待値**を見つけたことになります。
+
+### 3. マージンを明らかにする
+すべての結果の暗示確率が100%を超える場合、その超過分がブックメーカーの利益マージンです。
+
+---
+
+## バリューを見つける：期待値の公式
+
+**バリュー**は、あなたが推定する確率が暗示確率を上回る場合に存在します。
+
+\`\`\`
+期待値 = (あなたの確率 × デシマルオッズ) - 1
+\`\`\`
+
+### 例
+- あなたの推定：チームAが勝つ確率50%
+- オッズ：2.50（暗示確率40%）
+- 期待値 = (0.50 × 2.50) - 1 = +0.25（+25%のエッジ）
+
+これは強力なバリューベットです！
+
+---
+
+## 実践的な適用
+
+### ステップ1：オッズを暗示確率に変換
+### ステップ2：自分の確率を推定
+### ステップ3：2つを比較
+### ステップ4：あなたの推定 > 暗示確率 = バリューベット
+
+---
+
+## 重要なポイント
+
+1. 暗示確率はオッズをパーセンテージに変換する
+2. 公式：(1 / デシマルオッズ) × 100%
+3. あなたの確率 > 暗示確率のときバリューが存在する
+4. これが利益を出すベッティングの基礎
+
+📖 **続き：** [ブックメーカーのマージン計算方法](/blog/how-bookmakers-calculate-margins)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -996,11 +1472,13 @@ This is a strong value bet!
     relatedPosts: ['how-to-interpret-football-odds', 'implied-probability-explained', 'sharp-vs-public-money-betting'],
     title: {
       EN: 'How Bookmakers Calculate Margins: The Overround Explained',
+      JA: 'ブックメーカーのマージン計算方法：オーバーラウンドの解説',
       '中文': '博彩公司如何计算利润：过度让分解释',
       '繁體': '博彩公司如何計算利潤：過度讓分解釋',
     },
     excerpt: {
       EN: 'Understand the bookmaker\'s edge and how it affects your long-term profits. Learn to identify books with lower margins for better returns.',
+      JA: 'ブックメーカーのエッジと長期的な利益への影響を理解。より良いリターンのために低マージンのブックを特定する方法を学びましょう。',
       '中文': '了解博彩公司的优势以及它如何影响您的长期利润。',
       '繁體': '了解博彩公司的優勢以及它如何影響您的長期利潤。',
     },
@@ -1107,6 +1585,74 @@ That's a $50 difference—significant for serious bettors.
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## ブックメーカーの組み込み利益
+
+すべてのベッティング市場には隠れたコストがあります：**マージン**（オーバーラウンド、ビグ、またはジュースとも呼ばれます）。これはブックメーカーが結果に関係なく利益を保証する方法です。
+
+---
+
+## マージンの仕組み
+
+「公正な」市場では、すべての暗示確率の合計はちょうど100%になります。しかしブックメーカーは利益のために追加のパーセンテージポイントを加えます。
+
+### 例：公正な市場 vs 実際の市場
+
+**公正な市場（マージンなし）**
+| 結果 | 公正なオッズ | 暗示確率 |
+|---------|-----------|--------------|
+| ホーム | 2.50 | 40% |
+| 引き分け | 3.33 | 30% |
+| アウェイ | 3.33 | 30% |
+| **合計** | | **100%** |
+
+**実際の市場（5%マージン）**
+| 結果 | 実際のオッズ | 暗示確率 |
+|---------|-----------|--------------|
+| ホーム | 2.38 | 42% |
+| 引き分け | 3.17 | 31.5% |
+| アウェイ | 3.17 | 31.5% |
+| **合計** | | **105%** |
+
+---
+
+## オーバーラウンドの計算
+
+\`\`\`
+オーバーラウンド = (すべての暗示確率の合計) - 100%
+\`\`\`
+
+### ブックメーカータイプ別の典型的なマージン
+
+| ブックメーカータイプ | 典型的なマージン | 例 |
+|----------------|----------------|---------------|
+| シャープ/取引所 | 2-3% | Pinnacle、Betfair |
+| 中間層 | 4-6% | Bet365、Unibet |
+| レクリエーション | 7-10%+ | 多くのローカルブック |
+
+---
+
+## なぜ低マージンが重要か
+
+1000回の賭けで：
+- 3%のマージンは$1000の賭けで約$30のコスト
+- 8%のマージンは$1000の賭けで約$80のコスト
+
+$50の差—本格的なベッターにとっては重要です。
+
+---
+
+## 重要なポイント
+
+1. ブックメーカーは**マージン/オーバーラウンド**で利益を得る
+2. 低マージン = ベッターにとってより良い価値
+3. シャープブックは通常2-3%のマージン
+4. 常に複数のブックメーカーで**オッズを比較**する
+
+📖 **関連：** [シャープマネー vs パブリックマネー](/blog/sharp-vs-public-money-betting)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -1122,11 +1668,13 @@ That's a $50 difference—significant for serious bettors.
     relatedPosts: ['how-to-interpret-football-odds', 'match-result-1x2-betting-explained', 'over-under-totals-betting-guide'],
     title: {
       EN: 'Asian Handicap Betting: Complete Guide to AH Lines',
+      JA: 'アジアンハンディキャップベッティング：AHラインの完全ガイド',
       '中文': '亚洲盘口投注：AH盘口完整指南',
       '繁體': '亞洲盤口投注：AH盤口完整指南',
     },
     excerpt: {
       EN: 'Master Asian Handicap betting from quarter lines to full goals. Learn when to use AH over 1X2 and how to reduce variance in your bets.',
+      JA: 'クォーターラインからフルゴールまで、アジアンハンディキャップベッティングをマスター。1X2よりAHを使うべき時と、賭けの分散を減らす方法を解説。',
       '中文': '从四分之一球到整球掌握亚洲盘口投注。',
       '繁體': '從四分之一球到整球掌握亞洲盤口投注。',
     },
@@ -1240,6 +1788,81 @@ Your stake splits between two adjacent lines.
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## アジアンハンディキャップとは？
+
+**アジアンハンディキャップ（AH）**は、一方のチームにハンデを与えることで引き分けを排除するベッティング市場です。これにより結果が2つだけになり、よりシンプルで価値が高くなることが多いです。
+
+---
+
+## アジアンハンディキャップの仕組み
+
+### コンセプト
+ハンディキャップは異なる強さのチーム間の「競技場を平等に」します。
+
+**例：マンチェスター・シティ -1.5 vs サウサンプトン**
+- シティは-1.5ゴールのハンデからスタート
+- 賭けが勝つには2ゴール以上差で勝つ必要がある
+- サウサンプトンは+1.5のアドバンテージを得る
+- 1点差負け、引き分け、勝利で賭けが勝つ
+
+---
+
+## ハンディキャップラインの理解
+
+### フルゴールライン（-1、-2、+1、+2）
+最もシンプルな形式。引き分け = プッシュ（賭け金返金）。
+
+### ハーフゴールライン（-0.5、-1.5、+0.5、+1.5）
+プッシュの可能性なし—常に勝者と敗者がいる。
+
+### クォーターゴールライン（-0.25、-0.75、-1.25）
+賭け金は隣接する2つのラインに分割されます。
+
+**例：-0.75ハンディキャップ**
+- 賭け金の半分が-0.5に
+- 賭け金の半分が-1.0に
+
+---
+
+## AH結果表
+
+| ハンディキャップ | ベット | 結果 | 結果 |
+|----------|-----|--------|---------|
+| -1.5 | 本命 | 2点以上差勝ち | 勝ち |
+| -1.5 | 本命 | 1点差勝ち | 負け |
+| -1.0 | 本命 | 1点差勝ち | プッシュ |
+| -0.5 | 本命 | 1点以上差勝ち | 勝ち |
+| +0.5 | アンダードッグ | 引き分けか勝ち | 勝ち |
+
+---
+
+## アジアンハンディキャップを使うタイミング
+
+### AHを使う場合：
+- 引き分けを排除したい
+- 明確な本命がいる
+- 分散を減らしたい
+- 1X2より良いオッズ
+
+### 1X2に留まる場合：
+- 具体的に引き分けに賭けたい
+- チームが均衡している
+- よりシンプルな賭けを好む
+
+---
+
+## 重要なポイント
+
+1. AHはよりクリーンな2ウェイ市場のために引き分けを排除
+2. クォーターラインは賭け金を隣接ラインに分割
+3. 1X2より価値が高いことが多い
+4. ベッティングの分散を減らす
+
+📖 **比較：** [1X2マッチ結果ベッティング](/blog/match-result-1x2-betting-explained)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -1255,11 +1878,13 @@ Your stake splits between two adjacent lines.
     relatedPosts: ['how-to-interpret-football-odds', 'asian-handicap-betting-guide', 'how-ai-predicts-football-matches'],
     title: {
       EN: 'Over/Under Betting Guide: How to Bet on Football Totals',
+      JA: 'オーバー/アンダーベッティングガイド：サッカートータルへの賭け方',
       '中文': '大小球投注指南：如何投注足球总进球数',
       '繁體': '大小球投注指南：如何投注足球總進球數',
     },
     excerpt: {
       EN: 'Everything you need to know about totals betting in football. From reading lines to analyzing team scoring trends and xG stats.',
+      JA: 'サッカーのトータルベッティングについて知っておくべきすべてのこと。ラインの読み方からチームの得点傾向とxG統計の分析まで解説。',
       '中文': '关于足球总进球数投注您需要了解的一切。',
       '繁體': '關於足球總進球數投注您需要了解的一切。',
     },
@@ -1358,6 +1983,67 @@ Your stake splits between two adjacent lines.
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## オーバー/アンダーベッティングとは？
+
+**オーバー/アンダー**（「トータル」とも呼ばれる）ベッティングは、どちらのチームが得点するかに関係なく、試合の総ゴール数に焦点を当てます。
+
+---
+
+## 一般的なオーバー/アンダーライン
+
+### 標準ライン
+- **オーバー/アンダー 2.5** – 最も人気のあるライン
+- **オーバー/アンダー 1.5** – ロースコアリングの試合
+- **オーバー/アンダー 3.5** – ハイスコアリングの試合
+
+### アジアンライン
+- **オーバー/アンダー 2.25** – 2と2.5の間で分割
+- **オーバー/アンダー 2.75** – 2.5と3の間で分割
+
+---
+
+## O/Uオッズの読み方
+
+| ライン | 総ゴール数 | オーバー結果 | アンダー結果 |
+|------|-------------|-------------|--------------|
+| 2.5 | 0、1、2 | 負け | 勝ち |
+| 2.5 | 3+ | 勝ち | 負け |
+| 2.0 | 2 | プッシュ | プッシュ |
+| 2.0 | 3+ | 勝ち | 負け |
+
+---
+
+## トータルに影響を与える要因
+
+### チーム要因
+- 攻撃力（1試合あたりの得点）
+- 守備の堅さ（失点数）
+- プレースタイル（ポゼッション vs カウンター）
+
+### 試合のコンテキスト
+- 試合の重要性
+- 天候条件
+- 最近のフォーム
+
+### 統計指標
+- **xG（期待ゴール）** – 最も予測力が高い
+- 枠内シュート
+- ビッグチャンスの創出/被創出
+
+---
+
+## 重要なポイント
+
+1. O/Uはチームへのバイアスを排除—ゴールのみに集中
+2. 2.5がほとんどの試合の標準ライン
+3. xGデータはトータル予測に非常に有効
+4. 試合のコンテキストとチームスタイルを考慮
+
+📖 **詳細：** [AIがサッカーを予測する方法](/blog/how-ai-predicts-football-matches)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -1373,11 +2059,13 @@ Your stake splits between two adjacent lines.
     relatedPosts: ['how-to-interpret-football-odds', 'asian-handicap-betting-guide', 'implied-probability-explained'],
     title: {
       EN: 'Match Result (1X2) Betting Explained: The Classic Football Market',
+      JA: 'マッチリザルト（1X2）ベッティングの解説：クラシックなサッカー市場',
       '中文': '比赛结果（1X2）投注详解：经典足球市场',
       '繁體': '比賽結果（1X2）投注詳解：經典足球市場',
     },
     excerpt: {
       EN: 'The foundational football betting market explained. Learn how 1X2 odds work, when to bet each outcome, and strategies for maximizing value.',
+      JA: '基本的なサッカーベッティング市場を解説。1X2オッズの仕組み、各結果に賭けるタイミング、価値を最大化する戦略を学びましょう。',
       '中文': '基础足球投注市场详解。了解1X2赔率如何运作。',
       '繁體': '基礎足球投注市場詳解。了解1X2賠率如何運作。',
     },
@@ -1466,6 +2154,59 @@ Each outcome has its own odds reflecting its probability:
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## 1X2ベッティングとは？
+
+**1X2**（マッチリザルトまたはスリーウェイとも呼ばれる）は、最も基本的なサッカーベッティング市場です：
+
+- **1** = ホームチームの勝利
+- **X** = 引き分け
+- **2** = アウェイチームの勝利
+
+---
+
+## 1X2オッズの仕組み
+
+各結果にはその確率を反映した独自のオッズがあります：
+
+| 結果 | シンボル | 典型的なオッズ範囲 |
+|---------|--------|-------------------|
+| ホーム勝利 | 1 | 1.20 – 5.00+ |
+| 引き分け | X | 3.00 – 4.50 |
+| アウェイ勝利 | 2 | 1.30 – 8.00+ |
+
+---
+
+## 各結果に賭けるタイミング
+
+### ホーム（1）に賭ける場合：
+- ホームでの成績が強い
+- 相手のアウェイフォームが悪い
+- 主力選手がフィットし、相手は怪我人がいる
+
+### 引き分け（X）に賭ける場合：
+- チームが均衡している
+- 両チームとも守備的
+- 両チームにとって重要でない試合
+
+### アウェイ（2）に賭ける場合：
+- アウェイチームが明らかに強い
+- ホームチームの調子が悪い
+- オッズに良い価値がある
+
+---
+
+## 重要なポイント
+
+1. 1X2は最もシンプルで人気のある市場
+2. 3つの結果：ホーム（1）、引き分け（X）、アウェイ（2）
+3. フォーム、直接対決、コンテキストを考慮
+4. 均衡した試合では引き分けが価値をもたらすことが多い
+
+📖 **代替：** [アジアンハンディキャップガイド](/blog/asian-handicap-betting-guide)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -1481,11 +2222,13 @@ Each outcome has its own odds reflecting its probability:
     relatedPosts: ['how-to-interpret-football-odds', 'sharp-vs-public-money-betting', 'steam-moves-in-football-betting'],
     title: {
       EN: 'Why Football Odds Move: Understanding Line Movement',
+      JA: 'なぜサッカーオッズは動くのか：ライン変動の理解',
       '中文': '足球赔率为何变动：理解盘口变化',
       '繁體': '足球賠率為何變動：理解盤口變化',
     },
     excerpt: {
       EN: 'Discover what causes odds to shift before kickoff. From injury news to sharp money, learn to read line movements like a professional.',
+      JA: 'キックオフ前にオッズが変動する原因を発見。怪我のニュースからシャープマネーまで、プロのようにライン変動を読む方法を学びましょう。',
       '中文': '发现导致开球前赔率变化的原因。',
       '繁體': '發現導致開球前賠率變化的原因。',
     },
@@ -1577,6 +2320,59 @@ Football odds are dynamic—they move from the moment they're posted until kicko
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## なぜオッズは変化するのか？
+
+サッカーオッズは動的です—公開された瞬間からキックオフまで動き続けます。オッズが**なぜ**動くかを理解することで、より良いベッティング判断ができるようになります。
+
+---
+
+## オッズ変動の主な原因
+
+### 1. チームニュース
+- 主力選手の怪我
+- スタメン発表
+- 戦術変更
+
+### 2. ベッティング量
+- 大きな賭けは調整を引き起こす
+- パブリックマネーは通常本命を動かす
+- シャープマネーはしばしばアンダードッグを動かす
+
+### 3. 市場修正
+- オープニングオッズにはエラーがある可能性
+- ブックメーカーはアクションに基づいて調整
+- 各ブック間でラインが収束
+
+### 4. 外部要因
+- 天候の変化
+- 移動の問題
+- フィールド外の事件
+
+---
+
+## 変動を読む
+
+| 変動タイプ | 示唆すること |
+|---------------|------------------|
+| オッズ短縮 | 市場がこの結果をより予想 |
+| オッズ上昇 | 市場の信頼が低下 |
+| 逆方向変動 | シャープがパブリックに逆張り |
+| スチームムーブ | 協調的なシャープアクション |
+
+---
+
+## 重要なポイント
+
+1. オッズはニュース、ベッティングアクション、修正により動く
+2. 変動を追跡してバリュー機会を発見
+3. 逆方向のライン変動はしばしばシャープアクションを示す
+4. 早期のオッズにはより多くの非効率性がある
+
+📖 **上級：** [シャープマネー vs パブリックマネー](/blog/sharp-vs-public-money-betting)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -1592,11 +2388,13 @@ Football odds are dynamic—they move from the moment they're posted until kicko
     relatedPosts: ['why-football-odds-move', 'steam-moves-in-football-betting', 'how-bookmakers-calculate-margins'],
     title: {
       EN: 'Sharp vs Public Money: How Professional Bettors Move Lines',
+      JA: 'シャープマネー vs パブリックマネー：プロベッターがラインを動かす方法',
       '中文': '聪明钱 vs 大众钱：职业玩家如何影响盘口',
       '繁體': '聰明錢 vs 大眾錢：職業玩家如何影響盤口',
     },
     excerpt: {
       EN: 'Learn to distinguish between sharp and public betting action. Understand reverse line movement and how to follow the smart money.',
+      JA: 'シャープとパブリックのベッティングアクションを見分ける方法を学びましょう。逆方向ライン変動とスマートマネーのフォロー方法を理解。',
       '中文': '学习区分聪明钱和大众投注行为。',
       '繁體': '學習區分聰明錢和大眾投注行為。',
     },
@@ -1661,6 +2459,44 @@ Understanding the difference between **sharp** (professional) and **public** (re
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## シャープマネー vs パブリックマネー
+
+**シャープ**（プロ）と**パブリック**（レクリエーション）のベッティングアクションの違いを理解することは、バリューを特定するために重要です。
+
+### パブリックマネーの特徴
+- 本命や人気チームに賭ける
+- メディアのナラティブに影響される
+- 個々の賭け金額が小さい
+- 感情的に動かされることが多い
+
+### シャープマネーの特徴
+- 感情ではなくエッジに基づいて賭ける
+- しばしばアンダードッグを支持
+- ラインを動かすほどの大きな賭け金
+- 複数のアカウントを使用
+
+---
+
+## 逆方向ライン変動
+
+**逆方向ライン変動**は、パブリックベットの大半を受けているサイドに**逆らって**オッズが動く時に発生します。これはシャープアクションのシグナルです。
+
+**例：** 70%の賭けがチームAに入っているが、チームAのオッズが1.80から2.00に上昇。シャープはチームBに賭けています。
+
+---
+
+## 重要なポイント
+
+1. シャープマネーはラインを動かし、パブリックマネーはバリューを生む
+2. 逆方向ライン変動に注目
+3. シャープはしばしばパブリックの本命に逆張り
+4. ベッティングパーセンテージとライン変動を追跡
+
+📖 **関連：** [スチームムーブの解説](/blog/steam-moves-in-football-betting)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -1675,11 +2511,13 @@ Understanding the difference between **sharp** (professional) and **public** (re
     relatedPosts: ['sharp-vs-public-money-betting', 'why-football-odds-move', 'how-to-interpret-football-odds'],
     title: {
       EN: 'Steam Moves in Football Betting: Riding the Sharp Wave',
+      JA: 'サッカーベッティングにおけるスチームムーブ：シャープの波に乗る',
       '中文': '足球投注中的急剧变动：跟随聪明钱浪潮',
       '繁體': '足球投注中的急劇變動：跟隨聰明錢浪潮',
     },
     excerpt: {
       EN: 'What are steam moves and how can you capitalize on them? Learn to identify and react to rapid odds changes across multiple bookmakers.',
+      JA: 'スチームムーブとは何か、どう活用するか？複数のブックメーカーにまたがる急激なオッズ変化を識別し対応する方法を学びましょう。',
       '中文': '什么是急剧变动，如何利用它们？',
       '繁體': '什麼是急劇變動，如何利用它們？',
     },
@@ -1741,6 +2579,41 @@ Sometimes the best action is no action.
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## スチームムーブとは？
+
+**スチームムーブ**は、シャープベッティングシンジケートが同時に行動することで通常引き起こされる、複数のブックメーカーにまたがる急激で協調的なオッズの変動です。
+
+### 特徴
+- 数分以内に発生
+- 複数のブックメーカーに影響
+- オッズを10-20ポイント以上動かす
+- インフォームドマネーのシグナル
+
+---
+
+## スチームムーブへの対応方法
+
+### オプション1：ムーブを追いかける
+オッズが完全に調整される前に同じサイドに素早くベット。
+
+### オプション2：ムーブに逆張り
+調整が遅いレクリエーション市場でスチームに逆張り。
+
+### オプション3：静観
+最良のアクションがノーアクションの場合もある。
+
+---
+
+## 重要なポイント
+
+1. スチームムーブは協調的なシャープアクションのシグナル
+2. 活用にはスピードが不可欠
+3. すべてのスチームが追いかける価値があるわけではない
+4. ライン変動ツールを監視
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -1755,11 +2628,13 @@ Sometimes the best action is no action.
     relatedPosts: ['how-to-interpret-football-odds', 'evaluating-ai-football-prediction-models', 'ai-vs-human-tipsters-comparison'],
     title: {
       EN: 'How AI Predicts Football Matches: Inside the Machine Learning Models',
+      JA: 'AIがサッカーの試合を予測する方法：機械学習モデルの内部',
       '中文': 'AI如何预测足球比赛：机器学习模型内部解析',
       '繁體': 'AI如何預測足球比賽：機器學習模型內部解析',
     },
     excerpt: {
       EN: 'Explore how modern AI models analyze football data. From xG and form analysis to neural networks predicting match outcomes.',
+      JA: '最新のAIモデルがサッカーデータをどう分析するかを探求。xGやフォーム分析から試合結果を予測するニューラルネットワークまで解説。',
       '中文': '探索现代AI模型如何分析足球数据。',
       '繁體': '探索現代AI模型如何分析足球數據。',
     },
@@ -1844,6 +2719,62 @@ Combine multiple models for better accuracy.
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## AIモデルがサッカーを予測する方法
+
+最新の**AIサッカー予測**モデルは、機械学習を使用して膨大な量のデータを分析し、人間が見落とす可能性のあるパターンを特定します。
+
+---
+
+## データ入力
+
+### チーム統計
+- 得点/失点
+- xG（期待ゴール）
+- シュート精度
+- ポゼッション率
+
+### フォームとコンテキスト
+- 最近の結果
+- ホーム/アウェイの成績
+- 直接対決の履歴
+- 試合間の休息日数
+
+### 外部要因
+- 怪我と出場停止
+- 天候条件
+- 移動距離
+- 試合の重要性
+
+---
+
+## モデルタイプ
+
+### Elo/レーティングシステム
+結果に基づいてチームの強さを追跡。
+
+### 統計モデル
+ゴール予測のためのポアソン分布。
+
+### 機械学習
+過去のデータで訓練されたニューラルネットワーク。
+
+### アンサンブル方式
+精度向上のために複数のモデルを組み合わせ。
+
+---
+
+## 重要なポイント
+
+1. AIは人間が処理できるより多くのデータポイントを分析
+2. xGと高度な指標が重要な入力
+3. モデルはより多くのトレーニングデータで改善
+4. 100%正確なモデルはない
+
+📖 **モデル評価：** [AI予測モデルの評価](/blog/evaluating-ai-football-prediction-models)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -1858,11 +2789,13 @@ Combine multiple models for better accuracy.
     relatedPosts: ['how-ai-predicts-football-matches', 'ai-vs-human-tipsters-comparison', 'how-to-use-oddsflow-ai-predictions'],
     title: {
       EN: 'Evaluating AI Football Prediction Models: Key Metrics That Matter',
+      JA: 'AIサッカー予測モデルの評価：重要な指標',
       '中文': '评估AI足球预测模型：关键指标',
       '繁體': '評估AI足球預測模型：關鍵指標',
     },
     excerpt: {
       EN: 'Learn how to assess AI prediction quality. Understand accuracy, ROI, Brier scores, and what makes a trustworthy prediction model.',
+      JA: 'AI予測の品質を評価する方法を学びましょう。精度、ROI、ブライアスコア、信頼できる予測モデルの条件を理解。',
       '中文': '学习如何评估AI预测质量。',
       '繁體': '學習如何評估AI預測質量。',
     },
@@ -1949,6 +2882,58 @@ More predictions = more reliable metrics.
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## AI予測モデルの評価方法
+
+すべてのAI予測サービスが同等に作られているわけではありません。品質を評価する方法を紹介します。
+
+---
+
+## 主要指標
+
+### 1. 勝率/精度
+正しい予測の割合。
+- 平均的なティップスター：50-55%
+- 良いモデル：55-60%
+- 優秀なモデル：60%+
+
+### 2. ROI（投資収益率）
+総賭け金に対する利益の割合。
+- 損益分岐点：0%
+- 良い：5-10%
+- 優秀：10%+
+
+### 3. ブライアスコア
+確率のキャリブレーションを測定（低いほど良い）。
+- ランダム：0.25
+- 良い：<0.20
+- 優秀：<0.18
+
+### 4. サンプルサイズ
+予測数が多いほど信頼性の高い指標。
+- 最低：500ピック
+- 理想：1000+ピック
+
+---
+
+## 警告サイン
+
+- 過去のパフォーマンスデータがない
+- 非現実的な勝率（70%+）
+- ROI追跡がない
+- 都合の良い結果だけを選択
+
+---
+
+## 重要なポイント
+
+1. 勝率とROIを一緒に評価
+2. トラックレコードの透明性を要求
+3. 大きなサンプルサイズが不可欠
+4. あまりに良すぎる主張には注意
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -1963,11 +2948,13 @@ More predictions = more reliable metrics.
     relatedPosts: ['how-ai-predicts-football-matches', 'evaluating-ai-football-prediction-models', 'how-to-use-oddsflow-ai-predictions'],
     title: {
       EN: 'AI vs Human Tipsters: Which Produces Better Football Predictions?',
+      JA: 'AI vs 人間ティップスター：どちらがより良いサッカー予測を生み出すか？',
       '中文': 'AI vs 人类专家：谁的足球预测更准确？',
       '繁體': 'AI vs 人類專家：誰的足球預測更準確？',
     },
     excerpt: {
       EN: 'An honest comparison of AI and human prediction performance. When to trust algorithms and when human insight still has the edge.',
+      JA: 'AIと人間の予測パフォーマンスの正直な比較。アルゴリズムを信頼すべき時と、人間の洞察がまだ優位な時を解説。',
       '中文': 'AI与人类预测表现的真实比较。',
       '繁體': 'AI與人類預測表現的真實比較。',
     },
@@ -2066,6 +3053,68 @@ Both AI and human tipsters have strengths and weaknesses. Understanding them hel
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## AI vs 人間：正直な比較
+
+AIと人間のティップスターの両方に長所と短所があります。それらを理解することで、より良い判断ができるようになります。
+
+---
+
+## AIの長所
+
+- 膨大なデータを高速処理
+- 感情的バイアスがない
+- 一貫した方法論
+- 多くの試合を同時にカバー
+
+## AIの弱点
+
+- 定性的要因を見逃す可能性
+- 異常な状況への対応が困難
+- ブラックボックス的な意思決定
+- データ品質に依存
+
+---
+
+## 人間の長所
+
+- 文脈的理解
+- 定性的洞察（チームの士気など）
+- 新しい状況への適応
+- 推論を説明できる
+
+## 人間の弱点
+
+- 感情的バイアス
+- 認知的限界
+- 一貫性の欠如
+- カバーできる試合数の制限
+
+---
+
+## AIを信頼すべき時
+
+- 大量のベッティング
+- データが豊富な市場
+- 感情的バイアスの排除
+
+## 人間を信頼すべき時
+
+- ローカルリーグの専門知識
+- 異常な試合状況
+- 最近のスクワッド変更
+
+---
+
+## 重要なポイント
+
+1. 最良のアプローチ：AIデータと人間の洞察を組み合わせる
+2. AIはスケールと一貫性に優れる
+3. 人間はコンテキストと適応に優れる
+4. どちらも完璧ではない—ソースを多様化
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -2080,11 +3129,13 @@ Both AI and human tipsters have strengths and weaknesses. Understanding them hel
     relatedPosts: ['how-to-interpret-football-odds', 'how-ai-predicts-football-matches', 'responsible-football-betting-guide'],
     title: {
       EN: 'How to Use OddsFlow AI Predictions: Maximize Your Edge',
+      JA: 'OddsFlow AI予測の使い方：エッジを最大化する',
       '中文': '如何使用OddsFlow AI预测：最大化您的优势',
       '繁體': '如何使用OddsFlow AI預測：最大化您的優勢',
     },
     excerpt: {
       EN: 'A practical guide to getting the most from OddsFlow predictions. Learn to interpret confidence levels, combine with your analysis, and manage stakes.',
+      JA: 'OddsFlow予測を最大限に活用するための実践ガイド。信頼度レベルの解釈、自分の分析との組み合わせ、ステーク管理の方法を学びましょう。',
       '中文': '充分利用OddsFlow预测的实用指南。',
       '繁體': '充分利用OddsFlow預測的實用指南。',
     },
@@ -2168,6 +3219,56 @@ OddsFlow提供多个联赛的AI足球预测。
 
 *博彩有風險，請理性投注。*
       `,
+      JA: `
+## OddsFlowを始める
+
+OddsFlowは複数のリーグとベットタイプにわたるAI搭載のサッカー予測を提供しています。効果的に使用する方法を紹介します。
+
+---
+
+## 予測の理解
+
+### 信頼度レベル
+
+| レベル | 意味 | 推奨アクション |
+|-------|---------------|------------------|
+| 高 | 65%+の確率 | 大きめのステークを検討 |
+| 中 | 55-65%の確率 | 標準ステーク |
+| 低 | 55%未満の確率 | 小さいステークまたはスキップ |
+
+### 確率 vs オッズ
+
+常に私たちの確率推定をブックメーカーの暗示確率と比較してください。OddsFlow > 暗示確率 = 潜在的バリュー。
+
+---
+
+## ベストプラクティス
+
+### すべきこと：
+- 私たちの予測を自分の分析と比較する
+- ベッティング前に信頼度レベルを確認する
+- 時間をかけて結果を追跡する
+- 適切な資金管理を使用する
+
+### すべきでないこと：
+- すべての予測に盲目的に従う
+- 低信頼度の警告を無視する
+- 余裕のある以上に賭ける
+- 損失を追いかける
+
+---
+
+## 重要なポイント
+
+1. ステークサイズのガイドに信頼度レベルを使用
+2. AI確率をブックメーカーオッズと比較
+3. 自分自身のリサーチと組み合わせる
+4. 常に責任を持ってベット
+
+📖 **安全第一：** [責任あるベッティングガイド](/blog/responsible-football-betting-guide)
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+      `,
     },
   },
 
@@ -2182,11 +3283,13 @@ OddsFlow提供多个联赛的AI足球预测。
     relatedPosts: ['how-to-use-oddsflow-ai-predictions', 'how-to-interpret-football-odds', 'how-bookmakers-calculate-margins'],
     title: {
       EN: 'Responsible Football Betting: Protecting Your Bankroll and Wellbeing',
+      JA: '責任あるサッカーベッティング：資金とウェルビーイングの保護',
       '中文': '负责任的足球投注：保护您的资金和身心健康',
       '繁體': '負責任的足球投注：保護您的資金和身心健康',
     },
     excerpt: {
       EN: 'Essential guidance on maintaining a healthy relationship with betting. Set limits, recognize warning signs, and bet for entertainment, not income.',
+      JA: 'ベッティングとの健全な関係を維持するための重要なガイダンス。制限を設定し、警告サインを認識し、収入ではなく娯楽として賭けましょう。',
       '中文': '保持与投注健康关系的重要指导。',
       '繁體': '保持與投注健康關係的重要指導。',
     },
@@ -2292,6 +3395,63 @@ If you or someone you know needs help:
 
 *博彩有風險，請理性投注。必須年滿18歲。*
       `,
+      JA: `
+## 基本：ベッティングは娯楽であるべき
+
+サッカーベッティングは**楽しい**ものであるべきで、ストレスや経済的困難の原因であってはなりません。このガイドは健全なアプローチを維持するのに役立ちます。
+
+---
+
+## ゴールデンルール
+
+### 1. 失っても良い金額だけを賭ける
+決して以下に必要なお金を使わない：
+- 家賃やローン
+- 請求書や必需品
+- 貯蓄や投資
+
+### 2. 厳格な制限を設定
+- 日次/週次/月次の損失制限
+- ベッティングセッションの時間制限
+- 何があっても制限を守る
+
+### 3. 損失を追いかけない
+損失を「取り戻したい」という衝動は、より大きな損失につながります。連敗を通常のこととして受け入れましょう。
+
+### 4. 休憩を取る
+定期的な休憩は視野を維持するのに役立ちます。感情的になったら離れましょう。
+
+---
+
+## ギャンブル依存症の警告サイン
+
+- 余裕以上に賭けている
+- 損失を追いかけている
+- ベッティングについて嘘をつく
+- 責任を怠る
+- 賭けるためにお金を借りる
+- ベッティングしていないと不安を感じる
+
+---
+
+## 助けを求める
+
+あなたや知り合いが助けを必要としている場合：
+- **GamCare:** gamcare.org.uk
+- **Gambling Therapy:** gamblingtherapy.org
+- **BeGambleAware:** begambleaware.org
+
+---
+
+## 重要なポイント
+
+1. 収入ではなく娯楽のために賭ける
+2. 厳格な制限を設定し守る
+3. 損失を追いかけない
+4. 警告サインに気づいたら助けを求める
+
+*ギャンブルにはリスクが伴います。責任を持ってベットしてください。18歳以上である必要があります。*
+      `,
     },
   },
 };
@@ -2316,6 +3476,22 @@ export default function BlogPostPage() {
 
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  // Check auth state
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const t = (key: string) => translations[lang]?.[key] || translations['EN'][key] || key;
   const currentLang = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
@@ -2380,7 +3556,10 @@ export default function BlogPostPage() {
               <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
               <Link href={localePath('/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
               <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
-              <Link href={localePath('/blog')} className="text-emerald-400 transition-colors text-sm font-medium">{t('blog')}</Link>
+              <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
+              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
+              <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
@@ -2388,9 +3567,12 @@ export default function BlogPostPage() {
                 <button onClick={() => setLangDropdownOpen(!langDropdownOpen)} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer">
                   <FlagIcon code={currentLang.code} size={20} />
                   <span className="font-medium">{currentLang.code}</span>
+                  <svg className={`w-4 h-4 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
                 {langDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
                     {locales.map((loc) => {
                       const langCode = localeToTranslationCode[loc];
                       const language = LANGUAGES.find(l => l.code === langCode);
@@ -2405,36 +3587,104 @@ export default function BlogPostPage() {
                   </div>
                 )}
               </div>
-              <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block">{t('login')}</Link>
-              <Link href={localePath('/get-started')} className="hidden sm:block px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm">{t('getStarted')}</Link>
 
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {mobileMenuOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /> : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
-                </svg>
+              {user ? (
+                <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                  {user.user_metadata?.avatar_url ? (
+                    <img src={user.user_metadata.avatar_url} alt="Avatar" className="w-8 h-8 rounded-full object-cover" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
+                      {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                  )}
+                  <span className="text-sm font-medium hidden sm:block">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
+                </Link>
+              ) : (
+                <>
+                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t('login')}</Link>
+                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t('getStarted')}</Link>
+                </>
+              )}
+
+              {/* World Cup Special Button */}
+              <Link
+                href={localePath('/worldcup')}
+                className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-5 w-auto object-contain relative z-10" />
+                <span className="text-black font-semibold text-sm relative z-10">FIFA 2026</span>
+              </Link>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[45] md:hidden">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
           <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
             <div className="px-4 py-4 space-y-1">
+              <Link href={localePath('/worldcup')} onClick={() => setMobileMenuOpen(false)} className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-8 w-auto object-contain relative z-10" />
+                <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
+              </Link>
               {[
                 { href: localePath('/'), label: t('home') },
                 { href: localePath('/predictions'), label: t('predictions') },
                 { href: localePath('/leagues'), label: t('leagues') },
                 { href: localePath('/performance'), label: t('performance') },
-                { href: localePath('/blog'), label: t('blog') },
+                { href: localePath('/community'), label: t('community') },
+                { href: localePath('/news'), label: t('news') },
+                { href: localePath('/solution'), label: t('solution') },
+                { href: localePath('/pricing'), label: t('pricing') },
               ].map((link) => (
                 <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white transition-all">
                   {link.label}
                 </Link>
               ))}
+              <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
+                {user ? (
+                  <Link
+                    href={localePath('/dashboard')}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center gap-3 w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all"
+                  >
+                    {user.user_metadata?.avatar_url ? (
+                      <img src={user.user_metadata.avatar_url} alt="Avatar" className="w-8 h-8 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
+                        {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                      </div>
+                    )}
+                    <span className="text-white font-medium">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
+                  </Link>
+                ) : (
+                  <>
+                    <Link href={localePath('/login')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all">{t('login')}</Link>
+                    <Link href={localePath('/get-started')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-center font-semibold hover:shadow-lg transition-all">{t('getStarted')}</Link>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -2496,35 +3746,47 @@ export default function BlogPostPage() {
           </div>
 
           {/* Article Content */}
-          <div
-            className="prose prose-invert prose-lg max-w-none mt-10
-              prose-headings:text-white prose-headings:font-bold
-              prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6
-              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-4
-              prose-p:text-gray-300 prose-p:leading-relaxed
-              prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:text-emerald-300
-              prose-strong:text-white prose-strong:font-semibold
-              prose-code:text-emerald-400 prose-code:bg-white/5 prose-code:px-2 prose-code:py-1 prose-code:rounded
-              prose-pre:bg-gray-900/50 prose-pre:border prose-pre:border-white/10
-              prose-blockquote:border-l-emerald-500 prose-blockquote:bg-white/5 prose-blockquote:py-1 prose-blockquote:pl-6 prose-blockquote:italic
-              prose-table:border-collapse
-              prose-th:bg-white/5 prose-th:p-3 prose-th:text-left prose-th:border prose-th:border-white/10
-              prose-td:p-3 prose-td:border prose-td:border-white/10
-              prose-li:text-gray-300
-              prose-hr:border-white/10"
-            dangerouslySetInnerHTML={{ __html: content.replace(/\n/g, '<br/>').replace(/## /g, '<h2>').replace(/### /g, '<h3>').replace(/<br\/><h2>/g, '</p><h2>').replace(/<br\/><h3>/g, '</p><h3>').replace(/<h2>/g, '</p><h2>').replace(/<h3>/g, '</p><h3>') }}
-          />
+          <AnimatedSection delay={100}>
+            <div
+              className="article-content max-w-none mt-10"
+              dangerouslySetInnerHTML={{ __html: parseMarkdown(content) }}
+            />
+          </AnimatedSection>
 
           {/* Tags */}
-          <div className="mt-12 pt-8 border-t border-white/10">
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <span key={tag} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm text-gray-400">
-                  #{tag}
-                </span>
-              ))}
+          <AnimatedSection delay={200}>
+            <div className="mt-12 pt-8 border-t border-white/10">
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag, index) => (
+                  <span
+                    key={tag}
+                    className="px-4 py-2 bg-gradient-to-r from-white/5 to-white/[0.02] border border-white/10 rounded-full text-sm text-gray-300 hover:border-emerald-500/50 hover:text-emerald-400 transition-all cursor-default"
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          </AnimatedSection>
+
+          {/* CTA Section */}
+          <AnimatedSection delay={300}>
+            <div className="mt-12 p-8 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-cyan-500/5 to-transparent border border-emerald-500/20">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="flex-1 text-center md:text-left">
+                  <h3 className="text-xl font-bold mb-2">Ready to get AI-powered predictions?</h3>
+                  <p className="text-gray-400">Start using OddsFlow to make smarter betting decisions with data-driven insights.</p>
+                </div>
+                <Link
+                  href={localePath('/predictions')}
+                  className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition-all hover:scale-105"
+                >
+                  View Predictions
+                </Link>
+              </div>
+            </div>
+          </AnimatedSection>
         </div>
       </article>
 

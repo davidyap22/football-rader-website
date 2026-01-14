@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 import { supabase, Prematch } from '@/lib/supabase';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import { locales, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 interface UserPrediction {
   id: string;
@@ -226,8 +227,12 @@ const translations: Record<string, Record<string, string>> = {
 
 export default function UserPredictionsPage() {
   const params = useParams();
-  const locale = (params?.locale as string) || 'en';
-  const [language, setLanguage] = useState('EN');
+  const urlLocale = (params?.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
+
+  // Initialize language from URL locale
+  const initialLang = localeToTranslationCode[locale as Locale] || 'EN';
+  const [language, setLanguage] = useState(initialLang);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -304,12 +309,14 @@ export default function UserPredictionsPage() {
     return `${days}d ago`;
   };
 
+  // Sync language from URL locale
   useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_language');
-    if (savedLang && LANGUAGES.some(l => l.code === savedLang)) {
-      setLanguage(savedLang);
+    const langKey = localeToTranslationCode[locale as Locale];
+    if (langKey && LANGUAGES.some(l => l.code === langKey)) {
+      setLanguage(langKey);
+      localStorage.setItem('oddsflow_language', langKey);
     }
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     const checkUser = async () => {

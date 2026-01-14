@@ -440,8 +440,8 @@ export default function GetStartedPage() {
   const [success, setSuccess] = useState('');
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
-  // Language and UI state
-  const [language, setLanguage] = useState('en');
+  // Language and UI state - initialize from URL locale
+  const [language, setLanguage] = useState(locale);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -450,13 +450,16 @@ export default function GetStartedPage() {
   const t = translations[language] || translations.en;
   const currentLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
 
+  // Sync language from URL locale
+  useEffect(() => {
+    if (locale && LANGUAGES.some(l => l.code === locale)) {
+      setLanguage(locale);
+      localStorage.setItem('oddsflow_language', locale);
+    }
+  }, [locale]);
+
   // Check if user is already logged in
   useEffect(() => {
-    const savedLang = localStorage.getItem('oddsflow_language');
-    if (savedLang && LANGUAGES.some(l => l.code === savedLang)) {
-      setLanguage(savedLang);
-    }
-
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
@@ -590,91 +593,100 @@ export default function GetStartedPage() {
               <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.pricing}</Link>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               {/* Language Selector */}
               <div className="relative" ref={langDropdownRef}>
                 <button
                   onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-sm font-medium cursor-pointer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer"
                 >
                   <FlagIcon code={currentLang.code} size={20} />
-                  <span className="hidden sm:inline">{currentLang.label}</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span className="font-medium">{currentLang.code.toUpperCase()}</span>
+                  <svg className={`w-4 h-4 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
                 {langDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-40 bg-gray-900 border border-white/10 rounded-lg shadow-xl overflow-hidden z-50">
+                  <div className="absolute right-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
                     {LANGUAGES.map((lang) => (
                       <button
                         key={lang.code}
                         onClick={() => handleSetLang(lang.code)}
-                        className={`w-full px-4 py-2 text-left text-sm hover:bg-white/10 transition-colors flex items-center gap-2 cursor-pointer ${language === lang.code ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'}`}
+                        className={`w-full px-4 py-3 text-left text-sm hover:bg-white/10 transition-colors flex items-center gap-3 cursor-pointer ${language === lang.code ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300'}`}
                       >
                         <FlagIcon code={lang.code} size={20} />
-                        <span>{lang.label}</span>
+                        <span className="font-medium">{lang.label}</span>
                       </button>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* FIFA 2026 Button */}
+              <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t.login}</Link>
+
+              {/* World Cup Special Button */}
               <Link
                 href={localePath('/worldcup')}
-                className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500/20 to-rose-500/20 border border-amber-500/30 hover:border-amber-500/50 transition-all text-sm font-medium"
+                className="relative hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_20px_rgba(251,191,36,0.5)] hover:shadow-[0_0_30px_rgba(251,191,36,0.7)] transition-all cursor-pointer group overflow-hidden hover:scale-105"
               >
-                <span>⚽</span>
-                <span className="bg-gradient-to-r from-amber-400 to-rose-400 bg-clip-text text-transparent font-bold">{t.fifa2026}</span>
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-5 w-auto object-contain relative z-10" />
+                <span className="text-black font-semibold text-sm relative z-10">FIFA 2026</span>
               </Link>
-
-              <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium hidden sm:block cursor-pointer">{t.login}</Link>
-              <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer hidden sm:block">{t.getStarted}</Link>
 
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                aria-label="Toggle menu"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {mobileMenuOpen ? (
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  ) : (
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
+                  </svg>
+                )}
               </button>
             </div>
           </div>
-
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-white/10">
-              <div className="flex flex-col gap-4">
-                <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.home}</Link>
-                <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.predictions}</Link>
-                <Link href={localePath('/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.leagues}</Link>
-                <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.aiPerformance}</Link>
-                <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.community}</Link>
-                <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.news}</Link>
-                <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.solution}</Link>
-                <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t.pricing}</Link>
-                <Link
-                  href={localePath('/worldcup')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500/20 to-rose-500/20 border border-amber-500/30 text-sm font-medium w-fit"
-                >
-                  <span>⚽</span>
-                  <span className="bg-gradient-to-r from-amber-400 to-rose-400 bg-clip-text text-transparent font-bold">{t.fifa2026}</span>
-                </Link>
-                <div className="flex gap-3 pt-2">
-                  <Link href={localePath('/login')} className="px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-medium cursor-pointer">{t.login}</Link>
-                  <Link href={localePath('/get-started')} className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-sm cursor-pointer">{t.getStarted}</Link>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[45] md:hidden">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
+          <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+            <div className="px-4 py-4 space-y-1">
+              <Link href={localePath('/worldcup')} onClick={() => setMobileMenuOpen(false)} className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-8 w-auto object-contain relative z-10" />
+                <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
+              </Link>
+              {[
+                { href: localePath('/'), label: t.home },
+                { href: localePath('/predictions'), label: t.predictions },
+                { href: localePath('/leagues'), label: t.leagues },
+                { href: localePath('/performance'), label: t.aiPerformance },
+                { href: localePath('/community'), label: t.community },
+                { href: localePath('/news'), label: t.news },
+                { href: localePath('/solution'), label: t.solution },
+                { href: localePath('/pricing'), label: t.pricing },
+              ].map((link) => (
+                <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white transition-all">
+                  {link.label}
+                </Link>
+              ))}
+              <div className="pt-4 mt-4 border-t border-white/10 space-y-2">
+                <Link href={localePath('/login')} onClick={() => setMobileMenuOpen(false)} className="block w-full px-4 py-3 rounded-lg border border-white/20 text-white text-center font-medium hover:bg-white/10 transition-all">{t.login}</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="pt-24 pb-16 px-4 flex items-center justify-center min-h-screen">
