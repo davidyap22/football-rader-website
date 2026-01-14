@@ -894,6 +894,20 @@ export default function PerformancePage() {
 
       if (profitError) throw profitError;
 
+      // Debug: Check what we got from Supabase
+      console.log('=== FETCH DEBUG ===');
+      console.log('Total profitData records:', profitData?.length);
+      const betStyleCounts: Record<string, number> = {};
+      const valueHunterFixtures = new Set<string>();
+      profitData?.forEach((p: any) => {
+        betStyleCounts[p.bet_style || 'null'] = (betStyleCounts[p.bet_style || 'null'] || 0) + 1;
+        if (p.bet_style?.toLowerCase() === 'value hunter') {
+          valueHunterFixtures.add(String(p.fixture_id));
+        }
+      });
+      console.log('Bet style distribution:', betStyleCounts);
+      console.log('Value Hunter fixture_ids:', Array.from(valueHunterFixtures));
+
       // Store all individual bet records for filtering
       setAllBetRecords(profitData || []);
 
