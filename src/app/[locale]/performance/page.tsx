@@ -875,20 +875,22 @@ export default function PerformancePage() {
   const fetchPerformanceData = async () => {
     setLoading(true);
     try {
-      // Fetch finished matches from prematches table
+      // Fetch finished matches from prematches table (increase limit from default 1000)
       const { data: matchesData, error: matchesError } = await supabase
         .from('prematches')
         .select('fixture_id, league_name, league_logo, home_name, home_logo, away_name, away_logo, goals_home, goals_away, start_date_msia')
         .eq('status_short', 'FT')
-        .order('start_date_msia', { ascending: false });
+        .order('start_date_msia', { ascending: false })
+        .limit(10000);
 
       if (matchesError) throw matchesError;
 
-      // Fetch all profit_summary data with individual bet details
+      // Fetch all profit_summary data with individual bet details (increase limit from default 1000)
       const { data: profitData, error: profitError } = await supabase
         .from('profit_summary')
         .select('fixture_id, total_profit, total_invested, roi_percentage, total_bets, profit_moneyline, profit_handicap, profit_ou, bet_time, bet_style, profit, selection, stake_money, clock, line, odds, home_score, away_score, status')
-        .order('bet_time', { ascending: true });
+        .order('bet_time', { ascending: true })
+        .limit(50000);
 
       if (profitError) throw profitError;
 
