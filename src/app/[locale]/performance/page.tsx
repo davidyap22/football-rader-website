@@ -704,8 +704,7 @@ export default function PerformancePage() {
   const [profitBetStyleFilter, setProfitBetStyleFilter] = useState<string>('all');
   const [loadingProfit, setLoadingProfit] = useState(false);
 
-  // Bet Style filter for past matches table
-  const [selectedBetStyle, setSelectedBetStyle] = useState<string>('all');
+  // Bet Style filter for chart and past matches table
   const BET_STYLES = ['Aggressive', 'Conservative', 'Balanced', 'Value Hunter', 'Safe Play'];
 
   // Chart/Stats Bet Style filter
@@ -811,7 +810,7 @@ export default function PerformancePage() {
     };
   })();
 
-  // Compute per-match profits filtered by selectedBetStyle (for table)
+  // Compute per-match profits filtered by chartBetStyle (for table)
   const matchProfitsByStyle = (() => {
     const profitMap = new Map<string, {
       profit_moneyline: number;
@@ -822,9 +821,9 @@ export default function PerformancePage() {
     }>();
 
     // Filter records by selected bet style (case-insensitive comparison)
-    const filtered = selectedBetStyle === 'all'
+    const filtered = chartBetStyle === 'all'
       ? allBetRecords
-      : allBetRecords.filter(r => r.bet_style?.toLowerCase() === selectedBetStyle.toLowerCase());
+      : allBetRecords.filter(r => r.bet_style?.toLowerCase() === chartBetStyle.toLowerCase());
 
     // Group by fixture_id and calculate profits
     filtered.forEach(r => {
@@ -1074,7 +1073,7 @@ export default function PerformancePage() {
       : matches.filter(m => m.league_name === selectedLeague);
 
     // Also filter by bet style - only show matches that have at least one bet of the selected style
-    if (selectedBetStyle !== 'all') {
+    if (chartBetStyle !== 'all') {
       result = result.filter(m => {
         const profits = matchProfitsByStyle.get(m.fixture_id);
         // Check if this match has any profits (bets) for the selected style
@@ -1095,7 +1094,7 @@ export default function PerformancePage() {
   // Reset to page 1 when league or bet style filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedLeague, selectedBetStyle]);
+  }, [selectedLeague, chartBetStyle]);
 
   // Format match date as "X days ago" or actual date
   const formatMatchDate = (dateStr: string) => {
@@ -1231,7 +1230,7 @@ export default function PerformancePage() {
     setSelectedMatch(match);
     setProfitTypeFilter('all');
     // Auto-select the currently active bet style filter
-    setProfitBetStyleFilter(selectedBetStyle);
+    setProfitBetStyleFilter(chartBetStyle);
     setShowProfitModal(true);
     fetchProfitSummary(match.fixture_id);
   };
@@ -1901,49 +1900,6 @@ export default function PerformancePage() {
                 ))}
               </div>
 
-              {/* Bet Style Filter - Desktop */}
-              <div className="hidden md:flex items-center gap-3 mb-6 overflow-x-auto pb-2">
-                <button
-                  onClick={() => setSelectedBetStyle('all')}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
-                    selectedBetStyle === 'all'
-                      ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/50 shadow-lg shadow-amber-500/10'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 hover:border-white/20'
-                  }`}
-                >
-                  <div className={`w-5 h-5 rounded flex items-center justify-center ${
-                    selectedBetStyle === 'all' ? 'bg-amber-500' : 'bg-white/20'
-                  }`}>
-                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                    </svg>
-                  </div>
-                  All Styles
-                </button>
-                {BET_STYLES.map((style) => (
-                  <button
-                    key={style}
-                    onClick={() => setSelectedBetStyle(style)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all cursor-pointer ${
-                      selectedBetStyle === style
-                        ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/50 shadow-lg shadow-amber-500/10'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 hover:border-white/20'
-                    }`}
-                  >
-                    <div className={`w-5 h-5 rounded flex items-center justify-center ${
-                      selectedBetStyle === style ? 'bg-amber-500' : 'bg-white/20'
-                    }`}>
-                      {style === 'Aggressive' && <span className="text-[10px]">🔥</span>}
-                      {style === 'Conservative' && <span className="text-[10px]">🛡️</span>}
-                      {style === 'Balanced' && <span className="text-[10px]">⚖️</span>}
-                      {style === 'Value Hunter' && <span className="text-[10px]">💎</span>}
-                      {style === 'Safe Play' && <span className="text-[10px]">✅</span>}
-                    </div>
-                    {style}
-                  </button>
-                ))}
-              </div>
-
               {/* Past Matches - Table Style */}
               <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 overflow-hidden">
                 {/* Desktop Header - Hidden on mobile */}
@@ -1970,7 +1926,7 @@ export default function PerformancePage() {
                       const dateInfo = formatMatchDate(match.match_date);
                       const isHotMatch = dateInfo.isHot;
 
-                      // Get filtered profits for this match based on selectedBetStyle
+                      // Get filtered profits for this match based on chartBetStyle
                       const filteredProfits = matchProfitsByStyle.get(match.fixture_id) || {
                         profit_moneyline: 0,
                         profit_handicap: 0,
