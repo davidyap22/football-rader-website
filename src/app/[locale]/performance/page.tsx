@@ -1075,7 +1075,7 @@ export default function PerformancePage() {
     // Also filter by bet style - only show matches that have at least one bet of the selected style
     if (chartBetStyle !== 'all') {
       result = result.filter(m => {
-        const profits = matchProfitsByStyle.get(m.fixture_id);
+        const profits = matchProfitsByStyle.get(String(m.fixture_id));
         // Check if this match has any profits (bets) for the selected style
         return profits && (profits.total_profit !== 0 || profits.total_invested > 0);
       });
@@ -1927,7 +1927,7 @@ export default function PerformancePage() {
                       const isHotMatch = dateInfo.isHot;
 
                       // Get filtered profits for this match based on chartBetStyle
-                      const filteredProfits = matchProfitsByStyle.get(match.fixture_id) || {
+                      const filteredProfits = matchProfitsByStyle.get(String(match.fixture_id)) || {
                         profit_moneyline: 0,
                         profit_handicap: 0,
                         profit_ou: 0,
