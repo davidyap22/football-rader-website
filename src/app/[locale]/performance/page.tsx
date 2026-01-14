@@ -945,7 +945,7 @@ export default function PerformancePage() {
       });
 
       // Combine match data with profit data
-      const combinedMatches: MatchSummary[] = matchesData
+      const matchesFromPrematches: MatchSummary[] = matchesData
         ?.filter((m: any) => profitMap.has(String(m.fixture_id)))
         .map((m: any) => {
           const profit = profitMap.get(String(m.fixture_id))!;
@@ -970,6 +970,54 @@ export default function PerformancePage() {
             match_date: m.start_date_msia || profit.bet_time,
           };
         }) || [];
+
+      // Also include matches from profit_summary that don't exist in prematches
+      const prematchFixtureIds = new Set(matchesData?.map((m: any) => String(m.fixture_id)) || []);
+
+      // Get unique fixture_ids from profit_summary that are NOT in prematches
+      const profitOnlyFixtures = new Map<string, { league_name: string; home_score: number; away_score: number; bet_time: string }>();
+      profitData?.forEach((p: any) => {
+        const fixtureId = String(p.fixture_id);
+        if (!prematchFixtureIds.has(fixtureId) && !profitOnlyFixtures.has(fixtureId)) {
+          profitOnlyFixtures.set(fixtureId, {
+            league_name: p.league_name || 'Unknown',
+            home_score: p.home_score || 0,
+            away_score: p.away_score || 0,
+            bet_time: p.bet_time,
+          });
+        }
+      });
+
+      // Create match entries for profit-only fixtures
+      const matchesFromProfitOnly: MatchSummary[] = [];
+      profitOnlyFixtures.forEach((matchInfo, fixtureId) => {
+        if (profitMap.has(fixtureId)) {
+          const profit = profitMap.get(fixtureId)!;
+          const roi = profit.total_invested > 0 ? (profit.total_profit / profit.total_invested) * 100 : 0;
+          matchesFromProfitOnly.push({
+            fixture_id: fixtureId,
+            league_name: matchInfo.league_name,
+            league_logo: '',
+            home_name: 'Home Team',
+            home_logo: '',
+            away_name: 'Away Team',
+            away_logo: '',
+            home_score: matchInfo.home_score,
+            away_score: matchInfo.away_score,
+            total_profit: profit.total_profit,
+            total_invested: profit.total_invested,
+            roi_percentage: roi,
+            total_bets: profit.total_bets,
+            profit_moneyline: profit.profit_moneyline,
+            profit_handicap: profit.profit_handicap,
+            profit_ou: profit.profit_ou,
+            match_date: matchInfo.bet_time,
+          });
+        }
+      });
+
+      // Combine both sources
+      const combinedMatches = [...matchesFromPrematches, ...matchesFromProfitOnly];
 
       setMatches(combinedMatches);
 
