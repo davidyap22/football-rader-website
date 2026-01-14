@@ -65,8 +65,9 @@ export const config = {
   // - _next (Next.js internals)
   // - Static files (images, fonts, etc.)
   // - Favicon and other special files
+  // - Auth routes (OAuth callback)
   matcher: [
-    '/((?!api|_next|_vercel|.*\\..*).*)',
+    '/((?!api|auth|_next|_vercel|.*\\..*).*)',
     '/',
   ],
 };
