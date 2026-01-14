@@ -946,80 +946,44 @@ export default function PerformancePage() {
         else current.profit_ou += profit;
       });
 
-      // Combine match data with profit data
-      const matchesFromPrematches: MatchSummary[] = matchesData
-        ?.filter((m: any) => profitMap.has(String(m.fixture_id)))
-        .map((m: any) => {
-          const profit = profitMap.get(String(m.fixture_id))!;
-          const roi = profit.total_invested > 0 ? (profit.total_profit / profit.total_invested) * 100 : 0;
-          return {
-            fixture_id: String(m.fixture_id),
-            league_name: m.league_name || 'Unknown',
-            league_logo: m.league_logo || '',
-            home_name: m.home_name || 'Home',
-            home_logo: m.home_logo || '',
-            away_name: m.away_name || 'Away',
-            away_logo: m.away_logo || '',
-            home_score: m.goals_home || 0,
-            away_score: m.goals_away || 0,
-            total_profit: profit.total_profit,
-            total_invested: profit.total_invested,
-            roi_percentage: roi,
-            total_bets: profit.total_bets,
-            profit_moneyline: profit.profit_moneyline,
-            profit_handicap: profit.profit_handicap,
-            profit_ou: profit.profit_ou,
-            match_date: m.start_date_msia || profit.bet_time,
-          };
-        }) || [];
-
-      // Also include matches from profit_summary that don't exist in prematches
-      const prematchFixtureIds = new Set(matchesData?.map((m: any) => String(m.fixture_id)) || []);
-
-      // Get unique fixture_ids from profit_summary that are NOT in prematches
-      const profitOnlyFixtures = new Map<string, { league_name: string; home_score: number; away_score: number; bet_time: string }>();
-      profitData?.forEach((p: any) => {
-        const fixtureId = String(p.fixture_id);
-        if (!prematchFixtureIds.has(fixtureId) && !profitOnlyFixtures.has(fixtureId)) {
-          profitOnlyFixtures.set(fixtureId, {
-            league_name: p.league_name || 'Unknown',
-            home_score: p.home_score || 0,
-            away_score: p.away_score || 0,
-            bet_time: p.bet_time,
-          });
-        }
+      // Create a map of prematches data by fixture_id for quick lookup
+      const prematchesMap = new Map<string, any>();
+      matchesData?.forEach((m: any) => {
+        prematchesMap.set(String(m.fixture_id), m);
       });
 
-      // Create match entries for profit-only fixtures
-      const matchesFromProfitOnly: MatchSummary[] = [];
-      profitOnlyFixtures.forEach((matchInfo, fixtureId) => {
-        if (profitMap.has(fixtureId)) {
-          const profit = profitMap.get(fixtureId)!;
-          const roi = profit.total_invested > 0 ? (profit.total_profit / profit.total_invested) * 100 : 0;
-          matchesFromProfitOnly.push({
-            fixture_id: fixtureId,
-            league_name: matchInfo.league_name,
-            league_logo: '',
-            home_name: 'Home Team',
-            home_logo: '',
-            away_name: 'Away Team',
-            away_logo: '',
-            home_score: matchInfo.home_score,
-            away_score: matchInfo.away_score,
-            total_profit: profit.total_profit,
-            total_invested: profit.total_invested,
-            roi_percentage: roi,
-            total_bets: profit.total_bets,
-            profit_moneyline: profit.profit_moneyline,
-            profit_handicap: profit.profit_handicap,
-            profit_ou: profit.profit_ou,
-            match_date: matchInfo.bet_time,
-          });
-        }
-      });
+      // Build matches starting from profit_summary (guaranteed to have all our data)
+      // and enrich with prematches info if available
+      const combinedMatches: MatchSummary[] = [];
 
-      // Combine both sources
-      const combinedMatches = [...matchesFromPrematches, ...matchesFromProfitOnly];
+      profitMap.forEach((profit, fixtureId) => {
+        const prematch = prematchesMap.get(fixtureId);
+
+        // Get first profit record for this fixture to get league_name, scores, bet_time
+        const firstProfitRecord = profitData?.find((p: any) => String(p.fixture_id) === fixtureId);
+
+        const roi = profit.total_invested > 0 ? (profit.total_profit / profit.total_invested) * 100 : 0;
+
+        combinedMatches.push({
+          fixture_id: fixtureId,
+          league_name: prematch?.league_name || firstProfitRecord?.league_name || 'Unknown',
+          league_logo: prematch?.league_logo || '',
+          home_name: prematch?.home_name || 'Home Team',
+          home_logo: prematch?.home_logo || '',
+          away_name: prematch?.away_name || 'Away Team',
+          away_logo: prematch?.away_logo || '',
+          home_score: prematch?.goals_home ?? firstProfitRecord?.home_score ?? 0,
+          away_score: prematch?.goals_away ?? firstProfitRecord?.away_score ?? 0,
+          total_profit: profit.total_profit,
+          total_invested: profit.total_invested,
+          roi_percentage: roi,
+          total_bets: profit.total_bets,
+          profit_moneyline: profit.profit_moneyline,
+          profit_handicap: profit.profit_handicap,
+          profit_ou: profit.profit_ou,
+          match_date: prematch?.start_date_msia || profit.bet_time,
+        });
+      });
 
       setMatches(combinedMatches);
 
