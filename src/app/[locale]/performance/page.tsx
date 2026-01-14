@@ -770,10 +770,10 @@ export default function PerformancePage() {
 
     const roi = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
 
-    // Calculate daily cumulative data
-    const sortedRecords = [...filtered].sort((a, b) =>
-      new Date(a.bet_time).getTime() - new Date(b.bet_time).getTime()
-    );
+    // Calculate daily cumulative data - filter out invalid dates first, then sort
+    const sortedRecords = [...filtered]
+      .filter(r => r.bet_time && !isNaN(new Date(r.bet_time).getTime()))
+      .sort((a, b) => new Date(a.bet_time).getTime() - new Date(b.bet_time).getTime());
 
     let cumulative = 0;
     let cumulativeML = 0;
@@ -789,7 +789,7 @@ export default function PerformancePage() {
       else cumulativeOU += profit;
 
       return {
-        date: r.bet_time?.split('T')[0] || '',
+        date: r.bet_time.split('T')[0],
         profit: profit,
         cumulative: cumulative,
         cumulativeMoneyline: cumulativeML,
