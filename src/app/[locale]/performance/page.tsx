@@ -910,22 +910,6 @@ export default function PerformancePage() {
       }
 
       const profitData = allProfitData;
-      console.log('Total pages fetched:', page);
-      console.log('Total profitData after pagination:', profitData.length);
-
-      // Debug: Check what we got from Supabase
-      console.log('=== FETCH DEBUG ===');
-      console.log('Total profitData records:', profitData?.length);
-      const betStyleCounts: Record<string, number> = {};
-      const valueHunterFixtures = new Set<string>();
-      profitData?.forEach((p: any) => {
-        betStyleCounts[p.bet_style || 'null'] = (betStyleCounts[p.bet_style || 'null'] || 0) + 1;
-        if (p.bet_style?.toLowerCase() === 'value hunter') {
-          valueHunterFixtures.add(String(p.fixture_id));
-        }
-      });
-      console.log('Bet style distribution:', betStyleCounts);
-      console.log('Value Hunter fixture_ids:', Array.from(valueHunterFixtures));
 
       // Store all individual bet records for filtering
       setAllBetRecords(profitData || []);
@@ -1017,6 +1001,11 @@ export default function PerformancePage() {
           match_date: prematch?.start_date_msia || profit.bet_time,
         });
       });
+
+      // Sort by match_date descending (newest first)
+      combinedMatches.sort((a, b) =>
+        new Date(b.match_date).getTime() - new Date(a.match_date).getTime()
+      );
 
       setMatches(combinedMatches);
 
@@ -1119,26 +1108,14 @@ export default function PerformancePage() {
       ? matches
       : matches.filter(m => m.league_name === selectedLeague);
 
-    // Debug logging
-    console.log('=== FILTER DEBUG ===');
-    console.log('chartBetStyle:', chartBetStyle);
-    console.log('Total matches in state:', matches.length);
-    console.log('matchProfitsByStyle size:', matchProfitsByStyle.size);
-    console.log('matchProfitsByStyle keys:', Array.from(matchProfitsByStyle.keys()).slice(0, 10));
-
     // Also filter by bet style - only show matches that have at least one bet of the selected style
     if (chartBetStyle !== 'all') {
       result = result.filter(m => {
         const profits = matchProfitsByStyle.get(String(m.fixture_id));
-        const hasProfit = profits && (profits.total_profit !== 0 || profits.total_invested > 0);
-        if (!hasProfit && matchProfitsByStyle.size < 20) {
-          console.log(`Match ${m.fixture_id} excluded: profits=`, profits);
-        }
-        return hasProfit;
+        return profits && (profits.total_profit !== 0 || profits.total_invested > 0);
       });
     }
 
-    console.log('Filtered result count:', result.length);
     return result;
   })();
 
