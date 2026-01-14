@@ -2644,7 +2644,7 @@ export default function PerformancePage() {
                                 <td className="py-2 px-2 text-white text-xs font-medium">{record.selection || '-'}</td>
                                 <td className="py-2 px-2 text-center text-amber-400 text-xs">{record.line ?? '-'}</td>
                                 <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.odds?.toFixed(2) ?? '-'}</td>
-                                <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.stake_units ?? '-'}</td>
+                                <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.stake_money ? `$${record.stake_money.toFixed(2)}` : '-'}</td>
                                 <td className="py-2 px-2 text-center text-white text-xs font-medium">
                                   {record.home_score !== null && record.away_score !== null ? `${record.home_score}-${record.away_score}` : '-'}
                                 </td>
