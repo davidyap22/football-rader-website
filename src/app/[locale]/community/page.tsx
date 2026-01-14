@@ -102,6 +102,7 @@ const translations: Record<string, Record<string, string>> = {
     contact: "Contact",
     legal: "Legal",
     privacyPolicy: "Privacy Policy",
+    responsibleGaming: "Responsible Gaming",
     termsOfService: "Terms of Service",
     allRightsReserved: "All rights reserved.",
     gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
@@ -205,6 +206,7 @@ const translations: Record<string, Record<string, string>> = {
     contact: "联系我们",
     legal: "法律",
     privacyPolicy: "隐私政策",
+    responsibleGaming: "负责任博彩",
     termsOfService: "服务条款",
     allRightsReserved: "版权所有。",
     gamblingWarning: "博彩有风险，请理性投注。",
@@ -308,6 +310,7 @@ const translations: Record<string, Record<string, string>> = {
     contact: "聯繫我們",
     legal: "法律",
     privacyPolicy: "隱私政策",
+    responsibleGaming: "負責任博彩",
     termsOfService: "服務條款",
     allRightsReserved: "版權所有。",
     gamblingWarning: "博彩有風險，請理性投注。",
@@ -411,6 +414,7 @@ const translations: Record<string, Record<string, string>> = {
     contact: "Kontak",
     legal: "Legal",
     privacyPolicy: "Kebijakan Privasi",
+    responsibleGaming: "Perjudian Bertanggung Jawab",
     termsOfService: "Ketentuan Layanan",
     allRightsReserved: "Hak cipta dilindungi.",
     gamblingWarning: "Judi melibatkan risiko. Mohon bertaruh secara bertanggung jawab.",
@@ -514,6 +518,7 @@ const translations: Record<string, Record<string, string>> = {
     contact: "Contacto",
     legal: "Legal",
     privacyPolicy: "Política de Privacidad",
+    responsibleGaming: "Juego Responsable",
     termsOfService: "Términos de Servicio",
     allRightsReserved: "Todos los derechos reservados.",
     gamblingWarning: "El juego implica riesgo. Por favor, juegue responsablemente.",
@@ -617,6 +622,7 @@ const translations: Record<string, Record<string, string>> = {
     contact: "Contato",
     legal: "Legal",
     privacyPolicy: "Política de Privacidade",
+    responsibleGaming: "Jogo Responsavel",
     termsOfService: "Termos de Serviço",
     allRightsReserved: "Todos os direitos reservados.",
     gamblingWarning: "Apostas envolvem risco. Por favor, aposte com responsabilidade.",
@@ -720,6 +726,7 @@ const translations: Record<string, Record<string, string>> = {
     contact: "Kontakt",
     legal: "Rechtliches",
     privacyPolicy: "Datenschutz",
+    responsibleGaming: "Verantwortungsvolles Spielen",
     termsOfService: "Nutzungsbedingungen",
     allRightsReserved: "Alle Rechte vorbehalten.",
     gamblingWarning: "Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
@@ -823,6 +830,7 @@ const translations: Record<string, Record<string, string>> = {
     contact: "Contact",
     legal: "Légal",
     privacyPolicy: "Politique de confidentialité",
+    responsibleGaming: "Jeu Responsable",
     termsOfService: "Conditions d'utilisation",
     allRightsReserved: "Tous droits réservés.",
     gamblingWarning: "Les jeux d'argent comportent des risques. Veuillez jouer de manière responsable.",
@@ -926,6 +934,7 @@ const translations: Record<string, Record<string, string>> = {
     contact: "お問い合わせ",
     legal: "法的情報",
     privacyPolicy: "プライバシーポリシー",
+    responsibleGaming: "責任あるギャンブル",
     termsOfService: "利用規約",
     allRightsReserved: "全著作権所有。",
     gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
@@ -1029,6 +1038,7 @@ const translations: Record<string, Record<string, string>> = {
     contact: "문의",
     legal: "법적 고지",
     privacyPolicy: "개인정보 처리방침",
+    responsibleGaming: "책임감 있는 게임",
     termsOfService: "이용약관",
     allRightsReserved: "모든 권리 보유.",
     gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
@@ -3524,6 +3534,7 @@ export default function CommunityPage() {
               <ul className="space-y-3 text-gray-400">
                 <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
                 <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+                <li><Link href={localePath('/responsible-gaming')} className="hover:text-emerald-400 transition-colors inline-block">{t('responsibleGaming')}</Link></li>
               </ul>
             </div>
           </div>

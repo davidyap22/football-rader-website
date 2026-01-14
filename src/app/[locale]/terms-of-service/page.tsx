@@ -43,6 +43,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "Legal",
     privacyPolicy: "Privacy Policy",
     termsOfService: "Terms of Service",
+    responsibleGaming: "Responsible Gaming",
     allRightsReserved: "All rights reserved.",
     gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
     popularLeagues: "Popular Leagues",
@@ -78,6 +79,7 @@ const translations: Record<string, Record<string, string>> = {
     product: "Producto", liveOdds: "Rendimiento IA", solution: "Solución",
     company: "Empresa", aboutUs: "Sobre Nosotros", blog: "Blog", contact: "Contacto",
     legal: "Legal", privacyPolicy: "Política de Privacidad", termsOfService: "Términos de Servicio",
+    responsibleGaming: "Juego Responsable",
     allRightsReserved: "Todos los derechos reservados.", gamblingWarning: "Las apuestas implican riesgo. Por favor, apueste responsablemente.",
     popularLeagues: "Ligas Populares", communityFooter: "Comunidad", globalChat: "Chat Global",
     userPredictions: "Predicciones de Usuarios", todayMatches: "Partidos de Hoy",
@@ -109,6 +111,7 @@ const translations: Record<string, Record<string, string>> = {
     product: "Produto", liveOdds: "Desempenho IA", solution: "Solução",
     company: "Empresa", aboutUs: "Sobre Nós", blog: "Blog", contact: "Contato",
     legal: "Legal", privacyPolicy: "Política de Privacidade", termsOfService: "Termos de Serviço",
+    responsibleGaming: "Jogo Responsavel",
     allRightsReserved: "Todos os direitos reservados.", gamblingWarning: "Apostas envolvem risco. Por favor, aposte com responsabilidade.",
     popularLeagues: "Ligas Populares", communityFooter: "Comunidade", globalChat: "Chat Global",
     userPredictions: "Previsões de Usuários", todayMatches: "Jogos de Hoje",
@@ -140,6 +143,7 @@ const translations: Record<string, Record<string, string>> = {
     product: "Produkt", liveOdds: "KI-Leistung", solution: "Lösung",
     company: "Unternehmen", aboutUs: "Über Uns", blog: "Blog", contact: "Kontakt",
     legal: "Rechtliches", privacyPolicy: "Datenschutzrichtlinie", termsOfService: "Nutzungsbedingungen",
+    responsibleGaming: "Verantwortungsvolles Spielen",
     allRightsReserved: "Alle Rechte vorbehalten.", gamblingWarning: "Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
     popularLeagues: "Beliebte Ligen", communityFooter: "Community", globalChat: "Globaler Chat",
     userPredictions: "Benutzervorhersagen", todayMatches: "Heutige Spiele",
@@ -171,6 +175,7 @@ const translations: Record<string, Record<string, string>> = {
     product: "Produit", liveOdds: "Performance IA", solution: "Solution",
     company: "Entreprise", aboutUs: "À Propos", blog: "Blog", contact: "Contact",
     legal: "Mentions Légales", privacyPolicy: "Politique de Confidentialité", termsOfService: "Conditions d'Utilisation",
+    responsibleGaming: "Jeu Responsable",
     allRightsReserved: "Tous droits réservés.", gamblingWarning: "Les jeux d'argent comportent des risques. Veuillez jouer de manière responsable.",
     popularLeagues: "Ligues Populaires", communityFooter: "Communauté", globalChat: "Chat Global",
     userPredictions: "Prédictions des Utilisateurs", todayMatches: "Matchs du Jour",
@@ -202,6 +207,7 @@ const translations: Record<string, Record<string, string>> = {
     product: "製品", liveOdds: "AIパフォーマンス", solution: "ソリューション",
     company: "会社", aboutUs: "会社概要", blog: "ブログ", contact: "お問い合わせ",
     legal: "法的情報", privacyPolicy: "プライバシーポリシー", termsOfService: "利用規約",
+    responsibleGaming: "責任あるギャンブル",
     allRightsReserved: "全著作権所有。", gamblingWarning: "ギャンブルにはリスクが伴います。責任を持って賭けてください。",
     popularLeagues: "人気リーグ", communityFooter: "コミュニティ", globalChat: "グローバルチャット",
     userPredictions: "ユーザー予測", todayMatches: "今日の試合",
@@ -233,6 +239,7 @@ const translations: Record<string, Record<string, string>> = {
     product: "제품", liveOdds: "AI 성능", solution: "솔루션",
     company: "회사", aboutUs: "회사 소개", blog: "블로그", contact: "연락처",
     legal: "법적 정보", privacyPolicy: "개인정보 처리방침", termsOfService: "이용약관",
+    responsibleGaming: "책임감 있는 게임",
     allRightsReserved: "모든 권리 보유.", gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 베팅하세요.",
     popularLeagues: "인기 리그", communityFooter: "커뮤니티", globalChat: "글로벌 채팅",
     userPredictions: "사용자 예측", todayMatches: "오늘의 경기",
@@ -264,6 +271,7 @@ const translations: Record<string, Record<string, string>> = {
     product: "产品", liveOdds: "AI 性能", solution: "解决方案",
     company: "公司", aboutUs: "关于我们", blog: "博客", contact: "联系我们",
     legal: "法律", privacyPolicy: "隐私政策", termsOfService: "服务条款",
+    responsibleGaming: "负责任博彩",
     allRightsReserved: "版权所有。", gamblingWarning: "博彩有风险，请理性投注。",
     popularLeagues: "热门联赛", communityFooter: "社区", globalChat: "全球聊天",
     userPredictions: "用户预测", todayMatches: "今日比赛",
@@ -295,6 +303,7 @@ const translations: Record<string, Record<string, string>> = {
     product: "產品", liveOdds: "AI 性能", solution: "解決方案",
     company: "公司", aboutUs: "關於我們", blog: "部落格", contact: "聯繫我們",
     legal: "法律", privacyPolicy: "隱私政策", termsOfService: "服務條款",
+    responsibleGaming: "負責任博彩",
     allRightsReserved: "版權所有。", gamblingWarning: "博彩有風險，請理性投注。",
     popularLeagues: "熱門聯賽", communityFooter: "社區", globalChat: "全球聊天",
     userPredictions: "用戶預測", todayMatches: "今日比賽",
@@ -326,6 +335,7 @@ const translations: Record<string, Record<string, string>> = {
     product: "Produk", liveOdds: "Performa AI", solution: "Solusi",
     company: "Perusahaan", aboutUs: "Tentang Kami", blog: "Blog", contact: "Kontak",
     legal: "Hukum", privacyPolicy: "Kebijakan Privasi", termsOfService: "Syarat Layanan",
+    responsibleGaming: "Perjudian Bertanggung Jawab",
     allRightsReserved: "Hak cipta dilindungi.", gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
     popularLeagues: "Liga Populer", communityFooter: "Komunitas", globalChat: "Obrolan Global",
     userPredictions: "Prediksi Pengguna", todayMatches: "Pertandingan Hari Ini",
@@ -609,6 +619,7 @@ export default function TermsOfServicePage() {
               <ul className="space-y-3 text-gray-400">
                 <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
                 <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+                <li><Link href={localePath('/responsible-gaming')} className="hover:text-emerald-400 transition-colors inline-block">{t('responsibleGaming')}</Link></li>
               </ul>
             </div>
           </div>

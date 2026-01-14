@@ -44,6 +44,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "Legal",
     termsOfService: "Terms of Service",
     privacyPolicy: "Privacy Policy",
+    responsibleGaming: "Responsible Gaming",
     allRightsReserved: "All rights reserved.",
     gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
     disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
@@ -83,6 +84,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "Legal",
     termsOfService: "Términos de Servicio",
     privacyPolicy: "Política de Privacidad",
+    responsibleGaming: "Juego Responsable",
     allRightsReserved: "Todos los derechos reservados.",
     gamblingWarning: "El juego implica riesgo. Por favor juegue responsablemente.",
     disclaimer: "Aviso: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento. No garantizamos la precisión de las predicciones y no somos responsables de ninguna pérdida financiera. El juego implica riesgo. Por favor juegue responsablemente. Si usted o alguien que conoce tiene un problema de juego, busque ayuda. Los usuarios deben tener más de 18 años.",
@@ -122,6 +124,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "Legal",
     termsOfService: "Termos de Serviço",
     privacyPolicy: "Política de Privacidade",
+    responsibleGaming: "Jogo Responsavel",
     allRightsReserved: "Todos os direitos reservados.",
     gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
     disclaimer: "Aviso: OddsFlow fornece previsões baseadas em IA apenas para fins informativos e de entretenimento. Não garantimos a precisão das previsões e não somos responsáveis por quaisquer perdas financeiras. Apostas envolvem risco. Por favor aposte com responsabilidade. Se você ou alguém que conhece tem um problema com jogos, procure ajuda. Usuários devem ter mais de 18 anos.",
@@ -161,6 +164,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "Rechtliches",
     termsOfService: "Nutzungsbedingungen",
     privacyPolicy: "Datenschutz",
+    responsibleGaming: "Verantwortungsvolles Spielen",
     allRightsReserved: "Alle Rechte vorbehalten.",
     gamblingWarning: "Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
     disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestützte Vorhersagen nur zu Informations- und Unterhaltungszwecken. Wir garantieren nicht die Genauigkeit der Vorhersagen und sind nicht verantwortlich für finanzielle Verluste. Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll. Wenn Sie oder jemand, den Sie kennen, ein Glücksspielproblem hat, suchen Sie bitte Hilfe. Benutzer müssen über 18 Jahre alt sein.",
@@ -200,6 +204,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "Mentions Légales",
     termsOfService: "Conditions d'Utilisation",
     privacyPolicy: "Politique de Confidentialité",
+    responsibleGaming: "Jeu Responsable",
     allRightsReserved: "Tous droits réservés.",
     gamblingWarning: "Le jeu comporte des risques. Veuillez jouer de manière responsable.",
     disclaimer: "Avertissement : OddsFlow fournit des prédictions basées sur l'IA à des fins d'information et de divertissement uniquement. Nous ne garantissons pas l'exactitude des prédictions et ne sommes pas responsables des pertes financières. Le jeu comporte des risques. Veuillez jouer de manière responsable. Si vous ou quelqu'un que vous connaissez a un problème de jeu, veuillez demander de l'aide. Les utilisateurs doivent avoir plus de 18 ans.",
@@ -239,6 +244,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "法的情報",
     termsOfService: "利用規約",
     privacyPolicy: "プライバシーポリシー",
+    responsibleGaming: "責任あるギャンブル",
     allRightsReserved: "全著作権所有。",
     gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
     disclaimer: "免責事項：OddsFlowはAI駆動の予測を情報および娯楽目的のみで提供しています。予測の正確性を保証するものではなく、いかなる財務損失についても責任を負いません。ギャンブルにはリスクが伴います。責任を持ってお楽しみください。あなたまたはあなたの知人がギャンブル問題を抱えている場合は、助けを求めてください。ユーザーは18歳以上である必要があります。",
@@ -278,6 +284,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "법적 정보",
     termsOfService: "서비스 약관",
     privacyPolicy: "개인정보 처리방침",
+    responsibleGaming: "책임감 있는 게임",
     allRightsReserved: "모든 권리 보유.",
     gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
     disclaimer: "면책조항: OddsFlow는 정보 및 엔터테인먼트 목적으로만 AI 기반 예측을 제공합니다. 예측의 정확성을 보장하지 않으며 재정적 손실에 대해 책임지지 않습니다. 도박에는 위험이 따릅니다. 책임감 있게 베팅하세요. 본인 또는 아는 사람이 도박 문제가 있다면 도움을 구하세요. 사용자는 18세 이상이어야 합니다.",
@@ -317,6 +324,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "法律",
     termsOfService: "服务条款",
     privacyPolicy: "隐私政策",
+    responsibleGaming: "负责任博彩",
     allRightsReserved: "版权所有。",
     gamblingWarning: "博彩有风险，请理性投注。",
     disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。我们不保证预测的准确性，也不对任何财务损失负责。博彩有风险，请理性投注。如果您或您认识的人有赌博问题，请寻求帮助。用户必须年满 18 岁。",
@@ -356,6 +364,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "法律",
     termsOfService: "服務條款",
     privacyPolicy: "隱私政策",
+    responsibleGaming: "負責任博彩",
     allRightsReserved: "版權所有。",
     gamblingWarning: "博彩有風險，請理性投注。",
     disclaimer: "免責聲明：OddsFlow 提供的 AI 預測僅供參考和娛樂目的。我們不保證預測的準確性，也不對任何財務損失負責。博彩有風險，請理性投注。如果您或您認識的人有賭博問題，請尋求幫助。用戶必須年滿 18 歲。",
@@ -395,6 +404,7 @@ const translations: Record<string, Record<string, string>> = {
     legal: "Hukum",
     termsOfService: "Ketentuan Layanan",
     privacyPolicy: "Kebijakan Privasi",
+    responsibleGaming: "Perjudian Bertanggung Jawab",
     allRightsReserved: "Hak cipta dilindungi.",
     gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
     disclaimer: "Penafian: OddsFlow menyediakan prediksi bertenaga AI hanya untuk tujuan informasi dan hiburan. Kami tidak menjamin keakuratan prediksi dan tidak bertanggung jawab atas kerugian finansial. Perjudian melibatkan risiko. Harap bertaruh dengan bijak. Jika Anda atau seseorang yang Anda kenal memiliki masalah perjudian, silakan cari bantuan. Pengguna harus berusia 18+ tahun.",
@@ -936,6 +946,7 @@ export default function ContactPage() {
               <ul className="space-y-3 text-gray-400">
                 <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
                 <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+                <li><Link href={localePath('/responsible-gaming')} className="hover:text-emerald-400 transition-colors inline-block">{t('responsibleGaming')}</Link></li>
               </ul>
             </div>
           </div>

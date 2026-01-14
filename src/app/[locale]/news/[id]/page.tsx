@@ -50,6 +50,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "Blog",
     termsOfService: "Terms of Service",
     privacyPolicy: "Privacy Policy",
+    responsibleGaming: "Responsible Gaming",
     allRightsReserved: "All rights reserved.",
     gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
     popularLeagues: "Popular Leagues",
@@ -86,6 +87,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "Blog",
     termsOfService: "Términos de Servicio",
     privacyPolicy: "Política de Privacidad",
+    responsibleGaming: "Juego Responsable",
     allRightsReserved: "Todos los derechos reservados.",
     gamblingWarning: "El juego implica riesgo. Por favor juega responsablemente.",
     popularLeagues: "Ligas Populares",
@@ -122,6 +124,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "博客",
     termsOfService: "服务条款",
     privacyPolicy: "隐私政策",
+    responsibleGaming: "负责任博彩",
     allRightsReserved: "版权所有。",
     gamblingWarning: "博彩有风险，请理性投注。",
     popularLeagues: "热门联赛",
@@ -158,6 +161,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "博客",
     termsOfService: "服務條款",
     privacyPolicy: "隱私政策",
+    responsibleGaming: "負責任博彩",
     allRightsReserved: "版權所有。",
     gamblingWarning: "博彩有風險，請理性投注。",
     popularLeagues: "熱門聯賽",
@@ -194,6 +198,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "Blog",
     termsOfService: "Syarat Layanan",
     privacyPolicy: "Kebijakan Privasi",
+    responsibleGaming: "Perjudian Bertanggung Jawab",
     allRightsReserved: "Hak cipta dilindungi.",
     gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
     popularLeagues: "Liga Populer",
@@ -581,6 +586,7 @@ export default function ArticlePage() {
               <ul className="space-y-3 text-gray-400">
                 <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors">{t('termsOfService')}</Link></li>
                 <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors">{t('privacyPolicy')}</Link></li>
+                <li><Link href={localePath('/responsible-gaming')} className="hover:text-emerald-400 transition-colors">{t('responsibleGaming')}</Link></li>
               </ul>
             </div>
           </div>

@@ -35,6 +35,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "Blog",
     termsOfService: "Terms of Service",
     privacyPolicy: "Privacy Policy",
+    responsibleGaming: "Responsible Gaming",
     allRightsReserved: "All rights reserved.",
     gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
     seoTitle: "European Football AI Tips",
@@ -80,6 +81,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "Blog",
     termsOfService: "Terminos de Servicio",
     privacyPolicy: "Politica de Privacidad",
+    responsibleGaming: "Juego Responsable",
     allRightsReserved: "Todos los derechos reservados.",
     gamblingWarning: "El juego implica riesgo. Por favor juega responsablemente.",
     seoTitle: "Consejos de IA para Fútbol Europeo",
@@ -125,6 +127,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "Blog",
     termsOfService: "Termos de Servico",
     privacyPolicy: "Politica de Privacidade",
+    responsibleGaming: "Jogo Responsavel",
     allRightsReserved: "Todos os direitos reservados.",
     gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
     seoTitle: "Dicas de IA para Futebol Europeu",
@@ -170,6 +173,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "Blog",
     termsOfService: "Nutzungsbedingungen",
     privacyPolicy: "Datenschutz",
+    responsibleGaming: "Verantwortungsvolles Spielen",
     allRightsReserved: "Alle Rechte vorbehalten.",
     gamblingWarning: "Glucksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
     seoTitle: "KI-Tipps für Europäischen Fußball",
@@ -215,6 +219,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "Blog",
     termsOfService: "Conditions d'Utilisation",
     privacyPolicy: "Politique de Confidentialite",
+    responsibleGaming: "Jeu Responsable",
     allRightsReserved: "Tous droits reserves.",
     gamblingWarning: "Le jeu comporte des risques. Veuillez jouer de maniere responsable.",
     seoTitle: "Conseils IA pour le Football Européen",
@@ -260,6 +265,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "ブログ",
     termsOfService: "利用規約",
     privacyPolicy: "プライバシーポリシー",
+    responsibleGaming: "責任あるギャンブル",
     allRightsReserved: "全著作権所有。",
     gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
     seoTitle: "欧州サッカーAI予測",
@@ -305,6 +311,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "블로그",
     termsOfService: "서비스 약관",
     privacyPolicy: "개인정보 처리방침",
+    responsibleGaming: "책임감 있는 게임",
     allRightsReserved: "모든 권리 보유.",
     gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
     seoTitle: "유럽 축구 AI 예측",
@@ -350,6 +357,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "博客",
     termsOfService: "服务条款",
     privacyPolicy: "隐私政策",
+    responsibleGaming: "负责任博彩",
     allRightsReserved: "版权所有。",
     gamblingWarning: "博彩有风险，请理性投注。",
     seoTitle: "欧洲足球AI预测",
@@ -395,6 +403,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "博客",
     termsOfService: "服務條款",
     privacyPolicy: "隱私政策",
+    responsibleGaming: "負責任博彩",
     allRightsReserved: "版權所有。",
     gamblingWarning: "博彩有風險，請理性投注。",
     seoTitle: "歐洲足球AI預測",
@@ -440,6 +449,7 @@ const translations: Record<string, Record<string, string>> = {
     blog: "Blog",
     termsOfService: "Ketentuan Layanan",
     privacyPolicy: "Kebijakan Privasi",
+    responsibleGaming: "Perjudian Bertanggung Jawab",
     allRightsReserved: "Hak cipta dilindungi.",
     gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
     seoTitle: "Tips AI Sepak Bola Eropa",
@@ -918,6 +928,7 @@ export default function LeaguesPage() {
               <ul className="space-y-3 text-gray-400">
                 <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
                 <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+                <li><Link href={localePath('/responsible-gaming')} className="hover:text-emerald-400 transition-colors inline-block">{t('responsibleGaming')}</Link></li>
               </ul>
             </div>
           </div>
