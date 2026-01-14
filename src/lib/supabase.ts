@@ -633,6 +633,10 @@ export interface FootballNews {
   source_url: string;
   image_url?: string;
   published_at?: string;
+  league?: string;
+  tags?: string;
+  language?: string;
+  is_ai_rewritten?: boolean;
 }
 
 // Contact message interface

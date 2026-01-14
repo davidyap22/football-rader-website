@@ -953,76 +953,84 @@ export default function NewsPage() {
                   <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                 </div>
 
-                <a
-                  href={featuredNews.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block relative group"
-                >
-                  <div className="relative rounded-2xl overflow-hidden bg-[#0a0e14] border border-white/5">
-                    {/* Stadium light effect on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#05080d] via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                {(() => {
+                  const isExclusive = featuredNews.source === 'OddsFlow Exclusive Report';
+                  const CardContent = (
+                    <div className="relative rounded-2xl overflow-hidden bg-[#0a0e14] border border-white/5">
+                      {/* Stadium light effect on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#05080d] via-transparent to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                    <div className="grid lg:grid-cols-5 gap-0">
-                      {/* Image Section */}
-                      <div className="lg:col-span-3 relative aspect-video lg:aspect-auto lg:min-h-[400px] overflow-hidden">
-                        {featuredNews.image_url ? (
-                          <>
-                            <img
-                              src={featuredNews.image_url}
-                              alt={featuredNews.title}
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                            {/* Gradient overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0a0e14] lg:block hidden" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] via-[#0a0e14]/50 to-transparent lg:hidden" />
-                          </>
-                        ) : (
-                          <div className="w-full h-full min-h-[300px] bg-gradient-to-br from-[#0c1018] to-[#05080d] flex items-center justify-center">
-                            <div className="text-center">
-                              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                                <svg className="w-10 h-10 text-emerald-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                                </svg>
+                      <div className="grid lg:grid-cols-5 gap-0">
+                        {/* Image Section */}
+                        <div className="lg:col-span-3 relative aspect-video lg:aspect-auto lg:min-h-[400px] overflow-hidden">
+                          {featuredNews.image_url ? (
+                            <>
+                              <img
+                                src={featuredNews.image_url}
+                                alt={featuredNews.title}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              />
+                              {/* Gradient overlay */}
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0a0e14] lg:block hidden" />
+                              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] via-[#0a0e14]/50 to-transparent lg:hidden" />
+                            </>
+                          ) : (
+                            <div className="w-full h-full min-h-[300px] bg-gradient-to-br from-[#0c1018] to-[#05080d] flex items-center justify-center">
+                              <div className="text-center">
+                                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                                  <svg className="w-10 h-10 text-emerald-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                                  </svg>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Content Section */}
-                      <div className="lg:col-span-2 p-8 flex flex-col justify-center relative">
-                        {/* Broadcast-style source badge */}
-                        <div className="flex items-center gap-3 mb-6">
-                          <span className="px-3 py-1 rounded bg-emerald-500 text-black text-[11px] font-bold tracking-wide uppercase">
-                            {featuredNews.source}
-                          </span>
-                          {featuredNews.published_at && (
-                            <span className="text-xs text-gray-500 font-medium">
-                              {getRelativeTime(featuredNews.published_at)}
-                            </span>
                           )}
                         </div>
 
-                        <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4 leading-tight group-hover:text-emerald-400 transition-colors duration-300">
-                          {featuredNews.title}
-                        </h2>
+                        {/* Content Section */}
+                        <div className="lg:col-span-2 p-8 flex flex-col justify-center relative">
+                          {/* Broadcast-style source badge */}
+                          <div className="flex items-center gap-3 mb-6">
+                            <span className="px-3 py-1 rounded bg-emerald-500 text-black text-[11px] font-bold tracking-wide uppercase">
+                              {featuredNews.source}
+                            </span>
+                            {featuredNews.published_at && (
+                              <span className="text-xs text-gray-500 font-medium">
+                                {getRelativeTime(featuredNews.published_at)}
+                              </span>
+                            )}
+                          </div>
 
-                        <p className="text-gray-400 mb-6 leading-relaxed line-clamp-3 text-sm lg:text-base">
-                          {featuredNews.summary}
-                        </p>
+                          <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4 leading-tight group-hover:text-emerald-400 transition-colors duration-300">
+                            {featuredNews.title}
+                          </h2>
 
-                        {/* Read more with arrow */}
-                        <div className="flex items-center gap-2 text-emerald-400 font-medium text-sm group/link">
-                          <span>{t('readMore')}</span>
-                          <svg className="w-4 h-4 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                          </svg>
+                          <p className="text-gray-400 mb-6 leading-relaxed line-clamp-3 text-sm lg:text-base">
+                            {featuredNews.summary}
+                          </p>
+
+                          {/* Read more with arrow */}
+                          <div className="flex items-center gap-2 text-emerald-400 font-medium text-sm group/link">
+                            <span>{t('readMore')}</span>
+                            <svg className="w-4 h-4 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </a>
+                  );
+
+                  return isExclusive ? (
+                    <Link href={localePath(`/news/${featuredNews.id}`)} className="block relative group">
+                      {CardContent}
+                    </Link>
+                  ) : (
+                    <a href={featuredNews.source_url} target="_blank" rel="noopener noreferrer" className="block relative group">
+                      {CardContent}
+                    </a>
+                  );
+                })()}
               </div>
 
               {/* Latest News Section Header */}
@@ -1034,76 +1042,83 @@ export default function NewsPage() {
 
               {/* News Grid - Broadcast Style Cards */}
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {otherNews.map((item, index) => (
+                {otherNews.map((item, index) => {
+                  const isExclusive = item.source === 'OddsFlow Exclusive Report';
+                  const CardContent = (
+                    <div className="relative rounded-xl overflow-hidden bg-[#0a0e14] border border-white/5 hover:border-emerald-500/30 transition-all duration-300">
+                      {/* Spotlight effect on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                      {/* Image */}
+                      <div className="aspect-[16/10] relative overflow-hidden">
+                        {item.image_url ? (
+                          <>
+                            <img
+                              src={item.image_url}
+                              alt={item.title}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] to-transparent" />
+                          </>
+                        ) : (
+                          <div className="absolute inset-0 bg-gradient-to-br from-[#0c1018] to-[#05080d] flex items-center justify-center">
+                            <svg className="w-12 h-12 text-white/5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                            </svg>
+                          </div>
+                        )}
+
+                        {/* Source badge overlay */}
+                        <div className="absolute top-3 left-3">
+                          <span className={`px-2.5 py-1 rounded backdrop-blur-sm text-[10px] font-bold tracking-wide uppercase border ${isExclusive ? 'bg-emerald-500 text-black border-emerald-500' : 'bg-black/70 text-white border-white/10'}`}>
+                            {item.source}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-5">
+                        {/* Time */}
+                        {item.published_at && (
+                          <span className="text-[11px] text-emerald-400/80 font-medium uppercase tracking-wide">
+                            {getRelativeTime(item.published_at)}
+                          </span>
+                        )}
+
+                        <h3 className="font-bold text-white mt-2 mb-3 leading-snug group-hover:text-emerald-400 transition-colors duration-300 line-clamp-2">
+                          {item.title}
+                        </h3>
+
+                        <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">
+                          {item.summary}
+                        </p>
+
+                        {/* Read indicator */}
+                        <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                          <span className="text-xs text-gray-500">{isExclusive ? t('readMore') : `${t('readOn')} ${item.source}`}</span>
+                          <svg className="w-4 h-4 text-gray-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  );
+
+                  return (
                   <div
                     key={item.id}
                     className="relative"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
-                    <a
-                      href={item.source_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group block"
-                    >
-                      <div className="relative rounded-xl overflow-hidden bg-[#0a0e14] border border-white/5 hover:border-emerald-500/30 transition-all duration-300">
-                        {/* Spotlight effect on hover */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-                        {/* Image */}
-                        <div className="aspect-[16/10] relative overflow-hidden">
-                          {item.image_url ? (
-                            <>
-                              <img
-                                src={item.image_url}
-                                alt={item.title}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] to-transparent" />
-                            </>
-                          ) : (
-                            <div className="absolute inset-0 bg-gradient-to-br from-[#0c1018] to-[#05080d] flex items-center justify-center">
-                              <svg className="w-12 h-12 text-white/5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                              </svg>
-                            </div>
-                          )}
-
-                          {/* Source badge overlay */}
-                          <div className="absolute top-3 left-3">
-                            <span className="px-2.5 py-1 rounded bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold tracking-wide uppercase border border-white/10">
-                              {item.source}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-5">
-                          {/* Time */}
-                          {item.published_at && (
-                            <span className="text-[11px] text-emerald-400/80 font-medium uppercase tracking-wide">
-                              {getRelativeTime(item.published_at)}
-                            </span>
-                          )}
-
-                          <h3 className="font-bold text-white mt-2 mb-3 leading-snug group-hover:text-emerald-400 transition-colors duration-300 line-clamp-2">
-                            {item.title}
-                          </h3>
-
-                          <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">
-                            {item.summary}
-                          </p>
-
-                          {/* Read indicator */}
-                          <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
-                            <span className="text-xs text-gray-500">{t('readOn')} {item.source}</span>
-                            <svg className="w-4 h-4 text-gray-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
+                    {isExclusive ? (
+                      <Link href={localePath(`/news/${item.id}`)} className="group block">
+                        {CardContent}
+                      </Link>
+                    ) : (
+                      <a href={item.source_url} target="_blank" rel="noopener noreferrer" className="group block">
+                        {CardContent}
+                      </a>
+                    )}
 
                     {/* Comment Button - Link to comments page */}
                     <Link
@@ -1119,7 +1134,8 @@ export default function NewsPage() {
                       </svg>
                     </Link>
                   </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Pagination */}
