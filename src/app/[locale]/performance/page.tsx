@@ -749,7 +749,7 @@ export default function PerformancePage() {
   const filteredChartStats = (() => {
     const filtered = chartBetStyle === 'all'
       ? allBetRecords
-      : allBetRecords.filter(r => r.bet_style === chartBetStyle);
+      : allBetRecords.filter(r => r.bet_style?.toLowerCase() === chartBetStyle.toLowerCase());
 
     let profitMoneyline = 0;
     let profitHandicap = 0;
@@ -821,10 +821,10 @@ export default function PerformancePage() {
       total_invested: number;
     }>();
 
-    // Filter records by selected bet style
+    // Filter records by selected bet style (case-insensitive comparison)
     const filtered = selectedBetStyle === 'all'
       ? allBetRecords
-      : allBetRecords.filter(r => r.bet_style === selectedBetStyle);
+      : allBetRecords.filter(r => r.bet_style?.toLowerCase() === selectedBetStyle.toLowerCase());
 
     // Group by fixture_id and calculate profits
     filtered.forEach(r => {
