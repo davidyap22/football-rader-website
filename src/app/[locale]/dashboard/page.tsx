@@ -225,10 +225,24 @@ export default function DashboardPage() {
     return path === '/' ? `/${locale}` : `/${locale}${path}`;
   };
 
+  // Map translation code to URL locale
+  const translationCodeToLocale: Record<string, string> = {
+    'EN': 'en', 'ES': 'es', 'PT': 'pt', 'DE': 'de', 'FR': 'fr',
+    'JA': 'ja', 'KO': 'ko', '中文': 'zh', '繁體': 'tw', 'ID': 'id',
+  };
+
   const handleSetLang = (newLang: string) => {
     setLanguage(newLang);
     localStorage.setItem('oddsflow_language', newLang);
     setLangDropdownOpen(false);
+
+    // Navigate to the new locale URL
+    const newLocale = translationCodeToLocale[newLang] || 'en';
+    const currentPath = window.location.pathname;
+    // Remove current locale from path
+    const pathWithoutLocale = currentPath.replace(/^\/(en|es|pt|de|fr|ja|ko|zh|tw|id)(\/|$)/, '/');
+    const newPath = newLocale === 'en' ? pathWithoutLocale : `/${newLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
+    router.push(newPath);
   };
 
   const [user, setUser] = useState<User | null>(null);
