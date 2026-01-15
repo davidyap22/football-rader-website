@@ -5,17 +5,230 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase, signOut, getUserSubscription, UserSubscription } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
+import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
+import { locales, localeToTranslationCode, type Locale } from '@/i18n/config';
 
 type MenuSection = 'profile' | 'subscription' | 'calculator' | 'settings';
+
+// Translations for dashboard
+const translations: Record<string, Record<string, string>> = {
+  EN: {
+    // Navbar
+    home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance",
+    community: "Community", news: "News", solution: "Solution", pricing: "Pricing", login: "Log In", getStarted: "Get Started",
+    // Dashboard
+    profile: "Profile", subscription: "Subscription", profitCalculator: "Profit Calculator", settings: "Settings", signOut: "Sign Out",
+    quickActions: "Quick Actions", todaysPicks: "Today's picks", browseAll: "Browse all", trackStats: "Track stats", viewPlans: "View plans",
+    daysLeft: "Days Left", joined: "Joined", freeUser: "Free User", leaguesAllowed: "Leagues",
+    // Subscription
+    active: "Active", expired: "Expired", timeRemaining: "Time Remaining", days: "days",
+    managePlan: "Manage Plan", upgradePlan: "Upgrade Plan", cancel: "Cancel",
+    noActiveSubscription: "No Active Subscription", subscribeToUnlock: "Subscribe to unlock premium features", subscribeNow: "Subscribe Now",
+    aiPredictions: "AI Predictions", premiumPicks: "Premium picks", liveOdds: "Live Odds", realtime: "Real-time", support: "Support", help247: "24/7 help",
+    // Calculator
+    oddsFormat: "Odds Format", decimal: "Decimal", american: "American", fractional: "Fractional",
+    betAmount: "Bet Amount", odds: "Odds", ifYouWin: "If you win, you profit", stake: "Stake", return: "Return",
+    // Settings
+    account: "Account", email: "Email", password: "Password", change: "Change",
+    notifications: "Notifications", emailNotifications: "Email Notifications", receiveAlerts: "Receive prediction alerts via email",
+    pushNotifications: "Push Notifications", browserNotifications: "Browser push notifications",
+    dangerZone: "Danger Zone", deleteAccount: "Delete Account", deleteAccountDesc: "Permanently delete your account and all data", delete: "Delete",
+    // Common
+    start: "Start", end: "End", styles: "Styles",
+  },
+  '中文': {
+    // Navbar
+    home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现",
+    community: "社区", news: "新闻", solution: "解决方案", pricing: "价格", login: "登录", getStarted: "开始",
+    // Dashboard
+    profile: "个人资料", subscription: "订阅", profitCalculator: "利润计算器", settings: "设置", signOut: "退出登录",
+    quickActions: "快捷操作", todaysPicks: "今日精选", browseAll: "浏览全部", trackStats: "追踪数据", viewPlans: "查看方案",
+    daysLeft: "剩余天数", joined: "加入于", freeUser: "免费用户",
+    // Subscription
+    active: "活跃", expired: "已过期", timeRemaining: "剩余时间", days: "天",
+    managePlan: "管理方案", upgradePlan: "升级方案", cancel: "取消",
+    noActiveSubscription: "无活跃订阅", subscribeToUnlock: "订阅以解锁高级功能", subscribeNow: "立即订阅",
+    aiPredictions: "AI预测", premiumPicks: "高级精选", liveOdds: "实时赔率", realtime: "实时", support: "支持", help247: "24/7帮助",
+    // Calculator
+    oddsFormat: "赔率格式", decimal: "小数", american: "美式", fractional: "分数",
+    betAmount: "投注金额", odds: "赔率", ifYouWin: "如果赢了，利润", stake: "本金", return: "回报",
+    // Settings
+    account: "账户", email: "邮箱", password: "密码", change: "修改",
+    notifications: "通知", emailNotifications: "邮件通知", receiveAlerts: "通过邮件接收预测提醒",
+    pushNotifications: "推送通知", browserNotifications: "浏览器推送通知",
+    dangerZone: "危险区域", deleteAccount: "删除账户", deleteAccountDesc: "永久删除您的账户和所有数据", delete: "删除",
+    // Common
+    start: "开始", end: "结束", leaguesAllowed: "联赛", styles: "风格",
+  },
+  '繁體': {
+    home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現",
+    community: "社區", news: "新聞", solution: "解決方案", pricing: "價格", login: "登入", getStarted: "開始",
+    profile: "個人資料", subscription: "訂閱", profitCalculator: "利潤計算器", settings: "設定", signOut: "登出",
+    quickActions: "快捷操作", todaysPicks: "今日精選", browseAll: "瀏覽全部", trackStats: "追蹤數據", viewPlans: "查看方案",
+    daysLeft: "剩餘天數", joined: "加入於", freeUser: "免費用戶",
+    active: "活躍", expired: "已過期", timeRemaining: "剩餘時間", days: "天",
+    managePlan: "管理方案", upgradePlan: "升級方案", cancel: "取消",
+    noActiveSubscription: "無活躍訂閱", subscribeToUnlock: "訂閱以解鎖高級功能", subscribeNow: "立即訂閱",
+    aiPredictions: "AI預測", premiumPicks: "高級精選", liveOdds: "實時賠率", realtime: "實時", support: "支援", help247: "24/7幫助",
+    oddsFormat: "賠率格式", decimal: "小數", american: "美式", fractional: "分數",
+    betAmount: "投注金額", odds: "賠率", ifYouWin: "如果贏了，利潤", stake: "本金", return: "回報",
+    account: "帳戶", email: "郵箱", password: "密碼", change: "修改",
+    notifications: "通知", emailNotifications: "郵件通知", receiveAlerts: "通過郵件接收預測提醒",
+    pushNotifications: "推送通知", browserNotifications: "瀏覽器推送通知",
+    dangerZone: "危險區域", deleteAccount: "刪除帳戶", deleteAccountDesc: "永久刪除您的帳戶和所有數據", delete: "刪除",
+    start: "開始", end: "結束", leaguesAllowed: "聯賽", styles: "風格",
+  },
+  ID: {
+    home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI",
+    community: "Komunitas", news: "Berita", solution: "Solusi", pricing: "Harga", login: "Masuk", getStarted: "Mulai",
+    profile: "Profil", subscription: "Langganan", profitCalculator: "Kalkulator Keuntungan", settings: "Pengaturan", signOut: "Keluar",
+    quickActions: "Aksi Cepat", todaysPicks: "Pilihan hari ini", browseAll: "Telusuri semua", trackStats: "Lacak statistik", viewPlans: "Lihat paket",
+    daysLeft: "Hari tersisa", joined: "Bergabung", freeUser: "Pengguna Gratis",
+    active: "Aktif", expired: "Kedaluwarsa", timeRemaining: "Waktu Tersisa", days: "hari",
+    managePlan: "Kelola Paket", upgradePlan: "Upgrade Paket", cancel: "Batal",
+    noActiveSubscription: "Tidak Ada Langganan Aktif", subscribeToUnlock: "Berlangganan untuk membuka fitur premium", subscribeNow: "Berlangganan",
+    aiPredictions: "Prediksi AI", premiumPicks: "Pilihan premium", liveOdds: "Odds Live", realtime: "Real-time", support: "Dukungan", help247: "Bantuan 24/7",
+    oddsFormat: "Format Odds", decimal: "Desimal", american: "Amerika", fractional: "Pecahan",
+    betAmount: "Jumlah Taruhan", odds: "Odds", ifYouWin: "Jika menang, keuntungan", stake: "Modal", return: "Kembali",
+    account: "Akun", email: "Email", password: "Kata Sandi", change: "Ubah",
+    notifications: "Notifikasi", emailNotifications: "Notifikasi Email", receiveAlerts: "Terima peringatan prediksi via email",
+    pushNotifications: "Notifikasi Push", browserNotifications: "Notifikasi push browser",
+    dangerZone: "Zona Berbahaya", deleteAccount: "Hapus Akun", deleteAccountDesc: "Hapus akun dan semua data secara permanen", delete: "Hapus",
+    start: "Mulai", end: "Selesai", leaguesAllowed: "Liga", styles: "Gaya",
+  },
+  ES: {
+    home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA",
+    community: "Comunidad", news: "Noticias", solution: "Solución", pricing: "Precios", login: "Iniciar Sesión", getStarted: "Empezar",
+    profile: "Perfil", subscription: "Suscripción", profitCalculator: "Calculadora de Ganancias", settings: "Configuración", signOut: "Cerrar Sesión",
+    quickActions: "Acciones Rápidas", todaysPicks: "Picks de hoy", browseAll: "Ver todo", trackStats: "Ver estadísticas", viewPlans: "Ver planes",
+    daysLeft: "Días restantes", joined: "Unido", freeUser: "Usuario Gratis",
+    active: "Activo", expired: "Expirado", timeRemaining: "Tiempo Restante", days: "días",
+    managePlan: "Gestionar Plan", upgradePlan: "Mejorar Plan", cancel: "Cancelar",
+    noActiveSubscription: "Sin Suscripción Activa", subscribeToUnlock: "Suscríbete para desbloquear funciones premium", subscribeNow: "Suscribirse",
+    aiPredictions: "Predicciones IA", premiumPicks: "Picks premium", liveOdds: "Cuotas en Vivo", realtime: "Tiempo real", support: "Soporte", help247: "Ayuda 24/7",
+    oddsFormat: "Formato de Cuotas", decimal: "Decimal", american: "Americano", fractional: "Fraccionario",
+    betAmount: "Cantidad de Apuesta", odds: "Cuotas", ifYouWin: "Si ganas, ganancias", stake: "Inversión", return: "Retorno",
+    account: "Cuenta", email: "Correo", password: "Contraseña", change: "Cambiar",
+    notifications: "Notificaciones", emailNotifications: "Notificaciones por Email", receiveAlerts: "Recibir alertas de predicción por email",
+    pushNotifications: "Notificaciones Push", browserNotifications: "Notificaciones push del navegador",
+    dangerZone: "Zona de Peligro", deleteAccount: "Eliminar Cuenta", deleteAccountDesc: "Eliminar permanentemente tu cuenta y datos", delete: "Eliminar",
+    start: "Inicio", end: "Fin", leaguesAllowed: "Ligas", styles: "Estilos",
+  },
+  PT: {
+    home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho IA",
+    community: "Comunidade", news: "Notícias", solution: "Solução", pricing: "Preços", login: "Entrar", getStarted: "Começar",
+    profile: "Perfil", subscription: "Assinatura", profitCalculator: "Calculadora de Lucro", settings: "Configurações", signOut: "Sair",
+    quickActions: "Ações Rápidas", todaysPicks: "Picks de hoje", browseAll: "Ver tudo", trackStats: "Ver estatísticas", viewPlans: "Ver planos",
+    daysLeft: "Dias restantes", joined: "Entrou em", freeUser: "Usuário Grátis",
+    active: "Ativo", expired: "Expirado", timeRemaining: "Tempo Restante", days: "dias",
+    managePlan: "Gerenciar Plano", upgradePlan: "Atualizar Plano", cancel: "Cancelar",
+    noActiveSubscription: "Sem Assinatura Ativa", subscribeToUnlock: "Assine para desbloquear recursos premium", subscribeNow: "Assinar",
+    aiPredictions: "Previsões IA", premiumPicks: "Picks premium", liveOdds: "Odds ao Vivo", realtime: "Tempo real", support: "Suporte", help247: "Ajuda 24/7",
+    oddsFormat: "Formato de Odds", decimal: "Decimal", american: "Americano", fractional: "Fracionário",
+    betAmount: "Valor da Aposta", odds: "Odds", ifYouWin: "Se ganhar, lucro", stake: "Investimento", return: "Retorno",
+    account: "Conta", email: "Email", password: "Senha", change: "Alterar",
+    notifications: "Notificações", emailNotifications: "Notificações por Email", receiveAlerts: "Receber alertas de previsão por email",
+    pushNotifications: "Notificações Push", browserNotifications: "Notificações push do navegador",
+    dangerZone: "Zona de Perigo", deleteAccount: "Excluir Conta", deleteAccountDesc: "Excluir permanentemente sua conta e dados", delete: "Excluir",
+    start: "Início", end: "Fim", leaguesAllowed: "Ligas", styles: "Estilos",
+  },
+  DE: {
+    home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung",
+    community: "Community", news: "Nachrichten", solution: "Lösung", pricing: "Preise", login: "Anmelden", getStarted: "Loslegen",
+    profile: "Profil", subscription: "Abonnement", profitCalculator: "Gewinnrechner", settings: "Einstellungen", signOut: "Abmelden",
+    quickActions: "Schnellaktionen", todaysPicks: "Heutige Picks", browseAll: "Alle durchsuchen", trackStats: "Statistiken verfolgen", viewPlans: "Pläne ansehen",
+    daysLeft: "Tage übrig", joined: "Beigetreten", freeUser: "Kostenloser Benutzer",
+    active: "Aktiv", expired: "Abgelaufen", timeRemaining: "Verbleibende Zeit", days: "Tage",
+    managePlan: "Plan verwalten", upgradePlan: "Plan upgraden", cancel: "Abbrechen",
+    noActiveSubscription: "Kein aktives Abonnement", subscribeToUnlock: "Abonnieren für Premium-Funktionen", subscribeNow: "Jetzt abonnieren",
+    aiPredictions: "KI-Vorhersagen", premiumPicks: "Premium Picks", liveOdds: "Live-Quoten", realtime: "Echtzeit", support: "Support", help247: "24/7 Hilfe",
+    oddsFormat: "Quotenformat", decimal: "Dezimal", american: "Amerikanisch", fractional: "Bruch",
+    betAmount: "Einsatzbetrag", odds: "Quoten", ifYouWin: "Bei Gewinn, Profit", stake: "Einsatz", return: "Rückgabe",
+    account: "Konto", email: "E-Mail", password: "Passwort", change: "Ändern",
+    notifications: "Benachrichtigungen", emailNotifications: "E-Mail-Benachrichtigungen", receiveAlerts: "Vorhersage-Alerts per E-Mail erhalten",
+    pushNotifications: "Push-Benachrichtigungen", browserNotifications: "Browser-Push-Benachrichtigungen",
+    dangerZone: "Gefahrenzone", deleteAccount: "Konto löschen", deleteAccountDesc: "Konto und alle Daten dauerhaft löschen", delete: "Löschen",
+    start: "Start", end: "Ende", leaguesAllowed: "Ligen", styles: "Stile",
+  },
+  FR: {
+    home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance IA",
+    community: "Communauté", news: "Actualités", solution: "Solution", pricing: "Tarifs", login: "Connexion", getStarted: "Commencer",
+    profile: "Profil", subscription: "Abonnement", profitCalculator: "Calculateur de Profit", settings: "Paramètres", signOut: "Déconnexion",
+    quickActions: "Actions Rapides", todaysPicks: "Picks du jour", browseAll: "Tout parcourir", trackStats: "Suivre les stats", viewPlans: "Voir les plans",
+    daysLeft: "Jours restants", joined: "Inscrit le", freeUser: "Utilisateur Gratuit",
+    active: "Actif", expired: "Expiré", timeRemaining: "Temps Restant", days: "jours",
+    managePlan: "Gérer le Plan", upgradePlan: "Améliorer le Plan", cancel: "Annuler",
+    noActiveSubscription: "Pas d'Abonnement Actif", subscribeToUnlock: "Abonnez-vous pour débloquer les fonctionnalités premium", subscribeNow: "S'abonner",
+    aiPredictions: "Prédictions IA", premiumPicks: "Picks premium", liveOdds: "Cotes en Direct", realtime: "Temps réel", support: "Support", help247: "Aide 24/7",
+    oddsFormat: "Format des Cotes", decimal: "Décimal", american: "Américain", fractional: "Fractionnaire",
+    betAmount: "Montant du Pari", odds: "Cotes", ifYouWin: "Si vous gagnez, profit", stake: "Mise", return: "Retour",
+    account: "Compte", email: "Email", password: "Mot de passe", change: "Modifier",
+    notifications: "Notifications", emailNotifications: "Notifications Email", receiveAlerts: "Recevoir les alertes de prédiction par email",
+    pushNotifications: "Notifications Push", browserNotifications: "Notifications push du navigateur",
+    dangerZone: "Zone Dangereuse", deleteAccount: "Supprimer le Compte", deleteAccountDesc: "Supprimer définitivement votre compte et données", delete: "Supprimer",
+    start: "Début", end: "Fin", leaguesAllowed: "Ligues", styles: "Styles",
+  },
+  JA: {
+    home: "ホーム", predictions: "予想", leagues: "リーグ", performance: "AI性能",
+    community: "コミュニティ", news: "ニュース", solution: "ソリューション", pricing: "料金", login: "ログイン", getStarted: "始める",
+    profile: "プロフィール", subscription: "サブスクリプション", profitCalculator: "利益計算機", settings: "設定", signOut: "ログアウト",
+    quickActions: "クイックアクション", todaysPicks: "本日のピック", browseAll: "すべて見る", trackStats: "統計を追跡", viewPlans: "プランを見る",
+    daysLeft: "残り日数", joined: "登録日", freeUser: "無料ユーザー",
+    active: "アクティブ", expired: "期限切れ", timeRemaining: "残り時間", days: "日",
+    managePlan: "プラン管理", upgradePlan: "プランをアップグレード", cancel: "キャンセル",
+    noActiveSubscription: "アクティブなサブスクリプションなし", subscribeToUnlock: "プレミアム機能を解除するには購読", subscribeNow: "今すぐ購読",
+    aiPredictions: "AI予想", premiumPicks: "プレミアムピック", liveOdds: "ライブオッズ", realtime: "リアルタイム", support: "サポート", help247: "24時間対応",
+    oddsFormat: "オッズ形式", decimal: "小数", american: "アメリカ式", fractional: "分数",
+    betAmount: "ベット額", odds: "オッズ", ifYouWin: "勝った場合の利益", stake: "賭け金", return: "リターン",
+    account: "アカウント", email: "メール", password: "パスワード", change: "変更",
+    notifications: "通知", emailNotifications: "メール通知", receiveAlerts: "メールで予想アラートを受信",
+    pushNotifications: "プッシュ通知", browserNotifications: "ブラウザプッシュ通知",
+    dangerZone: "危険ゾーン", deleteAccount: "アカウント削除", deleteAccountDesc: "アカウントとすべてのデータを完全に削除", delete: "削除",
+    start: "開始", end: "終了", leaguesAllowed: "リーグ", styles: "スタイル",
+  },
+  KO: {
+    home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성능",
+    community: "커뮤니티", news: "뉴스", solution: "솔루션", pricing: "요금", login: "로그인", getStarted: "시작하기",
+    profile: "프로필", subscription: "구독", profitCalculator: "수익 계산기", settings: "설정", signOut: "로그아웃",
+    quickActions: "빠른 작업", todaysPicks: "오늘의 픽", browseAll: "모두 보기", trackStats: "통계 추적", viewPlans: "플랜 보기",
+    daysLeft: "남은 일수", joined: "가입일", freeUser: "무료 사용자",
+    active: "활성", expired: "만료됨", timeRemaining: "남은 시간", days: "일",
+    managePlan: "플랜 관리", upgradePlan: "플랜 업그레이드", cancel: "취소",
+    noActiveSubscription: "활성 구독 없음", subscribeToUnlock: "프리미엄 기능을 잠금 해제하려면 구독", subscribeNow: "지금 구독",
+    aiPredictions: "AI 예측", premiumPicks: "프리미엄 픽", liveOdds: "라이브 배당", realtime: "실시간", support: "지원", help247: "24시간 지원",
+    oddsFormat: "배당 형식", decimal: "소수", american: "미국식", fractional: "분수",
+    betAmount: "베팅 금액", odds: "배당", ifYouWin: "이기면 수익", stake: "판돈", return: "반환",
+    account: "계정", email: "이메일", password: "비밀번호", change: "변경",
+    notifications: "알림", emailNotifications: "이메일 알림", receiveAlerts: "이메일로 예측 알림 받기",
+    pushNotifications: "푸시 알림", browserNotifications: "브라우저 푸시 알림",
+    dangerZone: "위험 구역", deleteAccount: "계정 삭제", deleteAccountDesc: "계정과 모든 데이터를 영구적으로 삭제", delete: "삭제",
+    start: "시작", end: "종료", leaguesAllowed: "리그", styles: "스타일",
+  },
+};
 
 export default function DashboardPage() {
   const router = useRouter();
   const params = useParams();
-  const locale = params.locale as string;
+  const urlLocale = (params?.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
+
+  // Initialize language from URL locale
+  const initialLang = localeToTranslationCode[locale as Locale] || 'EN';
+  const [language, setLanguage] = useState(initialLang);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+
+  const currentLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
+  const t = (key: string) => translations[language]?.[key] || translations['EN'][key] || key;
 
   const localePath = (path: string): string => {
     if (locale === 'en') return path;
     return path === '/' ? `/${locale}` : `/${locale}${path}`;
+  };
+
+  const handleSetLang = (newLang: string) => {
+    setLanguage(newLang);
+    localStorage.setItem('oddsflow_language', newLang);
+    setLangDropdownOpen(false);
   };
 
   const [user, setUser] = useState<User | null>(null);
@@ -128,23 +341,32 @@ export default function DashboardPage() {
 
   const profitData = calculateProfit();
 
+  // Sync language from URL locale
+  useEffect(() => {
+    const langKey = localeToTranslationCode[locale as Locale];
+    if (langKey && LANGUAGES.some(l => l.code === langKey)) {
+      setLanguage(langKey);
+      localStorage.setItem('oddsflow_language', langKey);
+    }
+  }, [locale]);
+
   const menuItems = [
-    { id: 'profile' as MenuSection, label: 'Profile', icon: (
+    { id: 'profile' as MenuSection, label: t('profile'), icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
       </svg>
     )},
-    { id: 'subscription' as MenuSection, label: 'Subscription', icon: (
+    { id: 'subscription' as MenuSection, label: t('subscription'), icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
       </svg>
     )},
-    { id: 'calculator' as MenuSection, label: 'Profit Calculator', icon: (
+    { id: 'calculator' as MenuSection, label: t('profitCalculator'), icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
       </svg>
     )},
-    { id: 'settings' as MenuSection, label: 'Settings', icon: (
+    { id: 'settings' as MenuSection, label: t('settings'), icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -178,16 +400,41 @@ export default function DashboardPage() {
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Home</Link>
-              <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Predictions</Link>
-              <Link href={localePath('/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Leagues</Link>
-              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">AI Performance</Link>
-              <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Community</Link>
-              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">News</Link>
-              <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">Pricing</Link>
+              <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
+              <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
+              <Link href={localePath('/leagues')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('leagues')}</Link>
+              <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
+              <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
+              <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
+              <Link href={localePath('/solution')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('solution')}</Link>
+              <Link href={localePath('/pricing')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('pricing')}</Link>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              {/* Language Selector */}
+              <div className="relative">
+                <button onClick={() => setLangDropdownOpen(!langDropdownOpen)} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm cursor-pointer">
+                  <FlagIcon code={currentLang.code} size={20} />
+                  <span className="font-medium hidden sm:inline">{currentLang.code}</span>
+                  <svg className={`w-4 h-4 transition-transform ${langDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {langDropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setLangDropdownOpen(false)} />
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-gray-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-50 max-h-80 overflow-y-auto">
+                      {LANGUAGES.map((lang) => (
+                        <button key={lang.code} onClick={() => handleSetLang(lang.code)} className={`w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-white/5 transition-colors cursor-pointer ${language === lang.code ? 'bg-emerald-500/10 text-emerald-400' : 'text-gray-300'}`}>
+                          <FlagIcon code={lang.code} size={20} />
+                          <span className="font-medium">{lang.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
               <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-emerald-500/30 hover:bg-white/10 transition-all cursor-pointer">
                 {getAvatarUrl() ? (
                   <img src={getAvatarUrl()!} alt="" className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
@@ -250,14 +497,15 @@ export default function DashboardPage() {
               </Link>
 
               {[
-                { href: localePath('/'), label: 'Home' },
-                { href: localePath('/predictions'), label: 'Predictions' },
-                { href: localePath('/leagues'), label: 'Leagues' },
-                { href: localePath('/performance'), label: 'AI Performance' },
-                { href: localePath('/community'), label: 'Community' },
-                { href: localePath('/news'), label: 'News' },
-                { href: localePath('/pricing'), label: 'Pricing' },
-                { href: localePath('/dashboard'), label: 'Dashboard', active: true },
+                { href: localePath('/'), label: t('home') },
+                { href: localePath('/predictions'), label: t('predictions') },
+                { href: localePath('/leagues'), label: t('leagues') },
+                { href: localePath('/performance'), label: t('performance') },
+                { href: localePath('/community'), label: t('community') },
+                { href: localePath('/news'), label: t('news') },
+                { href: localePath('/solution'), label: t('solution') },
+                { href: localePath('/pricing'), label: t('pricing') },
+                { href: localePath('/dashboard'), label: t('profile'), active: true },
               ].map((link) => (
                 <Link
                   key={link.href}
@@ -326,7 +574,7 @@ export default function DashboardPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    <span className="font-medium">Sign Out</span>
+                    <span className="font-medium">{t('signOut')}</span>
                   </button>
                 </div>
               </div>
@@ -337,7 +585,7 @@ export default function DashboardPage() {
               {/* Profile Section */}
               {activeSection === 'profile' && (
                 <div className="space-y-6">
-                  <h1 className="text-2xl font-bold">Profile</h1>
+                  <h1 className="text-2xl font-bold">{t('profile')}</h1>
 
                   <div className="bg-gradient-to-br from-gray-900/90 to-gray-950/90 rounded-2xl border border-white/10 p-8">
                     <div className="flex flex-col md:flex-row items-center gap-6">
@@ -378,11 +626,11 @@ export default function DashboardPage() {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="text-center p-4 rounded-xl bg-white/5 min-w-[100px]">
                           <p className="text-2xl font-bold text-emerald-400">{subscription?.leagues_allowed || 0}</p>
-                          <p className="text-xs text-gray-400">Leagues</p>
+                          <p className="text-xs text-gray-400">{t('leaguesAllowed')}</p>
                         </div>
                         <div className="text-center p-4 rounded-xl bg-white/5 min-w-[100px]">
                           <p className="text-2xl font-bold text-cyan-400">{getDaysRemaining()}</p>
-                          <p className="text-xs text-gray-400">Days Left</p>
+                          <p className="text-xs text-gray-400">{t('daysLeft')}</p>
                         </div>
                       </div>
                     </div>
@@ -390,7 +638,7 @@ export default function DashboardPage() {
 
                   {/* Quick Actions */}
                   <div className="bg-gradient-to-br from-gray-900/90 to-gray-950/90 rounded-2xl border border-white/10 p-6">
-                    <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+                    <h3 className="text-lg font-semibold mb-4">{t('quickActions')}</h3>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       <Link href={localePath('/predictions')} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/20 transition-all group">
                         <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -399,8 +647,8 @@ export default function DashboardPage() {
                           </svg>
                         </div>
                         <div>
-                          <p className="font-semibold">Predictions</p>
-                          <p className="text-gray-400 text-sm">Today&apos;s picks</p>
+                          <p className="font-semibold">{t('predictions')}</p>
+                          <p className="text-gray-400 text-sm">{t('todaysPicks')}</p>
                         </div>
                       </Link>
 
@@ -411,8 +659,8 @@ export default function DashboardPage() {
                           </svg>
                         </div>
                         <div>
-                          <p className="font-semibold">Leagues</p>
-                          <p className="text-gray-400 text-sm">Browse all</p>
+                          <p className="font-semibold">{t('leagues')}</p>
+                          <p className="text-gray-400 text-sm">{t('browseAll')}</p>
                         </div>
                       </Link>
 
@@ -423,8 +671,8 @@ export default function DashboardPage() {
                           </svg>
                         </div>
                         <div>
-                          <p className="font-semibold">Performance</p>
-                          <p className="text-gray-400 text-sm">Track stats</p>
+                          <p className="font-semibold">{t('performance')}</p>
+                          <p className="text-gray-400 text-sm">{t('trackStats')}</p>
                         </div>
                       </Link>
 
@@ -435,8 +683,8 @@ export default function DashboardPage() {
                           </svg>
                         </div>
                         <div>
-                          <p className="font-semibold">Pricing</p>
-                          <p className="text-gray-400 text-sm">View plans</p>
+                          <p className="font-semibold">{t('pricing')}</p>
+                          <p className="text-gray-400 text-sm">{t('viewPlans')}</p>
                         </div>
                       </Link>
                     </div>
@@ -447,7 +695,7 @@ export default function DashboardPage() {
               {/* Subscription Section */}
               {activeSection === 'subscription' && (
                 <div className="space-y-4">
-                  <h1 className="text-xl font-bold">Subscription</h1>
+                  <h1 className="text-xl font-bold">{t('subscription')}</h1>
 
                   {subscription ? (
                     <div className="space-y-4">
@@ -693,7 +941,7 @@ export default function DashboardPage() {
               {/* Profit Calculator Section */}
               {activeSection === 'calculator' && (
                 <div className="space-y-4">
-                  <h1 className="text-xl font-bold">Profit Calculator</h1>
+                  <h1 className="text-xl font-bold">{t('profitCalculator')}</h1>
 
                   {/* Calculator Card with Animated Border */}
                   <div className="group relative rounded-2xl overflow-hidden p-[1px]">
@@ -829,30 +1077,30 @@ export default function DashboardPage() {
               {/* Settings Section */}
               {activeSection === 'settings' && (
                 <div className="space-y-6">
-                  <h1 className="text-2xl font-bold">Settings</h1>
+                  <h1 className="text-2xl font-bold">{t('settings')}</h1>
 
                   <div className="bg-gradient-to-br from-gray-900/90 to-gray-950/90 rounded-2xl border border-white/10 p-6">
                     <div className="space-y-6">
                       {/* Account Settings */}
                       <div>
-                        <h3 className="text-lg font-semibold mb-4">Account</h3>
+                        <h3 className="text-lg font-semibold mb-4">{t('account')}</h3>
                         <div className="space-y-4">
                           <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
                             <div>
-                              <p className="font-medium">Email</p>
+                              <p className="font-medium">{t('email')}</p>
                               <p className="text-gray-400 text-sm">{user?.email}</p>
                             </div>
                             <button className="px-4 py-2 rounded-lg bg-white/10 text-sm font-medium hover:bg-white/20 transition-all cursor-pointer">
-                              Change
+                              {t('change')}
                             </button>
                           </div>
                           <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
                             <div>
-                              <p className="font-medium">Password</p>
+                              <p className="font-medium">{t('password')}</p>
                               <p className="text-gray-400 text-sm">••••••••</p>
                             </div>
                             <button className="px-4 py-2 rounded-lg bg-white/10 text-sm font-medium hover:bg-white/20 transition-all cursor-pointer">
-                              Change
+                              {t('change')}
                             </button>
                           </div>
                         </div>
@@ -860,12 +1108,12 @@ export default function DashboardPage() {
 
                       {/* Notifications */}
                       <div>
-                        <h3 className="text-lg font-semibold mb-4">Notifications</h3>
+                        <h3 className="text-lg font-semibold mb-4">{t('notifications')}</h3>
                         <div className="space-y-4">
                           <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
                             <div>
-                              <p className="font-medium">Email Notifications</p>
-                              <p className="text-gray-400 text-sm">Receive prediction alerts via email</p>
+                              <p className="font-medium">{t('emailNotifications')}</p>
+                              <p className="text-gray-400 text-sm">{t('receiveAlerts')}</p>
                             </div>
                             <button className="w-12 h-6 rounded-full bg-emerald-500 relative cursor-pointer">
                               <span className="absolute right-1 top-1 w-4 h-4 rounded-full bg-white transition-all" />
@@ -873,8 +1121,8 @@ export default function DashboardPage() {
                           </div>
                           <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
                             <div>
-                              <p className="font-medium">Push Notifications</p>
-                              <p className="text-gray-400 text-sm">Browser push notifications</p>
+                              <p className="font-medium">{t('pushNotifications')}</p>
+                              <p className="text-gray-400 text-sm">{t('browserNotifications')}</p>
                             </div>
                             <button className="w-12 h-6 rounded-full bg-gray-600 relative cursor-pointer">
                               <span className="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transition-all" />
@@ -885,15 +1133,15 @@ export default function DashboardPage() {
 
                       {/* Danger Zone */}
                       <div>
-                        <h3 className="text-lg font-semibold mb-4 text-red-400">Danger Zone</h3>
+                        <h3 className="text-lg font-semibold mb-4 text-red-400">{t('dangerZone')}</h3>
                         <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="font-medium text-red-400">Delete Account</p>
-                              <p className="text-gray-400 text-sm">Permanently delete your account and all data</p>
+                              <p className="font-medium text-red-400">{t('deleteAccount')}</p>
+                              <p className="text-gray-400 text-sm">{t('deleteAccountDesc')}</p>
                             </div>
                             <button className="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 text-sm font-medium hover:bg-red-500/30 transition-all cursor-pointer">
-                              Delete
+                              {t('delete')}
                             </button>
                           </div>
                         </div>
@@ -931,7 +1179,7 @@ export default function DashboardPage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            <span className="text-[10px] font-medium">Sign Out</span>
+            <span className="text-[10px] font-medium">{t('signOut')}</span>
           </button>
         </div>
       </div>
