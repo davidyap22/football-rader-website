@@ -6979,9 +6979,11 @@ export default function BlogPostPage() {
 
           {/* Author */}
           <div className="flex items-center gap-4 pb-8 border-b border-white/10">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
-              <span className="text-black font-bold">OF</span>
-            </div>
+            <img
+              src="/homepage/OddsFlow Logo2.png"
+              alt="OddsFlow"
+              className="w-12 h-12 rounded-full object-contain"
+            />
             <div>
               <p className="font-medium">{post.author}</p>
               <p className="text-gray-500 text-sm">OddsFlow Team</p>
