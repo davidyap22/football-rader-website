@@ -575,17 +575,18 @@ interface DailyPerformance {
   cumulativeOU: number;
 }
 
-interface SignalHistoryItem {
-  clock: number;
-  signal: string;
-  selection: string | null;
-  odds1: number;
-  odds2: number;
-  odds3: number;
-  bookmaker: string;
-  stacking: string;
-  result_status: boolean;
-  line?: number;
+interface OddsHistoryItem {
+  created_at: string;
+  bookmaker: string | null;
+  moneyline_1x2_home: number | null;
+  moneyline_1x2_draw: number | null;
+  moneyline_1x2_away: number | null;
+  handicap_main_line: number | null;
+  handicap_home: number | null;
+  handicap_away: number | null;
+  totalpoints_main_line: number | null;
+  totalpoints_over: number | null;
+  totalpoints_under: number | null;
 }
 
 // Animated Counter Component
@@ -692,15 +693,11 @@ export default function PerformancePage() {
     profitOU: 0,
   });
 
-  // Signal History Modal state
+  // Odds History Modal state
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<MatchSummary | null>(null);
   const [historyTab, setHistoryTab] = useState<'1x2' | 'hdp' | 'ou'>('1x2');
-  const [signalHistory, setSignalHistory] = useState<{
-    moneyline: SignalHistoryItem[];
-    handicap: SignalHistoryItem[];
-    overunder: SignalHistoryItem[];
-  }>({ moneyline: [], handicap: [], overunder: [] });
+  const [oddsHistory, setOddsHistory] = useState<OddsHistoryItem[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -1169,81 +1166,32 @@ export default function PerformancePage() {
     return decimals > 0 ? parts.join('.') : parts[0];
   };
 
-  // Fetch signal history for a match
-  const fetchSignalHistory = async (fixtureId: string) => {
+  // Fetch odds history for a match
+  const fetchOddsHistory = async (fixtureId: string) => {
     setLoadingHistory(true);
     try {
-      // Fetch 1x2 moneyline signals
-      const { data: mlData } = await supabase
-        .from('moneyline 1x2')
-        .select('clock, signal, selection, moneyline_1x2_home, moneyline_1x2_draw, moneyline_1x2_away, bookmaker, stacking_quantity, result_status')
+      const { data, error } = await supabase
+        .from('odds_history')
+        .select('created_at, bookmaker, moneyline_1x2_home, moneyline_1x2_draw, moneyline_1x2_away, handicap_main_line, handicap_home, handicap_away, totalpoints_main_line, totalpoints_over, totalpoints_under')
         .eq('fixture_id', parseInt(fixtureId))
-        .order('clock', { ascending: false });
+        .order('created_at', { ascending: false });
 
-      // Fetch handicap signals
-      const { data: hdpData } = await supabase
-        .from('Handicap')
-        .select('clock, signal, selection, line, home_odds, away_odds, bookmaker, stacking_quantity, result_status')
-        .eq('fixture_id', parseInt(fixtureId))
-        .order('clock', { ascending: false });
-
-      // Fetch over/under signals
-      const { data: ouData } = await supabase
-        .from('OverUnder')
-        .select('clock, signal, selection, line, over, under, bookmaker, stacking_quantity, result_status')
-        .eq('fixture_id', parseInt(fixtureId))
-        .order('clock', { ascending: false });
-
-      setSignalHistory({
-        moneyline: mlData?.map((d: any) => ({
-          clock: d.clock,
-          signal: d.signal || '-',
-          selection: d.selection,
-          odds1: d.moneyline_1x2_home,
-          odds2: d.moneyline_1x2_draw,
-          odds3: d.moneyline_1x2_away,
-          bookmaker: d.bookmaker,
-          stacking: d.stacking_quantity || '-',
-          result_status: d.result_status,
-        })) || [],
-        handicap: hdpData?.map((d: any) => ({
-          clock: d.clock,
-          signal: d.signal || '-',
-          selection: d.selection,
-          odds1: d.home_odds,
-          odds2: 0,
-          odds3: d.away_odds,
-          bookmaker: d.bookmaker,
-          stacking: d.stacking_quantity || '-',
-          result_status: d.result_status,
-          line: d.line,
-        })) || [],
-        overunder: ouData?.map((d: any) => ({
-          clock: d.clock,
-          signal: d.signal || '-',
-          selection: d.selection,
-          odds1: d.over,
-          odds2: 0,
-          odds3: d.under,
-          bookmaker: d.bookmaker,
-          stacking: d.stacking_quantity || '-',
-          result_status: d.result_status,
-          line: d.line,
-        })) || [],
-      });
+      if (error) throw error;
+      setOddsHistory(data || []);
     } catch (error) {
-      console.error('Error fetching signal history:', error);
+      console.error('Error fetching odds history:', error);
+      setOddsHistory([]);
     } finally {
       setLoadingHistory(false);
     }
   };
 
-  // Open signal history modal
-  const openSignalHistory = (match: MatchSummary) => {
+  // Open odds history modal
+  const openOddsHistory = (match: MatchSummary) => {
     setSelectedMatch(match);
     setHistoryTab('1x2');
     setShowHistoryModal(true);
-    fetchSignalHistory(match.fixture_id);
+    fetchOddsHistory(match.fixture_id);
   };
 
   // Fetch profit summary for a match (use allBetRecords for consistency with table)
@@ -1991,7 +1939,7 @@ export default function PerformancePage() {
                           className={`md:hidden relative p-4 transition-all ${
                             index % 2 === 0 ? 'bg-white/[0.02]' : ''
                           } ${isHotMatch ? 'bg-emerald-500/5' : ''}`}
-                          onClick={() => openSignalHistory(match)}
+                          onClick={() => openOddsHistory(match)}
                         >
                           {/* Hot Match Indicator */}
                           {isHotMatch && (
@@ -2203,9 +2151,9 @@ export default function PerformancePage() {
                               </svg>
                             </button>
                             <button
-                              onClick={() => openSignalHistory(match)}
+                              onClick={() => openOddsHistory(match)}
                               className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
-                              title="View Signal History"
+                              title="View Odds History"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -2294,7 +2242,7 @@ export default function PerformancePage() {
         </div>
       </main>
 
-      {/* Signal History Modal */}
+      {/* Odds History Modal */}
       {showHistoryModal && selectedMatch && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
@@ -2305,7 +2253,7 @@ export default function PerformancePage() {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <h3 className="text-lg font-semibold text-white">Signal History</h3>
+                <h3 className="text-lg font-semibold text-white">Odds History</h3>
                 <span className="text-sm text-gray-400">
                   {selectedMatch.home_name} vs {selectedMatch.away_name}
                 </span>
@@ -2328,7 +2276,7 @@ export default function PerformancePage() {
                   historyTab === '1x2' ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-400 hover:text-white'
                 }`}
               >
-                1X2 ({signalHistory.moneyline.length})
+                1X2
               </button>
               <button
                 onClick={() => setHistoryTab('hdp')}
@@ -2336,7 +2284,7 @@ export default function PerformancePage() {
                   historyTab === 'hdp' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-gray-400 hover:text-white'
                 }`}
               >
-                HDP ({signalHistory.handicap.length})
+                HDP
               </button>
               <button
                 onClick={() => setHistoryTab('ou')}
@@ -2344,7 +2292,7 @@ export default function PerformancePage() {
                   historyTab === 'ou' ? 'text-amber-400 border-b-2 border-amber-400' : 'text-gray-400 hover:text-white'
                 }`}
               >
-                O/U ({signalHistory.overunder.length})
+                O/U
               </button>
             </div>
 
@@ -2358,67 +2306,66 @@ export default function PerformancePage() {
                 <table className="w-full">
                   <thead className="sticky top-0 bg-gray-800">
                     <tr className="text-xs text-gray-400 uppercase">
-                      <th className="px-4 py-3 text-left">Clock</th>
-                      <th className="px-4 py-3 text-left">Signal</th>
-                      <th className="px-4 py-3 text-left">Selection</th>
+                      <th className="px-4 py-3 text-left">Time</th>
+                      <th className="px-4 py-3 text-left">Bookmaker</th>
                       {historyTab === '1x2' ? (
                         <>
                           <th className="px-4 py-3 text-right">Home</th>
                           <th className="px-4 py-3 text-right">Draw</th>
                           <th className="px-4 py-3 text-right">Away</th>
                         </>
+                      ) : historyTab === 'hdp' ? (
+                        <>
+                          <th className="px-4 py-3 text-right">Line</th>
+                          <th className="px-4 py-3 text-right">Home</th>
+                          <th className="px-4 py-3 text-right">Away</th>
+                        </>
                       ) : (
                         <>
                           <th className="px-4 py-3 text-right">Line</th>
-                          <th className="px-4 py-3 text-right">{historyTab === 'hdp' ? 'Home' : 'Over'}</th>
-                          <th className="px-4 py-3 text-right">{historyTab === 'hdp' ? 'Away' : 'Under'}</th>
+                          <th className="px-4 py-3 text-right">Over</th>
+                          <th className="px-4 py-3 text-right">Under</th>
                         </>
                       )}
-                      <th className="px-4 py-3 text-left">Bookmaker</th>
-                      <th className="px-4 py-3 text-left">Stacking</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
-                    {(historyTab === '1x2' ? signalHistory.moneyline :
-                      historyTab === 'hdp' ? signalHistory.handicap :
-                      signalHistory.overunder
-                    ).map((item, idx) => (
+                    {oddsHistory.map((item, idx) => (
                       <tr key={idx} className="hover:bg-white/5">
-                        <td className="px-4 py-3 text-sm text-white font-medium">{item.clock}&apos;</td>
-                        <td className="px-4 py-3">
-                          <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
-                            item.signal.includes('ENTRY') ? 'bg-emerald-500/20 text-emerald-400' :
-                            item.signal.includes('HOLD') ? 'bg-cyan-500/20 text-cyan-400' :
-                            'bg-gray-500/20 text-gray-400'
-                          }`}>
-                            {item.signal.replace(/🟢|🔵|🔴/g, '').trim() || '-'}
-                          </span>
+                        <td className="px-4 py-3 text-sm text-white font-medium">
+                          {new Date(item.created_at).toLocaleString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
                         </td>
-                        <td className="px-4 py-3 text-sm text-white">{item.selection || '-'}</td>
+                        <td className="px-4 py-3 text-sm text-gray-400">{item.bookmaker || '-'}</td>
                         {historyTab === '1x2' ? (
                           <>
-                            <td className="px-4 py-3 text-sm text-cyan-400 text-right">{item.odds1?.toFixed(2)}</td>
-                            <td className="px-4 py-3 text-sm text-cyan-400 text-right">{item.odds2?.toFixed(2)}</td>
-                            <td className="px-4 py-3 text-sm text-amber-400 text-right">{item.odds3?.toFixed(2)}</td>
+                            <td className="px-4 py-3 text-sm text-cyan-400 text-right">{item.moneyline_1x2_home?.toFixed(2) || '-'}</td>
+                            <td className="px-4 py-3 text-sm text-gray-300 text-right">{item.moneyline_1x2_draw?.toFixed(2) || '-'}</td>
+                            <td className="px-4 py-3 text-sm text-amber-400 text-right">{item.moneyline_1x2_away?.toFixed(2) || '-'}</td>
+                          </>
+                        ) : historyTab === 'hdp' ? (
+                          <>
+                            <td className="px-4 py-3 text-sm text-white text-right">{item.handicap_main_line ?? '-'}</td>
+                            <td className="px-4 py-3 text-sm text-cyan-400 text-right">{item.handicap_home?.toFixed(2) || '-'}</td>
+                            <td className="px-4 py-3 text-sm text-amber-400 text-right">{item.handicap_away?.toFixed(2) || '-'}</td>
                           </>
                         ) : (
                           <>
-                            <td className="px-4 py-3 text-sm text-white text-right">{item.line}</td>
-                            <td className="px-4 py-3 text-sm text-cyan-400 text-right">{item.odds1?.toFixed(2)}</td>
-                            <td className="px-4 py-3 text-sm text-amber-400 text-right">{item.odds3?.toFixed(2)}</td>
+                            <td className="px-4 py-3 text-sm text-white text-right">{item.totalpoints_main_line ?? '-'}</td>
+                            <td className="px-4 py-3 text-sm text-cyan-400 text-right">{item.totalpoints_over?.toFixed(2) || '-'}</td>
+                            <td className="px-4 py-3 text-sm text-amber-400 text-right">{item.totalpoints_under?.toFixed(2) || '-'}</td>
                           </>
                         )}
-                        <td className="px-4 py-3 text-sm text-gray-400">{item.bookmaker}</td>
-                        <td className="px-4 py-3 text-sm text-emerald-400">{item.stacking}</td>
                       </tr>
                     ))}
-                    {(historyTab === '1x2' ? signalHistory.moneyline :
-                      historyTab === 'hdp' ? signalHistory.handicap :
-                      signalHistory.overunder
-                    ).length === 0 && (
+                    {oddsHistory.length === 0 && (
                       <tr>
-                        <td colSpan={8} className="px-4 py-8 text-center text-gray-500">
-                          No signal history available
+                        <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                          No odds history available
                         </td>
                       </tr>
                     )}
