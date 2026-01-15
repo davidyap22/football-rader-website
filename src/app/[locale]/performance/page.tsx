@@ -36,6 +36,11 @@ const translations: Record<string, Record<string, string>> = {
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    profitSummary: "Profit Summary",
+    totalInvested: "Total Invested",
+    moneyline1x2: "1X2 Moneyline",
+    asianHandicap: "Asian Handicap",
+    betDetails: "Bet Details",
     yearlyPerformance: "Yearly Performance",
     pastMatches: "Past Matches",
     allLeagues: "All Leagues",
@@ -88,6 +93,11 @@ const translations: Record<string, Record<string, string>> = {
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    profitSummary: "Resumen de Ganancias",
+    totalInvested: "Total Invertido",
+    moneyline1x2: "1X2 Ganador",
+    asianHandicap: "Hándicap Asiático",
+    betDetails: "Detalles de Apuestas",
     yearlyPerformance: "Rendimiento Anual",
     pastMatches: "Partidos Pasados",
     allLeagues: "Todas las Ligas",
@@ -140,6 +150,11 @@ const translations: Record<string, Record<string, string>> = {
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    profitSummary: "Resumo de Lucros",
+    totalInvested: "Total Investido",
+    moneyline1x2: "1X2 Vencedor",
+    asianHandicap: "Handicap Asiático",
+    betDetails: "Detalhes das Apostas",
     yearlyPerformance: "Desempenho Anual",
     pastMatches: "Partidas Passadas",
     allLeagues: "Todas as Ligas",
@@ -192,6 +207,11 @@ const translations: Record<string, Record<string, string>> = {
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    profitSummary: "Gewinnübersicht",
+    totalInvested: "Gesamtinvestition",
+    moneyline1x2: "1X2 Siegwette",
+    asianHandicap: "Asiatisches Handicap",
+    betDetails: "Wettdetails",
     yearlyPerformance: "Jahresleistung",
     pastMatches: "Vergangene Spiele",
     allLeagues: "Alle Ligen",
@@ -244,6 +264,11 @@ const translations: Record<string, Record<string, string>> = {
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    profitSummary: "Résumé des Profits",
+    totalInvested: "Total Investi",
+    moneyline1x2: "1X2 Vainqueur",
+    asianHandicap: "Handicap Asiatique",
+    betDetails: "Détails des Paris",
     yearlyPerformance: "Performance Annuelle",
     pastMatches: "Matchs Passés",
     allLeagues: "Toutes les Ligues",
@@ -296,6 +321,11 @@ const translations: Record<string, Record<string, string>> = {
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    profitSummary: "利益サマリー",
+    totalInvested: "総投資額",
+    moneyline1x2: "1X2 勝利予想",
+    asianHandicap: "アジアンハンディ",
+    betDetails: "ベット詳細",
     yearlyPerformance: "年間パフォーマンス",
     pastMatches: "過去の試合",
     allLeagues: "全リーグ",
@@ -348,6 +378,11 @@ const translations: Record<string, Record<string, string>> = {
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    profitSummary: "수익 요약",
+    totalInvested: "총 투자",
+    moneyline1x2: "1X2 승부예측",
+    asianHandicap: "아시안핸디캡",
+    betDetails: "베팅 상세",
     yearlyPerformance: "연간 성과",
     pastMatches: "지난 경기",
     allLeagues: "모든 리그",
@@ -400,6 +435,11 @@ const translations: Record<string, Record<string, string>> = {
     moneyline: "1x2",
     handicap: "让球",
     overUnder: "大小球",
+    profitSummary: "盈利详情",
+    totalInvested: "总投资",
+    moneyline1x2: "1X2 独赢",
+    asianHandicap: "亚洲盘",
+    betDetails: "投注明细",
     yearlyPerformance: "年度表现",
     pastMatches: "历史比赛",
     allLeagues: "所有联赛",
@@ -452,6 +492,11 @@ const translations: Record<string, Record<string, string>> = {
     moneyline: "1x2",
     handicap: "讓球",
     overUnder: "大小球",
+    profitSummary: "盈利詳情",
+    totalInvested: "總投資",
+    moneyline1x2: "1X2 獨贏",
+    asianHandicap: "亞洲盤",
+    betDetails: "投注明細",
     yearlyPerformance: "年度表現",
     pastMatches: "歷史比賽",
     allLeagues: "所有聯賽",
@@ -504,6 +549,11 @@ const translations: Record<string, Record<string, string>> = {
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    profitSummary: "Ringkasan Keuntungan",
+    totalInvested: "Total Investasi",
+    moneyline1x2: "1X2 Pemenang",
+    asianHandicap: "Handicap Asia",
+    betDetails: "Detail Taruhan",
     yearlyPerformance: "Performa Tahunan",
     pastMatches: "Pertandingan Sebelumnya",
     allLeagues: "Semua Liga",
@@ -2406,7 +2456,7 @@ export default function PerformancePage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">Profit Summary</h3>
+                  <h3 className="text-xl font-bold text-white">{t('profitSummary')}</h3>
                   <span className="text-sm text-gray-400">{selectedMatch.home_name} vs {selectedMatch.away_name}</span>
                 </div>
               </div>
@@ -2465,37 +2515,37 @@ export default function PerformancePage() {
                 {/* Main Stats */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Profit</div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('totalProfit')}</div>
                     <div className={`text-2xl font-bold ${filteredTotalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                       {filteredTotalProfit >= 0 ? '+$' : '-$'}{Math.abs(filteredTotalProfit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                   </div>
                   <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">ROI</div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('roi')}</div>
                     <div className={`text-2xl font-bold ${filteredROI >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                       {filteredROI >= 0 ? '+' : ''}{filteredROI.toFixed(2)}%
                     </div>
                   </div>
                   <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Invested</div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('totalInvested')}</div>
                     <div className="text-xl font-bold text-white">
                       ${filteredTotalInvested.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                   </div>
                   <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Bets</div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('totalBets')}</div>
                     <div className="text-xl font-bold text-white">{filteredTotalBets}</div>
                   </div>
                 </div>
 
                 {/* Market Breakdown */}
                 <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                  <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">Profit by Market</div>
+                  <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">{t('profitByMarket')}</div>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-cyan-500"></div>
-                        <span className="text-gray-300 text-sm">1X2 Moneyline</span>
+                        <span className="text-gray-300 text-sm">{t('moneyline1x2')}</span>
                       </div>
                       <span className={`font-bold ${filteredProfitMoneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                         {filteredProfitMoneyline >= 0 ? '+$' : '-$'}{Math.abs(filteredProfitMoneyline).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -2504,7 +2554,7 @@ export default function PerformancePage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-                        <span className="text-gray-300 text-sm">Asian Handicap</span>
+                        <span className="text-gray-300 text-sm">{t('asianHandicap')}</span>
                       </div>
                       <span className={`font-bold ${filteredProfitHandicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                         {filteredProfitHandicap >= 0 ? '+$' : '-$'}{Math.abs(filteredProfitHandicap).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -2513,7 +2563,7 @@ export default function PerformancePage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-                        <span className="text-gray-300 text-sm">Over/Under</span>
+                        <span className="text-gray-300 text-sm">{t('overUnder')}</span>
                       </div>
                       <span className={`font-bold ${filteredProfitOU >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                         {filteredProfitOU >= 0 ? '+$' : '-$'}{Math.abs(filteredProfitOU).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -2526,7 +2576,7 @@ export default function PerformancePage() {
                 {profitSummaryRecords.length > 0 && (
                     <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                       <div className="flex items-center justify-between mb-3">
-                        <div className="text-xs text-gray-500 uppercase tracking-wider">Bet Details ({filteredRecords.length})</div>
+                        <div className="text-xs text-gray-500 uppercase tracking-wider">{t('betDetails')} ({filteredRecords.length})</div>
                         <div className="flex gap-1">
                           {(['all', 'moneyline', 'handicap', 'ou'] as const).map((filter) => (
                             <button
