@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 // Markdown parser function
-const parseMarkdown = (text: string): string => {
+const parseMarkdown = (text: string, locale: string = 'en'): string => {
   let html = text;
 
   // Escape HTML first
@@ -27,8 +27,12 @@ const parseMarkdown = (text: string): string => {
   // Bold text
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
 
-  // Links [text](url)
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-emerald-400 hover:text-emerald-300 underline underline-offset-4 transition-colors">$1</a>');
+  // Links [text](url) - add locale prefix for internal links
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, url) => {
+    // If it's an internal link (starts with /), add locale prefix
+    const finalUrl = url.startsWith('/') ? `/${locale}${url}` : url;
+    return `<a href="${finalUrl}" class="text-emerald-400 hover:text-emerald-300 underline underline-offset-4 transition-colors">${linkText}</a>`;
+  });
 
   // Blockquotes
   html = html.replace(/^> (.+)$/gm, '<blockquote class="my-8 pl-6 py-5 border-l-4 border-emerald-500 bg-gradient-to-r from-emerald-500/10 to-transparent rounded-r-lg italic text-gray-200 text-lg leading-relaxed">$1</blockquote>');
@@ -7004,7 +7008,7 @@ export default function BlogPostPage() {
             <div
               className="article-content max-w-none mt-10 font-sans antialiased"
               style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}
-              dangerouslySetInnerHTML={{ __html: parseMarkdown(content) }}
+              dangerouslySetInnerHTML={{ __html: parseMarkdown(content, locale) }}
             />
           </AnimatedSection>
 
