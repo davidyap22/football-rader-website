@@ -23,6 +23,12 @@ export default function AuthCallbackPage() {
         // Check if we have a code in query (PKCE flow)
         const code = queryParams.get('code');
 
+        // IMMEDIATELY clear sensitive data from URL after reading
+        // This must happen BEFORE any async operations
+        if (accessToken || code) {
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+
         let session = null;
         let error = null;
 
@@ -34,21 +40,11 @@ export default function AuthCallbackPage() {
           });
           session = data?.session;
           error = setError;
-
-          // Clear the URL hash immediately after processing to hide tokens
-          if (typeof window !== 'undefined') {
-            window.history.replaceState(null, '', window.location.pathname);
-          }
         } else if (code) {
           // PKCE flow - exchange code for session
           const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
           session = data?.session;
           error = exchangeError;
-
-          // Clear the URL query params immediately after processing
-          if (typeof window !== 'undefined') {
-            window.history.replaceState(null, '', window.location.pathname);
-          }
         } else {
           // Try getting existing session
           const { data, error: getError } = await supabase.auth.getSession();
