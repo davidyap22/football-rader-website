@@ -878,7 +878,7 @@ function PredictionsContent() {
                 <div className="divide-y divide-white/5">
                   {leagueMatches.map((match, index) => (
                     <Link
-                      href={`/predictions/${match.id}?date=${formatDateForQuery(selectedDate)}`}
+                      href={localePath(`/predictions/${match.id}?date=${formatDateForQuery(selectedDate)}`)}
                       key={match.id}
                       onClick={(e) => handleMatchClick(e, match.id)}
                       className={`block transition-all duration-300 group cursor-pointer relative overflow-hidden ${
