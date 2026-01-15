@@ -5726,7 +5726,7 @@ Because football outcomes are uncertain and predictions should reflect that unce
   'backtesting-football-models': {
     id: 'backtesting-football-models',
     category: 'insight',
-    image: '/blog/blog_picture/S13/hero.png',
+    image: '/blog/blog_picture/S13/Hero.png',
     readTime: 9,
     date: '2025-01-14',
     author: 'OddsFlow Team',
@@ -6067,7 +6067,7 @@ Define match inclusion rules upfront and keep them consistent.
   'beyond-odds-football-features': {
     id: 'beyond-odds-football-features',
     category: 'insight',
-    image: '/blog/blog_picture/S14/hero.png',
+    image: '/blog/blog_picture/S14/Hero.png',
     readTime: 8,
     date: '2025-01-14',
     author: 'OddsFlow Team',
@@ -6408,7 +6408,7 @@ xGはオッズだけでは圧縮される可能性のある試合品質パター
   'responsible-use-of-predictions': {
     id: 'responsible-use-of-predictions',
     category: 'insight',
-    image: '/blog/blog_picture/S15/hero.png',
+    image: '/blog/blog_picture/S15/Hero.png',
     readTime: 7,
     date: '2025-01-14',
     author: 'OddsFlow Team',
