@@ -1251,9 +1251,10 @@ export default function PerformancePage() {
     setLoadingProfit(true);
     try {
       // Filter from allBetRecords to ensure consistency with table data
+      // Sort by clock (match minute) in ascending order
       const filteredData = allBetRecords
         .filter(r => String(r.fixture_id) === fixtureId)
-        .sort((a, b) => new Date(b.bet_time).getTime() - new Date(a.bet_time).getTime());
+        .sort((a, b) => (a.clock || 0) - (b.clock || 0));
 
       if (filteredData.length > 0) {
         setProfitSummary(filteredData[0]);
