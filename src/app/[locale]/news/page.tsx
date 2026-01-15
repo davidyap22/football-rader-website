@@ -973,10 +973,10 @@ export default function NewsPage() {
                       <div className="grid lg:grid-cols-5 gap-0">
                         {/* Image Section */}
                         <div className="lg:col-span-3 relative aspect-video lg:aspect-auto lg:min-h-[400px] overflow-hidden">
-                          {featuredNews.image_url ? (
+                          {(featuredNews.image_url || isExclusive) ? (
                             <>
                               <img
-                                src={featuredNews.image_url}
+                                src={featuredNews.image_url || '/news/oddsFlow news.png'}
                                 alt={featuredNews.title}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                               />
@@ -1001,9 +1001,16 @@ export default function NewsPage() {
                         <div className="lg:col-span-2 p-8 flex flex-col justify-center relative">
                           {/* Broadcast-style source badge */}
                           <div className="flex items-center gap-3 mb-6">
-                            <span className="px-3 py-1 rounded bg-emerald-500 text-black text-[11px] font-bold tracking-wide uppercase">
-                              {featuredNews.source}
-                            </span>
+                            {isExclusive ? (
+                              <span className="relative px-3 py-1 rounded bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 text-black text-[11px] font-bold tracking-wide uppercase shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden">
+                                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                                <span className="relative z-10">{featuredNews.source}</span>
+                              </span>
+                            ) : (
+                              <span className="px-3 py-1 rounded bg-emerald-500 text-black text-[11px] font-bold tracking-wide uppercase">
+                                {featuredNews.source}
+                              </span>
+                            )}
                             {featuredNews.published_at && (
                               <span className="text-xs text-gray-500 font-medium">
                                 {getRelativeTime(featuredNews.published_at)}
@@ -1061,10 +1068,10 @@ export default function NewsPage() {
 
                       {/* Image */}
                       <div className="aspect-[16/10] relative overflow-hidden">
-                        {item.image_url ? (
+                        {(item.image_url || isExclusive) ? (
                           <>
                             <img
-                              src={item.image_url}
+                              src={item.image_url || '/news/oddsFlow news.png'}
                               alt={item.title}
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
@@ -1080,9 +1087,16 @@ export default function NewsPage() {
 
                         {/* Source badge overlay */}
                         <div className="absolute top-3 left-3">
-                          <span className={`px-2.5 py-1 rounded backdrop-blur-sm text-[10px] font-bold tracking-wide uppercase border ${isExclusive ? 'bg-emerald-500 text-black border-emerald-500' : 'bg-black/70 text-white border-white/10'}`}>
-                            {item.source}
-                          </span>
+                          {isExclusive ? (
+                            <span className="relative px-2.5 py-1 rounded bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 text-black text-[10px] font-bold tracking-wide uppercase shadow-[0_0_12px_rgba(251,191,36,0.5)] overflow-hidden">
+                              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer" />
+                              <span className="relative z-10">{item.source}</span>
+                            </span>
+                          ) : (
+                            <span className="px-2.5 py-1 rounded backdrop-blur-sm text-[10px] font-bold tracking-wide uppercase border bg-black/70 text-white border-white/10">
+                              {item.source}
+                            </span>
+                          )}
                         </div>
                       </div>
 

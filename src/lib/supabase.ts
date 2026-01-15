@@ -624,8 +624,31 @@ export interface ProfitSummary {
   created_at: string | null;
 }
 
+// Exclusive Report structured data
+export interface ExclusiveReportSection {
+  id: string;
+  title: string;
+  content: string;
+  type: 'intro' | 'analysis' | 'odds' | 'strategy' | 'conclusion';
+}
+
+export interface ExclusiveReportStats {
+  label: string;
+  value: string;
+  color?: 'green' | 'red' | 'blue' | 'amber';
+}
+
+export interface ExclusiveReportData {
+  sections: ExclusiveReportSection[];
+  key_stats?: ExclusiveReportStats[];
+  verdict?: {
+    prediction_result: 'WIN' | 'LOSS' | 'PUSH';
+  };
+}
+
 export interface FootballNews {
   id: number;
+  fixture_id?: number;
   title: string;
   summary: string;
   content: string;
@@ -637,6 +660,8 @@ export interface FootballNews {
   tags?: string;
   language?: string;
   is_ai_rewritten?: boolean;
+  // For Exclusive Reports - structured JSON data
+  article_data?: ExclusiveReportData;
 }
 
 // Contact message interface

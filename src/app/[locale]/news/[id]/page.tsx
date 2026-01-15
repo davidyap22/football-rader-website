@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { supabase, FootballNews } from '@/lib/supabase';
+import { supabase, FootballNews, Prematch, ExclusiveReportData } from '@/lib/supabase';
+import ExclusiveReportTemplate from '@/components/ExclusiveReportTemplate';
 import { User } from '@supabase/supabase-js';
 import FlagIcon from "@/components/FlagIcon";
 import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
@@ -19,6 +20,16 @@ function formatDate(dateString: string | undefined): string {
     hour: '2-digit',
     minute: '2-digit',
   });
+}
+
+// Helper function to calculate reading time
+function calculateReadingTime(content: string | null | undefined): number {
+  if (!content) return 1;
+  // Strip HTML tags and count words
+  const text = content.replace(/<[^>]*>/g, '');
+  const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
+  const wordsPerMinute = 200;
+  return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
 }
 
 // Translations
@@ -37,10 +48,12 @@ const translations: Record<string, Record<string, string>> = {
     backToNews: "Back to News",
     publishedOn: "Published on",
     share: "Share",
+    shareDesc: "Share this article with your friends",
     relatedArticles: "Related Articles",
     articleNotFound: "Article not found",
     loading: "Loading...",
     exclusiveReport: "OddsFlow Exclusive Report",
+    minRead: "min read",
     footerDesc: "AI-powered football odds analysis for smarter predictions.",
     product: "Product",
     company: "Company",
@@ -74,10 +87,12 @@ const translations: Record<string, Record<string, string>> = {
     backToNews: "Volver a Noticias",
     publishedOn: "Publicado el",
     share: "Compartir",
+    shareDesc: "Comparte este artículo con tus amigos",
     relatedArticles: "Artículos Relacionados",
     articleNotFound: "Artículo no encontrado",
     loading: "Cargando...",
     exclusiveReport: "Informe Exclusivo OddsFlow",
+    minRead: "min de lectura",
     footerDesc: "Análisis de cuotas de fútbol impulsado por IA.",
     product: "Producto",
     company: "Empresa",
@@ -111,10 +126,12 @@ const translations: Record<string, Record<string, string>> = {
     backToNews: "返回新闻",
     publishedOn: "发布于",
     share: "分享",
+    shareDesc: "分享这篇文章给你的朋友",
     relatedArticles: "相关文章",
     articleNotFound: "文章未找到",
     loading: "加载中...",
     exclusiveReport: "OddsFlow 独家报告",
+    minRead: "分钟阅读",
     footerDesc: "AI 驱动的足球赔率分析，助您做出更明智的预测。",
     product: "产品",
     company: "公司",
@@ -148,10 +165,12 @@ const translations: Record<string, Record<string, string>> = {
     backToNews: "返回新聞",
     publishedOn: "發布於",
     share: "分享",
+    shareDesc: "分享這篇文章給你的朋友",
     relatedArticles: "相關文章",
     articleNotFound: "文章未找到",
     loading: "載入中...",
     exclusiveReport: "OddsFlow 獨家報告",
+    minRead: "分鐘閱讀",
     footerDesc: "AI 驅動的足球賠率分析，助您做出更明智的預測。",
     product: "產品",
     company: "公司",
@@ -185,10 +204,12 @@ const translations: Record<string, Record<string, string>> = {
     backToNews: "Kembali ke Berita",
     publishedOn: "Dipublikasikan pada",
     share: "Bagikan",
+    shareDesc: "Bagikan artikel ini dengan teman-teman Anda",
     relatedArticles: "Artikel Terkait",
     articleNotFound: "Artikel tidak ditemukan",
     loading: "Memuat...",
     exclusiveReport: "Laporan Eksklusif OddsFlow",
+    minRead: "menit baca",
     footerDesc: "Analisis odds sepak bola bertenaga AI untuk prediksi lebih cerdas.",
     product: "Produk",
     company: "Perusahaan",
@@ -218,6 +239,7 @@ export default function ArticlePage() {
   const articleId = params.id as string;
 
   const [article, setArticle] = useState<FootballNews | null>(null);
+  const [matchInfo, setMatchInfo] = useState<Prematch | null>(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -270,6 +292,40 @@ export default function ArticlePage() {
       fetchArticle();
     }
   }, [articleId]);
+
+  // Fetch match info when article has fixture_id
+  useEffect(() => {
+    async function fetchMatchInfo() {
+      if (!article?.fixture_id) {
+        console.log('No fixture_id in article');
+        return;
+      }
+
+      console.log('Fetching match info for fixture_id:', article.fixture_id);
+
+      try {
+        const { data, error } = await supabase
+          .from('prematches')
+          .select('*')
+          .eq('fixture_id', article.fixture_id)
+          .maybeSingle();
+
+        console.log('Prematch query result:', { data, error });
+
+        if (error) {
+          console.error('Error fetching match info:', error.message || error);
+          return;
+        }
+        if (data) {
+          setMatchInfo(data);
+        }
+      } catch (error) {
+        console.error('Error fetching match info:', error);
+      }
+    }
+
+    fetchMatchInfo();
+  }, [article?.fixture_id]);
 
   if (loading) {
     return (
@@ -427,98 +483,215 @@ export default function ArticlePage() {
         </div>
       )}
 
+      {/* Hero Section with Featured Image */}
+      {article.image_url && (
+        <div className="relative w-full h-[50vh] min-h-[400px] max-h-[600px]">
+          <img
+            src={article.image_url}
+            alt={article.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#05080d] via-[#05080d]/60 to-transparent" />
+
+          {/* Back Button on Hero */}
+          <div className="absolute top-20 left-4 sm:left-8 z-20">
+            <Link href={localePath('/news')} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition-all group">
+              <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="text-sm font-medium">{t('backToNews')}</span>
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
-      <main className="relative z-10 pt-24 pb-16 px-4">
+      <main className={`relative z-10 ${article.image_url ? '-mt-32' : 'pt-24'} pb-16 px-4`}>
         <div className="max-w-4xl mx-auto">
-          {/* Back to News */}
-          <Link href={localePath('/news')} className="inline-flex items-center gap-2 text-gray-400 hover:text-emerald-400 transition-colors mb-8 group">
-            <svg className="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            <span className="font-medium">{t('backToNews')}</span>
-          </Link>
 
-          {/* Article Header */}
-          <article className="bg-[#0a0e14] rounded-2xl border border-white/5 overflow-hidden">
-            {/* Featured Image */}
-            {article.image_url && (
-              <div className="aspect-video relative overflow-hidden">
-                <img
-                  src={article.image_url}
-                  alt={article.title}
-                  className="w-full h-full object-cover"
+          {/* Back to News (only show if no hero image) */}
+          {!article.image_url && (
+            <Link href={localePath('/news')} className="inline-flex items-center gap-2 text-gray-400 hover:text-emerald-400 transition-colors mb-8 group">
+              <svg className="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="font-medium">{t('backToNews')}</span>
+            </Link>
+          )}
+
+          {/* Article Card */}
+          <article className="bg-[#0a0e14]/95 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
+            <div className="p-6 sm:p-8 lg:p-12">
+
+              {/* Check if this is an Exclusive Report with structured data */}
+              {article.source === 'OddsFlow Exclusive Report' && article.article_data ? (
+                /* EXCLUSIVE REPORT TEMPLATE */
+                <ExclusiveReportTemplate
+                  title={article.title}
+                  summary={article.summary}
+                  publishedAt={article.published_at}
+                  imageUrl={article.image_url}
+                  matchInfo={matchInfo}
+                  articleData={article.article_data as ExclusiveReportData}
+                  locale={locale}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] to-transparent" />
-              </div>
-            )}
+              ) : (
+                /* REGULAR ARTICLE TEMPLATE */
+                <>
+                  {/* Source Badge & League */}
+                  <div className="flex flex-wrap items-center gap-3 mb-6">
+                    <span className="px-4 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-xs font-bold uppercase tracking-wider">
+                      {article.source === 'OddsFlow Exclusive Report' ? t('exclusiveReport') : article.source}
+                    </span>
+                    {article.league && (
+                      <span className="px-3 py-1.5 rounded-full bg-white/5 text-gray-300 text-xs font-medium border border-white/10">
+                        {article.league}
+                      </span>
+                    )}
+                  </div>
 
-            <div className="p-8 lg:p-12">
-              {/* Meta Info */}
-              <div className="flex flex-wrap items-center gap-4 mb-6">
-                <span className="px-3 py-1.5 rounded-lg bg-emerald-500 text-black text-sm font-bold uppercase tracking-wide">
-                  {article.source === 'OddsFlow Exclusive Report' ? t('exclusiveReport') : article.source}
-                </span>
-                {article.published_at && (
-                  <span className="text-gray-400 text-sm">
-                    {t('publishedOn')} {formatDate(article.published_at)}
-                  </span>
-                )}
-                {article.league && (
-                  <span className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-xs font-medium">
-                    {article.league}
-                  </span>
-                )}
-              </div>
+                  {/* Title */}
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight">
+                    {article.title}
+                  </h1>
 
-              {/* Title */}
-              <h1 className="text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight">
-                {article.title}
-              </h1>
+                  {/* Meta Info */}
+                  <div className="flex flex-wrap items-center gap-4 text-gray-400 text-sm mb-8">
+                    {article.published_at && (
+                      <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>{formatDate(article.published_at)}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>{calculateReadingTime(article.content)} {t('minRead')}</span>
+                    </div>
+                  </div>
 
-              {/* Summary */}
-              {article.summary && (
-                <p className="text-xl text-gray-300 mb-8 leading-relaxed border-l-4 border-emerald-500 pl-6">
-                  {article.summary}
-                </p>
+                  {/* Match Info Card */}
+                  {matchInfo && (
+                    <div className="mb-10 rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#111827] to-[#0c1220]">
+                      <div className="flex items-center justify-between px-5 py-3 bg-black/40 border-b border-white/5">
+                        <div className="flex items-center gap-2">
+                          {matchInfo.league_logo && (
+                            <img src={matchInfo.league_logo} alt={matchInfo.league_name} className="w-5 h-5 object-contain" />
+                          )}
+                          <span className="text-white text-sm font-medium">{matchInfo.league_name}</span>
+                        </div>
+                        <span className={`px-2.5 py-1 rounded text-xs font-semibold ${
+                          matchInfo.status_short === 'FT' ? 'bg-emerald-500/20 text-emerald-400' :
+                          matchInfo.status_short === 'NS' ? 'bg-amber-500/20 text-amber-400' :
+                          'bg-cyan-500/20 text-cyan-400'
+                        }`}>
+                          {matchInfo.status_short === 'FT' ? 'Full Time' : matchInfo.status_short}
+                        </span>
+                      </div>
+                      <div className="px-4 py-6 sm:px-6 sm:py-8">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex-1 flex flex-col items-center text-center">
+                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/5 flex items-center justify-center mb-2">
+                              {matchInfo.home_logo ? (
+                                <img src={matchInfo.home_logo} alt={matchInfo.home_name} className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
+                              ) : (
+                                <span className="text-xl font-bold text-gray-400">{matchInfo.home_name?.charAt(0)}</span>
+                              )}
+                            </div>
+                            <span className="text-white font-medium text-xs sm:text-sm line-clamp-2">{matchInfo.home_name}</span>
+                          </div>
+                          <div className="flex items-center gap-3 px-4">
+                            {matchInfo.goals_home !== null && matchInfo.goals_away !== null ? (
+                              <>
+                                <span className="text-3xl sm:text-4xl font-bold text-white">{matchInfo.goals_home}</span>
+                                <span className="text-xl text-gray-500">-</span>
+                                <span className="text-3xl sm:text-4xl font-bold text-white">{matchInfo.goals_away}</span>
+                              </>
+                            ) : (
+                              <span className="text-xl font-bold text-gray-400">VS</span>
+                            )}
+                          </div>
+                          <div className="flex-1 flex flex-col items-center text-center">
+                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/5 flex items-center justify-center mb-2">
+                              {matchInfo.away_logo ? (
+                                <img src={matchInfo.away_logo} alt={matchInfo.away_name} className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
+                              ) : (
+                                <span className="text-xl font-bold text-gray-400">{matchInfo.away_name?.charAt(0)}</span>
+                              )}
+                            </div>
+                            <span className="text-white font-medium text-xs sm:text-sm line-clamp-2">{matchInfo.away_name}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Summary */}
+                  {article.summary && (
+                    <div className="mb-10 p-6 rounded-xl bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border-l-4 border-emerald-500">
+                      <p className="text-lg text-gray-200 leading-relaxed italic">{article.summary}</p>
+                    </div>
+                  )}
+
+                  <div className="border-t border-white/10 mb-10" />
+
+                  {/* Article Content */}
+                  <div
+                    className="article-content prose prose-invert prose-lg max-w-none
+                      prose-headings:text-white prose-headings:font-bold prose-headings:mt-10 prose-headings:mb-4
+                      prose-h2:text-xl prose-h2:text-emerald-400 prose-h2:border-l-4 prose-h2:border-emerald-500 prose-h2:pl-4 prose-h2:py-1
+                      prose-h3:text-lg prose-h3:text-cyan-400
+                      prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-base
+                      prose-strong:text-white prose-strong:font-semibold
+                      prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline
+                      prose-ul:text-gray-300 prose-ul:my-6 prose-ol:text-gray-300 prose-ol:my-6
+                      prose-li:text-gray-300 prose-li:mb-2
+                      prose-blockquote:border-l-emerald-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-400
+                      prose-img:rounded-xl prose-img:my-8"
+                    dangerouslySetInnerHTML={{ __html: article.content || '' }}
+                  />
+                </>
               )}
 
-              {/* Content */}
-              <div
-                className="prose prose-invert prose-lg max-w-none
-                  prose-headings:text-white prose-headings:font-bold
-                  prose-h3:text-2xl prose-h3:mt-10 prose-h3:mb-4
-                  prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
-                  prose-strong:text-emerald-400
-                  prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline
-                  prose-ul:text-gray-300 prose-ol:text-gray-300
-                  prose-li:mb-2"
-                dangerouslySetInnerHTML={{ __html: article.content || '' }}
-              />
+              {/* End Divider */}
+              <div className="flex items-center justify-center my-12">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-px bg-gradient-to-r from-transparent to-emerald-500/50" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <div className="w-12 h-px bg-gradient-to-l from-transparent to-cyan-500/50" />
+                </div>
+              </div>
 
               {/* Share Section */}
-              <div className="mt-12 pt-8 border-t border-white/10">
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <span className="text-gray-400 font-medium">{t('share')}</span>
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank')}
-                      className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all"
-                    >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    </button>
-                    <button
-                      onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')}
-                      className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all"
-                    >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                    </button>
-                    <button
-                      onClick={() => navigator.clipboard.writeText(window.location.href)}
-                      className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
-                    </button>
-                  </div>
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-xl bg-white/5 border border-white/10">
+                <div>
+                  <h3 className="text-white font-semibold mb-1">{t('share')}</h3>
+                  <p className="text-gray-500 text-sm">{t('shareDesc')}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank')}
+                    className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  </button>
+                  <button
+                    onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')}
+                    className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  </button>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(window.location.href)}
+                    className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+                  </button>
                 </div>
               </div>
             </div>
