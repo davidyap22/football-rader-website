@@ -2227,7 +2227,7 @@ export default function CommunityPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 w-full max-w-3xl px-4">
               {/* Global Chat Button */}
               <Link
-                href={user ? "/community/global-chat" : "/login"}
+                href={user ? localePath("/community/global-chat") : localePath("/login")}
                 className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/40 to-emerald-600/40 backdrop-blur-md border border-emerald-400/50 p-5 md:p-6 text-center hover:border-emerald-300/70 hover:from-emerald-500/50 hover:to-emerald-600/50 transition-all duration-300 cursor-pointer shadow-lg shadow-emerald-500/20"
               >
                 <div className="relative">
@@ -2243,7 +2243,7 @@ export default function CommunityPage() {
 
               {/* User Predictions Button */}
               <Link
-                href={user ? "/community/user-predictions" : "/login"}
+                href={user ? localePath("/community/user-predictions") : localePath("/login")}
                 className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-500/40 to-cyan-600/40 backdrop-blur-md border border-cyan-400/50 p-5 md:p-6 text-center hover:border-cyan-300/70 hover:from-cyan-500/50 hover:to-cyan-600/50 transition-all duration-300 cursor-pointer shadow-lg shadow-cyan-500/20"
               >
                 <div className="relative">
@@ -3451,7 +3451,7 @@ export default function CommunityPage() {
             <h3 className="text-2xl font-bold text-white mb-3">{t('joinCommunityToday')}</h3>
             <p className="text-gray-400 mb-6 max-w-2xl mx-auto">{t('joinCommunityDesc')}</p>
             <Link
-              href={user ? "/community/global-chat" : "/login"}
+              href={user ? localePath("/community/global-chat") : localePath("/login")}
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-bold hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
             >
               {t('getStarted')}
