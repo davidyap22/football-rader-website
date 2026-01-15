@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 import { supabase, chatSupabase, Prematch, ChatMessage, ChatReaction, getChatMessages, sendChatMessage, subscribeToChatMessages, getMessageReactions, toggleMessageReaction, getGlobalChatStats } from '@/lib/supabase';
@@ -248,6 +248,7 @@ function ChatRoom({ user, t, localePath }: { user: User | null; t: (key: string)
 
 export default function GlobalChatPage() {
   const params = useParams();
+  const router = useRouter();
   const urlLocale = (params?.locale as string) || 'en';
   const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
 
@@ -257,6 +258,7 @@ export default function GlobalChatPage() {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [stats, setStats] = useState({ totalComments: 0, todayComments: 0, activeUsers: 0 });
   const [matches, setMatches] = useState<Prematch[]>([]);
 
@@ -287,15 +289,25 @@ export default function GlobalChatPage() {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
+      setIsAuthLoading(false);
     };
     checkUser();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: unknown, session: { user: User | null } | null) => {
       setUser(session?.user || null);
+      setIsAuthLoading(false);
     });
     loadStats();
     loadMatches();
     return () => subscription.unsubscribe();
   }, []);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthLoading && !user) {
+      const loginPath = locale === 'en' ? '/login' : `/${locale}/login`;
+      router.replace(loginPath);
+    }
+  }, [isAuthLoading, user, locale, router]);
 
   const loadStats = async () => {
     const result = await getGlobalChatStats();
@@ -315,6 +327,18 @@ export default function GlobalChatPage() {
       .order('start_date_msia', { ascending: true });
     setMatches(data || []);
   };
+
+  // Show loading while checking auth or redirecting
+  if (isAuthLoading || !user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black flex items-center justify-center">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+          <div className="absolute inset-0 animate-ping rounded-full h-12 w-12 border border-emerald-500/30"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white">

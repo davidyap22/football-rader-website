@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 import { supabase, Prematch } from '@/lib/supabase';
@@ -227,6 +227,7 @@ const translations: Record<string, Record<string, string>> = {
 
 export default function UserPredictionsPage() {
   const params = useParams();
+  const router = useRouter();
   const urlLocale = (params?.locale as string) || 'en';
   const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
 
@@ -236,6 +237,7 @@ export default function UserPredictionsPage() {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [matches, setMatches] = useState<Prematch[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -322,13 +324,23 @@ export default function UserPredictionsPage() {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
+      setIsAuthLoading(false);
     };
     checkUser();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: unknown, session: { user: User | null } | null) => {
       setUser(session?.user || null);
+      setIsAuthLoading(false);
     });
     return () => subscription.unsubscribe();
   }, []);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthLoading && !user) {
+      const loginPath = locale === 'en' ? '/login' : `/${locale}/login`;
+      router.replace(loginPath);
+    }
+  }, [isAuthLoading, user, locale, router]);
 
   useEffect(() => {
     loadMatches();
@@ -450,6 +462,18 @@ export default function UserPredictionsPage() {
     setPredictionModal(null);
     setModalForm({ homeScore: '', awayScore: '', winner: '' });
   };
+
+  // Show loading while checking auth or redirecting
+  if (isAuthLoading || !user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black flex items-center justify-center">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+          <div className="absolute inset-0 animate-ping rounded-full h-12 w-12 border border-emerald-500/30"></div>
+        </div>
+      </div>
+    );
+  }
 
   // Submit prediction from modal
   const submitPrediction = async () => {

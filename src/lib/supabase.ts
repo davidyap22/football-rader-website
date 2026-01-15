@@ -104,8 +104,9 @@ export const supabase = supabaseUrl && supabaseKey
 
 // ============ SEPARATE CHAT SUPABASE CLIENT ============
 // Chat functionality uses a different Supabase instance (for global chat only)
-const chatSupabaseUrl = process.env.NEXT_PUBLIC_CHAT_SUPABASE_URL || '';
-const chatSupabaseKey = process.env.NEXT_PUBLIC_CHAT_SUPABASE_ANON_KEY || '';
+// Fallback to hardcoded values if env vars are not available (for debugging)
+const chatSupabaseUrl = process.env.NEXT_PUBLIC_CHAT_SUPABASE_URL || 'https://rlvmlnwnaejhotlnhbpi.supabase.co';
+const chatSupabaseKey = process.env.NEXT_PUBLIC_CHAT_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsdm1sbnduYWVqaG90bG5oYnBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU2NDkxNzYsImV4cCI6MjA4MTIyNTE3Nn0.5VUchXN2-P3-jcfZXyL37RN9A9DCXonFYqpjDOl3YJY';
 
 // Create the chat supabase client
 export const chatSupabase = chatSupabaseUrl && chatSupabaseKey
