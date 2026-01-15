@@ -249,7 +249,7 @@ export default function PlayerDetailPage() {
       setUser(session?.user || null);
     };
     checkUser();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, session: { user: User | null } | null) => {
       setUser(session?.user || null);
     });
     return () => subscription.unsubscribe();
