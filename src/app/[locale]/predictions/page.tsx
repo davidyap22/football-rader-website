@@ -504,10 +504,21 @@ function PredictionsContent() {
   }, [selectedDate, isDateInitialized]);
 
   const formatTime = (dateStr: string) => {
-    const date = new Date(dateStr);
-    // Display UTC time
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    // The database stores Malaysia time (UTC+8)
+    // We need to interpret the string as Malaysia time, then display in user's local timezone
+
+    // If no timezone info, explicitly add Malaysia timezone (+08:00)
+    let correctedDateStr = dateStr;
+    if (!dateStr.includes('Z') && !dateStr.includes('+') && !dateStr.includes('-', 10)) {
+      // Add Malaysia timezone offset
+      correctedDateStr = dateStr + '+08:00';
+    }
+
+    const date = new Date(correctedDateStr);
+
+    // Display in user's local timezone
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
   };
 

@@ -930,22 +930,38 @@ export default function MatchDetailsPage() {
   }, [match?.type, fetchMatch]);
 
   const formatDateTime = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const day = date.getUTCDate();
+    // Database stores Malaysia time (UTC+8), interpret correctly
+    let correctedDateStr = dateStr;
+    if (!dateStr.includes('Z') && !dateStr.includes('+') && !dateStr.includes('-', 10)) {
+      correctedDateStr = dateStr + '+08:00';
+    }
+    const date = new Date(correctedDateStr);
+
+    const day = date.getDate();
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const month = months[date.getUTCMonth()];
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-    return `${day} ${month} ${date.getUTCFullYear()} • ${hours}:${minutes} UTC`;
+    const month = months[date.getMonth()];
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    // Get user's timezone abbreviation
+    const tzAbbr = new Intl.DateTimeFormat('en', { timeZoneName: 'short' }).formatToParts(date).find(p => p.type === 'timeZoneName')?.value || 'Local';
+
+    return `${day} ${month} ${date.getFullYear()} • ${hours}:${minutes} ${tzAbbr}`;
   };
 
   const formatHistoryTime = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const day = date.getUTCDate();
+    // Database stores Malaysia time (UTC+8), interpret correctly
+    let correctedDateStr = dateStr;
+    if (!dateStr.includes('Z') && !dateStr.includes('+') && !dateStr.includes('-', 10)) {
+      correctedDateStr = dateStr + '+08:00';
+    }
+    const date = new Date(correctedDateStr);
+
+    const day = date.getDate();
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const month = months[date.getUTCMonth()];
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const month = months[date.getMonth()];
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${day} ${month} ${hours}:${minutes}`;
   };
 
