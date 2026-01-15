@@ -1140,6 +1140,49 @@ export const getCommentStats = async () => {
   }
 };
 
+// Get stats for global chat (uses chatSupabase)
+export const getGlobalChatStats = async () => {
+  if (!chatSupabase) {
+    return { data: { totalComments: 0, todayComments: 0, activeUsers: 0 }, error: null };
+  }
+
+  try {
+    // Total messages
+    const { count: totalComments } = await chatSupabase
+      .from('global_chat_messages')
+      .select('*', { count: 'exact', head: true });
+
+    // Today's messages
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const { count: todayComments } = await chatSupabase
+      .from('global_chat_messages')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', today.toISOString());
+
+    // Active users (unique senders in last 7 days)
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    const { data: activeUsers } = await chatSupabase
+      .from('global_chat_messages')
+      .select('sender_name')
+      .gte('created_at', weekAgo.toISOString());
+
+    const uniqueActiveUsers = new Set(activeUsers?.map((u: { sender_name: string }) => u.sender_name)).size;
+
+    return {
+      data: {
+        totalComments: totalComments || 0,
+        todayComments: todayComments || 0,
+        activeUsers: uniqueActiveUsers,
+      },
+      error: null,
+    };
+  } catch (err) {
+    return { data: { totalComments: 0, todayComments: 0, activeUsers: 0 }, error: { message: 'Failed to fetch global chat stats' } };
+  }
+};
+
 // ============================================
 // Chat Messages (Real-time Chatroom)
 // ============================================

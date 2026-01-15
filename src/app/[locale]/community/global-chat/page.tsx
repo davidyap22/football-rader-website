@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
-import { supabase, chatSupabase, Prematch, ChatMessage, ChatReaction, getChatMessages, sendChatMessage, subscribeToChatMessages, getMessageReactions, toggleMessageReaction, getCommentStats } from '@/lib/supabase';
+import { supabase, chatSupabase, Prematch, ChatMessage, ChatReaction, getChatMessages, sendChatMessage, subscribeToChatMessages, getMessageReactions, toggleMessageReaction, getGlobalChatStats } from '@/lib/supabase';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 import { locales, localeToTranslationCode, type Locale } from '@/i18n/config';
 
@@ -12,92 +12,92 @@ const translations: Record<string, Record<string, string>> = {
   EN: {
     home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance",
     community: "Community", news: "News", pricing: "Pricing", login: "Log In", getStarted: "Get Started",
-    globalChat: "Global Chat", totalComments: "Total Comments", todayComments: "Today",
+    globalChat: "Global Chat", totalComments: "Total Messages", todayComments: "Today",
     activeUsers: "Active Users", typeMessage: "Type a message...", loginToChat: "Login to chat",
     send: "Send", backToCommunity: "Back to Community",
     userPredictions: "User Predictions", todaysMatches: "Today's Matches",
-    solution: "Solution",
+    solution: "Solution", noMessages: "No messages yet", beFirstToChat: "Be the first to start a conversation!",
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现",
     community: "社区", news: "新闻", pricing: "价格", login: "登录", getStarted: "开始",
-    globalChat: "全球聊天", totalComments: "总评论", todayComments: "今日",
+    globalChat: "全球聊天", totalComments: "总消息", todayComments: "今日",
     activeUsers: "活跃用户", typeMessage: "输入消息...", loginToChat: "登录后聊天",
     send: "发送", backToCommunity: "返回社区",
     userPredictions: "用户预测", todaysMatches: "今日比赛",
-    solution: "解决方案",
+    solution: "解决方案", noMessages: "暂无消息", beFirstToChat: "成为第一个发起对话的人！",
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現",
     community: "社區", news: "新聞", pricing: "價格", login: "登入", getStarted: "開始",
-    globalChat: "全球聊天", totalComments: "總評論", todayComments: "今日",
+    globalChat: "全球聊天", totalComments: "總訊息", todayComments: "今日",
     activeUsers: "活躍用戶", typeMessage: "輸入訊息...", loginToChat: "登入後聊天",
     send: "發送", backToCommunity: "返回社區",
     userPredictions: "用戶預測", todaysMatches: "今日比賽",
-    solution: "解決方案",
+    solution: "解決方案", noMessages: "暫無訊息", beFirstToChat: "成為第一個發起對話的人！",
   },
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI",
     community: "Komunitas", news: "Berita", pricing: "Harga", login: "Masuk", getStarted: "Mulai",
-    globalChat: "Chat Global", totalComments: "Total Komentar", todayComments: "Hari Ini",
+    globalChat: "Chat Global", totalComments: "Total Pesan", todayComments: "Hari Ini",
     activeUsers: "Pengguna Aktif", typeMessage: "Ketik pesan...", loginToChat: "Login untuk chat",
     send: "Kirim", backToCommunity: "Kembali ke Komunitas",
     userPredictions: "Prediksi Pengguna", todaysMatches: "Pertandingan Hari Ini",
-    solution: "Solusi",
+    solution: "Solusi", noMessages: "Belum ada pesan", beFirstToChat: "Jadilah yang pertama memulai percakapan!",
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA",
     community: "Comunidad", news: "Noticias", pricing: "Precios", login: "Iniciar Sesión", getStarted: "Empezar",
-    globalChat: "Chat Global", totalComments: "Total Comentarios", todayComments: "Hoy",
+    globalChat: "Chat Global", totalComments: "Total Mensajes", todayComments: "Hoy",
     activeUsers: "Usuarios Activos", typeMessage: "Escribe un mensaje...", loginToChat: "Inicia sesión para chatear",
     send: "Enviar", backToCommunity: "Volver a Comunidad",
     userPredictions: "Predicciones de Usuarios", todaysMatches: "Partidos de Hoy",
-    solution: "Solución",
+    solution: "Solución", noMessages: "Sin mensajes aún", beFirstToChat: "¡Sé el primero en iniciar una conversación!",
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho IA",
     community: "Comunidade", news: "Notícias", pricing: "Preços", login: "Entrar", getStarted: "Começar",
-    globalChat: "Chat Global", totalComments: "Total de Comentários", todayComments: "Hoje",
+    globalChat: "Chat Global", totalComments: "Total de Mensagens", todayComments: "Hoje",
     activeUsers: "Usuários Ativos", typeMessage: "Digite uma mensagem...", loginToChat: "Faça login para conversar",
     send: "Enviar", backToCommunity: "Voltar para Comunidade",
     userPredictions: "Previsões dos Usuários", todaysMatches: "Jogos de Hoje",
-    solution: "Solução",
+    solution: "Solução", noMessages: "Sem mensagens ainda", beFirstToChat: "Seja o primeiro a iniciar uma conversa!",
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung",
     community: "Community", news: "Nachrichten", pricing: "Preise", login: "Anmelden", getStarted: "Loslegen",
-    globalChat: "Globaler Chat", totalComments: "Gesamte Kommentare", todayComments: "Heute",
+    globalChat: "Globaler Chat", totalComments: "Gesamte Nachrichten", todayComments: "Heute",
     activeUsers: "Aktive Benutzer", typeMessage: "Nachricht eingeben...", loginToChat: "Anmelden zum Chatten",
     send: "Senden", backToCommunity: "Zurück zur Community",
     userPredictions: "Benutzer-Vorhersagen", todaysMatches: "Heutige Spiele",
-    solution: "Lösung",
+    solution: "Lösung", noMessages: "Noch keine Nachrichten", beFirstToChat: "Seien Sie der Erste, der ein Gespräch beginnt!",
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance IA",
     community: "Communauté", news: "Actualités", pricing: "Tarifs", login: "Connexion", getStarted: "Commencer",
-    globalChat: "Chat Global", totalComments: "Total Commentaires", todayComments: "Aujourd'hui",
+    globalChat: "Chat Global", totalComments: "Total Messages", todayComments: "Aujourd'hui",
     activeUsers: "Utilisateurs Actifs", typeMessage: "Tapez un message...", loginToChat: "Connectez-vous pour discuter",
     send: "Envoyer", backToCommunity: "Retour à la Communauté",
     userPredictions: "Prédictions des Utilisateurs", todaysMatches: "Matchs du Jour",
-    solution: "Solution",
+    solution: "Solution", noMessages: "Pas encore de messages", beFirstToChat: "Soyez le premier à démarrer une conversation !",
   },
   JA: {
     home: "ホーム", predictions: "予想", leagues: "リーグ", performance: "AI性能",
     community: "コミュニティ", news: "ニュース", pricing: "料金", login: "ログイン", getStarted: "始める",
-    globalChat: "グローバルチャット", totalComments: "総コメント数", todayComments: "今日",
+    globalChat: "グローバルチャット", totalComments: "総メッセージ数", todayComments: "今日",
     activeUsers: "アクティブユーザー", typeMessage: "メッセージを入力...", loginToChat: "ログインしてチャット",
     send: "送信", backToCommunity: "コミュニティに戻る",
     userPredictions: "ユーザー予想", todaysMatches: "今日の試合",
-    solution: "ソリューション",
+    solution: "ソリューション", noMessages: "まだメッセージがありません", beFirstToChat: "最初に会話を始めましょう！",
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성능",
     community: "커뮤니티", news: "뉴스", pricing: "요금", login: "로그인", getStarted: "시작하기",
-    globalChat: "전체 채팅", totalComments: "총 댓글", todayComments: "오늘",
+    globalChat: "전체 채팅", totalComments: "총 메시지", todayComments: "오늘",
     activeUsers: "활성 사용자", typeMessage: "메시지 입력...", loginToChat: "로그인하여 채팅",
     send: "보내기", backToCommunity: "커뮤니티로 돌아가기",
     userPredictions: "사용자 예측", todaysMatches: "오늘의 경기",
-    solution: "솔루션",
+    solution: "솔루션", noMessages: "아직 메시지가 없습니다", beFirstToChat: "첫 대화를 시작해 보세요!",
   },
 };
 
@@ -106,6 +106,7 @@ function ChatRoom({ user, t, localePath }: { user: User | null; t: (key: string)
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [reactions, setReactions] = useState<Record<string, ChatReaction[]>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -131,6 +132,7 @@ function ChatRoom({ user, t, localePath }: { user: User | null; t: (key: string)
   }, [messages]);
 
   const loadMessages = async () => {
+    setLoading(true);
     const result = await getChatMessages(null);
     const messages = result.data || [];
     setMessages(messages);
@@ -139,6 +141,7 @@ function ChatRoom({ user, t, localePath }: { user: User | null; t: (key: string)
       const reactionsResult = await getMessageReactions(msgIds);
       setReactions(reactionsResult.data || {});
     }
+    setLoading(false);
   };
 
   const handleSendMessage = async () => {
@@ -172,7 +175,19 @@ function ChatRoom({ user, t, localePath }: { user: User | null; t: (key: string)
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg) => {
+        {loading ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-gray-500">
+            <svg className="w-16 h-16 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <p className="text-lg font-medium">{t('noMessages') || 'No messages yet'}</p>
+            <p className="text-sm mt-1">{t('beFirstToChat') || 'Be the first to start a conversation!'}</p>
+          </div>
+        ) : messages.map((msg) => {
           const currentUserName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '';
           const isOwnMessage = msg.sender_name === currentUserName;
           return (
@@ -283,7 +298,7 @@ export default function GlobalChatPage() {
   }, []);
 
   const loadStats = async () => {
-    const result = await getCommentStats();
+    const result = await getGlobalChatStats();
     if (result.data) {
       setStats(result.data);
     }
