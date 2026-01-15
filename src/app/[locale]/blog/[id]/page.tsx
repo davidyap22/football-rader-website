@@ -17,11 +17,12 @@ const parseMarkdown = (text: string): string => {
   html = html.replace(/^&gt;/gm, '>');
 
   // Horizontal rules
-  html = html.replace(/^---$/gm, '<hr class="my-8 border-white/10" />');
+  html = html.replace(/^---$/gm, '<hr class="my-10 border-white/10" />');
 
-  // Headers (must be before bold processing)
-  html = html.replace(/^### (.+)$/gm, '<h3 class="text-xl font-bold text-white mt-10 mb-4 flex items-center gap-3"><span class="w-1 h-6 bg-gradient-to-b from-emerald-400 to-cyan-400 rounded-full"></span>$1</h3>');
-  html = html.replace(/^## (.+)$/gm, '<h2 class="text-2xl font-bold text-white mt-12 mb-6 pb-3 border-b border-white/10">$1</h2>');
+  // Headers (must be before bold processing) - H1 for main title
+  html = html.replace(/^# (.+)$/gm, '<h1 class="text-3xl md:text-4xl font-bold text-white mt-12 mb-8 leading-tight">$1</h1>');
+  html = html.replace(/^### (.+)$/gm, '<h3 class="text-xl md:text-2xl font-bold text-white mt-10 mb-5 flex items-center gap-3"><span class="w-1 h-7 bg-gradient-to-b from-emerald-400 to-cyan-400 rounded-full"></span>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2 class="text-2xl md:text-3xl font-bold text-white mt-14 mb-6 pb-4 border-b border-white/10">$1</h2>');
 
   // Bold text
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
@@ -30,13 +31,13 @@ const parseMarkdown = (text: string): string => {
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-emerald-400 hover:text-emerald-300 underline underline-offset-4 transition-colors">$1</a>');
 
   // Blockquotes
-  html = html.replace(/^> (.+)$/gm, '<blockquote class="my-6 pl-6 py-4 border-l-4 border-emerald-500 bg-gradient-to-r from-emerald-500/10 to-transparent rounded-r-lg italic text-gray-300">$1</blockquote>');
+  html = html.replace(/^> (.+)$/gm, '<blockquote class="my-8 pl-6 py-5 border-l-4 border-emerald-500 bg-gradient-to-r from-emerald-500/10 to-transparent rounded-r-lg italic text-gray-200 text-lg leading-relaxed">$1</blockquote>');
 
   // Ordered lists (1. 2. etc)
-  html = html.replace(/^(\d+)\. (.+)$/gm, '<li class="flex gap-4 items-start my-3"><span class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">$1</span><span class="pt-1">$2</span></li>');
+  html = html.replace(/^(\d+)\. (.+)$/gm, '<li class="flex gap-4 items-start my-4"><span class="flex-shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-base">$1</span><span class="pt-1.5 text-lg text-gray-200 leading-relaxed">$2</span></li>');
 
   // Unordered lists with dash
-  html = html.replace(/^- (.+)$/gm, '<li class="flex gap-3 items-start my-2"><span class="flex-shrink-0 w-2 h-2 rounded-full bg-emerald-400 mt-2.5"></span><span>$1</span></li>');
+  html = html.replace(/^- (.+)$/gm, '<li class="flex gap-4 items-start my-3"><span class="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-emerald-400 mt-2.5"></span><span class="text-lg text-gray-200 leading-relaxed">$1</span></li>');
 
   // Tables - basic support
   html = html.replace(/\|(.+)\|/g, (match, content) => {
@@ -47,22 +48,22 @@ const parseMarkdown = (text: string): string => {
     const isHeader = cells.some((cell: string) => cell.includes('**'));
     const cellTag = isHeader ? 'th' : 'td';
     const cellClass = isHeader
-      ? 'px-4 py-3 bg-white/5 font-semibold text-white border border-white/10'
-      : 'px-4 py-3 border border-white/10 text-gray-300';
+      ? 'px-5 py-4 bg-white/5 font-semibold text-white border border-white/10 text-base'
+      : 'px-5 py-4 border border-white/10 text-gray-200 text-base';
     return '<tr>' + cells.map((cell: string) => `<${cellTag} class="${cellClass}">${cell}</${cellTag}>`).join('') + '</tr>';
   });
 
   // Wrap consecutive table rows
-  html = html.replace(/(<tr>.*<\/tr>\n?)+/g, '<div class="overflow-x-auto my-8"><table class="w-full border-collapse rounded-lg overflow-hidden">$&</table></div>');
+  html = html.replace(/(<tr>.*<\/tr>\n?)+/g, '<div class="overflow-x-auto my-10"><table class="w-full border-collapse rounded-lg overflow-hidden">$&</table></div>');
 
   // Code inline `code`
-  html = html.replace(/`([^`]+)`/g, '<code class="px-2 py-1 bg-white/10 rounded text-emerald-400 text-sm font-mono">$1</code>');
+  html = html.replace(/`([^`]+)`/g, '<code class="px-2.5 py-1.5 bg-white/10 rounded text-emerald-400 text-base font-mono">$1</code>');
 
   // Emoji indicators
-  html = html.replace(/📖/g, '<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/20 mr-2">📖</span>');
-  html = html.replace(/💡/g, '<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-500/20 mr-2">💡</span>');
-  html = html.replace(/⚠️/g, '<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-orange-500/20 mr-2">⚠️</span>');
-  html = html.replace(/✅/g, '<span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-500/20 mr-2">✅</span>');
+  html = html.replace(/📖/g, '<span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-500/20 mr-2 text-xl">📖</span>');
+  html = html.replace(/💡/g, '<span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-yellow-500/20 mr-2 text-xl">💡</span>');
+  html = html.replace(/⚠️/g, '<span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-orange-500/20 mr-2 text-xl">⚠️</span>');
+  html = html.replace(/✅/g, '<span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-green-500/20 mr-2 text-xl">✅</span>');
 
   // Paragraphs - wrap remaining text blocks
   html = html.split('\n\n').map(block => {
@@ -70,13 +71,13 @@ const parseMarkdown = (text: string): string => {
       return block;
     }
     if (block.trim()) {
-      return `<p class="text-gray-300 leading-relaxed my-4">${block.replace(/\n/g, '<br/>')}</p>`;
+      return `<p class="text-gray-200 text-lg leading-8 my-6">${block.replace(/\n/g, '<br/>')}</p>`;
     }
     return '';
   }).join('\n');
 
   // Wrap list items in ul
-  html = html.replace(/(<li class="flex gap-[34][^"]*".*?<\/li>\n?)+/g, '<ul class="my-6 space-y-1">$&</ul>');
+  html = html.replace(/(<li class="flex gap-[34][^"]*".*?<\/li>\n?)+/g, '<ul class="my-8 space-y-2">$&</ul>');
 
   return html;
 };
@@ -6999,7 +7000,8 @@ export default function BlogPostPage() {
           {/* Article Content */}
           <AnimatedSection delay={100}>
             <div
-              className="article-content max-w-none mt-10"
+              className="article-content max-w-none mt-10 font-sans antialiased"
+              style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}
               dangerouslySetInnerHTML={{ __html: parseMarkdown(content) }}
             />
           </AnimatedSection>
