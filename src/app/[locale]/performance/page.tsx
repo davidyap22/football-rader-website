@@ -2249,15 +2249,10 @@ export default function PerformancePage() {
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowHistoryModal(false)} />
 
           {/* Modal */}
-          <div className="relative w-full max-w-4xl max-h-[85vh] bg-gray-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+          <div className="relative w-full max-w-6xl max-h-[85vh] bg-[#0d1117] border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10">
-              <div className="flex items-center gap-3">
-                <h3 className="text-lg font-semibold text-white">Odds History</h3>
-                <span className="text-sm text-gray-400">
-                  {selectedMatch.home_name} vs {selectedMatch.away_name}
-                </span>
-              </div>
+            <div className="flex items-center justify-between p-5">
+              <h3 className="text-xl font-bold text-white">Odds History</h3>
               <button
                 onClick={() => setShowHistoryModal(false)}
                 className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
@@ -2268,110 +2263,115 @@ export default function PerformancePage() {
               </button>
             </div>
 
-            {/* Tabs */}
-            <div className="flex border-b border-white/10">
-              <button
-                onClick={() => setHistoryTab('1x2')}
-                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors cursor-pointer ${
-                  historyTab === '1x2' ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                1X2
-              </button>
-              <button
-                onClick={() => setHistoryTab('hdp')}
-                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors cursor-pointer ${
-                  historyTab === 'hdp' ? 'text-cyan-400 border-b-2 border-cyan-400' : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                HDP
-              </button>
-              <button
-                onClick={() => setHistoryTab('ou')}
-                className={`flex-1 px-4 py-3 text-sm font-medium transition-colors cursor-pointer ${
-                  historyTab === 'ou' ? 'text-amber-400 border-b-2 border-amber-400' : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                O/U
-              </button>
-            </div>
-
             {/* Content */}
-            <div className="overflow-auto max-h-[60vh]">
-              {loadingHistory ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-500"></div>
-                </div>
-              ) : (
-                <table className="w-full">
-                  <thead className="sticky top-0 bg-gray-800">
-                    <tr className="text-xs text-gray-400 uppercase">
-                      <th className="px-4 py-3 text-left">Time</th>
-                      <th className="px-4 py-3 text-left">Bookmaker</th>
-                      {historyTab === '1x2' ? (
-                        <>
-                          <th className="px-4 py-3 text-right">Home</th>
-                          <th className="px-4 py-3 text-right">Draw</th>
-                          <th className="px-4 py-3 text-right">Away</th>
-                        </>
-                      ) : historyTab === 'hdp' ? (
-                        <>
-                          <th className="px-4 py-3 text-right">Line</th>
-                          <th className="px-4 py-3 text-right">Home</th>
-                          <th className="px-4 py-3 text-right">Away</th>
-                        </>
-                      ) : (
-                        <>
-                          <th className="px-4 py-3 text-right">Line</th>
-                          <th className="px-4 py-3 text-right">Over</th>
-                          <th className="px-4 py-3 text-right">Under</th>
-                        </>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5">
-                    {oddsHistory.map((item, idx) => (
-                      <tr key={idx} className="hover:bg-white/5">
-                        <td className="px-4 py-3 text-sm text-white font-medium">
-                          {new Date(item.created_at).toLocaleString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-400">{item.bookmaker || '-'}</td>
-                        {historyTab === '1x2' ? (
-                          <>
-                            <td className="px-4 py-3 text-sm text-cyan-400 text-right">{item.moneyline_1x2_home?.toFixed(2) || '-'}</td>
-                            <td className="px-4 py-3 text-sm text-gray-300 text-right">{item.moneyline_1x2_draw?.toFixed(2) || '-'}</td>
-                            <td className="px-4 py-3 text-sm text-amber-400 text-right">{item.moneyline_1x2_away?.toFixed(2) || '-'}</td>
-                          </>
-                        ) : historyTab === 'hdp' ? (
-                          <>
-                            <td className="px-4 py-3 text-sm text-white text-right">{item.handicap_main_line ?? '-'}</td>
-                            <td className="px-4 py-3 text-sm text-cyan-400 text-right">{item.handicap_home?.toFixed(2) || '-'}</td>
-                            <td className="px-4 py-3 text-sm text-amber-400 text-right">{item.handicap_away?.toFixed(2) || '-'}</td>
-                          </>
-                        ) : (
-                          <>
-                            <td className="px-4 py-3 text-sm text-white text-right">{item.totalpoints_main_line ?? '-'}</td>
-                            <td className="px-4 py-3 text-sm text-cyan-400 text-right">{item.totalpoints_over?.toFixed(2) || '-'}</td>
-                            <td className="px-4 py-3 text-sm text-amber-400 text-right">{item.totalpoints_under?.toFixed(2) || '-'}</td>
-                          </>
+            <div className="px-5 pb-5">
+              <div className="bg-[#161b22] rounded-xl border border-white/5 overflow-hidden">
+                <div className="overflow-auto max-h-[65vh]">
+                  {loadingHistory ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-500"></div>
+                    </div>
+                  ) : (
+                    <table className="w-full">
+                      <thead className="sticky top-0 bg-[#161b22] z-10">
+                        {/* Category Headers */}
+                        <tr className="border-b border-white/5">
+                          <th className="px-4 py-3"></th>
+                          <th colSpan={3} className="px-2 py-3 text-center">
+                            <span className="inline-flex px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-semibold">
+                              1X2
+                            </span>
+                          </th>
+                          <th colSpan={3} className="px-2 py-3 text-center">
+                            <span className="inline-flex px-4 py-1.5 rounded-full bg-cyan-500/20 text-cyan-400 text-xs font-semibold">
+                              OVER/UNDER
+                            </span>
+                          </th>
+                          <th colSpan={3} className="px-2 py-3 text-center">
+                            <span className="inline-flex px-4 py-1.5 rounded-full bg-purple-500/20 text-purple-400 text-xs font-semibold">
+                              HANDICAP
+                            </span>
+                          </th>
+                        </tr>
+                        {/* Column Headers */}
+                        <tr className="text-xs text-gray-500 border-b border-white/5">
+                          <th className="px-4 py-3 text-left font-medium">Time</th>
+                          <th className="px-3 py-3 text-center font-medium">Home</th>
+                          <th className="px-3 py-3 text-center font-medium">Draw</th>
+                          <th className="px-3 py-3 text-center font-medium border-r border-white/5">Away</th>
+                          <th className="px-3 py-3 text-center font-medium text-cyan-500">Line</th>
+                          <th className="px-3 py-3 text-center font-medium">Over</th>
+                          <th className="px-3 py-3 text-center font-medium border-r border-white/5">Under</th>
+                          <th className="px-3 py-3 text-center font-medium text-purple-500">Line</th>
+                          <th className="px-3 py-3 text-center font-medium">Home</th>
+                          <th className="px-3 py-3 text-center font-medium">Away</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/5">
+                        {oddsHistory.map((item, idx) => (
+                          <tr
+                            key={idx}
+                            className={`hover:bg-white/5 transition-colors ${
+                              idx === 0 ? 'bg-emerald-500/5' : ''
+                            }`}
+                          >
+                            <td className="px-4 py-3 text-sm text-gray-300 whitespace-nowrap">
+                              {new Date(item.created_at).toLocaleDateString('en-GB', {
+                                day: '2-digit',
+                                month: 'short'
+                              })} {new Date(item.created_at).toLocaleTimeString('en-GB', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                              })}
+                              {idx === 0 && (
+                                <span className="ml-2 text-emerald-400 text-xs">(Latest)</span>
+                              )}
+                            </td>
+                            {/* 1X2 */}
+                            <td className="px-3 py-3 text-sm text-white text-center font-medium">
+                              {item.moneyline_1x2_home?.toFixed(2) || '-'}
+                            </td>
+                            <td className="px-3 py-3 text-sm text-white text-center font-medium">
+                              {item.moneyline_1x2_draw?.toFixed(2) || '-'}
+                            </td>
+                            <td className="px-3 py-3 text-sm text-white text-center font-medium border-r border-white/5">
+                              {item.moneyline_1x2_away?.toFixed(2) || '-'}
+                            </td>
+                            {/* Over/Under */}
+                            <td className="px-3 py-3 text-sm text-cyan-400 text-center font-medium">
+                              {item.totalpoints_main_line ?? '-'}
+                            </td>
+                            <td className="px-3 py-3 text-sm text-white text-center font-medium">
+                              {item.totalpoints_over?.toFixed(2) || '-'}
+                            </td>
+                            <td className="px-3 py-3 text-sm text-white text-center font-medium border-r border-white/5">
+                              {item.totalpoints_under?.toFixed(2) || '-'}
+                            </td>
+                            {/* Handicap */}
+                            <td className="px-3 py-3 text-sm text-purple-400 text-center font-medium">
+                              {item.handicap_main_line ?? '-'}
+                            </td>
+                            <td className="px-3 py-3 text-sm text-white text-center font-medium">
+                              {item.handicap_home?.toFixed(2) || '-'}
+                            </td>
+                            <td className="px-3 py-3 text-sm text-white text-center font-medium">
+                              {item.handicap_away?.toFixed(2) || '-'}
+                            </td>
+                          </tr>
+                        ))}
+                        {oddsHistory.length === 0 && (
+                          <tr>
+                            <td colSpan={10} className="px-4 py-12 text-center text-gray-500">
+                              No odds history available
+                            </td>
+                          </tr>
                         )}
-                      </tr>
-                    ))}
-                    {oddsHistory.length === 0 && (
-                      <tr>
-                        <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
-                          No odds history available
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              )}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
