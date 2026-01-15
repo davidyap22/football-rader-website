@@ -1210,7 +1210,7 @@ function ChatRoom({
     }, 5000);
 
     return () => {
-      if (channel) {
+      if (channel && chatSupabase) {
         chatSupabase.removeChannel(channel);
       }
       if (pollingInterval) {

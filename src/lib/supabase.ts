@@ -104,13 +104,34 @@ export const supabase = supabaseUrl && supabaseKey
 
 // ============ SEPARATE CHAT SUPABASE CLIENT ============
 // Chat functionality uses a different Supabase instance (for global chat only)
-// IMPORTANT: Move these to environment variables!
 const chatSupabaseUrl = process.env.NEXT_PUBLIC_CHAT_SUPABASE_URL || '';
 const chatSupabaseKey = process.env.NEXT_PUBLIC_CHAT_SUPABASE_ANON_KEY || '';
 
+// Create the chat supabase client
 export const chatSupabase = chatSupabaseUrl && chatSupabaseKey
   ? createClient(chatSupabaseUrl, chatSupabaseKey)
-  : null as any;
+  : null;
+
+// Helper function for lazy initialization (fallback if needed)
+let _lazyClient: typeof chatSupabase = null;
+export const getChatSupabase = () => {
+  // Return cached client if already created
+  if (chatSupabase) return chatSupabase;
+  if (_lazyClient) return _lazyClient;
+
+  // Try to create client lazily (for cases where env vars are available at runtime but not build time)
+  const url = process.env.NEXT_PUBLIC_CHAT_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_CHAT_SUPABASE_ANON_KEY;
+
+  if (url && key) {
+    console.log('Creating chatSupabase lazily...');
+    _lazyClient = createClient(url, key);
+    return _lazyClient;
+  }
+
+  console.error('Chat Supabase not configured - missing NEXT_PUBLIC_CHAT_SUPABASE_URL or NEXT_PUBLIC_CHAT_SUPABASE_ANON_KEY');
+  return null;
+};
 
 // Auth helper functions
 export const signUpWithEmail = async (email: string, password: string, fullName: string) => {
@@ -1142,20 +1163,21 @@ export const getCommentStats = async () => {
 
 // Get stats for global chat (uses chatSupabase)
 export const getGlobalChatStats = async () => {
-  if (!chatSupabase) {
+  const client = getChatSupabase();
+  if (!client) {
     return { data: { totalComments: 0, todayComments: 0, activeUsers: 0 }, error: null };
   }
 
   try {
     // Total messages
-    const { count: totalComments } = await chatSupabase
+    const { count: totalComments } = await client
       .from('global_chat_messages')
       .select('*', { count: 'exact', head: true });
 
     // Today's messages
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const { count: todayComments } = await chatSupabase
+    const { count: todayComments } = await client
       .from('global_chat_messages')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', today.toISOString());
@@ -1163,7 +1185,7 @@ export const getGlobalChatStats = async () => {
     // Active users (unique senders in last 7 days)
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
-    const { data: activeUsers } = await chatSupabase
+    const { data: activeUsers } = await client
       .from('global_chat_messages')
       .select('sender_name')
       .gte('created_at', weekAgo.toISOString());
@@ -1198,15 +1220,17 @@ export interface ChatMessage {
 
 // Get chat messages (global or match-specific) - uses chatSupabase
 export const getChatMessages = async (matchId?: string | null, limit: number = 50) => {
-  if (!chatSupabase) {
-    console.error('chatSupabase is null');
+  const client = getChatSupabase();
+
+  if (!client) {
+    console.error('chatSupabase is null - env vars might not be loaded');
     return { data: null, error: { message: 'Chat Supabase client not initialized' } };
   }
 
   try {
     console.log('Fetching from global_chat_messages...');
 
-    const { data, error, status, statusText } = await chatSupabase
+    const { data, error, status, statusText } = await client
       .from('global_chat_messages')
       .select('*')
       .order('created_at', { ascending: true })
@@ -1231,7 +1255,8 @@ export const getChatMessages = async (matchId?: string | null, limit: number = 5
 
 // Send chat message - uses chatSupabase
 export const sendChatMessage = async (senderName: string, content: string, matchId?: string | null) => {
-  if (!chatSupabase) {
+  const client = getChatSupabase();
+  if (!client) {
     return { data: null, error: { message: 'Chat Supabase client not initialized' } };
   }
 
@@ -1252,7 +1277,7 @@ export const sendChatMessage = async (senderName: string, content: string, match
   const sanitizedContent = sanitizeInput(content);
 
   try {
-    const { data, error } = await chatSupabase
+    const { data, error } = await client
       .from('global_chat_messages')
       .insert({
         sender_name: senderName,
@@ -1280,7 +1305,8 @@ export const subscribeToChatMessages = (
   onMessage: (message: ChatMessage) => void,
   onStatusChange?: (status: string) => void
 ) => {
-  if (!chatSupabase) {
+  const client = getChatSupabase();
+  if (!client) {
     return null;
   }
 
@@ -1302,7 +1328,7 @@ export const subscribeToChatMessages = (
     subscriptionConfig.filter = `match_id=eq.${matchId}`;
   }
 
-  const channel = chatSupabase
+  const channel = client
     .channel(`chat-${matchId ?? 'global'}-${Date.now()}`)
     .on('postgres_changes', subscriptionConfig, (payload: { new: ChatMessage }) => {
       onMessage(payload.new);
@@ -1319,7 +1345,8 @@ export const subscribeToChatMessages = (
 
 // Get online users count (approximate based on recent chat activity) - uses chatSupabase
 export const getOnlineUsersCount = async () => {
-  if (!chatSupabase) {
+  const client = getChatSupabase();
+  if (!client) {
     return { data: 0, error: null };
   }
 
@@ -1327,7 +1354,7 @@ export const getOnlineUsersCount = async () => {
     const fiveMinutesAgo = new Date();
     fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 5);
 
-    const { data } = await chatSupabase
+    const { data } = await client
       .from('global_chat_messages')
       .select('sender_name')
       .gte('created_at', fiveMinutesAgo.toISOString());
@@ -1359,12 +1386,13 @@ export interface ReactionCount {
 
 // Get reactions for messages - uses chatSupabase
 export const getMessageReactions = async (messageIds: string[]) => {
-  if (!chatSupabase || messageIds.length === 0) {
+  const client = getChatSupabase();
+  if (!client || messageIds.length === 0) {
     return { data: {}, error: null };
   }
 
   try {
-    const { data, error } = await chatSupabase
+    const { data, error } = await client
       .from('chat_reactions')
       .select('*')
       .in('message_id', messageIds);
@@ -1390,13 +1418,14 @@ export const getMessageReactions = async (messageIds: string[]) => {
 
 // Toggle reaction on a message - uses chatSupabase
 export const toggleMessageReaction = async (messageId: string, userId: string, reactionType: string) => {
-  if (!chatSupabase) {
+  const client = getChatSupabase();
+  if (!client) {
     return { data: null, error: { message: 'Chat Supabase client not initialized' } };
   }
 
   try {
     // Check if user already reacted
-    const { data: existing } = await chatSupabase
+    const { data: existing } = await client
       .from('chat_reactions')
       .select('*')
       .eq('message_id', messageId)
@@ -1406,14 +1435,14 @@ export const toggleMessageReaction = async (messageId: string, userId: string, r
     if (existing) {
       if (existing.reaction_type === reactionType) {
         // Same reaction - remove it
-        await chatSupabase
+        await client
           .from('chat_reactions')
           .delete()
           .eq('id', existing.id);
         return { data: { action: 'removed' }, error: null };
       } else {
         // Different reaction - update it
-        await chatSupabase
+        await client
           .from('chat_reactions')
           .update({ reaction_type: reactionType })
           .eq('id', existing.id);
@@ -1421,7 +1450,7 @@ export const toggleMessageReaction = async (messageId: string, userId: string, r
       }
     } else {
       // No existing reaction - add new one
-      await chatSupabase
+      await client
         .from('chat_reactions')
         .insert({
           message_id: messageId,
