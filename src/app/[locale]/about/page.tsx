@@ -37,6 +37,7 @@ const translations: Record<string, Record<string, string>> = {
     realityNote: "A Note on Reality",
     realityText: "OddsFlow is a data analytics platform. We are not a bookmaker, and we are not a \"tipping service.\" We give you the map; you have to drive the car. Please use our data responsibly, do your own research, and remember that in football, nothing is ever 100% certain.",
     footer: "© 2026 OddsFlow. All rights reserved.",
+    footerDesc: "AI-powered football odds analysis for smarter predictions. Make data-driven decisions with real-time insights.",
     product: "Product", liveOdds: "AI Performance", popularLeagues: "Popular Leagues",
     communityFooter: "Community", globalChat: "Global Chat", userPredictions: "User Predictions", todayMatches: "Today Matches",
     company: "Company", aboutUs: "About Us", contact: "Contact", blog: "Blog",
@@ -72,6 +73,7 @@ const translations: Record<string, Record<string, string>> = {
     realityNote: "Una Nota sobre la Realidad",
     realityText: "OddsFlow es una plataforma de análisis de datos. No somos una casa de apuestas y no somos un \"servicio de tips\". Te damos el mapa; tú tienes que conducir el coche. Por favor usa nuestros datos responsablemente, haz tu propia investigación y recuerda que en el fútbol, nada es 100% seguro.",
     footer: "© 2026 OddsFlow. Todos los derechos reservados.",
+    footerDesc: "Análisis de cuotas de fútbol impulsado por IA para predicciones más inteligentes. Tome decisiones basadas en datos con información en tiempo real.",
     product: "Producto", liveOdds: "Rendimiento IA", popularLeagues: "Ligas Populares",
     communityFooter: "Comunidad", globalChat: "Chat Global", userPredictions: "Predicciones de Usuarios", todayMatches: "Partidos de Hoy",
     company: "Empresa", aboutUs: "Sobre Nosotros", contact: "Contacto", blog: "Blog",
@@ -107,6 +109,7 @@ const translations: Record<string, Record<string, string>> = {
     realityNote: "Uma Nota sobre a Realidade",
     realityText: "OddsFlow é uma plataforma de análise de dados. Não somos uma casa de apostas e não somos um \"serviço de dicas\". Damos o mapa; você tem que dirigir o carro. Por favor, use nossos dados com responsabilidade e lembre-se que no futebol, nada é 100% certo.",
     footer: "© 2026 OddsFlow. Todos os direitos reservados.",
+    footerDesc: "Análise de odds de futebol com IA para previsões mais inteligentes. Tome decisões baseadas em dados com insights em tempo real.",
     product: "Produto", liveOdds: "Desempenho IA", popularLeagues: "Ligas Populares",
     communityFooter: "Comunidade", globalChat: "Chat Global", userPredictions: "Previsões de Usuários", todayMatches: "Jogos de Hoje",
     company: "Empresa", aboutUs: "Sobre Nós", contact: "Contato", blog: "Blog",
@@ -142,6 +145,7 @@ const translations: Record<string, Record<string, string>> = {
     realityNote: "Ein Hinweis zur Realität",
     realityText: "OddsFlow ist eine Datenanalyseplattform. Wir sind kein Buchmacher und kein \"Tipp-Service\". Wir geben Ihnen die Karte; Sie müssen das Auto fahren. Bitte nutzen Sie unsere Daten verantwortungsvoll und denken Sie daran, dass im Fußball nichts 100% sicher ist.",
     footer: "© 2026 OddsFlow. Alle Rechte vorbehalten.",
+    footerDesc: "KI-gestützte Fußballquoten-Analyse für klügere Vorhersagen. Treffen Sie datengestützte Entscheidungen mit Echtzeit-Einblicken.",
     product: "Produkt", liveOdds: "KI-Leistung", popularLeagues: "Beliebte Ligen",
     communityFooter: "Community", globalChat: "Globaler Chat", userPredictions: "Benutzer-Vorhersagen", todayMatches: "Heutige Spiele",
     company: "Unternehmen", aboutUs: "Über uns", contact: "Kontakt", blog: "Blog",
@@ -177,6 +181,7 @@ const translations: Record<string, Record<string, string>> = {
     realityNote: "Une Note sur la Réalité",
     realityText: "OddsFlow est une plateforme d'analyse de données. Nous ne sommes pas un bookmaker et nous ne sommes pas un \"service de pronostics\". Nous vous donnons la carte; vous devez conduire la voiture. Veuillez utiliser nos données de manière responsable et n'oubliez pas que dans le football, rien n'est jamais certain à 100%.",
     footer: "© 2026 OddsFlow. Tous droits réservés.",
+    footerDesc: "Analyse de cotes de football propulsée par l'IA pour des prédictions plus intelligentes. Prenez des décisions basées sur les données avec des informations en temps réel.",
     product: "Produit", liveOdds: "Performance IA", popularLeagues: "Ligues Populaires",
     communityFooter: "Communauté", globalChat: "Chat Global", userPredictions: "Prédictions Utilisateurs", todayMatches: "Matchs du Jour",
     company: "Entreprise", aboutUs: "À Propos", contact: "Contact", blog: "Blog",
@@ -212,6 +217,7 @@ const translations: Record<string, Record<string, string>> = {
     realityNote: "現実についての注意",
     realityText: "OddsFlowはデータ分析プラットフォームです。私たちはブックメーカーでもなく、「チップサービス」でもありません。地図を渡しますが、運転はあなたがしなければなりません。責任を持ってデータを使用し、サッカーでは何も100%確実ではないことを忘れないでください。",
     footer: "© 2026 OddsFlow. 全著作権所有。",
+    footerDesc: "よりスマートな予測のためのAI駆動サッカーオッズ分析。リアルタイムの洞察でデータ駆動の意思決定を。",
     product: "製品", liveOdds: "AI分析", popularLeagues: "人気リーグ",
     communityFooter: "コミュニティ", globalChat: "グローバルチャット", userPredictions: "ユーザー予測", todayMatches: "今日の試合",
     company: "会社", aboutUs: "会社概要", contact: "お問い合わせ", blog: "ブログ",
@@ -247,6 +253,7 @@ const translations: Record<string, Record<string, string>> = {
     realityNote: "현실에 대한 참고",
     realityText: "OddsFlow는 데이터 분석 플랫폼입니다. 우리는 북메이커도 아니고 \"팁 서비스\"도 아닙니다. 지도를 드립니다; 운전은 당신이 해야 합니다. 데이터를 책임감 있게 사용하시고, 축구에서는 아무것도 100% 확실하지 않다는 것을 기억하세요.",
     footer: "© 2026 OddsFlow. 모든 권리 보유.",
+    footerDesc: "더 스마트한 예측을 위한 AI 기반 축구 배당률 분석. 실시간 인사이트로 데이터 기반 결정을 내리세요.",
     product: "제품", liveOdds: "AI 분석", popularLeagues: "인기 리그",
     communityFooter: "커뮤니티", globalChat: "글로벌 채팅", userPredictions: "사용자 예측", todayMatches: "오늘의 경기",
     company: "회사", aboutUs: "회사 소개", contact: "연락처", blog: "블로그",
@@ -282,6 +289,7 @@ const translations: Record<string, Record<string, string>> = {
     realityNote: "关于现实的说明",
     realityText: "OddsFlow 是一个数据分析平台。我们不是博彩公司，也不是\"贴士服务\"。我们给你地图；你必须自己驾驶。请负责任地使用我们的数据，进行自己的研究，并记住在足球中，没有什么是100%确定的。",
     footer: "© 2026 OddsFlow. 版权所有。",
+    footerDesc: "AI 驱动的足球赔率分析，助您做出更明智的预测。通过实时洞察做出数据驱动的决策。",
     product: "产品", liveOdds: "AI分析", popularLeagues: "热门联赛",
     communityFooter: "社区", globalChat: "全球聊天", userPredictions: "用户预测", todayMatches: "今日比赛",
     company: "公司", aboutUs: "关于我们", contact: "联系我们", blog: "博客",
@@ -317,6 +325,7 @@ const translations: Record<string, Record<string, string>> = {
     realityNote: "關於現實的說明",
     realityText: "OddsFlow 是一個數據分析平台。我們不是博彩公司，也不是\"貼士服務\"。我們給你地圖；你必須自己駕駛。請負責任地使用我們的數據，進行自己的研究，並記住在足球中，沒有什麼是100%確定的。",
     footer: "© 2026 OddsFlow. 版權所有。",
+    footerDesc: "AI 驅動的足球賠率分析，助您做出更明智的預測。通過即時洞察做出數據驅動的決策。",
     product: "產品", liveOdds: "AI分析", popularLeagues: "熱門聯賽",
     communityFooter: "社區", globalChat: "全球聊天", userPredictions: "用戶預測", todayMatches: "今日比賽",
     company: "公司", aboutUs: "關於我們", contact: "聯繫我們", blog: "部落格",
@@ -352,6 +361,7 @@ const translations: Record<string, Record<string, string>> = {
     realityNote: "Catatan tentang Realitas",
     realityText: "OddsFlow adalah platform analitik data. Kami bukan bandar taruhan, dan kami bukan \"layanan tip\". Kami memberikan peta; Anda harus mengemudi. Mohon gunakan data kami secara bertanggung jawab, lakukan riset Anda sendiri, dan ingat bahwa dalam sepak bola, tidak ada yang 100% pasti.",
     footer: "© 2026 OddsFlow. Hak cipta dilindungi.",
+    footerDesc: "Analisis odds sepak bola bertenaga AI untuk prediksi yang lebih cerdas. Buat keputusan berbasis data dengan wawasan real-time.",
     product: "Produk", liveOdds: "Performa AI", popularLeagues: "Liga Populer",
     communityFooter: "Komunitas", globalChat: "Obrolan Global", userPredictions: "Prediksi Pengguna", todayMatches: "Pertandingan Hari Ini",
     company: "Perusahaan", aboutUs: "Tentang Kami", contact: "Kontak", blog: "Blog",
@@ -630,13 +640,27 @@ export default function AboutPage() {
       {/* Footer */}
       <footer className="relative z-10 py-16 px-4 bg-black border-t border-white/5">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 lg:gap-12 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 lg:gap-12 mb-12">
             <div className="col-span-2">
               <Link href={localePath('/')} className="flex items-center gap-3 mb-6">
                 <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
                 <span className="text-xl font-bold">OddsFlow</span>
               </Link>
-              <p className="text-gray-400 mb-6 leading-relaxed">AI-powered football odds analysis for smarter predictions. Make data-driven decisions with real-time insights.</p>
+              <p className="text-gray-400 mb-6 leading-relaxed">{t('footerDesc')}</p>
+              <div className="flex items-center gap-4">
+                {/* Facebook */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </Link>
+                {/* Instagram */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </Link>
+                {/* Telegram */}
+                <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                </Link>
+              </div>
             </div>
 
             <div>
@@ -650,27 +674,53 @@ export default function AboutPage() {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
+              <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href={localePath('/about')} className="hover:text-emerald-400 transition-colors">{t('aboutUs')}</Link></li>
-                <li><Link href={localePath('/contact')} className="hover:text-emerald-400 transition-colors">{t('contact')}</Link></li>
-                <li><Link href={localePath('/blog')} className="hover:text-emerald-400 transition-colors">{t('blog')}</Link></li>
+                <li><Link href={localePath('/leagues/premier-league')} className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
+                <li><Link href={localePath('/leagues/la-liga')} className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
+                <li><Link href={localePath('/leagues/serie-a')} className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
+                <li><Link href={localePath('/leagues/bundesliga')} className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
+                <li><Link href={localePath('/leagues/ligue-1')} className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
+                <li><Link href={localePath('/leagues/champions-league')} className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
               </ul>
             </div>
 
             <div>
+              <h4 className="font-semibold mb-5 text-white">{t('communityFooter')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href={localePath('/community')} className="hover:text-emerald-400 transition-colors">{t('community')}</Link></li>
+                <li><Link href={localePath('/community/global-chat')} className="hover:text-emerald-400 transition-colors">{t('globalChat')}</Link></li>
+                <li><Link href={localePath('/community/user-predictions')} className="hover:text-emerald-400 transition-colors">{t('userPredictions')}</Link></li>
+              </ul>
+            </div>
+
+            <div className="relative z-10">
+              <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link href={localePath('/about')} className="hover:text-emerald-400 transition-colors inline-block">{t('aboutUs')}</Link></li>
+                <li><Link href={localePath('/contact')} className="hover:text-emerald-400 transition-colors inline-block">{t('contact')}</Link></li>
+                <li><Link href={localePath('/blog')} className="hover:text-emerald-400 transition-colors inline-block">{t('blog')}</Link></li>
+              </ul>
+            </div>
+
+            <div className="relative z-10">
               <h4 className="font-semibold mb-5 text-white">{t('legal')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors">{t('termsOfService')}</Link></li>
-                <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors">{t('privacyPolicy')}</Link></li>
-                <li><Link href={localePath('/responsible-gaming')} className="hover:text-emerald-400 transition-colors">{t('responsibleGaming')}</Link></li>
+                <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors inline-block">{t('termsOfService')}</Link></li>
+                <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors inline-block">{t('privacyPolicy')}</Link></li>
+                <li><Link href={localePath('/responsible-gaming')} className="hover:text-emerald-400 transition-colors inline-block">{t('responsibleGaming')}</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-white/10 pt-8 text-center">
-            <p className="text-gray-500 text-sm mb-4">{t('disclaimer')}</p>
-            <p className="text-gray-400 text-sm">{t('footer')} {t('gamblingWarning')}</p>
+          {/* Disclaimer */}
+          <div className="mt-8 pt-8 border-t border-white/5">
+            <p className="text-gray-500 text-xs leading-relaxed">{t('disclaimer')}</p>
+          </div>
+
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 mt-8">
+            <p className="text-gray-500 text-sm">&copy; 2026 OddsFlow. {t('allRightsReserved')}</p>
+            <p className="text-gray-600 text-xs">{t('gamblingWarning')}</p>
           </div>
         </div>
       </footer>
