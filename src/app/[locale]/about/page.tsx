@@ -408,7 +408,19 @@ export default function AboutPage() {
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white relative">
+      {/* Background Image */}
+      <div
+        className="fixed inset-0 z-0 opacity-20"
+        style={{
+          backgroundImage: 'url(/about/about-us.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+      <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/60 via-black/80 to-black" />
+
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
@@ -551,7 +563,7 @@ export default function AboutPage() {
       )}
 
       {/* Hero Section */}
-      <section className="pt-32 pb-16 px-4 relative overflow-hidden">
+      <section className="pt-32 pb-16 px-4 relative z-10 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 via-transparent to-transparent" />
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
@@ -566,10 +578,30 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Video Trailer Section */}
+      <section className="py-16 px-4 relative z-10">
+        <div className="max-w-5xl mx-auto">
+          <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-emerald-500/10">
+            <video
+              className="w-full aspect-video"
+              controls
+              poster="/about/about-us.png"
+              preload="metadata"
+            >
+              <source src="/about/Oddsflow video.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            {/* Video glow effect */}
+            <div className="absolute inset-0 pointer-events-none rounded-2xl ring-1 ring-inset ring-white/10" />
+          </div>
+          <p className="text-center text-gray-500 mt-4 text-sm">OddsFlow Trailer</p>
+        </div>
+      </section>
+
       {/* Our Story Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 relative z-10">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8 md:p-12">
+          <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8 md:p-12 backdrop-blur-sm">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-emerald-400">{t('ourStory')}</h2>
             <p className="text-gray-300 text-lg leading-relaxed">{t('storyText')}</p>
           </div>
@@ -577,7 +609,7 @@ export default function AboutPage() {
       </section>
 
       {/* What We Do Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 relative z-10">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">{t('whatWeDo')}</h2>
           <p className="text-gray-400 text-lg text-center mb-12">{t('whatWeDoIntro')}</p>
@@ -587,7 +619,7 @@ export default function AboutPage() {
               { title: t('feature2Title'), text: t('feature2Text'), icon: '🎯' },
               { title: t('feature3Title'), text: t('feature3Text'), icon: '📊' },
             ].map((feature, i) => (
-              <div key={i} className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 p-6 hover:border-emerald-500/30 transition-all">
+              <div key={i} className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 p-6 hover:border-emerald-500/30 transition-all backdrop-blur-sm">
                 <div className="text-3xl mb-4">{feature.icon}</div>
                 <h3 className="text-lg font-semibold mb-3 text-cyan-400">{feature.title}</h3>
                 <p className="text-gray-400">{feature.text}</p>
@@ -598,9 +630,9 @@ export default function AboutPage() {
       </section>
 
       {/* Philosophy Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 relative z-10">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 rounded-2xl border border-cyan-500/20 p-8 md:p-12">
+          <div className="bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 rounded-2xl border border-cyan-500/20 p-8 md:p-12 backdrop-blur-sm">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-cyan-400">{t('philosophy')}</h2>
             <p className="text-gray-300 text-lg leading-relaxed">{t('philosophyText')}</p>
           </div>
@@ -608,7 +640,7 @@ export default function AboutPage() {
       </section>
 
       {/* Who We Are For Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 relative z-10">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold mb-12 text-center">{t('whoWeAreFor')}</h2>
           <div className="grid md:grid-cols-3 gap-6">
@@ -617,7 +649,7 @@ export default function AboutPage() {
               { title: t('audience2Title'), text: t('audience2Text'), icon: '🔢' },
               { title: t('audience3Title'), text: t('audience3Text'), icon: '🧠' },
             ].map((audience, i) => (
-              <div key={i} className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 p-6 text-center hover:border-emerald-500/30 transition-all">
+              <div key={i} className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 p-6 text-center hover:border-emerald-500/30 transition-all backdrop-blur-sm">
                 <div className="text-4xl mb-4">{audience.icon}</div>
                 <h3 className="text-xl font-semibold mb-3">{audience.title}</h3>
                 <p className="text-gray-400">{audience.text}</p>
@@ -628,9 +660,9 @@ export default function AboutPage() {
       </section>
 
       {/* Reality Note Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 relative z-10">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-2xl border border-amber-500/20 p-8 md:p-12">
+          <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-2xl border border-amber-500/20 p-8 md:p-12 backdrop-blur-sm">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-amber-400">{t('realityNote')}</h2>
             <p className="text-gray-300 text-lg leading-relaxed">{t('realityText')}</p>
           </div>
