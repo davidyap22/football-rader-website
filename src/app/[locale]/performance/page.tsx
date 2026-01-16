@@ -2650,27 +2650,75 @@ export default function PerformancePage() {
                           </button>
                         ))}
                       </div>
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="border-b border-white/10">
-                            <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Clock</th>
-                            <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Type</th>
-                            <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Selection</th>
-                            <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Line</th>
-                            <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Odds</th>
-                            <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Stake</th>
-                            <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Score</th>
-                            <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Status</th>
-                            <th className="text-right py-2 px-2 text-gray-400 font-medium text-xs">Profit</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {filteredRecords.map((record, index) => {
-                            const derivedType = getBetType(record.selection);
-                            return (
-                              <tr key={record.id || index} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                <td className="py-2 px-2 text-gray-300 text-xs">{record.clock !== null ? `${record.clock}'` : '-'}</td>
-                                <td className="py-2 px-2">
+                      {/* Desktop Table */}
+                      <div className="hidden md:block overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="border-b border-white/10">
+                              <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Clock</th>
+                              <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Type</th>
+                              <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Selection</th>
+                              <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Line</th>
+                              <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Odds</th>
+                              <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Stake</th>
+                              <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Score</th>
+                              <th className="text-center py-2 px-2 text-gray-400 font-medium text-xs">Status</th>
+                              <th className="text-right py-2 px-2 text-gray-400 font-medium text-xs">Profit</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredRecords.map((record, index) => {
+                              const derivedType = getBetType(record.selection);
+                              return (
+                                <tr key={record.id || index} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                  <td className="py-2 px-2 text-gray-300 text-xs">{record.clock !== null ? `${record.clock}'` : '-'}</td>
+                                  <td className="py-2 px-2">
+                                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                                      derivedType === 'moneyline' ? 'bg-cyan-500/20 text-cyan-400' :
+                                      derivedType === 'handicap' ? 'bg-purple-500/20 text-purple-400' :
+                                      'bg-amber-500/20 text-amber-400'
+                                    }`}>
+                                      {derivedType === 'moneyline' ? '1X2' : derivedType === 'handicap' ? 'HDP' : 'O/U'}
+                                    </span>
+                                  </td>
+                                  <td className="py-2 px-2 text-white text-xs font-medium">{record.selection || '-'}</td>
+                                  <td className="py-2 px-2 text-center text-amber-400 text-xs">{record.line ?? '-'}</td>
+                                  <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.odds?.toFixed(2) ?? '-'}</td>
+                                  <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.stake_money ? `$${record.stake_money.toFixed(2)}` : '-'}</td>
+                                  <td className="py-2 px-2 text-center text-white text-xs font-medium">
+                                    {record.home_score !== null && record.away_score !== null ? `${record.home_score}-${record.away_score}` : '-'}
+                                  </td>
+                                  <td className="py-2 px-2 text-center">
+                                    <span
+                                      className={`px-2 py-0.5 rounded text-[10px] font-bold inline-block ${
+                                        record.status?.toLowerCase() === 'won' || record.status?.toLowerCase() === 'win' ? 'status-win-glow' :
+                                        record.status?.toLowerCase() === 'lost' || record.status?.toLowerCase() === 'loss' ? 'status-loss-glow' :
+                                        record.status?.toLowerCase() === 'push' ? 'bg-gray-500/20 text-gray-400' :
+                                        'bg-yellow-500/20 text-yellow-400'
+                                      }`}
+                                    >
+                                      {record.status?.toUpperCase() || '-'}
+                                    </span>
+                                  </td>
+                                  <td className={`py-2 px-2 text-right text-xs font-bold ${(record.profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                    {(record.profit ?? 0) >= 0 ? '+' : ''}{record.profit?.toFixed(2) ?? '0.00'}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* Mobile Card Layout */}
+                      <div className="md:hidden space-y-2 max-h-[300px] overflow-y-auto">
+                        {filteredRecords.map((record, index) => {
+                          const derivedType = getBetType(record.selection);
+                          return (
+                            <div key={record.id || index} className="bg-white/5 rounded-lg p-3 border border-white/5">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-gray-500 text-xs">{record.clock !== null ? `${record.clock}'` : '-'}</span>
                                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
                                     derivedType === 'moneyline' ? 'bg-cyan-500/20 text-cyan-400' :
                                     derivedType === 'handicap' ? 'bg-purple-500/20 text-purple-400' :
@@ -2678,34 +2726,35 @@ export default function PerformancePage() {
                                   }`}>
                                     {derivedType === 'moneyline' ? '1X2' : derivedType === 'handicap' ? 'HDP' : 'O/U'}
                                   </span>
-                                </td>
-                                <td className="py-2 px-2 text-white text-xs font-medium">{record.selection || '-'}</td>
-                                <td className="py-2 px-2 text-center text-amber-400 text-xs">{record.line ?? '-'}</td>
-                                <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.odds?.toFixed(2) ?? '-'}</td>
-                                <td className="py-2 px-2 text-center text-gray-300 text-xs">{record.stake_money ? `$${record.stake_money.toFixed(2)}` : '-'}</td>
-                                <td className="py-2 px-2 text-center text-white text-xs font-medium">
-                                  {record.home_score !== null && record.away_score !== null ? `${record.home_score}-${record.away_score}` : '-'}
-                                </td>
-                                <td className="py-2 px-2 text-center">
-                                  <span
-                                    className={`px-2 py-0.5 rounded text-[10px] font-bold inline-block ${
-                                      record.status?.toLowerCase() === 'won' || record.status?.toLowerCase() === 'win' ? 'status-win-glow' :
-                                      record.status?.toLowerCase() === 'lost' || record.status?.toLowerCase() === 'loss' ? 'status-loss-glow' :
-                                      record.status?.toLowerCase() === 'push' ? 'bg-gray-500/20 text-gray-400' :
-                                      'bg-yellow-500/20 text-yellow-400'
-                                    }`}
-                                  >
-                                    {record.status?.toUpperCase() || '-'}
-                                  </span>
-                                </td>
-                                <td className={`py-2 px-2 text-right text-xs font-bold ${(record.profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                                  {(record.profit ?? 0) >= 0 ? '+' : ''}{record.profit?.toFixed(2) ?? '0.00'}
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
+                                </div>
+                                <span
+                                  className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                    record.status?.toLowerCase() === 'won' || record.status?.toLowerCase() === 'win' ? 'status-win-glow' :
+                                    record.status?.toLowerCase() === 'lost' || record.status?.toLowerCase() === 'loss' ? 'status-loss-glow' :
+                                    record.status?.toLowerCase() === 'push' ? 'bg-gray-500/20 text-gray-400' :
+                                    'bg-yellow-500/20 text-yellow-400'
+                                  }`}
+                                >
+                                  {record.status?.toUpperCase() || '-'}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <div className="flex-1">
+                                  <div className="text-white text-sm font-medium">{record.selection || '-'}</div>
+                                  <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
+                                    <span>Line: <span className="text-amber-400">{record.line ?? '-'}</span></span>
+                                    <span>@{record.odds?.toFixed(2) ?? '-'}</span>
+                                    <span>${record.stake_money?.toFixed(0) ?? '-'}</span>
+                                  </div>
+                                </div>
+                                <div className={`text-sm font-bold ${(record.profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                  {(record.profit ?? 0) >= 0 ? '+$' : '-$'}{Math.abs(record.profit ?? 0).toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   )}
 
