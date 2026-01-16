@@ -838,7 +838,8 @@ export default function PerformancePage() {
     let cumulativeOU = 0;
 
     // Create per-bet data points for smooth chart lines
-    const dailyData = sortedRecords.map(r => {
+    // Use index as x-axis key to ensure unique positions, store date for display
+    const dailyData = sortedRecords.map((r, index) => {
       const profit = r.profit || 0;
       const betType = getBetTypeFromSelection(r.selection);
       cumulative += profit;
@@ -847,7 +848,9 @@ export default function PerformancePage() {
       else cumulativeOU += profit;
 
       return {
+        index: index,
         date: r.bet_time.split('T')[0],
+        fullDateTime: r.bet_time,
         profit: profit,
         cumulative: cumulative,
         cumulativeMoneyline: cumulativeML,
@@ -1708,11 +1711,17 @@ export default function PerformancePage() {
                         </defs>
                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
                         <XAxis
-                          dataKey="date"
+                          dataKey="index"
                           axisLine={false}
                           tickLine={false}
                           tick={{ fill: '#4b5563', fontSize: 11 }}
-                          tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          tickFormatter={(value) => {
+                            const dataPoint = filteredChartStats.dailyData[value];
+                            if (dataPoint?.date) {
+                              return new Date(dataPoint.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                            }
+                            return '';
+                          }}
                           interval="preserveStartEnd"
                           minTickGap={50}
                         />
@@ -1728,18 +1737,20 @@ export default function PerformancePage() {
                           domain={['dataMin - 1000', 'dataMax + 1000']}
                         />
                         <Tooltip
-                          content={({ active, payload, label }: any) => {
+                          content={({ active, payload }: any) => {
                             if (active && payload && payload.length) {
                               // Use actual cumulative values from payload (changes as user hovers)
                               const ml = payload[0]?.value ?? 0;
                               const hdp = payload[1]?.value ?? 0;
                               const ou = payload[2]?.value ?? 0;
                               const total = ml + hdp + ou;
+                              // Get date from the data point, not from label (which is now index)
+                              const dateStr = payload[0]?.payload?.date || '';
 
                               return (
                                 <div className="bg-gray-950/95 backdrop-blur-md border border-white/10 rounded-lg p-3 shadow-2xl min-w-[180px]">
                                   <p className="text-gray-500 text-xs mb-2 border-b border-white/5 pb-2">
-                                    {new Date(label).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+                                    {dateStr ? new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : ''}
                                   </p>
                                   <div className="space-y-1.5">
                                     {payload.map((entry: any, index: number) => (
