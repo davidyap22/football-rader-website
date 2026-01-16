@@ -855,7 +855,7 @@ export default function MatchDetailsPage() {
     if (matchData?.fixture_id) {
       // Fetch odds, AI predictions, match prediction, lineups, events, and statistics in parallel
       const personality = PERSONALITIES.find(p => p.id === selectedPersonality);
-      const [, , predictionResult, lineupsResult, eventsResult, statsResult] = await Promise.all([
+      const [, , predictionResult, lineupsResult, eventsResult, statsResult, liveSignalsResult] = await Promise.all([
         fetchOdds(matchData.fixture_id, matchData.type === 'In Play'),
         personality ? fetchAIPredictions(matchData.fixture_id, personality.aiModel) : Promise.resolve(),
         getMatchPrediction(matchData.fixture_id),
@@ -865,6 +865,12 @@ export default function MatchDetailsPage() {
         getFixtureEvents(matchData.fixture_id),
         // Fetch match statistics
         getMatchStatistics(matchData.fixture_id),
+        // Fetch live signals for Value Hunter or Conservative (refresh on every cycle)
+        selectedPersonality === 'value'
+          ? getLiveSignals(matchData.fixture_id)
+          : selectedPersonality === 'conservative'
+            ? getLiveSignalsByBetStyle(matchData.fixture_id, 'Conservative')
+            : Promise.resolve({ data: null }),
       ]);
       if (predictionResult?.data) {
         setMatchPrediction(predictionResult.data);
@@ -880,6 +886,10 @@ export default function MatchDetailsPage() {
       }
       if (statsResult?.data) {
         setMatchStats(statsResult.data);
+      }
+      // Update live signals state for Value Hunter / Conservative
+      if (liveSignalsResult?.data) {
+        setLiveSignals(liveSignalsResult.data);
       }
     }
   }, [fetchMatch, fetchOdds, fetchAIPredictions, selectedPersonality]);
