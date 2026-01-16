@@ -837,23 +837,38 @@ export default function PerformancePage() {
     let cumulativeHDP = 0;
     let cumulativeOU = 0;
 
-    const dailyData = sortedRecords.map(r => {
+    // Aggregate by day - each unique date gets one data point with end-of-day cumulative values
+    const dailyMap = new Map<string, {
+      date: string;
+      profit: number;
+      cumulative: number;
+      cumulativeMoneyline: number;
+      cumulativeHandicap: number;
+      cumulativeOU: number;
+    }>();
+
+    sortedRecords.forEach(r => {
       const profit = r.profit || 0;
       const betType = getBetTypeFromSelection(r.selection);
+      const dateKey = r.bet_time.split('T')[0];
+
       cumulative += profit;
       if (betType === 'moneyline') cumulativeML += profit;
       else if (betType === 'handicap') cumulativeHDP += profit;
       else cumulativeOU += profit;
 
-      return {
-        date: r.bet_time.split('T')[0],
-        profit: profit,
+      // Always update to latest cumulative values for this day
+      dailyMap.set(dateKey, {
+        date: dateKey,
+        profit: (dailyMap.get(dateKey)?.profit || 0) + profit,
         cumulative: cumulative,
         cumulativeMoneyline: cumulativeML,
         cumulativeHandicap: cumulativeHDP,
         cumulativeOU: cumulativeOU,
-      };
+      });
     });
+
+    const dailyData = Array.from(dailyMap.values());
 
     return {
       profitMoneyline,
