@@ -856,22 +856,6 @@ export default function PerformancePage() {
       };
     });
 
-    // Also create end-of-day summary map for tooltip display
-    const dailyEndOfDayMap = new Map<string, {
-      cumulativeMoneyline: number;
-      cumulativeHandicap: number;
-      cumulativeOU: number;
-    }>();
-
-    // Iterate through dailyData to get the last (end-of-day) values for each date
-    dailyData.forEach(d => {
-      dailyEndOfDayMap.set(d.date, {
-        cumulativeMoneyline: d.cumulativeMoneyline,
-        cumulativeHandicap: d.cumulativeHandicap,
-        cumulativeOU: d.cumulativeOU,
-      });
-    });
-
     return {
       profitMoneyline,
       profitHandicap,
@@ -880,7 +864,6 @@ export default function PerformancePage() {
       totalInvested,
       roi,
       dailyData,
-      dailyEndOfDayMap,
       totalBets: filtered.length,
     };
   })();
@@ -1747,18 +1730,11 @@ export default function PerformancePage() {
                         <Tooltip
                           content={({ active, payload, label }: any) => {
                             if (active && payload && payload.length) {
-                              // Get end-of-day values for consistent tooltip display
-                              const endOfDayData = filteredChartStats.dailyEndOfDayMap.get(label);
-                              const ml = endOfDayData?.cumulativeMoneyline ?? payload[0]?.value ?? 0;
-                              const hdp = endOfDayData?.cumulativeHandicap ?? payload[1]?.value ?? 0;
-                              const ou = endOfDayData?.cumulativeOU ?? payload[2]?.value ?? 0;
+                              // Use actual cumulative values from payload (changes as user hovers)
+                              const ml = payload[0]?.value ?? 0;
+                              const hdp = payload[1]?.value ?? 0;
+                              const ou = payload[2]?.value ?? 0;
                               const total = ml + hdp + ou;
-
-                              const tooltipData = [
-                                { name: payload[0]?.name || t('moneyline'), value: ml, color: '#10b981' },
-                                { name: payload[1]?.name || t('handicap'), value: hdp, color: '#06b6d4' },
-                                { name: payload[2]?.name || t('overUnder'), value: ou, color: '#f59e0b' },
-                              ];
 
                               return (
                                 <div className="bg-gray-950/95 backdrop-blur-md border border-white/10 rounded-lg p-3 shadow-2xl min-w-[180px]">
@@ -1766,7 +1742,7 @@ export default function PerformancePage() {
                                     {new Date(label).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
                                   </p>
                                   <div className="space-y-1.5">
-                                    {tooltipData.map((entry, index) => (
+                                    {payload.map((entry: any, index: number) => (
                                       <div key={index} className="flex items-center justify-between gap-4 text-xs">
                                         <div className="flex items-center gap-2">
                                           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
