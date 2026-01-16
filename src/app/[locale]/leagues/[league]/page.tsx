@@ -865,8 +865,10 @@ export default function LeagueDetailPage() {
                 <p className="text-gray-400 text-lg">{t('noStats')}</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[800px]">
+              <>
+              {/* Desktop Table */}
+              <div className="overflow-x-auto hidden md:block">
+                <table className="w-full">
                   <thead className="bg-gray-900/95">
                     <tr className="text-xs text-gray-400 uppercase tracking-wider">
                       <th className="text-left py-4 px-4 font-semibold">#</th>
@@ -1063,8 +1065,10 @@ export default function LeagueDetailPage() {
                                         <div className="w-6 h-6 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
                                       </div>
                                     ) : team.team_id && playerStats[team.team_id] && playerStats[team.team_id].length > 0 ? (
-                                      <div className="overflow-x-auto rounded-xl border border-white/10">
-                                        <table className="w-full min-w-[700px]">
+                                      <>
+                                      {/* Desktop Table */}
+                                      <div className="overflow-x-auto rounded-xl border border-white/10 hidden md:block">
+                                        <table className="w-full">
                                           <thead className="bg-gray-900/80">
                                             <tr className="text-[10px] text-gray-400 uppercase tracking-wider">
                                               <th className="text-left py-2.5 px-3 font-semibold">{t('player')}</th>
@@ -1153,6 +1157,104 @@ export default function LeagueDetailPage() {
                                           </tbody>
                                         </table>
                                       </div>
+
+                                      {/* Mobile Player Cards */}
+                                      <div className="md:hidden space-y-2">
+                                        {playerStats[team.team_id].map((player) => (
+                                          <div key={player.id} className="bg-white/5 rounded-lg p-3 border border-white/10">
+                                            {/* Row 1: Photo, Name, Position, Rating */}
+                                            <div className="flex items-center justify-between mb-2">
+                                              <div className="flex items-center gap-2">
+                                                {player.photo ? (
+                                                  <img src={player.photo} alt={player.player_name || ''} className="w-10 h-10 rounded-full object-cover bg-gray-700" />
+                                                ) : (
+                                                  <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm">
+                                                    {player.player_name?.charAt(0) || '?'}
+                                                  </div>
+                                                )}
+                                                <div>
+                                                  <div className="flex items-center gap-1.5">
+                                                    <span className="text-white text-sm font-medium">{player.player_name}</span>
+                                                    {player.captain && (
+                                                      <span className="px-1 py-0.5 text-[9px] font-bold bg-amber-500 text-black rounded">C</span>
+                                                    )}
+                                                    {player.injured && (
+                                                      <span className="px-1 py-0.5 text-[9px] font-bold bg-red-500 text-white rounded">INJ</span>
+                                                    )}
+                                                  </div>
+                                                  <div className="flex items-center gap-2">
+                                                    <span className="text-gray-500 text-[10px]">{player.nationality}</span>
+                                                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                                                      player.position === 'Goalkeeper' ? 'bg-yellow-500/20 text-yellow-400' :
+                                                      player.position === 'Defender' ? 'bg-blue-500/20 text-blue-400' :
+                                                      player.position === 'Midfielder' ? 'bg-green-500/20 text-green-400' :
+                                                      'bg-red-500/20 text-red-400'
+                                                    }`}>
+                                                      {player.position?.substring(0, 3).toUpperCase() || '-'}
+                                                    </span>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              {player.rating ? (
+                                                <span className={`px-2 py-1 rounded text-sm font-bold ${
+                                                  player.rating >= 7.5 ? 'bg-emerald-500/20 text-emerald-400' :
+                                                  player.rating >= 7 ? 'bg-green-500/20 text-green-400' :
+                                                  player.rating >= 6.5 ? 'bg-yellow-500/20 text-yellow-400' :
+                                                  'bg-red-500/20 text-red-400'
+                                                }`}>
+                                                  {Number(player.rating).toFixed(1)}
+                                                </span>
+                                              ) : (
+                                                <span className="text-gray-500 text-sm">-</span>
+                                              )}
+                                            </div>
+
+                                            {/* Row 2: Stats */}
+                                            <div className="grid grid-cols-6 gap-1 text-center text-xs mb-2 py-2 border-t border-b border-white/5">
+                                              <div>
+                                                <span className="text-gray-500 block text-[10px]">{t('age')}</span>
+                                                <span className="text-gray-300">{player.age || '-'}</span>
+                                              </div>
+                                              <div>
+                                                <span className="text-gray-500 block text-[10px]">{t('apps')}</span>
+                                                <span className="text-gray-300">{player.appearances || 0}</span>
+                                              </div>
+                                              <div>
+                                                <span className="text-gray-500 block text-[10px]">{t('mins')}</span>
+                                                <span className="text-gray-400">{player.minutes || 0}</span>
+                                              </div>
+                                              <div>
+                                                <span className="text-gray-500 block text-[10px]">{t('goals')}</span>
+                                                <span className="text-emerald-400 font-semibold">{player.goals_total || 0}</span>
+                                              </div>
+                                              <div>
+                                                <span className="text-gray-500 block text-[10px]">{t('assists')}</span>
+                                                <span className="text-cyan-400 font-semibold">{player.assists || 0}</span>
+                                              </div>
+                                              <div>
+                                                <span className="text-gray-500 block text-[10px]">Y/R</span>
+                                                <span>
+                                                  <span className="text-yellow-400">{player.cards_yellow || 0}</span>
+                                                  <span className="text-gray-600">/</span>
+                                                  <span className="text-red-400">{player.cards_red || 0}</span>
+                                                </span>
+                                              </div>
+                                            </div>
+
+                                            {/* Row 3: View Profile */}
+                                            <div className="flex justify-end">
+                                              <Link
+                                                href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
+                                                onClick={(e) => e.stopPropagation()}
+                                                className="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/30 transition-colors"
+                                              >
+                                                {t('viewProfile')}
+                                              </Link>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                      </>
                                     ) : (
                                       <p className="text-gray-500 text-sm py-4">{t('noPlayerData')}</p>
                                     )}
@@ -1167,6 +1269,162 @@ export default function LeagueDetailPage() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Mobile Card Layout */}
+              <div className="md:hidden space-y-2">
+                {teamStats.map((team, index) => (
+                  <div
+                    key={team.id}
+                    onClick={() => handleTeamClick(team)}
+                    className={`bg-white/5 rounded-lg p-3 border cursor-pointer transition-colors hover:bg-white/10 ${
+                      index < 4 ? 'border-l-2 border-l-emerald-500 border-white/5' :
+                      index >= teamStats.length - 3 ? 'border-l-2 border-l-red-500 border-white/5' : 'border-white/5'
+                    } ${expandedTeamId === team.id ? 'bg-white/10' : ''}`}
+                  >
+                    {/* Row 1: Rank, Team, Points */}
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold ${
+                          index < 4 ? 'bg-emerald-500/20 text-emerald-400' :
+                          index >= teamStats.length - 3 ? 'bg-red-500/20 text-red-400' :
+                          'bg-gray-700/50 text-gray-400'
+                        }`}>
+                          {index + 1}
+                        </span>
+                        {team.logo && (
+                          <img src={team.logo} alt={team.team_name || ''} className="w-7 h-7 object-contain" />
+                        )}
+                        <span className="text-white font-medium text-sm">{team.team_name}</span>
+                        <svg className={`w-4 h-4 text-gray-500 transition-transform ${expandedTeamId === team.id ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                      <span className="inline-flex items-center justify-center min-w-[36px] px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 font-bold text-sm">
+                        {team.points}
+                      </span>
+                    </div>
+
+                    {/* Row 2: Stats Grid */}
+                    <div className="grid grid-cols-7 gap-1 text-center text-xs mb-2">
+                      <div>
+                        <span className="text-gray-500 block text-[10px]">P</span>
+                        <span className="text-gray-300">{team.total_played || 0}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 block text-[10px]">W</span>
+                        <span className="text-emerald-400 font-medium">{team.total_wins || 0}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 block text-[10px]">D</span>
+                        <span className="text-yellow-400">{team.total_draws || 0}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 block text-[10px]">L</span>
+                        <span className="text-red-400">{team.total_loses || 0}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 block text-[10px]">GF</span>
+                        <span className="text-gray-300">{team.goals_for_total || 0}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 block text-[10px]">GA</span>
+                        <span className="text-gray-300">{team.goals_against_total || 0}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500 block text-[10px]">GD</span>
+                        <span className={`font-medium ${
+                          team.goal_difference > 0 ? 'text-emerald-400' :
+                          team.goal_difference < 0 ? 'text-red-400' : 'text-gray-400'
+                        }`}>
+                          {team.goal_difference > 0 ? '+' : ''}{team.goal_difference}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Row 3: Form & Profile */}
+                    <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                      <div className="flex items-center gap-1">
+                        {renderForm(team.form)}
+                      </div>
+                      <Link
+                        href={localePath(`/leagues/${leagueSlug}/${team.team_name?.toLowerCase().replace(/\s+/g, '-')}`)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/30 transition-colors border border-cyan-500/30"
+                      >
+                        {t('profile')}
+                      </Link>
+                    </div>
+
+                    {/* Expanded Details (Mobile) */}
+                    {expandedTeamId === team.id && (
+                      <div className="mt-3 pt-3 border-t border-white/10">
+                        <div className="space-y-3">
+                          {/* Coach */}
+                          {team.team_id && coaches[team.team_id] && (
+                            <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-900/50">
+                              {coaches[team.team_id].photo ? (
+                                <img
+                                  src={coaches[team.team_id].photo || undefined}
+                                  alt={coaches[team.team_id].name || ''}
+                                  className="w-10 h-10 rounded-full object-cover border border-emerald-500/30"
+                                />
+                              ) : (
+                                <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center border border-emerald-500/30">
+                                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                  </svg>
+                                </div>
+                              )}
+                              <div>
+                                <p className="text-gray-400 text-[10px] uppercase">{t('coach')}</p>
+                                <p className="text-white text-sm font-medium">{coaches[team.team_id].name}</p>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Formation */}
+                          {team.team_id && formations[team.team_id] && (
+                            <div className="p-2 rounded-lg bg-gray-900/50">
+                              <p className="text-gray-400 text-[10px] uppercase mb-1">{t('formation')}</p>
+                              <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-sm font-bold">
+                                {formations[team.team_id]}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Top Scorers */}
+                          {team.team_id && playerStats[team.team_id] && playerStats[team.team_id].length > 0 && (
+                            <div className="p-2 rounded-lg bg-gray-900/50">
+                              <p className="text-gray-400 text-[10px] uppercase mb-2">{t('topScorers')}</p>
+                              <div className="space-y-1">
+                                {playerStats[team.team_id].slice(0, 3).map((player) => (
+                                  <div key={player.id} className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                      {player.photo ? (
+                                        <img src={player.photo} alt="" className="w-6 h-6 rounded-full object-cover" />
+                                      ) : (
+                                        <div className="w-6 h-6 rounded-full bg-gray-700 text-[10px] flex items-center justify-center text-gray-400">
+                                          {player.player_name?.charAt(0)}
+                                        </div>
+                                      )}
+                                      <span className="text-white text-xs">{player.player_name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs">
+                                      <span className="text-emerald-400 font-medium">{player.goals_total || 0}G</span>
+                                      <span className="text-cyan-400">{player.assists || 0}A</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              </>
             )}
 
             {/* Legend */}
