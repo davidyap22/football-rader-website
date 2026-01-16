@@ -2445,7 +2445,9 @@ export default function MatchDetailsPage() {
                 <div className="overflow-auto flex-1 relative z-10">
                   {(showSignalHistory === 'value' || showSignalHistory === 'conservative') ? (
                     liveSignalsHistory.length > 0 ? (
-                      <table className="w-full text-sm border-collapse">
+                      <>
+                      {/* Desktop Table */}
+                      <table className="w-full text-sm border-collapse hidden md:table">
                         <thead className="sticky top-0 bg-[#0d1117]">
                           <tr>
                             <th className="text-left py-3 px-2 text-gray-400 font-medium">Clock</th>
@@ -2578,11 +2580,152 @@ export default function MatchDetailsPage() {
                           })}
                         </tbody>
                       </table>
+
+                      {/* Mobile Card Layout for Value/Conservative */}
+                      <div className="md:hidden space-y-3 p-2">
+                        {liveSignalsHistory.map((record, index) => {
+                          const rawRecord = record as unknown as Record<string, unknown>;
+                          const getSelectionLabel = () => {
+                            if (selectedMarket === 'moneyline') {
+                              const sel = String(rawRecord.selection_1x2 || '').toUpperCase();
+                              return sel === 'HOME' || sel === '1' ? 'Home' : sel === 'DRAW' || sel === 'X' ? 'Draw' : 'Away';
+                            } else if (selectedMarket === 'overunder') {
+                              const sel = String(rawRecord.selection_ou || '').toLowerCase();
+                              return sel === 'over' ? 'Over' : 'Under';
+                            } else {
+                              const sel = String(rawRecord.selection_hdp || '').toLowerCase();
+                              return sel === 'home' ? 'Home' : 'Away';
+                            }
+                          };
+                          const getFairOdds = () => {
+                            if (selectedMarket === 'moneyline') {
+                              const val = rawRecord.fair_odds_1x2;
+                              return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
+                            } else if (selectedMarket === 'overunder') {
+                              const val = rawRecord.fair_odds_ou;
+                              return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
+                            } else {
+                              const val = rawRecord.fair_odds_hdp;
+                              return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
+                            }
+                          };
+                          const getMarketOdds = () => {
+                            if (selectedMarket === 'moneyline') {
+                              const val = rawRecord.market_odds_1x2;
+                              return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
+                            } else if (selectedMarket === 'overunder') {
+                              const val = rawRecord.market_odds_ou;
+                              return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
+                            } else {
+                              const val = rawRecord.market_odds_hdp;
+                              return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
+                            }
+                          };
+                          const getEV = () => {
+                            const parseEV = (val: unknown) => {
+                              if (val === null || val === undefined) return '-';
+                              const str = String(val).replace('%', '');
+                              const num = parseFloat(str);
+                              return !isNaN(num) ? `+${num.toFixed(2)}%` : '-';
+                            };
+                            if (selectedMarket === 'moneyline') {
+                              return parseEV(rawRecord.expected_value_1x2);
+                            } else if (selectedMarket === 'overunder') {
+                              return parseEV(rawRecord.expected_value_ou);
+                            } else {
+                              return parseEV(rawRecord.expected_value_hdp);
+                            }
+                          };
+                          const getStake = () => {
+                            const parseStake = (val: unknown) => {
+                              if (val === null || val === undefined) return '-';
+                              const str = String(val).replace('%', '');
+                              const num = parseFloat(str);
+                              return !isNaN(num) ? `${num.toFixed(2)}u` : '-';
+                            };
+                            if (selectedMarket === 'moneyline') {
+                              return parseStake(rawRecord.recommended_stake_1x2);
+                            } else if (selectedMarket === 'overunder') {
+                              return parseStake(rawRecord.recommended_stake_ou);
+                            } else {
+                              return parseStake(rawRecord.recommended_stake_hdp);
+                            }
+                          };
+                          const isValuable = selectedMarket === 'moneyline' ? rawRecord.is_valuable_1x2 : selectedMarket === 'overunder' ? rawRecord.is_valuable_ou : rawRecord.is_valuable_hdp;
+                          const getLine = () => {
+                            if (selectedMarket === 'overunder') {
+                              const val = rawRecord.total_points_mainline ?? rawRecord.totalpoints_main_line ?? rawRecord.line_ou ?? rawRecord.line ?? null;
+                              return val !== null && val !== undefined ? String(val) : '-';
+                            } else if (selectedMarket === 'handicap') {
+                              const val = rawRecord.handicap_main_line ?? rawRecord.handicap_mainline ?? rawRecord.line_hdp ?? rawRecord.line ?? null;
+                              return val !== null && val !== undefined ? String(val) : '-';
+                            }
+                            return null;
+                          };
+
+                          return (
+                            <div
+                              key={record.id || index}
+                              className={`bg-white/5 rounded-lg p-3 border ${
+                                index === 0 ? 'border-purple-500/30 bg-purple-500/5' : 'border-white/5'
+                              }`}
+                            >
+                              {/* Header: Clock, Score, Status */}
+                              <div className="flex items-center justify-between mb-2 pb-2 border-b border-white/5">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-gray-400 text-sm">{record.clock !== null ? `${record.clock}'` : '-'}</span>
+                                  <span className="text-white font-bold">{record.score || '-'}</span>
+                                </div>
+                                {isValuable ? (
+                                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">VALUE</span>
+                                ) : (
+                                  <span className="px-2 py-0.5 rounded bg-gray-500/20 text-gray-400 text-xs">NORMAL</span>
+                                )}
+                              </div>
+
+                              {/* Selection & Line */}
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                  selectedMarket === 'moneyline' ? 'bg-emerald-500/20 text-emerald-400' :
+                                  selectedMarket === 'overunder' ? 'bg-cyan-500/20 text-cyan-400' :
+                                  'bg-pink-500/20 text-pink-400'
+                                }`}>{getSelectionLabel()}</span>
+                                {getLine() && (
+                                  <span className="text-amber-400 text-sm font-medium">Line: {getLine()}</span>
+                                )}
+                              </div>
+
+                              {/* Odds & EV Row */}
+                              <div className="grid grid-cols-4 gap-2 text-xs">
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Fair</span>
+                                  <span className="text-gray-400">{getFairOdds()}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Market</span>
+                                  <span className="text-white font-medium">{getMarketOdds()}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">EV</span>
+                                  <span className="text-emerald-400 font-medium">{getEV()}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Stake</span>
+                                  <span className="text-yellow-400">{getStake()}</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      </>
                     ) : (
                       <div className="text-center py-8 text-gray-500">No Value Hunter signal history available</div>
                     )
                   ) : signalHistory[showSignalHistory as 'moneyline' | 'overunder' | 'handicap']?.length > 0 ? (
-                    <table className="w-full text-sm border-collapse">
+                    <>
+                    {/* Desktop Table */}
+                    <table className="w-full text-sm border-collapse hidden md:table">
                       <thead className="sticky top-0 bg-[#0d1117]">
                         <tr>
                           <th className="text-left py-3 px-3 text-gray-400 font-medium">Clock</th>
@@ -2660,6 +2803,96 @@ export default function MatchDetailsPage() {
                         ))}
                       </tbody>
                     </table>
+
+                    {/* Mobile Card Layout for Regular Signals */}
+                    <div className="md:hidden space-y-3 p-2">
+                      {signalHistory[showSignalHistory as 'moneyline' | 'overunder' | 'handicap'].map((record, index) => (
+                        <div
+                          key={record.id}
+                          className={`bg-white/5 rounded-lg p-3 border ${
+                            index === 0 ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-white/5'
+                          }`}
+                        >
+                          {/* Header: Clock & Signal */}
+                          <div className="flex items-center justify-between mb-2 pb-2 border-b border-white/5">
+                            <span className="text-gray-400 text-sm">{record.clock !== null ? `${record.clock}'` : '-'}</span>
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${
+                              record.signal?.includes('🟢') ? 'bg-emerald-500/20 text-emerald-400' :
+                              record.signal?.includes('🔥') ? 'bg-orange-500/20 text-orange-400' :
+                              record.signal?.includes('🔵') ? 'bg-blue-500/20 text-blue-400' :
+                              record.signal?.includes('🔴') ? 'bg-red-500/20 text-red-400' :
+                              'bg-gray-500/20 text-gray-400'
+                            }`}>
+                              {record.signal || '-'}
+                            </span>
+                          </div>
+
+                          {/* Selection */}
+                          <div className="mb-2">
+                            <span className="text-white font-medium">{record.selection || '-'}</span>
+                          </div>
+
+                          {/* Market-specific odds */}
+                          <div className="grid grid-cols-3 gap-2 text-xs mb-2">
+                            {showSignalHistory === 'moneyline' && (
+                              <>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Home</span>
+                                  <span className="text-cyan-400 font-medium">{(record as Moneyline1x2Prediction).moneyline_1x2_home?.toFixed(2) ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Draw</span>
+                                  <span className="text-cyan-400 font-medium">{(record as Moneyline1x2Prediction).moneyline_1x2_draw?.toFixed(2) ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Away</span>
+                                  <span className="text-cyan-400 font-medium">{(record as Moneyline1x2Prediction).moneyline_1x2_away?.toFixed(2) ?? '-'}</span>
+                                </div>
+                              </>
+                            )}
+                            {showSignalHistory === 'overunder' && (
+                              <>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Line</span>
+                                  <span className="text-purple-400 font-medium">{(record as OverUnderPrediction).line ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Over</span>
+                                  <span className="text-cyan-400 font-medium">{(record as OverUnderPrediction).over?.toFixed(2) ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Under</span>
+                                  <span className="text-cyan-400 font-medium">{(record as OverUnderPrediction).under?.toFixed(2) ?? '-'}</span>
+                                </div>
+                              </>
+                            )}
+                            {showSignalHistory === 'handicap' && (
+                              <>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Line</span>
+                                  <span className="text-purple-400 font-medium">{(record as HandicapPrediction).line ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Home</span>
+                                  <span className="text-cyan-400 font-medium">{(record as HandicapPrediction).home_odds?.toFixed(2) ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Away</span>
+                                  <span className="text-cyan-400 font-medium">{(record as HandicapPrediction).away_odds?.toFixed(2) ?? '-'}</span>
+                                </div>
+                              </>
+                            )}
+                          </div>
+
+                          {/* Extra Info */}
+                          <div className="flex items-center justify-between text-[10px] text-gray-500 pt-2 border-t border-white/5">
+                            <span>{record.bookmaker || '-'}</span>
+                            <span className="text-yellow-400">{record.stacking_quantity || '-'}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    </>
                   ) : (
                     <div className="text-center py-8 text-gray-500">
                       No signal history available
@@ -2838,7 +3071,8 @@ export default function MatchDetailsPage() {
                             </button>
                           </div>
                         </div>
-                        <table className="w-full text-sm">
+                        {/* Desktop Table */}
+                        <table className="w-full text-sm hidden md:table">
                           <thead>
                             <tr className="border-b border-white/10">
                               <th className="text-left py-2 px-2 text-gray-400 font-medium text-xs">Clock</th>
@@ -2893,6 +3127,53 @@ export default function MatchDetailsPage() {
                             );})}
                           </tbody>
                         </table>
+
+                        {/* Mobile Card Layout */}
+                        <div className="md:hidden space-y-2 max-h-[300px] overflow-y-auto">
+                          {filteredRecords.map((record, index) => {
+                            const derivedType = getBetType(record.selection);
+                            return (
+                              <div key={record.id || index} className="bg-white/5 rounded-lg p-3 border border-white/5">
+                                {/* Header: Clock, Type, Status */}
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-gray-500 text-xs">{record.clock !== null ? `${record.clock}'` : '-'}</span>
+                                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                                      derivedType === 'moneyline' ? 'bg-cyan-500/20 text-cyan-400' :
+                                      derivedType === 'handicap' ? 'bg-purple-500/20 text-purple-400' :
+                                      'bg-amber-500/20 text-amber-400'
+                                    }`}>
+                                      {derivedType === 'moneyline' ? '1X2' : derivedType === 'handicap' ? 'HDP' : 'O/U'}
+                                    </span>
+                                  </div>
+                                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                    record.status === 'won' ? 'bg-cyan-500/20 text-cyan-400' :
+                                    record.status === 'lost' ? 'bg-red-500/20 text-red-400' :
+                                    record.status === 'push' ? 'bg-gray-500/20 text-gray-400' :
+                                    'bg-yellow-500/20 text-yellow-400'
+                                  }`}>
+                                    {record.status?.toUpperCase() || '-'}
+                                  </span>
+                                </div>
+
+                                {/* Selection & Profit */}
+                                <div className="flex items-center justify-between">
+                                  <div className="flex-1">
+                                    <div className="text-white text-sm font-medium">{record.selection || '-'}</div>
+                                    <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
+                                      <span>Line: <span className="text-amber-400">{record.line ?? '-'}</span></span>
+                                      <span>@{record.odds?.toFixed(2) ?? '-'}</span>
+                                      <span>{record.stake_units ?? '-'}u</span>
+                                    </div>
+                                  </div>
+                                  <div className={`text-sm font-bold ${(record.profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                    {(record.profit ?? 0) >= 0 ? '+' : ''}{record.profit?.toFixed(2) ?? '0.00'}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     );})()}
 
