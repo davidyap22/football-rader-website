@@ -472,6 +472,7 @@ export default function LeagueDetailPage() {
   const [teamStats, setTeamStats] = useState<TeamWithStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null);
   const [selectedFormations, setSelectedFormations] = useState<Record<number, string>>({});
   const [playerStats, setPlayerStats] = useState<Record<number, PlayerStats[]>>({});
@@ -771,9 +772,13 @@ export default function LeagueDetailPage() {
 
               {user ? (
                 <Link href={localePath('/dashboard')} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
-                    {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0)?.toUpperCase() || 'U'}
-                  </div>
+                  {user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
+                    <img src={user.user_metadata?.avatar_url || user.user_metadata?.picture} alt="" className="w-8 h-8 rounded-full object-cover" referrerPolicy="no-referrer" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-bold text-sm">
+                      {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                  )}
                   <span className="text-sm font-medium hidden sm:block">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
                 </Link>
               ) : (
@@ -792,10 +797,98 @@ export default function LeagueDetailPage() {
                 <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-5 w-auto object-contain relative z-10" />
                 <span className="text-black font-semibold text-sm relative z-10">FIFA 2026</span>
               </Link>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[45] md:hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Menu Panel */}
+          <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+            <div className="px-4 py-4 space-y-1">
+              {/* World Cup Special Entry */}
+              <Link
+                href={localePath('/worldcup')}
+                onClick={() => setMobileMenuOpen(false)}
+                className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
+                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-8 w-auto object-contain relative z-10" />
+                <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
+              </Link>
+
+              {[
+                { href: localePath('/'), label: t('home') },
+                { href: localePath('/predictions'), label: t('predictions') },
+                { href: localePath('/leagues'), label: t('leagues'), active: true },
+                { href: localePath('/performance'), label: t('performance') },
+                { href: localePath('/community'), label: t('community') },
+                { href: localePath('/news'), label: t('news') },
+                { href: localePath('/solution'), label: t('solution') },
+                { href: localePath('/pricing'), label: t('pricing') },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block px-4 py-3 rounded-lg text-base font-medium transition-all ${
+                    link.active
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              {/* Auth Buttons for Mobile */}
+              {!user && (
+                <div className="pt-3 mt-3 border-t border-white/10 space-y-2">
+                  <Link
+                    href={localePath('/login')}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block w-full text-center px-4 py-3 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all font-medium"
+                  >
+                    {t('login')}
+                  </Link>
+                  <Link
+                    href={localePath('/get-started')}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block w-full text-center px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
+                  >
+                    {t('getStarted')}
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="relative z-10 pt-24 pb-16 px-4">
