@@ -1457,8 +1457,10 @@ export default function TeamProfilePage() {
                       <div className="w-8 h-8 border-3 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
                     </div>
                   ) : players.length > 0 ? (
-                    <div className="overflow-x-auto rounded-xl border border-white/10">
-                      <table className="w-full min-w-[800px]">
+                    <>
+                    {/* Desktop Table */}
+                    <div className="overflow-x-auto rounded-xl border border-white/10 hidden md:block">
+                      <table className="w-full">
                         <thead className="bg-gray-900/95">
                           <tr className="text-[10px] text-gray-400 uppercase tracking-wider">
                             <th className="text-left py-3 px-4 font-semibold">{t('player')}</th>
@@ -1548,6 +1550,99 @@ export default function TeamProfilePage() {
                         </tbody>
                       </table>
                     </div>
+
+                    {/* Mobile Card Layout */}
+                    <div className="md:hidden space-y-3">
+                      {players.map((player) => (
+                        <div key={player.id} className="bg-white/5 rounded-xl p-4 border border-white/10">
+                          {/* Row 1: Player Info & Rating */}
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <div className="relative">
+                                {player.photo ? (
+                                  <img src={player.photo} alt={player.player_name || ''} className="w-12 h-12 rounded-xl object-cover bg-gray-700 ring-2 ring-white/10" />
+                                ) : (
+                                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-gray-400 font-medium ring-2 ring-white/10">
+                                    {player.player_name?.charAt(0) || '?'}
+                                  </div>
+                                )}
+                                {player.captain && (
+                                  <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center text-[9px] font-bold text-black">
+                                    C
+                                  </div>
+                                )}
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-white font-medium">{player.player_name}</span>
+                                  {player.injured && (
+                                    <span className="px-1.5 py-0.5 text-[9px] font-bold bg-red-500/20 text-red-400 rounded">INJ</span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                  <span className="text-gray-500 text-xs">{player.nationality}</span>
+                                  <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                                    player.position === 'Goalkeeper' ? 'bg-yellow-500/20 text-yellow-400' :
+                                    player.position === 'Defender' ? 'bg-blue-500/20 text-blue-400' :
+                                    player.position === 'Midfielder' ? 'bg-green-500/20 text-green-400' :
+                                    'bg-red-500/20 text-red-400'
+                                  }`}>
+                                    {player.position?.substring(0, 3).toUpperCase() || '-'}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            {player.rating ? (
+                              <span className={`px-2.5 py-1.5 rounded-lg text-sm font-bold ${
+                                player.rating >= 7.5 ? 'bg-emerald-500/20 text-emerald-400' :
+                                player.rating >= 7 ? 'bg-green-500/20 text-green-400' :
+                                player.rating >= 6.5 ? 'bg-yellow-500/20 text-yellow-400' :
+                                'bg-red-500/20 text-red-400'
+                              }`}>
+                                {Number(player.rating).toFixed(1)}
+                              </span>
+                            ) : (
+                              <span className="text-gray-500">-</span>
+                            )}
+                          </div>
+
+                          {/* Row 2: Stats Grid */}
+                          <div className="grid grid-cols-5 gap-2 text-center text-xs py-3 border-t border-b border-white/5">
+                            <div>
+                              <span className="text-gray-500 block text-[10px]">{t('age')}</span>
+                              <span className="text-gray-300">{player.age || '-'}</span>
+                            </div>
+                            <div>
+                              <span className="text-gray-500 block text-[10px]">{t('apps')}</span>
+                              <span className="text-gray-300">{player.appearances || 0}</span>
+                            </div>
+                            <div>
+                              <span className="text-gray-500 block text-[10px]">{t('minutes')}</span>
+                              <span className="text-gray-400">{player.minutes || 0}</span>
+                            </div>
+                            <div>
+                              <span className="text-gray-500 block text-[10px]">{t('goals')}</span>
+                              <span className="text-emerald-400 font-semibold">{player.goals_total || 0}</span>
+                            </div>
+                            <div>
+                              <span className="text-gray-500 block text-[10px]">{t('assists')}</span>
+                              <span className="text-cyan-400 font-semibold">{player.assists || 0}</span>
+                            </div>
+                          </div>
+
+                          {/* Row 3: View Profile */}
+                          <div className="flex justify-end pt-3">
+                            <Link
+                              href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
+                              className="px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors border border-emerald-500/20"
+                            >
+                              {t('viewProfile')}
+                            </Link>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    </>
                   ) : (
                     <div className="text-center py-12">
                       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center">
