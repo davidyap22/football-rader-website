@@ -2251,7 +2251,8 @@ export default function MatchDetailsPage() {
 
                 {oddsHistory.length > 0 ? (
                   <div className="overflow-auto flex-1 relative z-10">
-                    <table className="w-full text-sm border-collapse">
+                    {/* Desktop Table */}
+                    <table className="w-full text-sm border-collapse hidden md:table">
                       <thead className="sticky top-0 z-10">
                         {/* Section Headers */}
                         <tr className="bg-[#0d1117]">
@@ -2313,6 +2314,96 @@ export default function MatchDetailsPage() {
                         ))}
                       </tbody>
                     </table>
+
+                    {/* Mobile Card Layout */}
+                    <div className="md:hidden space-y-3 p-2">
+                      {oddsHistory.map((record, index) => (
+                        <div
+                          key={record.id}
+                          className={`bg-white/5 rounded-lg p-3 border ${
+                            index === 0 ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-white/5'
+                          }`}
+                        >
+                          {/* Time Header */}
+                          <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/5">
+                            <span className="text-sm text-gray-300">
+                              {formatHistoryTime(record.created_at)}
+                            </span>
+                            {index === 0 && (
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">
+                                Latest
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Odds Grid */}
+                          <div className="space-y-2">
+                            {/* 1X2 */}
+                            <div className="flex items-center gap-2">
+                              <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold w-12 text-center">
+                                1X2
+                              </span>
+                              <div className="flex-1 grid grid-cols-3 gap-1 text-xs">
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Home</span>
+                                  <span className="text-white font-medium">{record.moneyline_1x2_home?.toFixed(2) ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Draw</span>
+                                  <span className="text-white font-medium">{record.moneyline_1x2_draw?.toFixed(2) ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Away</span>
+                                  <span className="text-white font-medium">{record.moneyline_1x2_away?.toFixed(2) ?? '-'}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Over/Under */}
+                            <div className="flex items-center gap-2">
+                              <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 text-[10px] font-semibold w-12 text-center">
+                                O/U
+                              </span>
+                              <div className="flex-1 grid grid-cols-3 gap-1 text-xs">
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Line</span>
+                                  <span className="text-cyan-400 font-medium">{record.totalpoints_main_line ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Over</span>
+                                  <span className="text-white font-medium">{record.totalpoints_over?.toFixed(2) ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Under</span>
+                                  <span className="text-white font-medium">{record.totalpoints_under?.toFixed(2) ?? '-'}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Handicap */}
+                            <div className="flex items-center gap-2">
+                              <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 text-[10px] font-semibold w-12 text-center">
+                                HDP
+                              </span>
+                              <div className="flex-1 grid grid-cols-3 gap-1 text-xs">
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Line</span>
+                                  <span className="text-purple-400 font-medium">{record.handicap_main_line ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Home</span>
+                                  <span className="text-white font-medium">{record.handicap_home?.toFixed(2) ?? '-'}</span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Away</span>
+                                  <span className="text-white font-medium">{record.handicap_away?.toFixed(2) ?? '-'}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
