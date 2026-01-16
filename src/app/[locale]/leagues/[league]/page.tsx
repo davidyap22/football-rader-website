@@ -1383,11 +1383,11 @@ export default function LeagueDetailPage() {
                           )}
 
                           {/* Formation */}
-                          {team.team_id && formations[team.team_id] && (
+                          {team.team_id && selectedFormations[team.team_id] && (
                             <div className="p-2 rounded-lg bg-gray-900/50">
                               <p className="text-gray-400 text-[10px] uppercase mb-1">{t('formation')}</p>
                               <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-sm font-bold">
-                                {formations[team.team_id]}
+                                {selectedFormations[team.team_id]}
                               </span>
                             </div>
                           )}
