@@ -12,43 +12,50 @@ const translations: Record<string, Record<string, string>> = {
   EN: {
     home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance",
     community: "Community", news: "News", pricing: "Pricing", login: "Log In", getStarted: "Get Started", solution: "Solution",
-    pageTitle: "Responsible Gaming",
-    pageSubtitle: "At OddsFlow, we are committed to promoting responsible gambling and providing resources to help you stay in control.",
+    pageTitle: "Responsible Use & Risk Awareness",
+    pageSubtitle: "At OddsFlow, we believe in informed decision-making and sustainable analytics practices.",
     ageWarning: "18+ Only",
-    // Content sections
-    ourCommitment: "Our Commitment",
-    ourCommitmentText1: "OddsFlow provides AI-powered sports predictions for informational and entertainment purposes only. We are committed to promoting responsible gambling practices and ensuring our users can enjoy our platform safely.",
-    ourCommitmentText2: "Gambling should be fun and entertaining, not a way to make money or solve financial problems. We encourage all our users to gamble responsibly and within their means.",
-    ageVerification: "Age Verification",
-    ageVerificationText: "You must be at least 18 years old (or the legal gambling age in your jurisdiction) to use OddsFlow. We strictly prohibit underage gambling and take measures to prevent minors from accessing our services.",
-    warningSigns: "Warning Signs of Problem Gambling",
-    warningSignsText: "If you or someone you know exhibits any of these signs, it may indicate a gambling problem:",
-    warningSign1: "Spending more money or time gambling than you can afford",
-    warningSign2: "Chasing losses or gambling to try to win back money",
-    warningSign3: "Neglecting work, family, or other responsibilities due to gambling",
-    warningSign4: "Borrowing money or selling possessions to gamble",
-    warningSign5: "Feeling anxious, depressed, or irritable when not gambling",
-    warningSign6: "Lying to family or friends about gambling habits",
-    warningSign7: "Being unable to stop or reduce gambling despite wanting to",
-    warningSign8: "Gambling to escape problems or relieve negative feelings",
-    tipsTitle: "Tips for Responsible Gambling",
-    tip1Title: "Set a Budget", tip1Text: "Only gamble with money you can afford to lose. Set a budget before you start and stick to it.",
-    tip2Title: "Set Time Limits", tip2Text: "Decide how much time you will spend gambling and stick to it. Take regular breaks.",
-    tip3Title: "Never Chase Losses", tip3Text: "Accept that losing is part of gambling. Never try to win back money you have lost.",
-    tip4Title: "Balance Your Life", tip4Text: "Gambling should be just one of many leisure activities, not your only source of entertainment.",
-    tip5Title: "Avoid Alcohol", tip5Text: "Avoid gambling when under the influence of alcohol or drugs, as it impairs judgment.",
-    tip6Title: "Know the Odds", tip6Text: "Understand that the odds are always in favor of the house. Gambling is not a reliable way to make money.",
-    getHelp: "Get Help",
-    getHelpText: "If you or someone you know has a gambling problem, please reach out to these resources for help:",
-    selfExclusion: "Self-Exclusion",
-    selfExclusionText1: "If you need to take a break from gambling, you can request self-exclusion from your account. Contact us at",
-    selfExclusionText2: "to request self-exclusion for a period of your choosing.",
-    selfExclusionText3: "During the self-exclusion period, you will not be able to access your account or use our prediction services.",
+    // Section 1: Our Position: Data, Not Bets
+    section1Title: "Our Position: Data, Not Bets",
+    section1Text: "OddsFlow is a sports analytics platform, not a gambling operator. We do not accept, place, or facilitate bets. Our role is to provide data-driven insights - what users choose to do with those insights is their own responsibility. Think of us as your analytics engine, not your bookie.",
+    // Section 2: The Philosophy of Risk Management
+    section2Title: "The Philosophy of Risk Management",
+    section2Text: "If you use our data for sports trading or betting through third-party platforms, treat it like any other financial activity: never risk more than you can comfortably lose, diversify your approach, and remember that even the best data cannot predict the future with certainty. Markets are inherently volatile - our analytics improve your edge, but they do not eliminate risk.",
+    // Section 3: Age & Legal Compliance
+    section3Title: "Age & Legal Compliance",
+    section3Subtitle: "18+ Only",
+    section3Text: "Access to OddsFlow's premium analytics tools is restricted to users aged 18 and above. It is your responsibility to ensure that any use of sports betting or trading platforms in conjunction with our data complies with your local laws. We operate globally, but legal compliance is a local matter.",
+    // Section 4: Principles of Sustainable Usage
+    section4Title: "Principles of Sustainable Usage",
+    section4Intro: "We encourage all users to approach our platform with discipline:",
+    section4Item1Title: "Define Your Limits",
+    section4Item1Text: "Set personal boundaries on time and capital before engaging with any external betting or trading activity.",
+    section4Item2Title: "Avoid Chasing",
+    section4Item2Text: "Losses are part of any probabilistic endeavor. Chasing losses leads to compounding mistakes.",
+    section4Item3Title: "Clear Mindset",
+    section4Item3Text: "Never trade or bet when emotionally compromised, fatigued, or under the influence of substances.",
+    section4Item4Title: "Balance",
+    section4Item4Text: "Ensure that sports analytics or trading remains a hobby or secondary activity - not a replacement for stable income or healthy lifestyle habits.",
+    // Section 5: Recognizing the Red Flags
+    section5Title: "Recognizing the Red Flags",
+    section5Intro: "Market speculation can become addictive. Warning signs include:",
+    section5Item1: "Spending beyond your means",
+    section5Item2: "Neglecting personal or professional responsibilities",
+    section5Item3: "Using borrowed money to place bets",
+    section5Item4: "Feeling anxious, irritable, or depressed when not trading",
+    section5Item5: "Hiding your activity from friends or family",
+    section5Outro: "If any of these apply to you - stop. Reassess. Seek support.",
+    // Section 6: Getting Help
+    section6Title: "Getting Help",
+    section6GlobalTitle: "Global Support",
+    section6GlobalText: "If you or someone you know is struggling with gambling-related issues, we encourage reaching out to local support organizations. Many countries offer confidential helplines and free counseling services.",
+    section6SelfExclusionTitle: "Self-Exclusion",
+    section6SelfExclusionText: "If you need a break, you may contact us at support@oddsflow.ai to request a temporary suspension of your account. We support your choice to step back when needed.",
     // Footer
     product: "Product", liveOdds: "AI Performance", popularLeagues: "Popular Leagues",
     communityFooter: "Community", globalChat: "Global Chat", userPredictions: "User Predictions",
     company: "Company", aboutUs: "About Us", contact: "Contact", blog: "Blog",
-    legal: "Legal", termsOfService: "Terms of Service", privacyPolicy: "Privacy Policy", responsibleGaming: "Responsible Gaming",
+    legal: "Legal", termsOfService: "Terms of Service", privacyPolicy: "Privacy Policy", responsibleGaming: "Responsible Use",
     allRightsReserved: "All rights reserved.",
     gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
     disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
@@ -56,41 +63,43 @@ const translations: Record<string, Record<string, string>> = {
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA",
     community: "Comunidad", news: "Noticias", pricing: "Precios", login: "Iniciar Sesion", getStarted: "Comenzar", solution: "Solucion",
-    pageTitle: "Juego Responsable",
-    pageSubtitle: "En OddsFlow, estamos comprometidos con promover el juego responsable y proporcionar recursos para ayudarle a mantener el control.",
+    pageTitle: "Uso Responsable y Conciencia del Riesgo",
+    pageSubtitle: "En OddsFlow, creemos en la toma de decisiones informadas y practicas de analitica sostenibles.",
     ageWarning: "Solo mayores de 18",
-    ourCommitment: "Nuestro Compromiso",
-    ourCommitmentText1: "OddsFlow proporciona predicciones deportivas impulsadas por IA solo con fines informativos y de entretenimiento. Estamos comprometidos con promover practicas de juego responsable.",
-    ourCommitmentText2: "El juego debe ser divertido y entretenido, no una forma de ganar dinero o resolver problemas financieros. Animamos a todos nuestros usuarios a jugar responsablemente.",
-    ageVerification: "Verificacion de Edad",
-    ageVerificationText: "Debe tener al menos 18 anos para usar OddsFlow. Prohibimos estrictamente el juego de menores de edad.",
-    warningSigns: "Senales de Advertencia del Juego Problematico",
-    warningSignsText: "Si usted o alguien que conoce exhibe alguna de estas senales, puede indicar un problema de juego:",
-    warningSign1: "Gastar mas dinero o tiempo jugando de lo que puede permitirse",
-    warningSign2: "Perseguir perdidas o apostar para intentar recuperar dinero",
-    warningSign3: "Descuidar el trabajo, la familia u otras responsabilidades debido al juego",
-    warningSign4: "Pedir dinero prestado o vender posesiones para jugar",
-    warningSign5: "Sentirse ansioso, deprimido o irritable cuando no esta jugando",
-    warningSign6: "Mentir a familiares o amigos sobre habitos de juego",
-    warningSign7: "No poder dejar o reducir el juego a pesar de querer hacerlo",
-    warningSign8: "Jugar para escapar de problemas o aliviar sentimientos negativos",
-    tipsTitle: "Consejos para el Juego Responsable",
-    tip1Title: "Establezca un Presupuesto", tip1Text: "Solo juegue con dinero que pueda permitirse perder.",
-    tip2Title: "Establezca Limites de Tiempo", tip2Text: "Decida cuanto tiempo pasara jugando y cumpla con ello.",
-    tip3Title: "Nunca Persiga Perdidas", tip3Text: "Acepte que perder es parte del juego. Nunca intente recuperar dinero perdido.",
-    tip4Title: "Equilibre su Vida", tip4Text: "El juego debe ser solo una de muchas actividades de ocio.",
-    tip5Title: "Evite el Alcohol", tip5Text: "Evite jugar bajo la influencia del alcohol o drogas.",
-    tip6Title: "Conozca las Probabilidades", tip6Text: "Entienda que las probabilidades siempre favorecen a la casa.",
-    getHelp: "Obtenga Ayuda",
-    getHelpText: "Si usted o alguien que conoce tiene un problema de juego, contacte estos recursos:",
-    selfExclusion: "Autoexclusion",
-    selfExclusionText1: "Si necesita tomar un descanso del juego, puede solicitar la autoexclusion de su cuenta. Contactenos en",
-    selfExclusionText2: "para solicitar la autoexclusion por el periodo que elija.",
-    selfExclusionText3: "Durante el periodo de autoexclusion, no podra acceder a su cuenta ni usar nuestros servicios.",
+    section1Title: "Nuestra Posicion: Datos, No Apuestas",
+    section1Text: "OddsFlow es una plataforma de analitica deportiva, no un operador de apuestas. No aceptamos, realizamos ni facilitamos apuestas. Nuestro rol es proporcionar insights basados en datos - lo que los usuarios elijan hacer con esos insights es su propia responsabilidad. Piense en nosotros como su motor de analitica, no como su corredor de apuestas.",
+    section2Title: "La Filosofia de la Gestion del Riesgo",
+    section2Text: "Si utiliza nuestros datos para trading deportivo o apuestas a traves de plataformas de terceros, tratelo como cualquier otra actividad financiera: nunca arriesgue mas de lo que pueda perder comodamente, diversifique su enfoque y recuerde que incluso los mejores datos no pueden predecir el futuro con certeza. Los mercados son inherentemente volatiles - nuestra analitica mejora su ventaja, pero no elimina el riesgo.",
+    section3Title: "Cumplimiento Legal y de Edad",
+    section3Subtitle: "Solo mayores de 18",
+    section3Text: "El acceso a las herramientas de analitica premium de OddsFlow esta restringido a usuarios mayores de 18 anos. Es su responsabilidad asegurar que cualquier uso de plataformas de apuestas deportivas o trading en conjunto con nuestros datos cumpla con sus leyes locales. Operamos globalmente, pero el cumplimiento legal es un asunto local.",
+    section4Title: "Principios de Uso Sostenible",
+    section4Intro: "Animamos a todos los usuarios a abordar nuestra plataforma con disciplina:",
+    section4Item1Title: "Defina Sus Limites",
+    section4Item1Text: "Establezca limites personales de tiempo y capital antes de participar en cualquier actividad de apuestas o trading externo.",
+    section4Item2Title: "Evite Perseguir Perdidas",
+    section4Item2Text: "Las perdidas son parte de cualquier actividad probabilistica. Perseguir perdidas lleva a errores acumulados.",
+    section4Item3Title: "Mentalidad Clara",
+    section4Item3Text: "Nunca opere o apueste cuando este emocionalmente comprometido, fatigado o bajo la influencia de sustancias.",
+    section4Item4Title: "Equilibrio",
+    section4Item4Text: "Asegurese de que la analitica deportiva o el trading siga siendo un hobby o actividad secundaria - no un reemplazo de ingresos estables o habitos de vida saludables.",
+    section5Title: "Reconociendo las Senales de Alerta",
+    section5Intro: "La especulacion de mercado puede volverse adictiva. Las senales de advertencia incluyen:",
+    section5Item1: "Gastar mas alla de sus posibilidades",
+    section5Item2: "Descuidar responsabilidades personales o profesionales",
+    section5Item3: "Usar dinero prestado para apostar",
+    section5Item4: "Sentirse ansioso, irritable o deprimido cuando no esta operando",
+    section5Item5: "Ocultar su actividad de amigos o familiares",
+    section5Outro: "Si alguna de estas situaciones le aplica - detenga. Reevalue. Busque apoyo.",
+    section6Title: "Obtener Ayuda",
+    section6GlobalTitle: "Apoyo Global",
+    section6GlobalText: "Si usted o alguien que conoce esta luchando con problemas relacionados con el juego, le animamos a contactar organizaciones de apoyo locales. Muchos paises ofrecen lineas de ayuda confidenciales y servicios de asesoramiento gratuitos.",
+    section6SelfExclusionTitle: "Autoexclusion",
+    section6SelfExclusionText: "Si necesita un descanso, puede contactarnos en support@oddsflow.ai para solicitar una suspension temporal de su cuenta. Apoyamos su decision de dar un paso atras cuando sea necesario.",
     product: "Producto", liveOdds: "Rendimiento IA", popularLeagues: "Ligas Populares",
     communityFooter: "Comunidad", globalChat: "Chat Global", userPredictions: "Predicciones de Usuarios",
     company: "Empresa", aboutUs: "Sobre Nosotros", contact: "Contacto", blog: "Blog",
-    legal: "Legal", termsOfService: "Terminos de Servicio", privacyPolicy: "Politica de Privacidad", responsibleGaming: "Juego Responsable",
+    legal: "Legal", termsOfService: "Terminos de Servicio", privacyPolicy: "Politica de Privacidad", responsibleGaming: "Uso Responsable",
     allRightsReserved: "Todos los derechos reservados.",
     gamblingWarning: "El juego implica riesgo. Por favor juegue responsablemente.",
     disclaimer: "Aviso: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento. No garantizamos la precision de las predicciones. El juego implica riesgo. Los usuarios deben tener mas de 18 anos.",
@@ -98,41 +107,43 @@ const translations: Record<string, Record<string, string>> = {
   PT: {
     home: "Inicio", predictions: "Previsoes", leagues: "Ligas", performance: "Desempenho IA",
     community: "Comunidade", news: "Noticias", pricing: "Precos", login: "Entrar", getStarted: "Comecar", solution: "Solucao",
-    pageTitle: "Jogo Responsavel",
-    pageSubtitle: "Na OddsFlow, estamos comprometidos em promover o jogo responsavel e fornecer recursos para ajuda-lo a manter o controle.",
+    pageTitle: "Uso Responsavel e Consciencia de Risco",
+    pageSubtitle: "Na OddsFlow, acreditamos na tomada de decisoes informadas e praticas de analitica sustentaveis.",
     ageWarning: "Apenas maiores de 18",
-    ourCommitment: "Nosso Compromisso",
-    ourCommitmentText1: "A OddsFlow fornece previsoes esportivas baseadas em IA apenas para fins informativos e de entretenimento. Estamos comprometidos em promover praticas de jogo responsavel.",
-    ourCommitmentText2: "Apostar deve ser divertido e entretenido, nao uma forma de ganhar dinheiro ou resolver problemas financeiros.",
-    ageVerification: "Verificacao de Idade",
-    ageVerificationText: "Voce deve ter pelo menos 18 anos para usar a OddsFlow. Proibimos estritamente jogos de azar para menores.",
-    warningSigns: "Sinais de Alerta do Jogo Problematico",
-    warningSignsText: "Se voce ou alguem que conhece exibe algum destes sinais, pode indicar um problema de jogo:",
-    warningSign1: "Gastar mais dinheiro ou tempo jogando do que pode pagar",
-    warningSign2: "Perseguir perdas ou apostar para tentar recuperar dinheiro",
-    warningSign3: "Negligenciar trabalho, familia ou outras responsabilidades devido ao jogo",
-    warningSign4: "Pedir dinheiro emprestado ou vender pertences para jogar",
-    warningSign5: "Sentir-se ansioso, deprimido ou irritado quando nao esta jogando",
-    warningSign6: "Mentir para familiares ou amigos sobre habitos de jogo",
-    warningSign7: "Nao conseguir parar ou reduzir o jogo apesar de querer",
-    warningSign8: "Jogar para escapar de problemas ou aliviar sentimentos negativos",
-    tipsTitle: "Dicas para Jogo Responsavel",
-    tip1Title: "Defina um Orcamento", tip1Text: "Aposte apenas com dinheiro que pode perder.",
-    tip2Title: "Defina Limites de Tempo", tip2Text: "Decida quanto tempo passara jogando e cumpra.",
-    tip3Title: "Nunca Persiga Perdas", tip3Text: "Aceite que perder faz parte do jogo.",
-    tip4Title: "Equilibre sua Vida", tip4Text: "O jogo deve ser apenas uma das muitas atividades de lazer.",
-    tip5Title: "Evite Alcool", tip5Text: "Evite jogar sob influencia de alcool ou drogas.",
-    tip6Title: "Conheca as Probabilidades", tip6Text: "Entenda que as probabilidades sempre favorecem a casa.",
-    getHelp: "Obtenha Ajuda",
-    getHelpText: "Se voce ou alguem que conhece tem um problema de jogo, entre em contato com estes recursos:",
-    selfExclusion: "Autoexclusao",
-    selfExclusionText1: "Se precisar de uma pausa do jogo, pode solicitar autoexclusao. Entre em contato conosco em",
-    selfExclusionText2: "para solicitar autoexclusao pelo periodo desejado.",
-    selfExclusionText3: "Durante o periodo de autoexclusao, voce nao podera acessar sua conta.",
+    section1Title: "Nossa Posicao: Dados, Nao Apostas",
+    section1Text: "OddsFlow e uma plataforma de analitica esportiva, nao uma operadora de apostas. Nao aceitamos, realizamos ou facilitamos apostas. Nosso papel e fornecer insights baseados em dados - o que os usuarios escolhem fazer com esses insights e sua propria responsabilidade. Pense em nos como seu motor de analitica, nao como seu apostador.",
+    section2Title: "A Filosofia da Gestao de Risco",
+    section2Text: "Se voce usa nossos dados para trading esportivo ou apostas atraves de plataformas de terceiros, trate como qualquer outra atividade financeira: nunca arrisque mais do que pode perder confortavelmente, diversifique sua abordagem e lembre-se de que mesmo os melhores dados nao podem prever o futuro com certeza. Os mercados sao inerentemente volateis - nossa analitica melhora sua vantagem, mas nao elimina o risco.",
+    section3Title: "Conformidade Legal e de Idade",
+    section3Subtitle: "Apenas maiores de 18",
+    section3Text: "O acesso as ferramentas de analitica premium da OddsFlow e restrito a usuarios com 18 anos ou mais. E sua responsabilidade garantir que qualquer uso de plataformas de apostas esportivas ou trading em conjunto com nossos dados esteja em conformidade com suas leis locais. Operamos globalmente, mas a conformidade legal e uma questao local.",
+    section4Title: "Principios de Uso Sustentavel",
+    section4Intro: "Encorajamos todos os usuarios a abordar nossa plataforma com disciplina:",
+    section4Item1Title: "Defina Seus Limites",
+    section4Item1Text: "Estabeleca limites pessoais de tempo e capital antes de se envolver em qualquer atividade de apostas ou trading externo.",
+    section4Item2Title: "Evite Perseguir Perdas",
+    section4Item2Text: "Perdas fazem parte de qualquer atividade probabilistica. Perseguir perdas leva a erros acumulados.",
+    section4Item3Title: "Mentalidade Clara",
+    section4Item3Text: "Nunca opere ou aposte quando estiver emocionalmente comprometido, fatigado ou sob influencia de substancias.",
+    section4Item4Title: "Equilibrio",
+    section4Item4Text: "Garanta que a analitica esportiva ou trading permaneca como hobby ou atividade secundaria - nao como substituto de renda estavel ou habitos de vida saudaveis.",
+    section5Title: "Reconhecendo os Sinais de Alerta",
+    section5Intro: "A especulacao de mercado pode se tornar viciante. Os sinais de alerta incluem:",
+    section5Item1: "Gastar alem das suas possibilidades",
+    section5Item2: "Negligenciar responsabilidades pessoais ou profissionais",
+    section5Item3: "Usar dinheiro emprestado para apostar",
+    section5Item4: "Sentir-se ansioso, irritado ou deprimido quando nao esta operando",
+    section5Item5: "Esconder sua atividade de amigos ou familiares",
+    section5Outro: "Se alguma dessas situacoes se aplica a voce - pare. Reavalie. Busque apoio.",
+    section6Title: "Obtendo Ajuda",
+    section6GlobalTitle: "Suporte Global",
+    section6GlobalText: "Se voce ou alguem que conhece esta enfrentando problemas relacionados a jogos de azar, encorajamos contatar organizacoes de apoio locais. Muitos paises oferecem linhas de ajuda confidenciais e servicos de aconselhamento gratuitos.",
+    section6SelfExclusionTitle: "Autoexclusao",
+    section6SelfExclusionText: "Se precisar de uma pausa, pode nos contatar em support@oddsflow.ai para solicitar uma suspensao temporaria da sua conta. Apoiamos sua escolha de dar um passo atras quando necessario.",
     product: "Produto", liveOdds: "Desempenho IA", popularLeagues: "Ligas Populares",
     communityFooter: "Comunidade", globalChat: "Chat Global", userPredictions: "Previsoes de Usuarios",
     company: "Empresa", aboutUs: "Sobre Nos", contact: "Contato", blog: "Blog",
-    legal: "Legal", termsOfService: "Termos de Servico", privacyPolicy: "Politica de Privacidade", responsibleGaming: "Jogo Responsavel",
+    legal: "Legal", termsOfService: "Termos de Servico", privacyPolicy: "Politica de Privacidade", responsibleGaming: "Uso Responsavel",
     allRightsReserved: "Todos os direitos reservados.",
     gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
     disclaimer: "Aviso: OddsFlow fornece previsoes baseadas em IA apenas para fins informativos. Nao garantimos a precisao das previsoes. Usuarios devem ter mais de 18 anos.",
@@ -140,41 +151,43 @@ const translations: Record<string, Record<string, string>> = {
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung",
     community: "Community", news: "Nachrichten", pricing: "Preise", login: "Anmelden", getStarted: "Loslegen", solution: "Losung",
-    pageTitle: "Verantwortungsvolles Spielen",
-    pageSubtitle: "Bei OddsFlow sind wir verpflichtet, verantwortungsvolles Spielen zu fordern und Ressourcen bereitzustellen.",
+    pageTitle: "Verantwortungsvolle Nutzung & Risikobewusstsein",
+    pageSubtitle: "Bei OddsFlow glauben wir an informierte Entscheidungsfindung und nachhaltige Analysepraktiken.",
     ageWarning: "Nur ab 18",
-    ourCommitment: "Unser Engagement",
-    ourCommitmentText1: "OddsFlow bietet KI-gestutzte Sportvorhersagen nur zu Informations- und Unterhaltungszwecken.",
-    ourCommitmentText2: "Glucksspiel sollte Spass machen, keine Moglichkeit Geld zu verdienen oder finanzielle Probleme zu losen.",
-    ageVerification: "Altersverifikation",
-    ageVerificationText: "Sie mussen mindestens 18 Jahre alt sein, um OddsFlow zu nutzen.",
-    warningSigns: "Warnzeichen fur problematisches Spielen",
-    warningSignsText: "Wenn Sie oder jemand, den Sie kennen, diese Anzeichen zeigt, kann dies auf ein Spielproblem hinweisen:",
-    warningSign1: "Mehr Geld oder Zeit beim Spielen ausgeben als Sie sich leisten konnen",
-    warningSign2: "Verlusten nachjagen oder spielen, um Geld zuruckzugewinnen",
-    warningSign3: "Arbeit, Familie oder andere Verantwortlichkeiten vernachlassigen",
-    warningSign4: "Geld leihen oder Besitz verkaufen, um zu spielen",
-    warningSign5: "Angstlich, deprimiert oder gereizt sein, wenn nicht gespielt wird",
-    warningSign6: "Familie oder Freunde uber Spielgewohnheiten belgen",
-    warningSign7: "Nicht aufhoren oder reduzieren konnen, obwohl man es mochte",
-    warningSign8: "Spielen, um Problemen zu entkommen oder negative Gefuhle zu lindern",
-    tipsTitle: "Tipps fur verantwortungsvolles Spielen",
-    tip1Title: "Budget festlegen", tip1Text: "Spielen Sie nur mit Geld, das Sie verlieren konnen.",
-    tip2Title: "Zeitlimits setzen", tip2Text: "Entscheiden Sie, wie viel Zeit Sie spielen werden.",
-    tip3Title: "Nie Verlusten nachjagen", tip3Text: "Akzeptieren Sie, dass Verlieren Teil des Spielens ist.",
-    tip4Title: "Leben ausbalancieren", tip4Text: "Glucksspiel sollte nur eine von vielen Freizeitaktivitaten sein.",
-    tip5Title: "Alkohol vermeiden", tip5Text: "Vermeiden Sie das Spielen unter Einfluss von Alkohol oder Drogen.",
-    tip6Title: "Quoten kennen", tip6Text: "Verstehen Sie, dass die Quoten immer das Haus begunstigen.",
-    getHelp: "Hilfe holen",
-    getHelpText: "Wenn Sie oder jemand, den Sie kennen, ein Spielproblem hat, wenden Sie sich an diese Ressourcen:",
-    selfExclusion: "Selbstausschluss",
-    selfExclusionText1: "Wenn Sie eine Pause vom Spielen benotigen, konnen Sie einen Selbstausschluss beantragen. Kontaktieren Sie uns unter",
-    selfExclusionText2: "um einen Selbstausschluss fur einen Zeitraum Ihrer Wahl zu beantragen.",
-    selfExclusionText3: "Wahrend des Selbstausschlusszeitraums konnen Sie nicht auf Ihr Konto zugreifen.",
+    section1Title: "Unsere Position: Daten, Keine Wetten",
+    section1Text: "OddsFlow ist eine Sportanalyseplattform, kein Wettanbieter. Wir nehmen keine Wetten an, platzieren oder vermitteln sie. Unsere Rolle ist es, datengesteuerte Erkenntnisse zu liefern - was Benutzer mit diesen Erkenntnissen tun, liegt in ihrer eigenen Verantwortung. Betrachten Sie uns als Ihren Analyse-Motor, nicht als Ihren Buchmacher.",
+    section2Title: "Die Philosophie des Risikomanagements",
+    section2Text: "Wenn Sie unsere Daten fur Sporthandel oder Wetten uber Drittanbieterplattformen nutzen, behandeln Sie es wie jede andere finanzielle Aktivitat: Riskieren Sie nie mehr, als Sie bequem verlieren konnen, diversifizieren Sie Ihren Ansatz und denken Sie daran, dass selbst die besten Daten die Zukunft nicht mit Sicherheit vorhersagen konnen. Markte sind von Natur aus volatil - unsere Analysen verbessern Ihren Vorteil, eliminieren aber nicht das Risiko.",
+    section3Title: "Alters- und Rechtskonformitat",
+    section3Subtitle: "Nur ab 18",
+    section3Text: "Der Zugang zu OddsFlows Premium-Analysetools ist auf Benutzer ab 18 Jahren beschrankt. Es liegt in Ihrer Verantwortung sicherzustellen, dass jede Nutzung von Sportwett- oder Handelsplattformen in Verbindung mit unseren Daten Ihren lokalen Gesetzen entspricht. Wir operieren global, aber die rechtliche Konformitat ist eine lokale Angelegenheit.",
+    section4Title: "Prinzipien nachhaltiger Nutzung",
+    section4Intro: "Wir ermutigen alle Benutzer, unsere Plattform mit Disziplin zu nutzen:",
+    section4Item1Title: "Definieren Sie Ihre Grenzen",
+    section4Item1Text: "Setzen Sie personliche Grenzen fur Zeit und Kapital, bevor Sie sich an externen Wett- oder Handelsaktivitaten beteiligen.",
+    section4Item2Title: "Vermeiden Sie das Nachjagen",
+    section4Item2Text: "Verluste sind Teil jeder probabilistischen Aktivitat. Verlusten nachzujagen fuhrt zu kumulativen Fehlern.",
+    section4Item3Title: "Klare Denkweise",
+    section4Item3Text: "Handeln oder wetten Sie nie, wenn Sie emotional beeintrachtigt, erschopft oder unter Einfluss von Substanzen sind.",
+    section4Item4Title: "Gleichgewicht",
+    section4Item4Text: "Stellen Sie sicher, dass Sportanalysen oder Trading ein Hobby oder eine Nebentatigkeit bleiben - kein Ersatz fur stabiles Einkommen oder gesunde Lebensgewohnheiten.",
+    section5Title: "Warnsignale Erkennen",
+    section5Intro: "Marktspekulation kann suchtig machen. Warnzeichen umfassen:",
+    section5Item1: "Uber Ihre Verhaltnisse ausgeben",
+    section5Item2: "Personliche oder berufliche Verantwortlichkeiten vernachlassigen",
+    section5Item3: "Geliehenes Geld zum Wetten verwenden",
+    section5Item4: "Sich angstlich, gereizt oder deprimiert fuhlen, wenn Sie nicht handeln",
+    section5Item5: "Ihre Aktivitaten vor Freunden oder Familie verbergen",
+    section5Outro: "Wenn etwas davon auf Sie zutrifft - stoppen Sie. Bewerten Sie neu. Suchen Sie Unterstutzung.",
+    section6Title: "Hilfe Bekommen",
+    section6GlobalTitle: "Globale Unterstutzung",
+    section6GlobalText: "Wenn Sie oder jemand, den Sie kennen, mit glucksspielbezogenen Problemen kampft, ermutigen wir Sie, lokale Hilfsorganisationen zu kontaktieren. Viele Lander bieten vertrauliche Hotlines und kostenlose Beratungsdienste an.",
+    section6SelfExclusionTitle: "Selbstausschluss",
+    section6SelfExclusionText: "Wenn Sie eine Pause benotigen, konnen Sie uns unter support@oddsflow.ai kontaktieren, um eine vorubergehende Sperrung Ihres Kontos zu beantragen. Wir unterstutzen Ihre Entscheidung, einen Schritt zuruckzutreten, wenn notig.",
     product: "Produkt", liveOdds: "KI-Leistung", popularLeagues: "Beliebte Ligen",
     communityFooter: "Community", globalChat: "Globaler Chat", userPredictions: "Benutzer-Vorhersagen",
     company: "Unternehmen", aboutUs: "Uber uns", contact: "Kontakt", blog: "Blog",
-    legal: "Rechtliches", termsOfService: "Nutzungsbedingungen", privacyPolicy: "Datenschutz", responsibleGaming: "Verantwortungsvolles Spielen",
+    legal: "Rechtliches", termsOfService: "Nutzungsbedingungen", privacyPolicy: "Datenschutz", responsibleGaming: "Verantwortungsvolle Nutzung",
     allRightsReserved: "Alle Rechte vorbehalten.",
     gamblingWarning: "Glucksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
     disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestutzte Vorhersagen nur zu Informations- und Unterhaltungszwecken. Benutzer mussen 18+ Jahre alt sein.",
@@ -182,41 +195,43 @@ const translations: Record<string, Record<string, string>> = {
   FR: {
     home: "Accueil", predictions: "Predictions", leagues: "Ligues", performance: "Performance IA",
     community: "Communaute", news: "Actualites", pricing: "Tarifs", login: "Connexion", getStarted: "Commencer", solution: "Solution",
-    pageTitle: "Jeu Responsable",
-    pageSubtitle: "Chez OddsFlow, nous nous engageons a promouvoir le jeu responsable et a fournir des ressources pour vous aider a garder le controle.",
+    pageTitle: "Utilisation Responsable & Conscience du Risque",
+    pageSubtitle: "Chez OddsFlow, nous croyons en la prise de decisions eclairees et en des pratiques d'analyse durables.",
     ageWarning: "18+ uniquement",
-    ourCommitment: "Notre Engagement",
-    ourCommitmentText1: "OddsFlow fournit des predictions sportives basees sur l'IA uniquement a des fins d'information et de divertissement.",
-    ourCommitmentText2: "Les jeux d'argent doivent etre amusants et divertissants, pas un moyen de gagner de l'argent ou de resoudre des problemes financiers.",
-    ageVerification: "Verification de l'Age",
-    ageVerificationText: "Vous devez avoir au moins 18 ans pour utiliser OddsFlow.",
-    warningSigns: "Signes d'Alerte du Jeu Problematique",
-    warningSignsText: "Si vous ou quelqu'un que vous connaissez presente l'un de ces signes, cela peut indiquer un probleme de jeu:",
-    warningSign1: "Depenser plus d'argent ou de temps a jouer que vous ne pouvez vous le permettre",
-    warningSign2: "Poursuivre les pertes ou jouer pour tenter de recuperer de l'argent",
-    warningSign3: "Negliger le travail, la famille ou d'autres responsabilites a cause du jeu",
-    warningSign4: "Emprunter de l'argent ou vendre des biens pour jouer",
-    warningSign5: "Se sentir anxieux, deprime ou irritable quand on ne joue pas",
-    warningSign6: "Mentir a la famille ou aux amis sur les habitudes de jeu",
-    warningSign7: "Etre incapable d'arreter ou de reduire le jeu malgre le desir",
-    warningSign8: "Jouer pour echapper aux problemes ou soulager les sentiments negatifs",
-    tipsTitle: "Conseils pour un Jeu Responsable",
-    tip1Title: "Fixez un Budget", tip1Text: "Ne jouez qu'avec de l'argent que vous pouvez vous permettre de perdre.",
-    tip2Title: "Fixez des Limites de Temps", tip2Text: "Decidez combien de temps vous passerez a jouer.",
-    tip3Title: "Ne Poursuivez Jamais les Pertes", tip3Text: "Acceptez que perdre fait partie du jeu.",
-    tip4Title: "Equilibrez Votre Vie", tip4Text: "Le jeu ne devrait etre qu'une activite de loisir parmi d'autres.",
-    tip5Title: "Evitez l'Alcool", tip5Text: "Evitez de jouer sous l'influence de l'alcool ou de drogues.",
-    tip6Title: "Connaissez les Cotes", tip6Text: "Comprenez que les cotes favorisent toujours la maison.",
-    getHelp: "Obtenir de l'Aide",
-    getHelpText: "Si vous ou quelqu'un que vous connaissez a un probleme de jeu, contactez ces ressources:",
-    selfExclusion: "Auto-exclusion",
-    selfExclusionText1: "Si vous avez besoin de faire une pause, vous pouvez demander une auto-exclusion. Contactez-nous a",
-    selfExclusionText2: "pour demander une auto-exclusion pour la periode de votre choix.",
-    selfExclusionText3: "Pendant la periode d'auto-exclusion, vous ne pourrez pas acceder a votre compte.",
+    section1Title: "Notre Position: Donnees, Pas de Paris",
+    section1Text: "OddsFlow est une plateforme d'analyse sportive, pas un operateur de paris. Nous n'acceptons, ne placons ni ne facilitons les paris. Notre role est de fournir des insights bases sur les donnees - ce que les utilisateurs choisissent de faire avec ces insights releve de leur propre responsabilite. Considerez-nous comme votre moteur d'analyse, pas comme votre bookmaker.",
+    section2Title: "La Philosophie de la Gestion du Risque",
+    section2Text: "Si vous utilisez nos donnees pour le trading sportif ou les paris via des plateformes tierces, traitez-le comme toute autre activite financiere: ne risquez jamais plus que ce que vous pouvez confortablement perdre, diversifiez votre approche et rappelez-vous que meme les meilleures donnees ne peuvent pas predire l'avenir avec certitude. Les marches sont inheremment volatils - nos analyses ameliorent votre avantage, mais n'eliminent pas le risque.",
+    section3Title: "Conformite Legale et d'Age",
+    section3Subtitle: "18+ uniquement",
+    section3Text: "L'acces aux outils d'analyse premium d'OddsFlow est reserve aux utilisateurs ages de 18 ans et plus. Il vous incombe de vous assurer que toute utilisation de plateformes de paris sportifs ou de trading en conjonction avec nos donnees est conforme a vos lois locales. Nous operons a l'echelle mondiale, mais la conformite legale est une question locale.",
+    section4Title: "Principes d'Utilisation Durable",
+    section4Intro: "Nous encourageons tous les utilisateurs a aborder notre plateforme avec discipline:",
+    section4Item1Title: "Definissez Vos Limites",
+    section4Item1Text: "Fixez des limites personnelles de temps et de capital avant de vous engager dans toute activite de paris ou de trading externe.",
+    section4Item2Title: "Evitez de Poursuivre les Pertes",
+    section4Item2Text: "Les pertes font partie de toute activite probabiliste. Poursuivre les pertes mene a des erreurs cumulees.",
+    section4Item3Title: "Etat d'Esprit Clair",
+    section4Item3Text: "Ne tradez ou ne pariez jamais lorsque vous etes emotionnellement compromis, fatigue ou sous l'influence de substances.",
+    section4Item4Title: "Equilibre",
+    section4Item4Text: "Assurez-vous que l'analyse sportive ou le trading reste un hobby ou une activite secondaire - pas un remplacement de revenus stables ou d'habitudes de vie saines.",
+    section5Title: "Reconnaitre les Signaux d'Alerte",
+    section5Intro: "La speculation de marche peut devenir addictive. Les signes d'alerte incluent:",
+    section5Item1: "Depenser au-dela de vos moyens",
+    section5Item2: "Negliger les responsabilites personnelles ou professionnelles",
+    section5Item3: "Utiliser de l'argent emprunte pour parier",
+    section5Item4: "Se sentir anxieux, irritable ou deprime quand on ne trade pas",
+    section5Item5: "Cacher votre activite a vos amis ou votre famille",
+    section5Outro: "Si l'un de ces points vous concerne - arretez. Reevaluez. Cherchez du soutien.",
+    section6Title: "Obtenir de l'Aide",
+    section6GlobalTitle: "Support Global",
+    section6GlobalText: "Si vous ou quelqu'un que vous connaissez lutte contre des problemes lies aux jeux d'argent, nous vous encourageons a contacter les organisations de soutien locales. De nombreux pays proposent des lignes d'assistance confidentielles et des services de conseil gratuits.",
+    section6SelfExclusionTitle: "Auto-exclusion",
+    section6SelfExclusionText: "Si vous avez besoin d'une pause, vous pouvez nous contacter a support@oddsflow.ai pour demander une suspension temporaire de votre compte. Nous soutenons votre choix de prendre du recul quand c'est necessaire.",
     product: "Produit", liveOdds: "Performance IA", popularLeagues: "Ligues Populaires",
     communityFooter: "Communaute", globalChat: "Chat Global", userPredictions: "Predictions Utilisateurs",
     company: "Entreprise", aboutUs: "A Propos", contact: "Contact", blog: "Blog",
-    legal: "Legal", termsOfService: "Conditions d'Utilisation", privacyPolicy: "Politique de Confidentialite", responsibleGaming: "Jeu Responsable",
+    legal: "Legal", termsOfService: "Conditions d'Utilisation", privacyPolicy: "Politique de Confidentialite", responsibleGaming: "Utilisation Responsable",
     allRightsReserved: "Tous droits reserves.",
     gamblingWarning: "Les jeux d'argent comportent des risques. Jouez de maniere responsable.",
     disclaimer: "Avertissement: OddsFlow fournit des predictions basees sur l'IA uniquement a des fins d'information et de divertissement. Les utilisateurs doivent avoir 18+ ans.",
@@ -224,41 +239,43 @@ const translations: Record<string, Record<string, string>> = {
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AIパフォーマンス",
     community: "コミュニティ", news: "ニュース", pricing: "料金", login: "ログイン", getStarted: "始める", solution: "ソリューション",
-    pageTitle: "責任あるギャンブル",
-    pageSubtitle: "OddsFlowでは、責任あるギャンブルを促進し、コントロールを維持するためのリソースを提供することに取り組んでいます。",
+    pageTitle: "責任ある利用とリスク意識",
+    pageSubtitle: "OddsFlowでは、情報に基づいた意思決定と持続可能な分析実践を信じています。",
     ageWarning: "18歳以上限定",
-    ourCommitment: "私たちの取り組み",
-    ourCommitmentText1: "OddsFlowは、情報および娯楽目的でのみAIによるスポーツ予測を提供しています。",
-    ourCommitmentText2: "ギャンブルは楽しく娯楽であるべきで、お金を稼いだり金銭的な問題を解決する方法ではありません。",
-    ageVerification: "年齢確認",
-    ageVerificationText: "OddsFlowを使用するには18歳以上である必要があります。",
-    warningSigns: "問題ギャンブルの警告サイン",
-    warningSignsText: "あなたや知り合いがこれらの兆候を示している場合、ギャンブル問題を示唆している可能性があります：",
-    warningSign1: "余裕がある以上のお金や時間をギャンブルに費やす",
-    warningSign2: "損失を追いかけたり、お金を取り戻そうとギャンブルする",
-    warningSign3: "ギャンブルのために仕事、家族、その他の責任を怠る",
-    warningSign4: "ギャンブルのためにお金を借りたり所持品を売る",
-    warningSign5: "ギャンブルしていないときに不安、落ち込み、イライラを感じる",
-    warningSign6: "ギャンブル習慣について家族や友人に嘘をつく",
-    warningSign7: "やめたいと思っているのにギャンブルをやめられない",
-    warningSign8: "問題から逃げたりネガティブな感情を和らげるためにギャンブルする",
-    tipsTitle: "責任あるギャンブルのヒント",
-    tip1Title: "予算を設定する", tip1Text: "失っても良いお金だけでギャンブルしてください。",
-    tip2Title: "時間制限を設定する", tip2Text: "ギャンブルに費やす時間を決めて守りましょう。",
-    tip3Title: "損失を追いかけない", tip3Text: "負けることはギャンブルの一部であることを受け入れましょう。",
-    tip4Title: "生活のバランスを取る", tip4Text: "ギャンブルは多くのレジャー活動の一つであるべきです。",
-    tip5Title: "アルコールを避ける", tip5Text: "アルコールや薬物の影響下でギャンブルしないでください。",
-    tip6Title: "オッズを知る", tip6Text: "オッズは常にハウスに有利であることを理解してください。",
-    getHelp: "助けを求める",
-    getHelpText: "あなたや知り合いにギャンブル問題がある場合、これらのリソースに連絡してください：",
-    selfExclusion: "自己排除",
-    selfExclusionText1: "ギャンブルから休憩が必要な場合、自己排除をリクエストできます。",
-    selfExclusionText2: "にご連絡いただき、ご希望の期間の自己排除をリクエストしてください。",
-    selfExclusionText3: "自己排除期間中は、アカウントにアクセスできません。",
+    section1Title: "私たちの立場：データであり、賭けではない",
+    section1Text: "OddsFlowはスポーツ分析プラットフォームであり、ギャンブル運営者ではありません。私たちは賭けを受け付けたり、行ったり、仲介したりしません。私たちの役割はデータ駆動型のインサイトを提供することです - ユーザーがそれらのインサイトで何をするかは、ユーザー自身の責任です。私たちをあなたの分析エンジンとして考えてください、ブックメーカーではありません。",
+    section2Title: "リスク管理の哲学",
+    section2Text: "サードパーティのプラットフォームを通じてスポーツトレーディングやベッティングに私たちのデータを使用する場合、他の金融活動と同様に扱ってください：快適に失える以上のリスクを取らない、アプローチを多様化する、そして最高のデータでさえ将来を確実に予測することはできないことを覚えておいてください。市場は本質的に不安定です - 私たちの分析はあなたの優位性を向上させますが、リスクを排除するものではありません。",
+    section3Title: "年齢と法的コンプライアンス",
+    section3Subtitle: "18歳以上限定",
+    section3Text: "OddsFlowのプレミアム分析ツールへのアクセスは18歳以上のユーザーに制限されています。私たちのデータと連携してスポーツベッティングやトレーディングプラットフォームを使用する際は、お住まいの地域の法律に準拠していることを確認する責任はユーザーにあります。私たちはグローバルに運営していますが、法的コンプライアンスは地域の問題です。",
+    section4Title: "持続可能な利用の原則",
+    section4Intro: "すべてのユーザーに規律を持って私たちのプラットフォームにアプローチすることをお勧めします：",
+    section4Item1Title: "限度を定義する",
+    section4Item1Text: "外部のベッティングやトレーディング活動に参加する前に、時間と資本の個人的な制限を設定してください。",
+    section4Item2Title: "損失を追いかけない",
+    section4Item2Text: "損失は確率的な活動の一部です。損失を追いかけることは複合的な間違いにつながります。",
+    section4Item3Title: "クリアな心理状態",
+    section4Item3Text: "感情的に不安定な状態、疲労している状態、または物質の影響下にある状態でトレードやベットをしないでください。",
+    section4Item4Title: "バランス",
+    section4Item4Text: "スポーツ分析やトレーディングが趣味または副次的な活動にとどまるようにしてください - 安定した収入や健康的な生活習慣の代わりではありません。",
+    section5Title: "警告サインを認識する",
+    section5Intro: "市場投機は中毒性になる可能性があります。警告サインには以下が含まれます：",
+    section5Item1: "収入を超えて支出する",
+    section5Item2: "個人的または職業的責任を怠る",
+    section5Item3: "借りたお金を賭けに使う",
+    section5Item4: "トレードしていないときに不安、イライラ、または落ち込みを感じる",
+    section5Item5: "友人や家族から活動を隠す",
+    section5Outro: "これらのいずれかが当てはまる場合 - 停止してください。再評価してください。サポートを求めてください。",
+    section6Title: "助けを得る",
+    section6GlobalTitle: "グローバルサポート",
+    section6GlobalText: "あなたや知り合いがギャンブル関連の問題に苦しんでいる場合、地元のサポート組織に連絡することをお勧めします。多くの国では、秘密厳守のヘルプラインと無料のカウンセリングサービスを提供しています。",
+    section6SelfExclusionTitle: "自己排除",
+    section6SelfExclusionText: "休憩が必要な場合は、support@oddsflow.ai に連絡して、アカウントの一時停止をリクエストできます。必要なときに一歩引くというあなたの選択をサポートします。",
     product: "製品", liveOdds: "AIパフォーマンス", popularLeagues: "人気リーグ",
     communityFooter: "コミュニティ", globalChat: "グローバルチャット", userPredictions: "ユーザー予測",
     company: "会社", aboutUs: "会社概要", contact: "お問い合わせ", blog: "ブログ",
-    legal: "法的情報", termsOfService: "利用規約", privacyPolicy: "プライバシーポリシー", responsibleGaming: "責任あるギャンブル",
+    legal: "法的情報", termsOfService: "利用規約", privacyPolicy: "プライバシーポリシー", responsibleGaming: "責任ある利用",
     allRightsReserved: "全著作権所有。",
     gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってギャンブルしてください。",
     disclaimer: "免責事項：OddsFlowは情報および娯楽目的でのみAI予測を提供しています。ユーザーは18歳以上である必要があります。",
@@ -266,41 +283,43 @@ const translations: Record<string, Record<string, string>> = {
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성과",
     community: "커뮤니티", news: "뉴스", pricing: "가격", login: "로그인", getStarted: "시작하기", solution: "솔루션",
-    pageTitle: "책임감 있는 게임",
-    pageSubtitle: "OddsFlow에서는 책임감 있는 도박을 촉진하고 통제력을 유지하는 데 도움이 되는 리소스를 제공하기 위해 노력하고 있습니다.",
+    pageTitle: "책임감 있는 사용 및 위험 인식",
+    pageSubtitle: "OddsFlow에서는 정보에 기반한 의사결정과 지속 가능한 분석 관행을 믿습니다.",
     ageWarning: "18세 이상만",
-    ourCommitment: "우리의 약속",
-    ourCommitmentText1: "OddsFlow는 정보 및 오락 목적으로만 AI 기반 스포츠 예측을 제공합니다.",
-    ourCommitmentText2: "도박은 재미있고 오락적이어야 하며, 돈을 벌거나 재정 문제를 해결하는 방법이 아닙니다.",
-    ageVerification: "연령 확인",
-    ageVerificationText: "OddsFlow를 사용하려면 최소 18세 이상이어야 합니다.",
-    warningSigns: "문제 도박의 경고 신호",
-    warningSignsText: "귀하 또는 아는 사람이 이러한 징후를 보이면 도박 문제를 나타낼 수 있습니다:",
-    warningSign1: "감당할 수 있는 것보다 더 많은 돈이나 시간을 도박에 소비",
-    warningSign2: "손실을 쫓거나 돈을 되찾기 위해 도박",
-    warningSign3: "도박으로 인해 일, 가족 또는 기타 책임을 소홀히 함",
-    warningSign4: "도박을 위해 돈을 빌리거나 소지품을 판매",
-    warningSign5: "도박하지 않을 때 불안하거나 우울하거나 짜증을 느낌",
-    warningSign6: "도박 습관에 대해 가족이나 친구에게 거짓말",
-    warningSign7: "그만두고 싶어도 도박을 중단하거나 줄일 수 없음",
-    warningSign8: "문제를 피하거나 부정적인 감정을 해소하기 위해 도박",
-    tipsTitle: "책임감 있는 도박을 위한 팁",
-    tip1Title: "예산 설정", tip1Text: "잃어도 괜찮은 돈으로만 도박하세요.",
-    tip2Title: "시간 제한 설정", tip2Text: "도박에 소요할 시간을 정하고 지키세요.",
-    tip3Title: "손실을 쫓지 마세요", tip3Text: "지는 것이 도박의 일부임을 받아들이세요.",
-    tip4Title: "삶의 균형 유지", tip4Text: "도박은 여러 여가 활동 중 하나일 뿐이어야 합니다.",
-    tip5Title: "음주 피하기", tip5Text: "알코올이나 약물의 영향을 받은 상태에서 도박하지 마세요.",
-    tip6Title: "확률 알기", tip6Text: "확률은 항상 하우스에 유리하다는 것을 이해하세요.",
-    getHelp: "도움 받기",
-    getHelpText: "귀하 또는 아는 사람에게 도박 문제가 있다면 다음 리소스에 연락하세요:",
-    selfExclusion: "자기 배제",
-    selfExclusionText1: "도박에서 휴식이 필요하면 자기 배제를 요청할 수 있습니다.",
-    selfExclusionText2: "로 연락하여 원하는 기간 동안 자기 배제를 요청하세요.",
-    selfExclusionText3: "자기 배제 기간 동안 계정에 액세스할 수 없습니다.",
+    section1Title: "우리의 입장: 데이터, 베팅 아님",
+    section1Text: "OddsFlow는 스포츠 분석 플랫폼이지, 도박 운영자가 아닙니다. 우리는 베팅을 수락하거나, 배치하거나, 촉진하지 않습니다. 우리의 역할은 데이터 기반 인사이트를 제공하는 것입니다 - 사용자가 이러한 인사이트로 무엇을 하는지는 그들 자신의 책임입니다. 우리를 분석 엔진으로 생각하세요, 북메이커가 아닙니다.",
+    section2Title: "위험 관리 철학",
+    section2Text: "제3자 플랫폼을 통해 스포츠 트레이딩이나 베팅에 우리 데이터를 사용한다면, 다른 금융 활동처럼 다루세요: 편하게 잃을 수 있는 것 이상을 절대 위험에 빠뜨리지 마세요, 접근 방식을 다양화하고, 최고의 데이터도 미래를 확실하게 예측할 수 없다는 것을 기억하세요. 시장은 본질적으로 변동성이 있습니다 - 우리의 분석은 여러분의 우위를 향상시키지만, 위험을 제거하지는 않습니다.",
+    section3Title: "연령 및 법적 준수",
+    section3Subtitle: "18세 이상만",
+    section3Text: "OddsFlow의 프리미엄 분석 도구에 대한 접근은 18세 이상의 사용자로 제한됩니다. 우리 데이터와 함께 스포츠 베팅 또는 트레이딩 플랫폼을 사용하는 것이 현지 법률을 준수하는지 확인하는 것은 귀하의 책임입니다. 우리는 글로벌하게 운영하지만, 법적 준수는 지역 문제입니다.",
+    section4Title: "지속 가능한 사용 원칙",
+    section4Intro: "모든 사용자가 규율을 가지고 우리 플랫폼에 접근하도록 권장합니다:",
+    section4Item1Title: "한계 정의하기",
+    section4Item1Text: "외부 베팅이나 트레이딩 활동에 참여하기 전에 시간과 자본에 대한 개인적인 한계를 설정하세요.",
+    section4Item2Title: "손실 쫓지 않기",
+    section4Item2Text: "손실은 모든 확률적 활동의 일부입니다. 손실을 쫓는 것은 복합적인 실수로 이어집니다.",
+    section4Item3Title: "명확한 마음가짐",
+    section4Item3Text: "감정적으로 손상되었거나, 피곤하거나, 물질의 영향을 받은 상태에서 트레이딩하거나 베팅하지 마세요.",
+    section4Item4Title: "균형",
+    section4Item4Text: "스포츠 분석이나 트레이딩이 취미 또는 부차적인 활동으로 남도록 하세요 - 안정적인 수입이나 건강한 생활 습관의 대체물이 아닙니다.",
+    section5Title: "경고 신호 인식하기",
+    section5Intro: "시장 투기는 중독성이 될 수 있습니다. 경고 신호에는 다음이 포함됩니다:",
+    section5Item1: "수입을 초과하여 지출",
+    section5Item2: "개인적 또는 직업적 책임 소홀",
+    section5Item3: "빌린 돈으로 베팅",
+    section5Item4: "트레이딩하지 않을 때 불안하거나, 짜증나거나, 우울함을 느낌",
+    section5Item5: "친구나 가족에게 활동 숨기기",
+    section5Outro: "이 중 하나라도 해당된다면 - 멈추세요. 재평가하세요. 지원을 구하세요.",
+    section6Title: "도움 받기",
+    section6GlobalTitle: "글로벌 지원",
+    section6GlobalText: "귀하 또는 아는 사람이 도박 관련 문제로 어려움을 겪고 있다면, 지역 지원 조직에 연락하시기를 권장합니다. 많은 국가에서 비밀 핫라인과 무료 상담 서비스를 제공합니다.",
+    section6SelfExclusionTitle: "자기 배제",
+    section6SelfExclusionText: "휴식이 필요하면 support@oddsflow.ai로 연락하여 계정의 임시 정지를 요청할 수 있습니다. 필요할 때 한 걸음 물러서려는 선택을 지지합니다.",
     product: "제품", liveOdds: "AI 성과", popularLeagues: "인기 리그",
     communityFooter: "커뮤니티", globalChat: "글로벌 채팅", userPredictions: "사용자 예측",
     company: "회사", aboutUs: "회사 소개", contact: "연락처", blog: "블로그",
-    legal: "법적 정보", termsOfService: "서비스 약관", privacyPolicy: "개인정보 보호정책", responsibleGaming: "책임감 있는 게임",
+    legal: "법적 정보", termsOfService: "서비스 약관", privacyPolicy: "개인정보 보호정책", responsibleGaming: "책임감 있는 사용",
     allRightsReserved: "모든 권리 보유.",
     gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 도박하세요.",
     disclaimer: "면책 조항: OddsFlow는 정보 및 오락 목적으로만 AI 예측을 제공합니다. 사용자는 18세 이상이어야 합니다.",
@@ -308,41 +327,43 @@ const translations: Record<string, Record<string, string>> = {
   "中文": {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现",
     community: "社区", news: "新闻", pricing: "价格", login: "登录", getStarted: "开始使用", solution: "解决方案",
-    pageTitle: "负责任博彩",
-    pageSubtitle: "在OddsFlow，我们致力于推广负责任的博彩行为，并提供资源帮助您保持控制。",
+    pageTitle: "负责任使用与风险意识",
+    pageSubtitle: "在OddsFlow，我们相信知情决策和可持续的分析实践。",
     ageWarning: "仅限18岁以上",
-    ourCommitment: "我们的承诺",
-    ourCommitmentText1: "OddsFlow仅为信息和娱乐目的提供AI驱动的体育预测。我们致力于推广负责任的博彩行为。",
-    ourCommitmentText2: "博彩应该是有趣的娱乐活动，而不是赚钱或解决财务问题的方式。",
-    ageVerification: "年龄验证",
-    ageVerificationText: "您必须年满18岁才能使用OddsFlow。我们严禁未成年人博彩。",
-    warningSigns: "问题博彩的警告信号",
-    warningSignsText: "如果您或您认识的人表现出以下任何迹象，可能表明存在博彩问题：",
-    warningSign1: "花费超出承受能力的金钱或时间进行博彩",
-    warningSign2: "追逐损失或试图通过博彩赢回金钱",
-    warningSign3: "因博彩而忽视工作、家庭或其他责任",
-    warningSign4: "借钱或出售物品来进行博彩",
-    warningSign5: "不博彩时感到焦虑、沮丧或烦躁",
-    warningSign6: "对家人或朋友隐瞒博彩习惯",
-    warningSign7: "尽管想停止但无法停止或减少博彩",
-    warningSign8: "通过博彩来逃避问题或缓解负面情绪",
-    tipsTitle: "负责任博彩的建议",
-    tip1Title: "设定预算", tip1Text: "只用您能承受损失的钱进行博彩。",
-    tip2Title: "设定时间限制", tip2Text: "决定您将花多少时间博彩并坚持执行。",
-    tip3Title: "永不追逐损失", tip3Text: "接受输钱是博彩的一部分。",
-    tip4Title: "平衡生活", tip4Text: "博彩应该只是众多休闲活动之一。",
-    tip5Title: "避免饮酒", tip5Text: "在酒精或药物影响下避免博彩。",
-    tip6Title: "了解赔率", tip6Text: "理解赔率总是有利于庄家的。",
-    getHelp: "获取帮助",
-    getHelpText: "如果您或您认识的人有博彩问题，请联系以下资源寻求帮助：",
-    selfExclusion: "自我排除",
-    selfExclusionText1: "如果您需要休息，可以申请自我排除。请通过以下方式联系我们",
-    selfExclusionText2: "申请您选择的自我排除期限。",
-    selfExclusionText3: "在自我排除期间，您将无法访问您的账户。",
+    section1Title: "我们的立场：数据，而非博彩",
+    section1Text: "OddsFlow是一个体育分析平台，而非博彩运营商。我们不接受、下注或促进博彩。我们的角色是提供数据驱动的洞察 - 用户选择如何使用这些洞察是他们自己的责任。把我们当作您的分析引擎，而非您的博彩公司。",
+    section2Title: "风险管理哲学",
+    section2Text: "如果您通过第三方平台将我们的数据用于体育交易或博彩，请像对待任何其他金融活动一样：永远不要冒超出您舒适承受范围的风险，多元化您的方法，并记住即使是最好的数据也无法确定地预测未来。市场本质上是波动的 - 我们的分析提高您的优势，但不能消除风险。",
+    section3Title: "年龄与法律合规",
+    section3Subtitle: "仅限18岁以上",
+    section3Text: "OddsFlow高级分析工具的访问权限仅限于18岁及以上的用户。确保您与我们的数据一起使用的任何体育博彩或交易平台符合您当地法律是您的责任。我们在全球运营，但法律合规是当地事务。",
+    section4Title: "可持续使用原则",
+    section4Intro: "我们鼓励所有用户以纪律性的方式使用我们的平台：",
+    section4Item1Title: "定义您的限制",
+    section4Item1Text: "在参与任何外部博彩或交易活动之前，设定时间和资金的个人限制。",
+    section4Item2Title: "避免追逐损失",
+    section4Item2Text: "损失是任何概率性活动的一部分。追逐损失会导致复合错误。",
+    section4Item3Title: "清晰的心态",
+    section4Item3Text: "在情绪受损、疲劳或受物质影响时，切勿交易或下注。",
+    section4Item4Title: "平衡",
+    section4Item4Text: "确保体育分析或交易保持为爱好或次要活动 - 而非稳定收入或健康生活习惯的替代品。",
+    section5Title: "识别警告信号",
+    section5Intro: "市场投机可能会上瘾。警告信号包括：",
+    section5Item1: "超出您的能力范围消费",
+    section5Item2: "忽视个人或职业责任",
+    section5Item3: "使用借来的钱下注",
+    section5Item4: "不交易时感到焦虑、烦躁或沮丧",
+    section5Item5: "向朋友或家人隐瞒您的活动",
+    section5Outro: "如果其中任何一项适用于您 - 停止。重新评估。寻求支持。",
+    section6Title: "获取帮助",
+    section6GlobalTitle: "全球支持",
+    section6GlobalText: "如果您或您认识的人正在与博彩相关问题作斗争，我们鼓励联系当地支持组织。许多国家提供保密热线和免费咨询服务。",
+    section6SelfExclusionTitle: "自我排除",
+    section6SelfExclusionText: "如果您需要休息，可以通过 support@oddsflow.ai 联系我们，申请临时暂停您的账户。我们支持您在需要时选择退后一步。",
     product: "产品", liveOdds: "AI表现", popularLeagues: "热门联赛",
     communityFooter: "社区", globalChat: "全球聊天", userPredictions: "用户预测",
     company: "公司", aboutUs: "关于我们", contact: "联系我们", blog: "博客",
-    legal: "法律", termsOfService: "服务条款", privacyPolicy: "隐私政策", responsibleGaming: "负责任博彩",
+    legal: "法律", termsOfService: "服务条款", privacyPolicy: "隐私政策", responsibleGaming: "负责任使用",
     allRightsReserved: "版权所有。",
     gamblingWarning: "博彩涉及风险。请负责任地博彩。",
     disclaimer: "免责声明：OddsFlow仅为信息和娱乐目的提供AI预测。用户必须年满18岁。",
@@ -350,41 +371,43 @@ const translations: Record<string, Record<string, string>> = {
   "繁體": {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現",
     community: "社區", news: "新聞", pricing: "價格", login: "登入", getStarted: "開始使用", solution: "解決方案",
-    pageTitle: "負責任博彩",
-    pageSubtitle: "在OddsFlow，我們致力於推廣負責任的博彩行為，並提供資源幫助您保持控制。",
+    pageTitle: "負責任使用與風險意識",
+    pageSubtitle: "在OddsFlow，我們相信知情決策和可持續的分析實踐。",
     ageWarning: "僅限18歲以上",
-    ourCommitment: "我們的承諾",
-    ourCommitmentText1: "OddsFlow僅為資訊和娛樂目的提供AI驅動的體育預測。我們致力於推廣負責任的博彩行為。",
-    ourCommitmentText2: "博彩應該是有趣的娛樂活動，而不是賺錢或解決財務問題的方式。",
-    ageVerification: "年齡驗證",
-    ageVerificationText: "您必須年滿18歲才能使用OddsFlow。我們嚴禁未成年人博彩。",
-    warningSigns: "問題博彩的警告信號",
-    warningSignsText: "如果您或您認識的人表現出以下任何跡象，可能表明存在博彩問題：",
-    warningSign1: "花費超出承受能力的金錢或時間進行博彩",
-    warningSign2: "追逐損失或試圖通過博彩贏回金錢",
-    warningSign3: "因博彩而忽視工作、家庭或其他責任",
-    warningSign4: "借錢或出售物品來進行博彩",
-    warningSign5: "不博彩時感到焦慮、沮喪或煩躁",
-    warningSign6: "對家人或朋友隱瞞博彩習慣",
-    warningSign7: "儘管想停止但無法停止或減少博彩",
-    warningSign8: "通過博彩來逃避問題或緩解負面情緒",
-    tipsTitle: "負責任博彩的建議",
-    tip1Title: "設定預算", tip1Text: "只用您能承受損失的錢進行博彩。",
-    tip2Title: "設定時間限制", tip2Text: "決定您將花多少時間博彩並堅持執行。",
-    tip3Title: "永不追逐損失", tip3Text: "接受輸錢是博彩的一部分。",
-    tip4Title: "平衡生活", tip4Text: "博彩應該只是眾多休閒活動之一。",
-    tip5Title: "避免飲酒", tip5Text: "在酒精或藥物影響下避免博彩。",
-    tip6Title: "了解賠率", tip6Text: "理解賠率總是有利於莊家的。",
-    getHelp: "獲取幫助",
-    getHelpText: "如果您或您認識的人有博彩問題，請聯繫以下資源尋求幫助：",
-    selfExclusion: "自我排除",
-    selfExclusionText1: "如果您需要休息，可以申請自我排除。請通過以下方式聯繫我們",
-    selfExclusionText2: "申請您選擇的自我排除期限。",
-    selfExclusionText3: "在自我排除期間，您將無法訪問您的帳戶。",
+    section1Title: "我們的立場：數據，而非博彩",
+    section1Text: "OddsFlow是一個體育分析平台，而非博彩運營商。我們不接受、下注或促進博彩。我們的角色是提供數據驅動的洞察 - 用戶選擇如何使用這些洞察是他們自己的責任。把我們當作您的分析引擎，而非您的博彩公司。",
+    section2Title: "風險管理哲學",
+    section2Text: "如果您通過第三方平台將我們的數據用於體育交易或博彩，請像對待任何其他金融活動一樣：永遠不要冒超出您舒適承受範圍的風險，多元化您的方法，並記住即使是最好的數據也無法確定地預測未來。市場本質上是波動的 - 我們的分析提高您的優勢，但不能消除風險。",
+    section3Title: "年齡與法律合規",
+    section3Subtitle: "僅限18歲以上",
+    section3Text: "OddsFlow高級分析工具的訪問權限僅限於18歲及以上的用戶。確保您與我們的數據一起使用的任何體育博彩或交易平台符合您當地法律是您的責任。我們在全球運營，但法律合規是當地事務。",
+    section4Title: "可持續使用原則",
+    section4Intro: "我們鼓勵所有用戶以紀律性的方式使用我們的平台：",
+    section4Item1Title: "定義您的限制",
+    section4Item1Text: "在參與任何外部博彩或交易活動之前，設定時間和資金的個人限制。",
+    section4Item2Title: "避免追逐損失",
+    section4Item2Text: "損失是任何概率性活動的一部分。追逐損失會導致複合錯誤。",
+    section4Item3Title: "清晰的心態",
+    section4Item3Text: "在情緒受損、疲勞或受物質影響時，切勿交易或下注。",
+    section4Item4Title: "平衡",
+    section4Item4Text: "確保體育分析或交易保持為愛好或次要活動 - 而非穩定收入或健康生活習慣的替代品。",
+    section5Title: "識別警告信號",
+    section5Intro: "市場投機可能會上癮。警告信號包括：",
+    section5Item1: "超出您的能力範圍消費",
+    section5Item2: "忽視個人或職業責任",
+    section5Item3: "使用借來的錢下注",
+    section5Item4: "不交易時感到焦慮、煩躁或沮喪",
+    section5Item5: "向朋友或家人隱瞞您的活動",
+    section5Outro: "如果其中任何一項適用於您 - 停止。重新評估。尋求支持。",
+    section6Title: "獲取幫助",
+    section6GlobalTitle: "全球支持",
+    section6GlobalText: "如果您或您認識的人正在與博彩相關問題作鬥爭，我們鼓勵聯繫當地支持組織。許多國家提供保密熱線和免費諮詢服務。",
+    section6SelfExclusionTitle: "自我排除",
+    section6SelfExclusionText: "如果您需要休息，可以通過 support@oddsflow.ai 聯繫我們，申請臨時暫停您的帳戶。我們支持您在需要時選擇退後一步。",
     product: "產品", liveOdds: "AI表現", popularLeagues: "熱門聯賽",
     communityFooter: "社區", globalChat: "全球聊天", userPredictions: "用戶預測",
     company: "公司", aboutUs: "關於我們", contact: "聯繫我們", blog: "部落格",
-    legal: "法律", termsOfService: "服務條款", privacyPolicy: "隱私政策", responsibleGaming: "負責任博彩",
+    legal: "法律", termsOfService: "服務條款", privacyPolicy: "隱私政策", responsibleGaming: "負責任使用",
     allRightsReserved: "版權所有。",
     gamblingWarning: "博彩涉及風險。請負責任地博彩。",
     disclaimer: "免責聲明：OddsFlow僅為資訊和娛樂目的提供AI預測。用戶必須年滿18歲。",
@@ -392,41 +415,43 @@ const translations: Record<string, Record<string, string>> = {
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI",
     community: "Komunitas", news: "Berita", pricing: "Harga", login: "Masuk", getStarted: "Mulai", solution: "Solusi",
-    pageTitle: "Perjudian Bertanggung Jawab",
-    pageSubtitle: "Di OddsFlow, kami berkomitmen untuk mempromosikan perjudian yang bertanggung jawab dan menyediakan sumber daya untuk membantu Anda tetap terkendali.",
+    pageTitle: "Penggunaan Bertanggung Jawab & Kesadaran Risiko",
+    pageSubtitle: "Di OddsFlow, kami percaya pada pengambilan keputusan yang terinformasi dan praktik analitik yang berkelanjutan.",
     ageWarning: "Hanya 18+",
-    ourCommitment: "Komitmen Kami",
-    ourCommitmentText1: "OddsFlow menyediakan prediksi olahraga berbasis AI hanya untuk tujuan informasi dan hiburan.",
-    ourCommitmentText2: "Perjudian harus menyenangkan dan menghibur, bukan cara untuk menghasilkan uang atau menyelesaikan masalah keuangan.",
-    ageVerification: "Verifikasi Usia",
-    ageVerificationText: "Anda harus berusia minimal 18 tahun untuk menggunakan OddsFlow.",
-    warningSigns: "Tanda-tanda Peringatan Masalah Perjudian",
-    warningSignsText: "Jika Anda atau seseorang yang Anda kenal menunjukkan tanda-tanda ini, mungkin menunjukkan masalah perjudian:",
-    warningSign1: "Menghabiskan lebih banyak uang atau waktu untuk berjudi daripada yang mampu",
-    warningSign2: "Mengejar kerugian atau berjudi untuk mencoba memenangkan kembali uang",
-    warningSign3: "Mengabaikan pekerjaan, keluarga, atau tanggung jawab lain karena perjudian",
-    warningSign4: "Meminjam uang atau menjual barang untuk berjudi",
-    warningSign5: "Merasa cemas, tertekan, atau mudah marah saat tidak berjudi",
-    warningSign6: "Berbohong kepada keluarga atau teman tentang kebiasaan berjudi",
-    warningSign7: "Tidak dapat berhenti atau mengurangi perjudian meskipun ingin",
-    warningSign8: "Berjudi untuk melarikan diri dari masalah atau meredakan perasaan negatif",
-    tipsTitle: "Tips untuk Perjudian Bertanggung Jawab",
-    tip1Title: "Tetapkan Anggaran", tip1Text: "Hanya berjudi dengan uang yang mampu Anda kehilangan.",
-    tip2Title: "Tetapkan Batas Waktu", tip2Text: "Putuskan berapa lama Anda akan berjudi dan patuhi.",
-    tip3Title: "Jangan Pernah Mengejar Kerugian", tip3Text: "Terima bahwa kalah adalah bagian dari perjudian.",
-    tip4Title: "Seimbangkan Hidup Anda", tip4Text: "Perjudian harus menjadi salah satu dari banyak aktivitas rekreasi.",
-    tip5Title: "Hindari Alkohol", tip5Text: "Hindari berjudi saat berada di bawah pengaruh alkohol atau obat-obatan.",
-    tip6Title: "Ketahui Peluang", tip6Text: "Pahami bahwa peluang selalu menguntungkan rumah.",
-    getHelp: "Dapatkan Bantuan",
-    getHelpText: "Jika Anda atau seseorang yang Anda kenal memiliki masalah perjudian, hubungi sumber daya ini:",
-    selfExclusion: "Pengecualian Diri",
-    selfExclusionText1: "Jika Anda perlu istirahat dari perjudian, Anda dapat meminta pengecualian diri. Hubungi kami di",
-    selfExclusionText2: "untuk meminta pengecualian diri untuk periode yang Anda pilih.",
-    selfExclusionText3: "Selama periode pengecualian diri, Anda tidak akan dapat mengakses akun Anda.",
+    section1Title: "Posisi Kami: Data, Bukan Taruhan",
+    section1Text: "OddsFlow adalah platform analitik olahraga, bukan operator perjudian. Kami tidak menerima, menempatkan, atau memfasilitasi taruhan. Peran kami adalah menyediakan wawasan berbasis data - apa yang pengguna pilih untuk dilakukan dengan wawasan tersebut adalah tanggung jawab mereka sendiri. Anggap kami sebagai mesin analitik Anda, bukan bandar Anda.",
+    section2Title: "Filosofi Manajemen Risiko",
+    section2Text: "Jika Anda menggunakan data kami untuk perdagangan olahraga atau taruhan melalui platform pihak ketiga, perlakukan seperti aktivitas keuangan lainnya: jangan pernah mengambil risiko lebih dari yang dapat Anda tanggung dengan nyaman, diversifikasi pendekatan Anda, dan ingat bahwa bahkan data terbaik tidak dapat memprediksi masa depan dengan pasti. Pasar secara inheren volatil - analitik kami meningkatkan keunggulan Anda, tetapi tidak menghilangkan risiko.",
+    section3Title: "Kepatuhan Usia & Hukum",
+    section3Subtitle: "Hanya 18+",
+    section3Text: "Akses ke alat analitik premium OddsFlow dibatasi untuk pengguna berusia 18 tahun ke atas. Adalah tanggung jawab Anda untuk memastikan bahwa penggunaan platform taruhan olahraga atau perdagangan bersama dengan data kami mematuhi hukum setempat Anda. Kami beroperasi secara global, tetapi kepatuhan hukum adalah masalah lokal.",
+    section4Title: "Prinsip Penggunaan Berkelanjutan",
+    section4Intro: "Kami mendorong semua pengguna untuk mendekati platform kami dengan disiplin:",
+    section4Item1Title: "Tentukan Batas Anda",
+    section4Item1Text: "Tetapkan batasan pribadi untuk waktu dan modal sebelum terlibat dalam aktivitas taruhan atau perdagangan eksternal.",
+    section4Item2Title: "Hindari Mengejar Kerugian",
+    section4Item2Text: "Kerugian adalah bagian dari setiap aktivitas probabilistik. Mengejar kerugian mengarah pada kesalahan yang bertumpuk.",
+    section4Item3Title: "Pikiran Jernih",
+    section4Item3Text: "Jangan pernah berdagang atau bertaruh saat emosional terganggu, lelah, atau di bawah pengaruh zat.",
+    section4Item4Title: "Keseimbangan",
+    section4Item4Text: "Pastikan analitik olahraga atau perdagangan tetap menjadi hobi atau aktivitas sekunder - bukan pengganti pendapatan stabil atau kebiasaan gaya hidup sehat.",
+    section5Title: "Mengenali Tanda Bahaya",
+    section5Intro: "Spekulasi pasar dapat menjadi adiktif. Tanda-tanda peringatan meliputi:",
+    section5Item1: "Menghabiskan di luar kemampuan Anda",
+    section5Item2: "Mengabaikan tanggung jawab pribadi atau profesional",
+    section5Item3: "Menggunakan uang pinjaman untuk bertaruh",
+    section5Item4: "Merasa cemas, mudah marah, atau tertekan saat tidak berdagang",
+    section5Item5: "Menyembunyikan aktivitas Anda dari teman atau keluarga",
+    section5Outro: "Jika salah satu dari ini berlaku untuk Anda - berhenti. Evaluasi ulang. Cari dukungan.",
+    section6Title: "Mendapatkan Bantuan",
+    section6GlobalTitle: "Dukungan Global",
+    section6GlobalText: "Jika Anda atau seseorang yang Anda kenal berjuang dengan masalah terkait perjudian, kami mendorong untuk menghubungi organisasi dukungan lokal. Banyak negara menawarkan saluran bantuan rahasia dan layanan konseling gratis.",
+    section6SelfExclusionTitle: "Pengecualian Diri",
+    section6SelfExclusionText: "Jika Anda perlu istirahat, Anda dapat menghubungi kami di support@oddsflow.ai untuk meminta penangguhan sementara akun Anda. Kami mendukung pilihan Anda untuk mundur saat diperlukan.",
     product: "Produk", liveOdds: "Performa AI", popularLeagues: "Liga Populer",
     communityFooter: "Komunitas", globalChat: "Chat Global", userPredictions: "Prediksi Pengguna",
     company: "Perusahaan", aboutUs: "Tentang Kami", contact: "Kontak", blog: "Blog",
-    legal: "Legal", termsOfService: "Ketentuan Layanan", privacyPolicy: "Kebijakan Privasi", responsibleGaming: "Perjudian Bertanggung Jawab",
+    legal: "Legal", termsOfService: "Ketentuan Layanan", privacyPolicy: "Kebijakan Privasi", responsibleGaming: "Penggunaan Bertanggung Jawab",
     allRightsReserved: "Hak cipta dilindungi.",
     gamblingWarning: "Perjudian melibatkan risiko. Silakan berjudi secara bertanggung jawab.",
     disclaimer: "Penafian: OddsFlow menyediakan prediksi berbasis AI hanya untuk tujuan informasi dan hiburan. Pengguna harus berusia 18+ tahun.",
@@ -468,20 +493,6 @@ export default function ResponsibleGamingPage() {
 
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
-
-  const warningSigns = [
-    t('warningSign1'), t('warningSign2'), t('warningSign3'), t('warningSign4'),
-    t('warningSign5'), t('warningSign6'), t('warningSign7'), t('warningSign8'),
-  ];
-
-  const tips = [
-    { title: t('tip1Title'), text: t('tip1Text') },
-    { title: t('tip2Title'), text: t('tip2Text') },
-    { title: t('tip3Title'), text: t('tip3Text') },
-    { title: t('tip4Title'), text: t('tip4Text') },
-    { title: t('tip5Title'), text: t('tip5Text') },
-    { title: t('tip6Title'), text: t('tip6Text') },
-  ];
 
   const helpResources = [
     { name: 'National Council on Problem Gambling (US)', phone: '1-800-522-4700', url: 'https://www.ncpgambling.org' },
@@ -658,85 +669,143 @@ export default function ResponsibleGamingPage() {
         </div>
       </section>
 
-      {/* Main Content */}
+      {/* Main Content - 6 Sections */}
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto space-y-12">
-          {/* Our Commitment */}
+          {/* Section 1: Our Position: Data, Not Bets */}
           <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8">
-            <h2 className="text-2xl font-bold mb-4 text-emerald-400">{t('ourCommitment')}</h2>
-            <p className="text-gray-300 leading-relaxed mb-4">{t('ourCommitmentText1')}</p>
-            <p className="text-gray-300 leading-relaxed">{t('ourCommitmentText2')}</p>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-emerald-400">{t('section1Title')}</h2>
+            </div>
+            <p className="text-gray-300 leading-relaxed">{t('section1Text')}</p>
           </div>
 
-          {/* Age Verification */}
+          {/* Section 2: The Philosophy of Risk Management */}
           <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8">
-            <h2 className="text-2xl font-bold mb-4 text-cyan-400">{t('ageVerification')}</h2>
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
-                <span className="text-xl font-bold text-red-400">18+</span>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                </svg>
               </div>
-              <p className="text-gray-300 leading-relaxed">{t('ageVerificationText')}</p>
+              <h2 className="text-2xl font-bold text-cyan-400">{t('section2Title')}</h2>
+            </div>
+            <p className="text-gray-300 leading-relaxed">{t('section2Text')}</p>
+          </div>
+
+          {/* Section 3: Age & Legal Compliance */}
+          <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
+                <span className="text-sm font-bold text-red-400">18+</span>
+              </div>
+              <h2 className="text-2xl font-bold text-white">{t('section3Title')}</h2>
+            </div>
+            <div className="flex items-start gap-4">
+              <p className="text-gray-300 leading-relaxed">{t('section3Text')}</p>
             </div>
           </div>
 
-          {/* Warning Signs */}
+          {/* Section 4: Principles of Sustainable Usage */}
           <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8">
-            <h2 className="text-2xl font-bold mb-6 text-amber-400">{t('warningSigns')}</h2>
-            <p className="text-gray-300 leading-relaxed mb-6">{t('warningSignsText')}</p>
-            <ul className="space-y-3">
-              {warningSigns.map((sign, i) => (
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-purple-400">{t('section4Title')}</h2>
+            </div>
+            <p className="text-gray-300 leading-relaxed mb-6">{t('section4Intro')}</p>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                <h3 className="font-semibold text-white mb-2">{t('section4Item1Title')}</h3>
+                <p className="text-gray-400 text-sm">{t('section4Item1Text')}</p>
+              </div>
+              <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                <h3 className="font-semibold text-white mb-2">{t('section4Item2Title')}</h3>
+                <p className="text-gray-400 text-sm">{t('section4Item2Text')}</p>
+              </div>
+              <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                <h3 className="font-semibold text-white mb-2">{t('section4Item3Title')}</h3>
+                <p className="text-gray-400 text-sm">{t('section4Item3Text')}</p>
+              </div>
+              <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                <h3 className="font-semibold text-white mb-2">{t('section4Item4Title')}</h3>
+                <p className="text-gray-400 text-sm">{t('section4Item4Text')}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 5: Recognizing the Red Flags */}
+          <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                <svg className="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-amber-400">{t('section5Title')}</h2>
+            </div>
+            <p className="text-gray-300 leading-relaxed mb-6">{t('section5Intro')}</p>
+            <ul className="space-y-3 mb-6">
+              {[t('section5Item1'), t('section5Item2'), t('section5Item3'), t('section5Item4'), t('section5Item5')].map((item, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
-                  <span className="text-gray-300">{sign}</span>
+                  <span className="text-gray-300">{item}</span>
                 </li>
               ))}
             </ul>
+            <p className="text-amber-400 font-semibold">{t('section5Outro')}</p>
           </div>
 
-          {/* Tips for Responsible Gambling */}
-          <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8">
-            <h2 className="text-2xl font-bold mb-6 text-emerald-400">{t('tipsTitle')}</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {tips.map((tip, i) => (
-                <div key={i} className="bg-white/5 rounded-xl p-4 border border-white/5">
-                  <h3 className="font-semibold text-white mb-2">{tip.title}</h3>
-                  <p className="text-gray-400 text-sm">{tip.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Help Resources */}
+          {/* Section 6: Getting Help */}
           <div className="bg-gradient-to-br from-red-500/10 to-amber-500/10 rounded-2xl border border-red-500/20 p-8">
-            <h2 className="text-2xl font-bold mb-6 text-white">{t('getHelp')}</h2>
-            <p className="text-gray-300 leading-relaxed mb-6">{t('getHelpText')}</p>
-            <div className="grid md:grid-cols-2 gap-4">
-              {helpResources.map((resource, i) => (
-                <a
-                  key={i}
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-emerald-500/30 transition-all"
-                >
-                  <h3 className="font-semibold text-white mb-1">{resource.name}</h3>
-                  <p className="text-emerald-400 text-sm font-medium">{resource.phone}</p>
-                </a>
-              ))}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
+                <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-white">{t('section6Title')}</h2>
             </div>
-          </div>
 
-          {/* Self-Exclusion */}
-          <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8">
-            <h2 className="text-2xl font-bold mb-4 text-cyan-400">{t('selfExclusion')}</h2>
-            <p className="text-gray-300 leading-relaxed mb-4">
-              {t('selfExclusionText1')}{' '}
-              <a href="mailto:support@oddsflow.ai" className="text-emerald-400 hover:underline">support@oddsflow.ai</a>{' '}
-              {t('selfExclusionText2')}
-            </p>
-            <p className="text-gray-300 leading-relaxed">{t('selfExclusionText3')}</p>
+            {/* Global Support */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-emerald-400 mb-3">{t('section6GlobalTitle')}</h3>
+              <p className="text-gray-300 leading-relaxed mb-6">{t('section6GlobalText')}</p>
+              <div className="grid md:grid-cols-2 gap-4">
+                {helpResources.map((resource, i) => (
+                  <a
+                    key={i}
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-emerald-500/30 transition-all"
+                  >
+                    <h4 className="font-semibold text-white mb-1">{resource.name}</h4>
+                    <p className="text-emerald-400 text-sm font-medium">{resource.phone}</p>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Self-Exclusion */}
+            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+              <h3 className="text-lg font-semibold text-cyan-400 mb-3">{t('section6SelfExclusionTitle')}</h3>
+              <p className="text-gray-300 leading-relaxed">
+                {t('section6SelfExclusionText').replace('support@oddsflow.ai', '')}{' '}
+                <a href="mailto:support@oddsflow.ai" className="text-emerald-400 hover:underline">support@oddsflow.ai</a>
+                {t('section6SelfExclusionText').includes('support@oddsflow.ai') ? '' : '.'}
+              </p>
+            </div>
           </div>
         </div>
       </section>
