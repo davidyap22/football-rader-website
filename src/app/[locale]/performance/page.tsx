@@ -2352,7 +2352,9 @@ export default function PerformancePage() {
                       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-500"></div>
                     </div>
                   ) : (
-                    <table className="w-full">
+                    <>
+                    {/* Desktop Table */}
+                    <table className="w-full hidden md:table">
                       <thead className="sticky top-0 bg-[#161b22] z-10">
                         {/* Category Headers */}
                         <tr className="border-b border-white/5">
@@ -2449,6 +2451,110 @@ export default function PerformancePage() {
                         )}
                       </tbody>
                     </table>
+
+                    {/* Mobile Card Layout */}
+                    <div className="md:hidden space-y-3 p-3 max-h-[65vh] overflow-y-auto">
+                      {oddsHistory.length === 0 ? (
+                        <div className="text-center text-gray-500 py-12">
+                          No odds history available
+                        </div>
+                      ) : (
+                        oddsHistory.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className={`bg-white/5 rounded-lg p-3 border ${
+                              idx === 0 ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-white/5'
+                            }`}
+                          >
+                            {/* Time Header */}
+                            <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/5">
+                              <span className="text-sm text-gray-300">
+                                {new Date(item.created_at).toLocaleDateString('en-GB', {
+                                  day: '2-digit',
+                                  month: 'short'
+                                })} {new Date(item.created_at).toLocaleTimeString('en-GB', {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                  hour12: false
+                                })}
+                              </span>
+                              {idx === 0 && (
+                                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">
+                                  Latest
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Odds Grid */}
+                            <div className="space-y-2">
+                              {/* 1X2 */}
+                              <div className="flex items-center gap-2">
+                                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold w-12 text-center">
+                                  1X2
+                                </span>
+                                <div className="flex-1 grid grid-cols-3 gap-1 text-xs">
+                                  <div className="text-center">
+                                    <span className="text-gray-500 block text-[10px]">Home</span>
+                                    <span className="text-white font-medium">{item.moneyline_1x2_home?.toFixed(2) || '-'}</span>
+                                  </div>
+                                  <div className="text-center">
+                                    <span className="text-gray-500 block text-[10px]">Draw</span>
+                                    <span className="text-white font-medium">{item.moneyline_1x2_draw?.toFixed(2) || '-'}</span>
+                                  </div>
+                                  <div className="text-center">
+                                    <span className="text-gray-500 block text-[10px]">Away</span>
+                                    <span className="text-white font-medium">{item.moneyline_1x2_away?.toFixed(2) || '-'}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Over/Under */}
+                              <div className="flex items-center gap-2">
+                                <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 text-[10px] font-semibold w-12 text-center">
+                                  O/U
+                                </span>
+                                <div className="flex-1 grid grid-cols-3 gap-1 text-xs">
+                                  <div className="text-center">
+                                    <span className="text-gray-500 block text-[10px]">Line</span>
+                                    <span className="text-cyan-400 font-medium">{item.totalpoints_main_line ?? '-'}</span>
+                                  </div>
+                                  <div className="text-center">
+                                    <span className="text-gray-500 block text-[10px]">Over</span>
+                                    <span className="text-white font-medium">{item.totalpoints_over?.toFixed(2) || '-'}</span>
+                                  </div>
+                                  <div className="text-center">
+                                    <span className="text-gray-500 block text-[10px]">Under</span>
+                                    <span className="text-white font-medium">{item.totalpoints_under?.toFixed(2) || '-'}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Handicap */}
+                              <div className="flex items-center gap-2">
+                                <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 text-[10px] font-semibold w-12 text-center">
+                                  HDP
+                                </span>
+                                <div className="flex-1 grid grid-cols-3 gap-1 text-xs">
+                                  <div className="text-center">
+                                    <span className="text-gray-500 block text-[10px]">Line</span>
+                                    <span className="text-purple-400 font-medium">{item.handicap_main_line ?? '-'}</span>
+                                  </div>
+                                  <div className="text-center">
+                                    <span className="text-gray-500 block text-[10px]">Home</span>
+                                    <span className="text-white font-medium">{item.handicap_home?.toFixed(2) || '-'}</span>
+                                  </div>
+                                  <div className="text-center">
+                                    <span className="text-gray-500 block text-[10px]">Away</span>
+                                    <span className="text-white font-medium">{item.handicap_away?.toFixed(2) || '-'}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    </>
                   )}
                 </div>
               </div>
