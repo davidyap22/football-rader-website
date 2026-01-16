@@ -1123,7 +1123,7 @@ function PredictionsContent() {
       {/* Footer */}
       <footer className="relative z-10 py-8 px-4 border-t border-white/5 mt-auto">
         <div className="max-w-7xl mx-auto text-center text-gray-500 text-sm">
-          <p>&copy; 2026 OddsFlow. All rights reserved. Gambling involves risk. Please gamble responsibly.</p>
+          <p>{t('allRights')} {t('footer')}</p>
         </div>
       </footer>
 
