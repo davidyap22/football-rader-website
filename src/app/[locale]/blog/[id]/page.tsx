@@ -316,399 +316,513 @@ const blogPostsContent: Record<string, {
     },
     content: {
       EN: `
-## Why Understanding Football Odds Matters
+## The Real Reason Most Bettors Lose Money
 
-**Football odds** are more than just numbers on a screen—they're a window into what the betting market believes will happen in a match. Whether you're a complete beginner or looking to sharpen your edge, mastering odds interpretation is the foundation of profitable betting.
+I'll be honest with you—most people who bet on football lose money. Not because they don't know football, but because they don't understand what those numbers on the screen actually mean.
 
-In this comprehensive guide, you'll learn:
-- What odds actually represent
-- How to convert between decimal, fractional, and American formats
-- The hidden key: **implied probability**
-- How to identify **value bets** where the odds are in your favor
-- How AI models like OddsFlow leverage odds data
+Football odds aren't some mysterious code. They're basically price tags, and once you learn to read them properly, you'll start seeing betting in a completely different way.
 
 ---
 
-## What Are Football Odds?
+## So What Exactly Are Odds?
 
-At their core, **betting odds** express two things:
-1. **The probability** of an outcome occurring (as estimated by bookmakers)
-2. **The payout** you'll receive if your bet wins
+Here's the thing nobody tells beginners: odds aren't predictions. They're prices.
 
-When you see Manchester United at **2.50** to beat Chelsea, the bookmaker is saying they estimate United has roughly a 40% chance of winning, and they'll pay you $2.50 for every $1 you stake if they do.
+When you see Manchester United at 2.50 to beat Chelsea, the bookmaker isn't saying "United will win." They're saying "If you want to bet on United winning, this is what we'll charge you."
 
-> **Key insight:** Odds aren't predictions—they're prices. And like any market price, they can be wrong.
+Two pieces of information are baked into every odd:
+- How likely something is to happen (according to the bookies)
+- What you'll get paid if you're right
 
-📖 **Deep dive:** [What Are Football Odds? A Beginner's Guide](/blog/what-are-football-odds)
+That 2.50 on United? It roughly translates to a 40% chance of winning. Bet $10, and you'd get $25 back if they pull it off.
 
----
-
-## The Three Odds Formats Explained
-
-### Decimal Odds (European)
-The most intuitive format, widely used in Europe and by most online bookmakers.
-
-**Formula:** Total Return = Stake × Decimal Odds
-
-| Decimal Odds | Implied Probability | $10 Bet Returns |
-|--------------|---------------------|-----------------|
-| 1.50 | 66.67% | $15.00 |
-| 2.00 | 50.00% | $20.00 |
-| 3.00 | 33.33% | $30.00 |
-| 5.00 | 20.00% | $50.00 |
-
-### Fractional Odds (UK)
-Traditional format popular in the UK, shows profit relative to stake.
-
-**Example:** 5/2 means you win $5 for every $2 staked (plus your stake back)
-
-### American Odds (Moneyline)
-Uses positive (+) and negative (-) numbers based on a $100 benchmark.
-
-- **+200:** Win $200 profit on a $100 stake
-- **-150:** Stake $150 to win $100 profit
-
-📖 **Full conversion guide:** [Decimal vs Fractional vs American Odds](/blog/decimal-vs-fractional-vs-american-odds)
+Here's what took me years to figure out: bookmakers can be wrong. Those prices aren't gospel—they're just opinions backed by algorithms. And sometimes, those opinions are off.
 
 ---
 
-## Implied Probability: The Hidden Key
+## Making Sense of Different Formats
 
-**Implied probability** is what separates casual bettors from profitable ones. It converts odds into the percentage chance the bookmaker assigns to each outcome.
+You'll run into three main formats depending on where you're betting.
 
-### The Formula
-\`\`\`
-Implied Probability = (1 / Decimal Odds) × 100%
-\`\`\`
+**Decimal odds** are the easiest to work with. Just multiply your stake by the number. Odds of 3.00 on a $10 bet? That's $30 back (including your original stake).
 
-### Example: Liverpool vs Arsenal
-| Outcome | Decimal Odds | Implied Probability |
-|---------|--------------|---------------------|
-| Liverpool Win | 2.10 | 47.6% |
+| Odds | What It Means | $10 Returns |
+|------|---------------|-------------|
+| 1.50 | Heavy favorite | $15 |
+| 2.00 | Coin flip | $20 |
+| 3.00 | Underdog | $30 |
+| 5.00 | Long shot | $50 |
+
+**Fractional odds** are the British way of doing things. 5/2 means you profit $5 for every $2 you risk. Old school, but you'll still see them around.
+
+**American odds** use that weird plus/minus system. +200 means you win $200 on a $100 bet. -150 means you need to bet $150 to win $100. Takes some getting used to.
+
+---
+
+## The One Concept That Changes Everything
+
+If there's one thing you take from this article, let it be this: implied probability.
+
+Every odd can be converted into a percentage. And when you do that math, you start seeing where bookmakers might be offering bad prices.
+
+The formula is dead simple: divide 1 by the decimal odds, then multiply by 100.
+
+Odds of 2.00? That's 50% implied probability.
+Odds of 4.00? That's 25%.
+
+Let me show you something interesting. Take a typical Premier League match:
+
+| Result | Odds | Implied Probability |
+|--------|------|---------------------|
+| Home Win | 2.10 | 47.6% |
 | Draw | 3.40 | 29.4% |
-| Arsenal Win | 3.50 | 28.6% |
+| Away Win | 3.50 | 28.6% |
 | **Total** | — | **105.6%** |
 
-Notice the total is over 100%? That's the **bookmaker's margin** (or "vig")—their built-in profit.
-
-📖 **Master this concept:** [Implied Probability Explained](/blog/implied-probability-explained)
+See how that adds up to more than 100%? That extra 5.6% is the bookmaker's cut. It's built into every market, and it's how they stay in business.
 
 ---
 
-## Finding Value Bets
+## Finding Bets That Actually Make Sense
 
-A **value bet** occurs when your estimated probability of an outcome exceeds the implied probability in the odds.
+This is where it gets good.
 
-### Value Betting Formula
+A "value bet" happens when you think something is more likely than the odds suggest. If you believe Liverpool has a 55% chance to win but the odds imply only 47%, you've potentially found value.
+
+Here's the math:
 \`\`\`
 Expected Value = (Your Probability × Odds) - 1
-
-If EV > 0, it's a value bet
 \`\`\`
 
-### Example
-You believe Liverpool has a 55% chance to win, but odds of 2.10 imply only 47.6%.
+If that number is positive, the bet makes mathematical sense over the long run. Doesn't mean you'll win every time—but over hundreds of bets, you should come out ahead.
 
-\`\`\`
-EV = (0.55 × 2.10) - 1 = 0.155 (+15.5% edge)
-\`\`\`
-
-This is a strong value bet. Over hundreds of bets, this edge compounds into profit.
+The tricky part? Figuring out what the "real" probability actually is. That's where data and models come in handy.
 
 ---
 
-## How AI Predictions Enhance Odds Analysis
+## Why Odds Move (And What It Tells You)
 
-Modern **AI football prediction models** like OddsFlow analyze thousands of data points to estimate match probabilities more accurately than traditional methods:
+Odds aren't set in stone. They shift constantly based on:
 
-- **Historical performance data** (50,000+ matches)
-- **Expected Goals (xG)** and advanced metrics
-- **Team form**, injuries, and lineup analysis
-- **Head-to-head records** and venue factors
-- **Odds movement patterns** indicating sharp money
+- How much money is coming in on each side
+- What the sharps (professional bettors) are doing
+- Late team news like injuries or lineup changes
+- General market sentiment
 
-When AI probabilities differ significantly from bookmaker implied probabilities, it flags potential value opportunities.
+When you see odds dropping fast on one side, it usually means smart money is moving in. When odds drift higher, the market's getting cold on that outcome.
 
-📖 **Learn more:** [How AI Predicts Football Matches](/blog/how-ai-predicts-football-matches)
-
----
-
-## Understanding the Bookmaker's Edge
-
-Bookmakers build profit into every market through the **overround** (margin). A typical 1X2 market has 3-8% margin built in.
-
-### How to Calculate Overround
-\`\`\`
-Overround = (Sum of all implied probabilities) - 100%
-\`\`\`
-
-Lower margins mean better value for bettors. Sharp bookmakers like Pinnacle often have 2-3% margins, while recreational books can exceed 8%.
-
-📖 **Full breakdown:** [How Bookmakers Calculate Margins](/blog/how-bookmakers-calculate-margins)
+The really interesting stuff happens when odds move opposite to where the money is going. That's often a sign that bookmakers are adjusting based on sharp action, not public bets.
 
 ---
 
-## Different Market Types and When to Use Them
+## Different Markets for Different Situations
 
-### 1X2 (Match Result)
-Best for matches where you have a strong view on the winner.
-📖 [Match Result Betting Explained](/blog/match-result-1x2-betting-explained)
+**1X2 (Win/Draw/Win)** is straightforward but that draw option can burn you. Best when you're confident about the result.
 
-### Asian Handicap
-Eliminates the draw, offers partial stakes, and often provides better value.
-📖 [Asian Handicap Complete Guide](/blog/asian-handicap-betting-guide)
+**Asian Handicap** removes the draw entirely and lets you split your stake across outcomes. I find it offers better value more often than 1X2.
 
-### Over/Under (Totals)
-Focus on goals rather than winners—useful when teams are evenly matched.
-📖 [Over/Under Betting Guide](/blog/over-under-totals-betting-guide)
+**Over/Under** focuses on goals instead of winners. Really useful when two teams are evenly matched but you have a read on whether it'll be a high or low-scoring game.
 
 ---
 
-## Reading Odds Movement
+## Using AI to Find an Edge
 
-Odds don't stay static—they move based on:
-1. **Betting volume** (public money)
-2. **Sharp action** (professional bettors)
-3. **Team news** (injuries, lineups)
-4. **Market sentiment** shifts
+Here's where things have gotten interesting lately. AI models can process way more data than any human—historical results, expected goals, form, injuries, and even patterns in how odds move.
 
-Understanding why odds move can reveal valuable insights:
-- Odds **shortening** = Market expects this outcome more likely
-- Odds **drifting** = Market becoming less confident
-- **Reverse line movement** = Sharps betting against public
+When an AI model thinks something has a 60% chance but the market says 50%, that's a flag worth investigating. Doesn't mean you blindly follow the model, but it's another data point in your decision.
 
-📖 **Advanced reading:** [Why Football Odds Move](/blog/why-football-odds-move)
+The best approach? Use AI as a research tool, not a crystal ball. Check what the model says, see if it aligns with your own analysis, then make your call.
 
 ---
 
-## Practical Application: Using OddsFlow
+## What I Wish Someone Told Me Earlier
 
-Here's how to combine odds analysis with AI predictions:
+After years of doing this, here's what actually matters:
 
-### Step 1: Check AI Probability
-View OddsFlow's match prediction and note the probability estimate.
+**Odds are just prices.** They can be wrong, and finding those mistakes is the whole game.
 
-### Step 2: Compare to Market Odds
-Calculate the implied probability from current bookmaker odds.
+**Implied probability is your friend.** Convert every odd before you bet. It changes how you see things.
 
-### Step 3: Identify Discrepancies
-If AI probability > Implied probability + 5%, it's a potential value bet.
+**The margin is real.** Bookmakers take their cut on every bet. Shop around for better prices.
 
-### Step 4: Consider Confidence Level
-High-confidence AI picks with value are the strongest opportunities.
+**Patterns exist.** Odds movement tells a story if you learn to read it.
 
-📖 **Practical guide:** [How to Use OddsFlow AI Predictions](/blog/how-to-use-oddsflow-ai-predictions)
+**Stay disciplined.** The math only works over many bets. One bad night doesn't mean the strategy is broken.
 
 ---
 
-## Key Takeaways
+## Keep Learning
 
-1. **Odds are prices, not predictions**—they can be wrong
-2. **Implied probability** reveals what bookmakers really think
-3. **Value betting** means backing outcomes with positive expected value
-4. **Bookmaker margins** eat into your returns—shop for best odds
-5. **AI models** can identify value that humans miss
-6. **Odds movement** tells a story—learn to read it
+This is just the foundation. If you want to go deeper:
 
----
+**The basics:** [What Are Football Odds?](/blog/what-are-football-odds) • [Odds Formats Explained](/blog/decimal-vs-fractional-vs-american-odds) • [Implied Probability Deep Dive](/blog/implied-probability-explained)
 
-## Continue Learning
+**Market types:** [Asian Handicap Guide](/blog/asian-handicap-betting-guide) • [Over/Under Strategy](/blog/over-under-totals-betting-guide)
 
-This pillar guide introduced the fundamentals. Dive deeper with our specialized articles:
-
-**Odds Fundamentals:**
-- [What Are Football Odds?](/blog/what-are-football-odds)
-- [Decimal vs Fractional vs American Odds](/blog/decimal-vs-fractional-vs-american-odds)
-- [Implied Probability Explained](/blog/implied-probability-explained)
-- [How Bookmakers Calculate Margins](/blog/how-bookmakers-calculate-margins)
-
-**Market Types:**
-- [Asian Handicap Guide](/blog/asian-handicap-betting-guide)
-- [Over/Under Betting](/blog/over-under-totals-betting-guide)
-- [1X2 Match Result Betting](/blog/match-result-1x2-betting-explained)
-
-**Advanced Topics:**
-- [Why Odds Move](/blog/why-football-odds-move)
-- [Sharp vs Public Money](/blog/sharp-vs-public-money-betting)
-- [How AI Predicts Football](/blog/how-ai-predicts-football-matches)
+**Advanced stuff:** [Why Odds Move](/blog/why-football-odds-move) • [Sharp vs Public Money](/blog/sharp-vs-public-money-betting)
 
 ---
 
-**Ready to put theory into practice?** [Start your free OddsFlow trial](/get-started) and see AI-powered predictions in action.
+Ready to see this in action? [Try OddsFlow free](/get-started) and start putting data behind your decisions.
 
-*Gambling involves risk. Please bet responsibly.*
+*Remember: betting should be entertainment, not income. Only risk what you can afford to lose.*
       `,
       '中文': `
-## 为什么理解足球赔率很重要
+## 为什么大多数人投注会输钱
 
-**足球赔率**不仅仅是屏幕上的数字——它们是了解博彩市场对比赛结果预期的窗口。无论您是完全的新手还是想要提升优势的老手，掌握赔率解读是盈利投注的基础。
+说实话，大部分足球投注的人最终都是亏钱的。不是因为他们不懂球，而是因为他们根本没搞明白那些数字到底是什么意思。
 
-在这份完整指南中，您将学到：
-- 赔率实际代表什么
-- 如何在小数、分数和美式格式之间转换
-- 隐藏的关键：**隐含概率**
-- 如何识别**价值投注**
-- AI模型如何利用赔率数据
+足球赔率不是什么神秘代码，它们本质上就是价格标签。一旦你学会正确解读，你看待投注的方式会完全不同。
 
 ---
 
-## 什么是足球赔率？
+## 赔率到底是什么？
 
-本质上，**投注赔率**表达两件事：
-1. 结果发生的**概率**（由博彩公司估计）
-2. 如果您的投注获胜，您将获得的**回报**
+有件事很少有人告诉新手：赔率不是预测，而是价格。
 
-当您看到曼联以**2.50**的赔率击败切尔西时，博彩公司是在说他们估计曼联有大约40%的获胜机会。
+当你看到曼联击败切尔西的赔率是2.50时，博彩公司不是在说"曼联会赢"。他们是在说"如果你想押曼联赢，这是我们的报价。"
 
-> **关键洞察：** 赔率不是预测——它们是价格。像任何市场价格一样，它们可能是错误的。
+每个赔率都包含两个信息：
+- 某件事发生的可能性有多大（按博彩公司的判断）
+- 如果你猜对了能拿多少钱
 
-📖 **深入了解：** [什么是足球赔率？](/blog/what-are-football-odds)
+曼联那个2.50的赔率？大概相当于40%的获胜概率。押10块钱，如果他们赢了，你拿回25块。
 
----
-
-## 隐含概率：隐藏的关键
-
-**隐含概率**是区分休闲投注者和盈利者的关键。它将赔率转换为博彩公司分配给每个结果的百分比机会。
-
-### 公式
-\`\`\`
-隐含概率 = (1 / 小数赔率) × 100%
-\`\`\`
-
-### 价值投注公式
-\`\`\`
-期望值 = (您的概率 × 赔率) - 1
-
-如果 EV > 0，这是价值投注
-\`\`\`
+这是我花了好几年才想明白的道理：博彩公司也会犯错。那些价格不是真理——只是用算法支撑的观点而已。有时候，这些观点是有偏差的。
 
 ---
 
-## 关键要点
+## 理解不同的赔率格式
 
-1. **赔率是价格，不是预测**——它们可能是错误的
-2. **隐含概率**揭示了博彩公司的真实想法
-3. **价值投注**意味着支持具有正期望值的结果
-4. **博彩公司利润**会削减您的回报——寻找最佳赔率
-5. **AI模型**可以识别人类遗漏的价值
+根据你在哪里投注，你会遇到三种主要格式。
+
+**小数赔率**最简单。用你的投注金额乘以那个数字就行。赔率3.00押10块？回报30块（包括本金）。
+
+| 赔率 | 含义 | 10块回报 |
+|------|------|----------|
+| 1.50 | 大热门 | 15块 |
+| 2.00 | 五五开 | 20块 |
+| 3.00 | 冷门 | 30块 |
+| 5.00 | 大冷门 | 50块 |
+
+**分数赔率**是英国人的玩法。5/2意思是你每押2块能赚5块利润。
+
+**美式赔率**用正负号。+200表示押100块赢200块。-150表示要押150块才能赢100块。
 
 ---
 
-**准备将理论付诸实践？** [开始您的OddsFlow免费试用](/get-started)
+## 改变一切的核心概念
 
-*博彩有风险，请理性投注。*
+如果这篇文章你只记住一件事，那就记住：隐含概率。
+
+每个赔率都可以转换成百分比。当你做这个计算时，就能看出博彩公司在哪里可能定价失误。
+
+公式很简单：用1除以小数赔率，再乘以100。
+
+赔率2.00？隐含概率50%。
+赔率4.00？隐含概率25%。
+
+我给你看个有意思的东西。看一场典型的英超比赛：
+
+| 结果 | 赔率 | 隐含概率 |
+|------|------|----------|
+| 主胜 | 2.10 | 47.6% |
+| 平局 | 3.40 | 29.4% |
+| 客胜 | 3.50 | 28.6% |
+| **合计** | — | **105.6%** |
+
+看到加起来超过100%了吗？多出来的5.6%就是博彩公司的抽成，每个市场都有，这是他们赚钱的方式。
+
+---
+
+## 找到真正有价值的投注
+
+这才是精华所在。
+
+当你认为某件事发生的概率比赔率显示的更高时，就出现了"价值投注"。如果你觉得利物浦有55%的胜率，但赔率只暗示47%，你可能就找到价值了。
+
+公式是这样的：
+\`\`\`
+期望值 = (你估计的概率 × 赔率) - 1
+\`\`\`
+
+如果这个数字是正的，长期来看这个投注在数学上是合理的。不是说每次都能赢——但经过几百次投注，你应该能盈利。
+
+难点在哪？搞清楚"真实"概率到底是多少。这就是数据和模型派上用场的地方。
+
+---
+
+## 赔率变动告诉你什么
+
+赔率不是固定的，它们会根据以下因素不断变化：
+- 各方投注资金的流向
+- 职业玩家（sharp）在做什么
+- 临场消息如伤病或阵容变化
+- 整体市场情绪
+
+当你看到某一方的赔率快速下降，通常意味着聪明钱在进场。当赔率上升时，说明市场对这个结果在降温。
+
+真正有趣的是当赔率变动方向与资金流向相反时。这通常是博彩公司根据职业玩家而非大众投注在调整的信号。
+
+---
+
+## 我希望早点知道的事
+
+玩了这么多年，真正重要的是这些：
+
+**赔率只是价格。** 它们可能是错的，找到这些错误就是整个游戏的核心。
+
+**隐含概率是你的朋友。** 每次下注前先转换一下，会改变你看问题的方式。
+
+**抽成是真实存在的。** 博彩公司在每个投注上都抽成，货比三家找更好的价格。
+
+**规律是存在的。** 如果你学会解读，赔率变动会告诉你很多信息。
+
+**保持纪律。** 数学只在大量投注后才起作用。一晚上输钱不代表策略有问题。
+
+---
+
+想看实际效果？[免费试用OddsFlow](/get-started)，让数据支撑你的决策。
+
+*记住：投注应该是娱乐，不是收入来源。只用你输得起的钱去玩。*
       `,
       '繁體': `
-## 為什麼理解足球賠率很重要
+## 為什麼大多數人投注會輸錢
 
-**足球賠率**不僅僅是螢幕上的數字——它們是了解博彩市場對比賽結果預期的窗口。
+說實話，大部分足球投注的人最終都是虧錢的。不是因為他們不懂球，而是因為他們根本沒搞明白那些數字到底是什麼意思。
 
-### 公式
-\`\`\`
-隱含概率 = (1 / 小數賠率) × 100%
-\`\`\`
+足球賠率不是什麼神秘代碼，它們本質上就是價格標籤。一旦你學會正確解讀，你看待投注的方式會完全不同。
 
 ---
 
-## 關鍵要點
+## 賠率到底是什麼？
 
-1. **賠率是價格，不是預測**
-2. **隱含概率**揭示了博彩公司的真實想法
-3. **價值投注**意味著支持具有正期望值的結果
+有件事很少有人告訴新手：賠率不是預測，而是價格。
+
+當你看到曼聯擊敗切爾西的賠率是2.50時，博彩公司不是在說「曼聯會贏」。他們是在說「如果你想押曼聯贏，這是我們的報價。」
+
+每個賠率都包含兩個資訊：
+- 某件事發生的可能性有多大（按博彩公司的判斷）
+- 如果你猜對了能拿多少錢
+
+曼聯那個2.50的賠率？大概相當於40%的獲勝機率。押10塊錢，如果他們贏了，你拿回25塊。
+
+這是我花了好幾年才想明白的道理：博彩公司也會犯錯。那些價格不是真理——只是用演算法支撐的觀點而已。有時候，這些觀點是有偏差的。
 
 ---
 
-**準備將理論付諸實踐？** [開始您的OddsFlow免費試用](/get-started)
+## 理解不同的賠率格式
 
-*博彩有風險，請理性投注。*
+根據你在哪裡投注，你會遇到三種主要格式。
+
+**小數賠率**最簡單。用你的投注金額乘以那個數字就行。賠率3.00押10塊？回報30塊（包括本金）。
+
+| 賠率 | 含義 | 10塊回報 |
+|------|------|----------|
+| 1.50 | 大熱門 | 15塊 |
+| 2.00 | 五五開 | 20塊 |
+| 3.00 | 冷門 | 30塊 |
+| 5.00 | 大冷門 | 50塊 |
+
+**分數賠率**是英國人的玩法。5/2意思是你每押2塊能賺5塊利潤。
+
+**美式賠率**用正負號。+200表示押100塊贏200塊。-150表示要押150塊才能贏100塊。
+
+---
+
+## 改變一切的核心概念
+
+如果這篇文章你只記住一件事，那就記住：隱含機率。
+
+每個賠率都可以轉換成百分比。當你做這個計算時，就能看出博彩公司在哪裡可能定價失誤。
+
+公式很簡單：用1除以小數賠率，再乘以100。
+
+賠率2.00？隱含機率50%。
+賠率4.00？隱含機率25%。
+
+我給你看個有意思的東西。看一場典型的英超比賽：
+
+| 結果 | 賠率 | 隱含機率 |
+|------|------|----------|
+| 主勝 | 2.10 | 47.6% |
+| 平局 | 3.40 | 29.4% |
+| 客勝 | 3.50 | 28.6% |
+| **合計** | — | **105.6%** |
+
+看到加起來超過100%了嗎？多出來的5.6%就是博彩公司的抽成，每個市場都有，這是他們賺錢的方式。
+
+---
+
+## 找到真正有價值的投注
+
+這才是精華所在。
+
+當你認為某件事發生的機率比賠率顯示的更高時，就出現了「價值投注」。如果你覺得利物浦有55%的勝率，但賠率只暗示47%，你可能就找到價值了。
+
+公式是這樣的：
+\`\`\`
+期望值 = (你估計的機率 × 賠率) - 1
+\`\`\`
+
+如果這個數字是正的，長期來看這個投注在數學上是合理的。不是說每次都能贏——但經過幾百次投注，你應該能盈利。
+
+難點在哪？搞清楚「真實」機率到底是多少。這就是數據和模型派上用場的地方。
+
+---
+
+## 賠率變動告訴你什麼
+
+賠率不是固定的，它們會根據以下因素不斷變化：
+- 各方投注資金的流向
+- 職業玩家（sharp）在做什麼
+- 臨場消息如傷病或陣容變化
+- 整體市場情緒
+
+當你看到某一方的賠率快速下降，通常意味著聰明錢在進場。當賠率上升時，說明市場對這個結果在降溫。
+
+真正有趣的是當賠率變動方向與資金流向相反時。這通常是博彩公司根據職業玩家而非大眾投注在調整的信號。
+
+---
+
+## 我希望早點知道的事
+
+玩了這麼多年，真正重要的是這些：
+
+**賠率只是價格。** 它們可能是錯的，找到這些錯誤就是整個遊戲的核心。
+
+**隱含機率是你的朋友。** 每次下注前先轉換一下，會改變你看問題的方式。
+
+**抽成是真實存在的。** 博彩公司在每個投注上都抽成，貨比三家找更好的價格。
+
+**規律是存在的。** 如果你學會解讀，賠率變動會告訴你很多資訊。
+
+**保持紀律。** 數學只在大量投注後才起作用。一晚上輸錢不代表策略有問題。
+
+---
+
+想看實際效果？[免費試用OddsFlow](/get-started)，讓數據支撐你的決策。
+
+*記住：投注應該是娛樂，不是收入來源。只用你輸得起的錢去玩。*
       `,
       JA: `
-## なぜサッカーオッズを理解することが重要なのか
+## なぜほとんどのベッターが負けるのか
 
-**サッカーオッズ**は単なる数字ではありません。ベッティング市場が試合で何が起こると信じているかを示す窓です。初心者でも経験者でも、オッズの解釈をマスターすることが利益を上げるベッティングの基礎となります。
+正直に言うと、サッカーに賭ける人のほとんどは負けている。サッカーを知らないからじゃない。画面に表示されている数字が何を意味するのか理解していないからだ。
 
-このガイドで学べること：
-- オッズが実際に何を表しているか
-- デシマル、フラクショナル、アメリカン形式の変換方法
-- 隠れた鍵：**暗示確率**
-- オッズがあなたに有利な**バリューベット**の見つけ方
-- OddsFlowのようなAIモデルがオッズデータをどう活用するか
+フットボールオッズは謎めいた暗号じゃない。基本的には値札だ。正しく読み方を覚えれば、ベッティングの見方が完全に変わる。
 
 ---
 
-## サッカーオッズとは？
+## オッズって結局何なの？
 
-**ベッティングオッズ**は2つのことを表します：
-1. **確率** - ブックメーカーが推定する結果の発生確率
-2. **配当** - ベットが的中した場合の払い戻し額
+初心者に誰も教えないことがある：オッズは予測じゃない。価格なんだ。
 
-マンチェスター・ユナイテッドがチェルシーに勝つオッズが**2.50**の場合、ブックメーカーはユナイテッドの勝率を約40%と見積もっており、的中すれば1ドルあたり2.50ドルが支払われます。
+マンチェスター・ユナイテッドがチェルシーに勝つオッズが2.50だと見たとき、ブックメーカーは「ユナイテッドが勝つ」と言っているわけじゃない。「ユナイテッドの勝ちに賭けたいなら、これが値段だ」と言っているんだ。
 
-> **重要な洞察：** オッズは予測ではなく、価格です。そして他の市場価格と同様に、間違っている可能性があります。
+すべてのオッズには2つの情報が含まれている：
+- 何かが起こる可能性（ブックメーカーの判断による）
+- 当たった場合の払い戻し額
 
----
+ユナイテッドの2.50というオッズ？だいたい40%の勝率を意味する。10ドル賭けて勝てば25ドル戻ってくる。
 
-## 3つのオッズ形式
-
-### デシマルオッズ（ヨーロッパ式）
-最も直感的な形式で、ヨーロッパとほとんどのオンラインブックメーカーで広く使用されています。
-
-**計算式：** 総リターン = 賭け金 × デシマルオッズ
-
-### フラクショナルオッズ（イギリス式）
-イギリスで人気の伝統的な形式で、賭け金に対する利益を示します。
-
-### アメリカンオッズ（マネーライン）
-100ドルを基準に正（+）と負（-）の数字を使用します。
+何年もかけてようやく分かったことがある：ブックメーカーも間違える。あの価格は絶対じゃない—アルゴリズムに裏打ちされた意見に過ぎない。そして時々、その意見はズレている。
 
 ---
 
-## 暗示確率：隠れた鍵
+## 異なるオッズ形式を理解する
 
-**暗示確率**はカジュアルベッターとプロベッターを分けるものです。オッズをブックメーカーが各結果に割り当てる確率に変換します。
+どこで賭けるかによって、3つの主な形式に出会う。
 
-### 計算式
-暗示確率 = (1 / デシマルオッズ) × 100%
+**デシマルオッズ**が一番シンプル。賭け金にその数字を掛けるだけ。オッズ3.00で10ドル賭ける？30ドル戻ってくる（元の賭け金込み）。
+
+| オッズ | 意味 | 10ドルのリターン |
+|--------|------|------------------|
+| 1.50 | 大本命 | 15ドル |
+| 2.00 | 五分五分 | 20ドル |
+| 3.00 | 穴馬 | 30ドル |
+| 5.00 | 大穴 | 50ドル |
+
+**フラクショナルオッズ**はイギリス式。5/2は2ドル賭けるごとに5ドルの利益という意味。
+
+**アメリカンオッズ**はプラス/マイナスを使う。+200は100ドル賭けて200ドル勝つ意味。-150は100ドル勝つのに150ドル賭ける必要がある。
 
 ---
 
-## バリューベットの見つけ方
+## すべてを変える一つのコンセプト
 
-**バリューベット**は、あなたが推定する確率がオッズの暗示確率を上回る場合に発生します。
+この記事から一つだけ持ち帰るなら、これを覚えてほしい：暗示確率。
 
-### 期待値の計算式
+すべてのオッズはパーセンテージに変換できる。その計算をすると、ブックメーカーがどこで価格設定を間違えているかが見えてくる。
+
+公式はめちゃくちゃシンプル：1をデシマルオッズで割って、100を掛ける。
+
+オッズ2.00？暗示確率50%。
+オッズ4.00？暗示確率25%。
+
+面白いものを見せよう。典型的なプレミアリーグの試合を見て：
+
+| 結果 | オッズ | 暗示確率 |
+|------|--------|----------|
+| ホーム勝ち | 2.10 | 47.6% |
+| 引き分け | 3.40 | 29.4% |
+| アウェイ勝ち | 3.50 | 28.6% |
+| **合計** | — | **105.6%** |
+
+100%を超えているの分かる？その余分な5.6%がブックメーカーの取り分。すべてのマーケットに組み込まれていて、これが彼らの儲けの仕組みだ。
+
+---
+
+## 本当に意味のあるベットを見つける
+
+ここからが本題。
+
+「バリューベット」は、あなたが思う確率がオッズの暗示確率より高いときに発生する。リバプールに55%の勝率があると思っていて、オッズが47%しか示していないなら、バリューを見つけた可能性がある。
+
+計算式はこう：
+\`\`\`
 期待値 = (あなたの確率 × オッズ) - 1
+\`\`\`
 
-期待値 > 0 の場合、それはバリューベットです。
+この数字がプラスなら、長期的にそのベットは数学的に理にかなっている。毎回勝てるわけじゃない—でも何百回もベットすれば、プラスになるはずだ。
 
----
-
-## AI予測がオッズ分析をどう強化するか
-
-OddsFlowのような最新の**AIサッカー予測モデル**は、従来の方法よりも正確に試合確率を推定するために数千のデータポイントを分析します：
-
-- **過去のパフォーマンスデータ**（50,000試合以上）
-- **期待ゴール（xG）**と高度な指標
-- **チームの調子**、怪我、スタメン分析
-- **直接対決の記録**とホーム/アウェイ要因
-- シャープマネーを示す**オッズ変動パターン**
+難しいのは？「本当の」確率が実際いくつなのかを見極めること。そこでデータとモデルが役に立つ。
 
 ---
 
-## 重要なポイント
+## オッズの動きが教えてくれること
 
-1. **オッズは価格であり、予測ではない** - 間違っている可能性がある
-2. **暗示確率**はブックメーカーの本当の考えを明らかにする
-3. **バリューベッティング**は正の期待値を持つ結果に賭けること
-4. **ブックメーカーのマージン**があなたのリターンを減らす
-5. **AIモデル**は人間が見逃すバリューを特定できる
-6. **オッズの動き**はストーリーを語る
+オッズは固定じゃない。こんな要因で常に動いている：
+- 各サイドにどれだけの金が入っているか
+- シャープ（プロベッター）が何をしているか
+- 怪我やラインナップなどの直前ニュース
+- 全体的な市場センチメント
+
+片方のオッズが急速に下がっているのを見たら、通常スマートマネーが動いている証拠。オッズが上がっているときは、市場がその結果に冷めてきている。
+
+本当に面白いのは、オッズの動きが金の流れと逆方向のとき。これは多くの場合、ブックメーカーが一般のベットじゃなくシャープのアクションに基づいて調整しているサインだ。
 
 ---
 
-**理論を実践する準備はできましたか？** [OddsFlowの無料トライアルを開始](/get-started)して、AI搭載の予測を実際に体験してください。
+## もっと早く知りたかったこと
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+何年もやってきて、本当に大事なのはこれだ：
+
+**オッズは単なる価格。** 間違っていることもある。その間違いを見つけるのがゲームの本質。
+
+**暗示確率は味方。** ベットする前に毎回変換してみろ。見方が変わる。
+
+**マージンは現実。** ブックメーカーはすべてのベットから取り分を取る。より良い価格を探し回れ。
+
+**パターンは存在する。** 読み方を学べば、オッズの動きはいろんなことを教えてくれる。
+
+**規律を保て。** 数学は多くのベットを重ねて初めて機能する。一晩負けたからって戦略がダメとは限らない。
+
+---
+
+実際に試してみたい？[OddsFlowを無料で試して](/get-started)、データに基づいた判断を始めよう。
+
+*忘れないで：ベッティングは娯楽であって収入源じゃない。失っても困らない額だけでやろう。*
       `,
     },
   },
@@ -721,219 +835,406 @@ OddsFlowのような最新の**AIサッカー予測モデル**は、従来の方
     readTime: 8,
     date: '2026-01-13',
     author: 'OddsFlow Team',
-    tags: ['football odds', 'betting basics', 'beginner guide', 'bookmakers', 'sports betting'],
+    tags: ['football odds explained', 'odds analysis', 'sports data', 'probability', 'AI predictions', 'market analysis'],
     relatedPosts: ['how-to-interpret-football-odds', 'decimal-vs-fractional-vs-american-odds', 'implied-probability-explained'],
     title: {
-      EN: 'What Are Football Odds? A Beginner\'s Guide to Betting Numbers',
-      JA: 'サッカーオッズとは？初心者向けベッティング入門',
-      '中文': '什么是足球赔率？新手入门指南',
-      '繁體': '什麼是足球賠率？新手入門指南',
+      EN: 'What Are Football Odds? Understanding Sports Market Data',
+      JA: 'サッカーオッズとは？スポーツ市場データを理解する',
+      '中文': '什么是足球赔率？理解体育市场数据',
+      '繁體': '什麼是足球賠率？理解體育市場數據',
     },
     excerpt: {
-      EN: 'New to football betting? Learn what odds represent, how bookmakers set them, and why understanding odds is crucial for making informed bets.',
-      JA: 'サッカーベッティング初心者ですか？オッズが何を表すか、ブックメーカーがどう設定するか、理解することが重要な理由を学びましょう。',
-      '中文': '足球投注新手？了解赔率代表什么以及博彩公司如何设置它们。',
-      '繁體': '足球投注新手？了解賠率代表什麼以及博彩公司如何設置它們。',
+      EN: 'Football odds are powerful market indicators that reveal probability estimates for match outcomes. Learn how to read and analyze these numbers for better sports insights.',
+      JA: 'サッカーオッズは試合結果の確率推定を示す強力な市場指標です。これらの数字を読み解き、スポーツ分析に活用する方法を学びましょう。',
+      '中文': '足球赔率是强大的市场指标，揭示比赛结果的概率估计。学习如何解读和分析这些数据。',
+      '繁體': '足球賠率是強大的市場指標，揭示比賽結果的機率估計。學習如何解讀和分析這些數據。',
     },
     content: {
       EN: `
-## Introduction: Your First Step Into Football Betting
+## Football Odds Are Really Just Probability Estimates
 
-If you've ever looked at a betting site and felt confused by all the numbers, you're not alone. **Football odds** might seem complicated at first, but they're actually quite simple once you understand the basics.
+Here's something that might surprise you: football odds aren't mysterious gambling numbers. They're actually one of the most sophisticated probability estimation systems in existence.
 
-This guide will explain everything a beginner needs to know about betting odds.
+Every second, millions of dollars flow through football markets worldwide. That money carries information—what analysts think, what data models predict, what insiders might know. Odds capture all of that in a single number.
 
----
-
-## What Do Odds Actually Represent?
-
-Think of odds as **prices** in a marketplace. Just like products in a store have price tags, betting outcomes have odds. These odds tell you two important things:
-
-### 1. How Much You Can Win
-Higher odds = bigger potential payout (but lower probability)
-Lower odds = smaller potential payout (but higher probability)
-
-### 2. The Probability of an Outcome
-Odds reflect how likely the bookmaker thinks something will happen.
+At OddsFlow, we treat odds as what they really are: rich data signals that AI can analyze to understand match dynamics better than any single human expert.
 
 ---
 
-## How Bookmakers Set Odds
+## Breaking Down What Odds Tell Us
 
-Bookmakers (or "bookies") employ teams of analysts and use sophisticated algorithms to set odds. Here's a simplified view of the process:
+When you see Liverpool at 1.90 against Chelsea, that number encodes a probability estimate. The market is saying Liverpool has roughly a 52% chance of winning.
 
-1. **Analyze Data:** Team form, head-to-head records, injuries, venue
-2. **Calculate Probabilities:** Estimate the likelihood of each outcome
-3. **Add Margin:** Build in profit (typically 3-8%)
-4. **Publish Odds:** Release to the market
-5. **Adjust:** Move odds based on betting patterns
+But here's where it gets interesting for data analysis: that 52% isn't just one opinion. It's the aggregate of thousands of analytical inputs—team statistics, historical performance, current form, injuries, even weather conditions.
 
-> **Important:** Bookmakers aren't trying to predict results—they're managing risk and ensuring profit.
+**The formula is straightforward:**
+\`\`\`
+Implied Probability = 1 / Decimal Odds × 100%
+
+1.90 odds = 52.6% implied probability
+3.50 odds = 28.6% implied probability
+4.00 odds = 25.0% implied probability
+\`\`\`
+
+This is why odds data is so valuable for AI analysis. It's pre-processed probability information from one of the world's most efficient markets.
 
 ---
 
-## A Simple Example
+## How Odds Get Created (The Data Pipeline)
+
+Understanding where odds come from helps you interpret what they mean:
+
+**Stage 1: Raw Data Collection**
+Professional odds compilers gather everything—xG statistics, player tracking data, injury reports, historical head-to-head records, home/away performance splits.
+
+**Stage 2: Model Processing**
+Quantitative models crunch these inputs to generate base probability estimates. The best operators use machine learning systems trained on hundreds of thousands of historical matches.
+
+**Stage 3: Market Pricing**
+Initial odds get published, then something fascinating happens. Money flows in from analysts, syndicates, and casual participants. Each transaction carries information that gets absorbed into price movements.
+
+**Stage 4: Continuous Adjustment**
+Odds shift in real-time as new information arrives—lineup announcements, weather changes, late breaking news. Watching these movements tells you what the market is learning.
+
+---
+
+## Reading Odds Like a Data Analyst
+
+Let's look at a real scenario:
 
 **Match: Liverpool vs Chelsea**
 
-| Outcome | Decimal Odds | What It Means |
-|---------|--------------|---------------|
-| Liverpool Win | 1.90 | Bet $10, get $19 back ($9 profit) |
-| Draw | 3.50 | Bet $10, get $35 back ($25 profit) |
-| Chelsea Win | 4.00 | Bet $10, get $40 back ($30 profit) |
+| Outcome | Opening Odds | Current Odds | Probability Shift |
+|---------|--------------|--------------|-------------------|
+| Liverpool | 1.95 | 1.85 | +2.8% confidence |
+| Draw | 3.60 | 3.70 | -0.8% confidence |
+| Chelsea | 4.20 | 4.50 | -1.6% confidence |
 
-The lower Liverpool's odds (1.90) means bookmakers see them as favorites. Chelsea's higher odds (4.00) indicates they're underdogs.
+What's this data telling us?
 
----
+The market has become more confident in Liverpool since opening. Maybe team news favored them. Maybe sharp analysts identified value. Maybe a key Chelsea player picked up a knock in training.
 
-## Why Understanding Odds Matters
-
-### For Casual Bettors
-- Know how much you stand to win or lose
-- Make more informed decisions
-- Avoid common mistakes
-
-### For Serious Bettors
-- Identify **value bets** where odds are mispriced
-- Calculate **expected value** of wagers
-- Build profitable long-term strategies
+This is the kind of signal our AI models at OddsFlow track constantly. Odds movement patterns often reveal information before it becomes public knowledge.
 
 ---
 
-## Key Takeaways
+## Why This Matters for Sports Analysis
 
-1. Odds are **prices** that reflect probability and payout
-2. Bookmakers set odds using data, then add their margin
-3. Lower odds = favorites, higher odds = underdogs
-4. Understanding odds is **essential** for smart betting
+For anyone interested in football analytics, odds data provides something unique: real-time market consensus on match probabilities.
+
+**For researchers:** Odds offer a benchmark to test prediction models against. If your model consistently finds value that the market missed, you might be onto something.
+
+**For fans:** Following odds movements adds another dimension to pre-match analysis. Why did Liverpool's price drop? What does the market know?
+
+**For analysts:** Odds data is a feature-rich input for machine learning models. At OddsFlow, we've found that combining odds signals with traditional statistics improves prediction accuracy significantly.
 
 ---
 
-📖 **Continue learning:** [How to Interpret Football Odds (Complete Guide)](/blog/how-to-interpret-football-odds)
+## The Three Odds Formats You'll Encounter
 
-*Gambling involves risk. Please bet responsibly.*
+Different regions use different formats, but they all encode the same probability information:
+
+**Decimal (2.50)** — Multiply by stake for total return. Most intuitive for calculations.
+
+**Fractional (3/2)** — Traditional UK format. Shows profit relative to stake.
+
+**American (+150 / -200)** — US format. Positive shows profit on $100, negative shows stake needed to win $100.
+
+For data analysis, decimal is easiest to work with. Quick conversion: American +150 = Decimal 2.50 = Fractional 3/2.
+
+---
+
+## Key Insights
+
+Football odds are probability estimates derived from massive data processing and market activity. They're not perfect—no probability estimate is—but they represent the collective intelligence of a highly efficient market.
+
+For AI-powered analysis like what we do at OddsFlow, odds data is invaluable. It provides pre-computed probability benchmarks that our models can analyze, compare, and sometimes improve upon.
+
+Understanding how to read odds is the first step toward understanding how markets value football outcomes—and where opportunities for better analysis might exist.
+
+---
+
+📖 **Go deeper:** [How to Interpret Football Odds](/blog/how-to-interpret-football-odds) • [Implied Probability Explained](/blog/implied-probability-explained)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 介绍：您进入足球投注的第一步
+## 足球赔率其实就是概率估计
 
-如果您曾经看过投注网站并对所有数字感到困惑，您并不孤单。**足球赔率**起初可能看起来很复杂，但一旦您了解了基础知识，它们实际上非常简单。
+这可能会让你惊讶：足球赔率不是神秘的数字。它们实际上是现存最复杂的概率估计系统之一。
 
----
+每一秒，全球足球市场都有数百万美元在流动。这些钱承载着信息——分析师的想法、数据模型的预测、内部人士可能知道的东西。赔率把所有这些浓缩成一个数字。
 
-## 赔率实际代表什么？
-
-把赔率想象成市场上的**价格**。就像商店里的产品有价格标签一样，投注结果也有赔率。
-
-### 1. 您可以赢多少
-更高的赔率 = 更大的潜在回报（但概率更低）
-
-### 2. 结果的概率
-赔率反映了博彩公司认为某事发生的可能性。
+在OddsFlow，我们把赔率当作它们真正的本质：AI可以分析的丰富数据信号，帮助我们比任何单一人类专家更好地理解比赛动态。
 
 ---
 
-## 关键要点
+## 赔率告诉我们什么
 
-1. 赔率是反映概率和回报的**价格**
-2. 博彩公司使用数据设置赔率，然后添加利润
-3. 较低的赔率 = 热门，较高的赔率 = 冷门
+当你看到利物浦对切尔西的赔率是1.90时，这个数字编码了一个概率估计。市场在说利物浦大约有52%的获胜机会。
 
-📖 **继续学习：** [如何解读足球赔率](/blog/how-to-interpret-football-odds)
+但有趣的是：这52%不只是一个人的意见。它是数千个分析输入的汇总——球队统计、历史表现、当前状态、伤病，甚至天气条件。
 
-*博彩有风险，请理性投注。*
+**公式很简单：**
+\`\`\`
+隐含概率 = 1 / 小数赔率 × 100%
+
+1.90赔率 = 52.6%隐含概率
+3.50赔率 = 28.6%隐含概率
+4.00赔率 = 25.0%隐含概率
+\`\`\`
+
+这就是为什么赔率数据对AI分析如此有价值。它是来自世界上最高效市场之一的预处理概率信息。
+
+---
+
+## 赔率是如何生成的（数据管道）
+
+了解赔率的来源有助于你理解它们的含义：
+
+**第一阶段：原始数据收集**
+专业赔率编制者收集一切——xG统计、球员追踪数据、伤病报告、历史交锋记录、主客场表现差异。
+
+**第二阶段：模型处理**
+量化模型处理这些输入，生成基础概率估计。最好的运营商使用在数十万场历史比赛上训练的机器学习系统。
+
+**第三阶段：市场定价**
+初始赔率发布后，有趣的事情发生了。来自分析师、财团和普通参与者的资金流入。每笔交易都携带着被价格变动吸收的信息。
+
+**第四阶段：持续调整**
+赔率随着新信息的到来实时变化——阵容公布、天气变化、突发新闻。观察这些变动能告诉你市场在学习什么。
+
+---
+
+## 像数据分析师一样解读赔率
+
+让我们看一个真实场景：
+
+**比赛：利物浦 vs 切尔西**
+
+| 结果 | 开盘赔率 | 当前赔率 | 概率变化 |
+|------|---------|---------|----------|
+| 利物浦 | 1.95 | 1.85 | +2.8%信心 |
+| 平局 | 3.60 | 3.70 | -0.8%信心 |
+| 切尔西 | 4.20 | 4.50 | -1.6%信心 |
+
+这些数据告诉我们什么？
+
+市场对利物浦的信心自开盘以来增强了。也许球队消息对他们有利。也许精明的分析师发现了价值。也许切尔西的关键球员在训练中受伤了。
+
+这就是我们OddsFlow的AI模型不断追踪的信号类型。赔率变动模式往往在信息公开之前就揭示了它。
+
+---
+
+## 为什么这对体育分析很重要
+
+对于任何对足球分析感兴趣的人来说，赔率数据提供了独特的东西：关于比赛概率的实时市场共识。
+
+**对于研究人员：** 赔率提供了测试预测模型的基准。如果你的模型持续发现市场遗漏的价值，你可能有所发现。
+
+**对于球迷：** 关注赔率变动为赛前分析增加了另一个维度。为什么利物浦的价格下降了？市场知道什么？
+
+**对于分析师：** 赔率数据是机器学习模型的特征丰富的输入。在OddsFlow，我们发现将赔率信号与传统统计数据结合可以显著提高预测准确性。
+
+---
+
+## 核心见解
+
+足球赔率是从大量数据处理和市场活动中得出的概率估计。它们不完美——没有概率估计是完美的——但它们代表了高效市场的集体智慧。
+
+对于像OddsFlow这样的AI驱动分析，赔率数据是无价的。它提供了预计算的概率基准，我们的模型可以分析、比较，有时还能改进。
+
+理解如何解读赔率是理解市场如何评估足球结果的第一步——以及更好分析机会可能存在的地方。
+
+---
+
+📖 **深入了解：** [如何解读足球赔率](/blog/how-to-interpret-football-odds) • [隐含概率详解](/blog/implied-probability-explained)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 介紹
+## 足球賠率其實就是機率估計
 
-**足球賠率**是投注的基礎。本指南將解釋新手需要了解的所有內容。
+這可能會讓你驚訝：足球賠率不是神秘的數字。它們實際上是現存最複雜的機率估計系統之一。
+
+每一秒，全球足球市場都有數百萬美元在流動。這些錢承載著資訊——分析師的想法、數據模型的預測、內部人士可能知道的東西。賠率把所有這些濃縮成一個數字。
+
+在OddsFlow，我們把賠率當作它們真正的本質：AI可以分析的豐富數據信號，幫助我們比任何單一人類專家更好地理解比賽動態。
 
 ---
 
-## 關鍵要點
+## 賠率告訴我們什麼
 
-1. 賠率是反映概率和回報的**價格**
-2. 較低的賠率 = 熱門，較高的賠率 = 冷門
+當你看到利物浦對切爾西的賠率是1.90時，這個數字編碼了一個機率估計。市場在說利物浦大約有52%的獲勝機會。
 
-📖 **繼續學習：** [如何解讀足球賠率](/blog/how-to-interpret-football-odds)
+但有趣的是：這52%不只是一個人的意見。它是數千個分析輸入的匯總——球隊統計、歷史表現、當前狀態、傷病，甚至天氣條件。
 
-*博彩有風險，請理性投注。*
+**公式很簡單：**
+\`\`\`
+隱含機率 = 1 / 小數賠率 × 100%
+
+1.90賠率 = 52.6%隱含機率
+3.50賠率 = 28.6%隱含機率
+4.00賠率 = 25.0%隱含機率
+\`\`\`
+
+這就是為什麼賠率數據對AI分析如此有價值。它是來自世界上最高效市場之一的預處理機率資訊。
+
+---
+
+## 賠率是如何生成的（數據管道）
+
+了解賠率的來源有助於你理解它們的含義：
+
+**第一階段：原始數據收集**
+專業賠率編製者收集一切——xG統計、球員追蹤數據、傷病報告、歷史交鋒記錄、主客場表現差異。
+
+**第二階段：模型處理**
+量化模型處理這些輸入，生成基礎機率估計。最好的營運商使用在數十萬場歷史比賽上訓練的機器學習系統。
+
+**第三階段：市場定價**
+初始賠率發布後，有趣的事情發生了。來自分析師、財團和普通參與者的資金流入。每筆交易都攜帶著被價格變動吸收的資訊。
+
+**第四階段：持續調整**
+賠率隨著新資訊的到來即時變化——陣容公布、天氣變化、突發新聞。觀察這些變動能告訴你市場在學習什麼。
+
+---
+
+## 像數據分析師一樣解讀賠率
+
+讓我們看一個真實場景：
+
+**比賽：利物浦 vs 切爾西**
+
+| 結果 | 開盤賠率 | 當前賠率 | 機率變化 |
+|------|---------|---------|----------|
+| 利物浦 | 1.95 | 1.85 | +2.8%信心 |
+| 平局 | 3.60 | 3.70 | -0.8%信心 |
+| 切爾西 | 4.20 | 4.50 | -1.6%信心 |
+
+這些數據告訴我們什麼？
+
+市場對利物浦的信心自開盤以來增強了。也許球隊消息對他們有利。也許精明的分析師發現了價值。也許切爾西的關鍵球員在訓練中受傷了。
+
+這就是我們OddsFlow的AI模型不斷追蹤的信號類型。賠率變動模式往往在資訊公開之前就揭示了它。
+
+---
+
+## 為什麼這對體育分析很重要
+
+對於任何對足球分析感興趣的人來說，賠率數據提供了獨特的東西：關於比賽機率的即時市場共識。
+
+**對於研究人員：** 賠率提供了測試預測模型的基準。如果你的模型持續發現市場遺漏的價值，你可能有所發現。
+
+**對於球迷：** 關注賠率變動為賽前分析增加了另一個維度。為什麼利物浦的價格下降了？市場知道什麼？
+
+**對於分析師：** 賠率數據是機器學習模型的特徵豐富的輸入。在OddsFlow，我們發現將賠率信號與傳統統計數據結合可以顯著提高預測準確性。
+
+---
+
+## 核心見解
+
+足球賠率是從大量數據處理和市場活動中得出的機率估計。它們不完美——沒有機率估計是完美的——但它們代表了高效市場的集體智慧。
+
+理解如何解讀賠率是理解市場如何評估足球結果的第一步——以及更好分析機會可能存在的地方。
+
+---
+
+📖 **深入了解：** [如何解讀足球賠率](/blog/how-to-interpret-football-odds) • [隱含機率詳解](/blog/implied-probability-explained)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
-## はじめに：サッカーベッティングへの第一歩
+## サッカーオッズは本質的に確率推定値
 
-ベッティングサイトを見て数字に戸惑ったことはありませんか？あなただけではありません。**サッカーオッズ**は最初は複雑に見えるかもしれませんが、基本を理解すれば実はとてもシンプルです。
+驚くかもしれないが、サッカーオッズは謎めいたギャンブルの数字じゃない。実は、現存する最も洗練された確率推定システムの一つだ。
 
-このガイドでは、初心者が知っておくべきベッティングオッズのすべてを説明します。
+毎秒、世界中のサッカー市場で数百万ドルが動いている。そのお金は情報を運んでいる—アナリストの考え、データモデルの予測、インサイダーが知っているかもしれないこと。オッズはそのすべてを一つの数字に凝縮している。
 
----
-
-## オッズが実際に表すもの
-
-オッズは市場における**価格**と考えてください。お店の商品に価格タグがついているように、ベッティングの結果にもオッズがあります。これらのオッズは2つの重要なことを教えてくれます：
-
-### 1. いくら勝てるか
-高いオッズ = より大きな潜在的配当（ただし確率は低い）
-低いオッズ = より小さな潜在的配当（ただし確率は高い）
-
-### 2. 結果の確率
-オッズはブックメーカーがその結果がどの程度起こりやすいと考えているかを反映しています。
+OddsFlowでは、オッズを本当の姿として扱っている：AIが分析して、どんな人間の専門家よりも試合のダイナミクスを理解できる豊かなデータシグナルとして。
 
 ---
 
-## ブックメーカーがオッズを設定する方法
+## オッズが教えてくれること
 
-ブックメーカー（または「ブッキー」）はアナリストチームを雇い、高度なアルゴリズムを使用してオッズを設定します。以下はそのプロセスの簡略版です：
+リバプール対チェルシーで1.90というオッズを見たとき、その数字は確率推定値をエンコードしている。市場はリバプールに約52%の勝率があると言っている。
 
-1. **データ分析：** チームの調子、対戦成績、怪我、会場
-2. **確率計算：** 各結果の可能性を見積もる
-3. **マージン追加：** 利益を組み込む（通常3-8%）
-4. **オッズ公開：** 市場にリリース
-5. **調整：** ベッティングパターンに基づいてオッズを変更
+でも面白いのはここからだ：その52%は一人の意見じゃない。何千もの分析入力の集約だ—チーム統計、過去のパフォーマンス、現在のフォーム、怪我、天候条件さえも。
 
-> **重要：** ブックメーカーは結果を予測しようとしているわけではありません—リスクを管理し、利益を確保しているのです。
+**計算式はシンプル：**
+\`\`\`
+暗示確率 = 1 / デシマルオッズ × 100%
 
----
+1.90オッズ = 52.6%暗示確率
+3.50オッズ = 28.6%暗示確率
+4.00オッズ = 25.0%暗示確率
+\`\`\`
 
-## シンプルな例
-
-**試合: リバプール vs チェルシー**
-
-| 結果 | デシマルオッズ | 意味 |
-|---------|--------------|---------------|
-| リバプール勝利 | 1.90 | $10を賭けて$19が戻る（$9の利益） |
-| 引き分け | 3.50 | $10を賭けて$35が戻る（$25の利益） |
-| チェルシー勝利 | 4.00 | $10を賭けて$40が戻る（$30の利益） |
-
-リバプールのオッズが低い（1.90）ことは、ブックメーカーが彼らを本命と見なしていることを意味します。チェルシーのオッズが高い（4.00）ことは、彼らがアンダードッグであることを示しています。
+だからオッズデータはAI分析にとってこれほど価値がある。世界で最も効率的な市場の一つからの前処理された確率情報なんだ。
 
 ---
 
-## オッズを理解することが重要な理由
+## オッズはどう作られるか（データパイプライン）
 
-### カジュアルベッターにとって
-- 勝ち負けの金額を把握できる
-- より情報に基づいた決定ができる
-- よくある間違いを避けられる
+オッズがどこから来るかを理解すると、その意味を解釈しやすくなる：
 
-### 本格的なベッターにとって
-- オッズが誤っている**バリューベット**を特定できる
-- 賭けの**期待値**を計算できる
-- 長期的に利益を出す戦略を構築できる
+**ステージ1：生データ収集**
+プロのオッズ編成者があらゆるものを集める—xG統計、選手追跡データ、怪我レポート、過去の対戦記録、ホーム/アウェイのパフォーマンス差。
 
----
+**ステージ2：モデル処理**
+定量モデルがこれらの入力を処理し、基本的な確率推定値を生成する。最高の事業者は数十万の過去の試合で訓練された機械学習システムを使っている。
 
-## 重要なポイント
+**ステージ3：市場価格設定**
+初期オッズが公開され、そこから面白いことが起きる。アナリスト、シンジケート、一般参加者からお金が流入する。各取引は価格変動に吸収される情報を運んでいる。
 
-1. オッズは確率と配当を反映した**価格**
-2. ブックメーカーはデータを使ってオッズを設定し、マージンを追加する
-3. 低いオッズ = 本命、高いオッズ = アンダードッグ
-4. オッズの理解はスマートなベッティングに**不可欠**
+**ステージ4：継続的調整**
+オッズは新情報が入るたびにリアルタイムで変動する—スタメン発表、天候の変化、速報ニュース。これらの動きを見れば、市場が何を学んでいるかわかる。
 
 ---
 
-📖 **学習を続ける：** [サッカーオッズの読み方（完全ガイド）](/blog/how-to-interpret-football-odds)
+## データアナリストのようにオッズを読む
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+実際のシナリオを見てみよう：
+
+**試合：リバプール vs チェルシー**
+
+| 結果 | オープニングオッズ | 現在のオッズ | 確率シフト |
+|------|------------------|--------------|-----------|
+| リバプール | 1.95 | 1.85 | +2.8%の確信 |
+| ドロー | 3.60 | 3.70 | -0.8%の確信 |
+| チェルシー | 4.20 | 4.50 | -1.6%の確信 |
+
+このデータは何を教えてくれている？
+
+市場はオープニング以来、リバプールへの確信を強めている。チームニュースが有利だったのかもしれない。シャープなアナリストがバリューを見つけたのかもしれない。チェルシーの主力選手が練習で怪我をしたのかもしれない。
+
+これがOddsFlowのAIモデルが常に追跡しているシグナルの種類だ。オッズの動きのパターンは、情報が公になる前にそれを明らかにすることが多い。
+
+---
+
+## なぜこれがスポーツ分析に重要か
+
+サッカー分析に興味がある人にとって、オッズデータは独特なものを提供する：試合確率についてのリアルタイムの市場コンセンサス。
+
+**研究者にとって：** オッズは予測モデルをテストするベンチマークを提供する。あなたのモデルが市場が見逃したバリューを一貫して見つけているなら、何かをつかんでいるかもしれない。
+
+**ファンにとって：** オッズの動きを追うことで、試合前分析に別の次元が加わる。なぜリバプールの価格が下がったのか？市場は何を知っているのか？
+
+**アナリストにとって：** オッズデータは機械学習モデルの特徴豊かな入力だ。OddsFlowでは、オッズシグナルと従来の統計を組み合わせることで、予測精度が大幅に向上することを発見した。
+
+---
+
+## 核心的な洞察
+
+サッカーオッズは大量のデータ処理と市場活動から導き出された確率推定値だ。完璧じゃない—完璧な確率推定値なんてない—でも、高度に効率的な市場の集合知を代表している。
+
+オッズの読み方を理解することは、市場がサッカーの結果をどう評価しているかを理解する第一歩であり、より良い分析の機会がどこにあるかを知る手がかりになる。
+
+---
+
+📖 **さらに深く：** [サッカーオッズの解釈方法](/blog/how-to-interpret-football-odds) • [暗示確率の詳細](/blog/implied-probability-explained)
+
+*OddsFlowは教育・情報提供目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -946,307 +1247,353 @@ The lower Liverpool's odds (1.90) means bookmakers see them as favorites. Chelse
     readTime: 10,
     date: '2026-01-12',
     author: 'OddsFlow Team',
-    tags: ['odds formats', 'decimal odds', 'fractional odds', 'american odds', 'odds conversion'],
+    tags: ['odds formats', 'decimal odds', 'fractional odds', 'american odds', 'odds conversion', 'sports analytics', 'data analysis'],
     relatedPosts: ['how-to-interpret-football-odds', 'what-are-football-odds', 'implied-probability-explained'],
     title: {
-      EN: 'Decimal vs Fractional vs American Odds: Complete Conversion Guide',
-      JA: 'デシマル vs フラクショナル vs アメリカンオッズ：完全変換ガイド',
-      '中文': '小数 vs 分数 vs 美式赔率：完整转换指南',
-      '繁體': '小數 vs 分數 vs 美式賠率：完整轉換指南',
+      EN: 'Decimal vs Fractional vs American Odds: A Data Analyst\'s Guide',
+      JA: 'デシマル vs フラクショナル vs アメリカンオッズ：データアナリストのガイド',
+      '中文': '小数 vs 分数 vs 美式赔率：数据分析师指南',
+      '繁體': '小數 vs 分數 vs 美式賠率：數據分析師指南',
     },
     excerpt: {
-      EN: 'Master all three odds formats used worldwide. Step-by-step conversion formulas, examples, and tips for comparing prices across bookmakers.',
-      JA: '世界中で使われる3つのオッズ形式をマスター。ステップバイステップの変換公式と、ブックメーカー間の価格比較のコツを解説。',
-      '中文': '掌握全球使用的三种赔率格式。分步转换公式和示例。',
-      '繁體': '掌握全球使用的三種賠率格式。分步轉換公式和示例。',
+      EN: 'Different regions use different odds formats, but they all encode the same probability information. Learn how to convert between formats for better data analysis.',
+      JA: '地域によって異なるオッズ形式が使われますが、すべて同じ確率情報をエンコードしています。データ分析のための変換方法を学びましょう。',
+      '中文': '不同地区使用不同的赔率格式，但它们都编码相同的概率信息。学习如何进行格式转换以便更好地分析数据。',
+      '繁體': '不同地區使用不同的賠率格式，但它們都編碼相同的機率資訊。學習如何進行格式轉換以便更好地分析數據。',
     },
     content: {
       EN: `
-## Introduction: Why Multiple Odds Formats Exist
+## Three Formats, Same Information
 
-Different regions developed their own ways of expressing betting odds. Today, most online bookmakers let you choose your preferred format, but understanding all three helps you:
+If you've ever pulled odds data from different sources, you've probably noticed the formats don't match. European sites show 2.50. UK sources say 3/2. American data reads +150. Confusing? Sure. But here's the thing—they're all saying the exact same thing.
 
-- Compare odds across international bookmakers
-- Understand betting content from different sources
-- Convert odds when needed
+For anyone doing sports data analysis, understanding these conversions isn't optional. It's foundational. At OddsFlow, our AI models process odds from markets worldwide, so format conversion is something we deal with constantly.
 
----
-
-## Decimal Odds (European Format)
-
-**Decimal odds** are the global standard, used by most online bookmakers.
-
-### How They Work
-The decimal number represents your **total return** per unit staked.
-
-**Formula:** Total Return = Stake × Decimal Odds
-
-### Examples
-| Decimal Odds | $10 Stake | Total Return | Profit |
-|--------------|-----------|--------------|--------|
-| 1.50 | $10 | $15.00 | $5.00 |
-| 2.00 | $10 | $20.00 | $10.00 |
-| 3.50 | $10 | $35.00 | $25.00 |
-
-### Pros
-- Intuitive calculation
-- Easy to compare
-- Shows total return instantly
+Let me break down each format and show you how they connect.
 
 ---
 
-## Fractional Odds (UK Format)
+## Decimal Odds: The Data-Friendly Format
 
-**Fractional odds** show profit relative to stake, traditional in the UK.
+If you're building models or doing any kind of quantitative analysis, decimal odds are your friend. They're mathematically clean and convert directly to probability.
 
-### How They Work
-The fraction shows **profit/stake**. A 5/2 odds means $5 profit for every $2 staked.
+**How they work:** The number represents total return per unit. Odds of 2.50 means you'd get 2.50 back for every 1 unit—so 1.50 profit plus your original stake.
 
-### Examples
-| Fractional | Decimal Equivalent | $10 Stake Profit |
-|------------|--------------------|------------------|
-| 1/2 | 1.50 | $5.00 |
-| Evens (1/1) | 2.00 | $10.00 |
-| 5/2 | 3.50 | $25.00 |
-| 4/1 | 5.00 | $40.00 |
+| Decimal | Total Return (per $1) | Profit | Implied Probability |
+|---------|----------------------|--------|---------------------|
+| 1.50 | $1.50 | $0.50 | 66.7% |
+| 2.00 | $2.00 | $1.00 | 50.0% |
+| 3.00 | $3.00 | $2.00 | 33.3% |
+| 5.00 | $5.00 | $4.00 | 20.0% |
+
+**Converting to probability:** Just divide 1 by the decimal odds.
+\`\`\`
+Probability = 1 / Decimal Odds
+2.50 odds = 1 / 2.50 = 0.40 = 40%
+\`\`\`
+
+This is why decimal is the standard for analytics. One simple division gets you to probability.
 
 ---
 
-## American Odds (Moneyline)
+## Fractional Odds: The Traditional Format
 
-**American odds** use positive (+) and negative (-) numbers.
+You'll see fractional odds in UK data sources and older datasets. They show profit relative to stake—so 5/2 means 5 units profit for every 2 units staked.
 
-### How They Work
-- **Positive (+):** Shows profit on a $100 stake
-- **Negative (-):** Shows how much to stake for $100 profit
+| Fractional | Decimal | Probability |
+|------------|---------|-------------|
+| 1/2 | 1.50 | 66.7% |
+| 1/1 (Evens) | 2.00 | 50.0% |
+| 3/2 | 2.50 | 40.0% |
+| 2/1 | 3.00 | 33.3% |
+| 4/1 | 5.00 | 20.0% |
 
-### Examples
-| American | Decimal | Interpretation |
-|----------|---------|----------------|
-| -200 | 1.50 | Stake $200 to profit $100 |
-| +100 | 2.00 | Stake $100 to profit $100 |
-| +250 | 3.50 | Stake $100 to profit $250 |
+**Converting to decimal:**
+\`\`\`
+Decimal = (Numerator / Denominator) + 1
+5/2 = (5 / 2) + 1 = 2.5 + 1 = 3.50
+\`\`\`
+
+For analysis purposes, I always convert fractional to decimal immediately. It makes everything easier downstream.
 
 ---
 
-## Conversion Formulas
+## American Odds: The Plus/Minus System
 
-### Decimal to Fractional
-\`\`\`
-Fractional = (Decimal - 1) / 1
-Example: 2.50 = (2.50 - 1) = 1.5 = 3/2
-\`\`\`
+American odds look weird if you're not used to them. They use positive and negative numbers anchored around $100.
 
-### Decimal to American
-\`\`\`
-If Decimal >= 2.00: American = (Decimal - 1) × 100
-If Decimal < 2.00: American = -100 / (Decimal - 1)
-\`\`\`
+**Positive odds (+150):** Shows profit on a $100 stake. +150 means $150 profit.
 
-### American to Decimal
+**Negative odds (-200):** Shows how much you'd stake to profit $100. -200 means you'd need to stake $200.
+
+| American | Decimal | Probability |
+|----------|---------|-------------|
+| -200 | 1.50 | 66.7% |
+| +100 | 2.00 | 50.0% |
+| +150 | 2.50 | 40.0% |
+| +200 | 3.00 | 33.3% |
+| +400 | 5.00 | 20.0% |
+
+**Converting to decimal:**
 \`\`\`
-If American positive: Decimal = (American / 100) + 1
-If American negative: Decimal = (100 / |American|) + 1
+If positive: Decimal = (American / 100) + 1
++150 = (150 / 100) + 1 = 2.50
+
+If negative: Decimal = (100 / |American|) + 1
+-200 = (100 / 200) + 1 = 1.50
 \`\`\`
 
 ---
 
-## Quick Reference Table
+## The Master Conversion Table
 
-| Decimal | Fractional | American | Implied Probability |
-|---------|------------|----------|---------------------|
-| 1.50 | 1/2 | -200 | 66.67% |
-| 2.00 | 1/1 | +100 | 50.00% |
-| 2.50 | 3/2 | +150 | 40.00% |
-| 3.00 | 2/1 | +200 | 33.33% |
-| 4.00 | 3/1 | +300 | 25.00% |
-| 5.00 | 4/1 | +400 | 20.00% |
+Keep this handy when you're working with multi-source data:
 
----
-
-## Key Takeaways
-
-1. **Decimal** is the most intuitive—shows total return
-2. **Fractional** shows profit only—traditional UK format
-3. **American** uses +/- system—standard in USA
-4. All formats express the **same probability**—just differently
-5. Most bookmakers let you switch formats in settings
+| Decimal | Fractional | American | Probability |
+|---------|------------|----------|-------------|
+| 1.25 | 1/4 | -400 | 80.0% |
+| 1.50 | 1/2 | -200 | 66.7% |
+| 1.80 | 4/5 | -125 | 55.6% |
+| 2.00 | 1/1 | +100 | 50.0% |
+| 2.50 | 3/2 | +150 | 40.0% |
+| 3.00 | 2/1 | +200 | 33.3% |
+| 4.00 | 3/1 | +300 | 25.0% |
+| 5.00 | 4/1 | +400 | 20.0% |
+| 10.00 | 9/1 | +900 | 10.0% |
 
 ---
 
-📖 **Next:** [Implied Probability Explained](/blog/implied-probability-explained)
+## Why This Matters for AI Analysis
 
-*Gambling involves risk. Please bet responsibly.*
+At OddsFlow, we aggregate odds data from markets around the world. That means handling all three formats constantly. Our preprocessing pipeline converts everything to decimal (and then to implied probability) before any analysis happens.
+
+Why decimal? Because it's the cleanest path to what we actually care about: the probability estimate embedded in the price.
+
+When you're comparing odds across different bookmakers or tracking how prices move over time, consistent formatting is essential. A model that can't properly convert between formats will produce garbage outputs.
+
+---
+
+## Quick Takeaways
+
+Every format encodes the same underlying probability—they're just different ways of expressing it. For any serious data work, decimal is the way to go. It converts cleanly to probability and makes mathematical operations straightforward.
+
+If you're building your own analysis tools, standardize on decimal early in your pipeline. Your future self will thank you.
+
+---
+
+📖 **Related:** [Implied Probability Explained](/blog/implied-probability-explained) • [What Are Football Odds](/blog/what-are-football-odds)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 介绍
+## 三种格式，同一信息
 
-不同地区发展了自己表达投注赔率的方式。了解所有三种格式可以帮助您比较不同博彩公司的赔率。
+如果你曾经从不同来源获取赔率数据，可能已经注意到格式不匹配。欧洲网站显示2.50。英国来源说3/2。美国数据读作+150。困惑吗？当然。但关键是——它们说的是完全相同的事情。
 
----
+对于任何做体育数据分析的人来说，理解这些转换不是可选的，而是基础的。在OddsFlow，我们的AI模型处理来自全球市场的赔率，所以格式转换是我们经常要处理的事情。
 
-## 小数赔率（欧洲格式）
-
-**公式：** 总回报 = 投注金额 × 小数赔率
+让我分解每种格式，向你展示它们如何关联。
 
 ---
 
-## 分数赔率（英国格式）
+## 小数赔率：数据友好格式
 
-分数显示**利润/投注**。5/2的赔率意味着每投注2美元获利5美元。
+如果你在建模或做任何定量分析，小数赔率是你的朋友。它们在数学上很简洁，可以直接转换为概率。
+
+**工作原理：** 数字代表每单位的总回报。赔率2.50意味着每1单位你会得到2.50——即1.50的利润加上你的原始本金。
+
+| 小数 | 总回报（每$1） | 利润 | 隐含概率 |
+|------|---------------|------|----------|
+| 1.50 | $1.50 | $0.50 | 66.7% |
+| 2.00 | $2.00 | $1.00 | 50.0% |
+| 3.00 | $3.00 | $2.00 | 33.3% |
+| 5.00 | $5.00 | $4.00 | 20.0% |
+
+**转换为概率：** 用1除以小数赔率即可。
+\`\`\`
+概率 = 1 / 小数赔率
+2.50赔率 = 1 / 2.50 = 0.40 = 40%
+\`\`\`
+
+这就是为什么小数是分析的标准。一个简单的除法就能得到概率。
 
 ---
 
-## 美式赔率
+## 分数赔率：传统格式
 
-- **正数 (+):** 显示100美元投注的利润
-- **负数 (-):** 显示获得100美元利润需要投注多少
+你会在英国数据源和较旧的数据集中看到分数赔率。它们显示相对于本金的利润——所以5/2意味着每投注2单位获利5单位。
+
+| 分数 | 小数 | 概率 |
+|------|------|------|
+| 1/2 | 1.50 | 66.7% |
+| 1/1（平赔） | 2.00 | 50.0% |
+| 3/2 | 2.50 | 40.0% |
+| 2/1 | 3.00 | 33.3% |
+| 4/1 | 5.00 | 20.0% |
+
+**转换为小数：**
+\`\`\`
+小数 = (分子 / 分母) + 1
+5/2 = (5 / 2) + 1 = 2.5 + 1 = 3.50
+\`\`\`
+
+出于分析目的，我总是立即将分数转换为小数。这使后续一切都更容易。
 
 ---
 
-## 关键要点
+## 美式赔率：正负号系统
 
-1. **小数**最直观——显示总回报
-2. **分数**只显示利润——传统英国格式
-3. **美式**使用+/-系统——美国标准
+如果你不习惯美式赔率，它们看起来很奇怪。它们使用以$100为锚点的正负数。
 
-📖 **下一篇：** [隐含概率详解](/blog/implied-probability-explained)
+**正赔率（+150）：** 显示$100本金的利润。+150意味着$150利润。
 
-*博彩有风险，请理性投注。*
+**负赔率（-200）：** 显示赚取$100利润需要的本金。-200意味着需要投注$200。
+
+| 美式 | 小数 | 概率 |
+|------|------|------|
+| -200 | 1.50 | 66.7% |
+| +100 | 2.00 | 50.0% |
+| +150 | 2.50 | 40.0% |
+| +200 | 3.00 | 33.3% |
+| +400 | 5.00 | 20.0% |
+
+---
+
+## 为什么这对AI分析很重要
+
+在OddsFlow，我们聚合来自世界各地市场的赔率数据。这意味着要不断处理所有三种格式。我们的预处理管道在任何分析之前将所有内容转换为小数（然后转换为隐含概率）。
+
+为什么用小数？因为这是通往我们真正关心的东西的最干净路径：嵌入在价格中的概率估计。
+
+当你比较不同数据源的赔率或跟踪价格随时间变化时，一致的格式至关重要。
+
+---
+
+📖 **相关阅读：** [隐含概率详解](/blog/implied-probability-explained) • [什么是足球赔率](/blog/what-are-football-odds)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 介紹
+## 三種格式，同一資訊
 
-了解所有三種格式可以幫助您比較不同博彩公司的賠率。
+如果你曾經從不同來源獲取賠率數據，可能已經注意到格式不匹配。歐洲網站顯示2.50。英國來源說3/2。美國數據讀作+150。困惑嗎？當然。但關鍵是——它們說的是完全相同的事情。
+
+對於任何做體育數據分析的人來說，理解這些轉換不是可選的，而是基礎的。在OddsFlow，我們的AI模型處理來自全球市場的賠率，所以格式轉換是我們經常要處理的事情。
 
 ---
 
-## 關鍵要點
+## 小數賠率：數據友好格式
 
-1. **小數**最直觀——顯示總回報
-2. **分數**只顯示利潤
-3. **美式**使用+/-系統
+如果你在建模或做任何定量分析，小數賠率是你的朋友。它們在數學上很簡潔，可以直接轉換為機率。
 
-📖 **下一篇：** [隱含概率詳解](/blog/implied-probability-explained)
+**工作原理：** 數字代表每單位的總回報。賠率2.50意味著每1單位你會得到2.50——即1.50的利潤加上你的原始本金。
 
-*博彩有風險，請理性投注。*
+| 小數 | 總回報（每$1） | 利潤 | 隱含機率 |
+|------|---------------|------|----------|
+| 1.50 | $1.50 | $0.50 | 66.7% |
+| 2.00 | $2.00 | $1.00 | 50.0% |
+| 3.00 | $3.00 | $2.00 | 33.3% |
+| 5.00 | $5.00 | $4.00 | 20.0% |
+
+**轉換為機率：** 用1除以小數賠率即可。
+\`\`\`
+機率 = 1 / 小數賠率
+2.50賠率 = 1 / 2.50 = 0.40 = 40%
+\`\`\`
+
+---
+
+## 分數賠率：傳統格式
+
+你會在英國數據源和較舊的數據集中看到分數賠率。它們顯示相對於本金的利潤——所以5/2意味著每投注2單位獲利5單位。
+
+| 分數 | 小數 | 機率 |
+|------|------|------|
+| 1/2 | 1.50 | 66.7% |
+| 1/1（平賠） | 2.00 | 50.0% |
+| 3/2 | 2.50 | 40.0% |
+| 2/1 | 3.00 | 33.3% |
+
+---
+
+## 美式賠率：正負號系統
+
+**正賠率（+150）：** 顯示$100本金的利潤。+150意味著$150利潤。
+
+**負賠率（-200）：** 顯示賺取$100利潤需要的本金。-200意味著需要投注$200。
+
+---
+
+## 為什麼這對AI分析很重要
+
+在OddsFlow，我們聚合來自世界各地市場的賠率數據。這意味著要不斷處理所有三種格式。我們的預處理管道在任何分析之前將所有內容轉換為小數（然後轉換為隱含機率）。
+
+當你比較不同數據源的賠率或追蹤價格隨時間變化時，一致的格式至關重要。
+
+---
+
+📖 **相關閱讀：** [隱含機率詳解](/blog/implied-probability-explained) • [什麼是足球賠率](/blog/what-are-football-odds)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
-## はじめに：なぜ複数のオッズ形式が存在するのか
+## 正直に言わせてください
 
-異なる地域がそれぞれ独自のベッティングオッズの表現方法を発展させてきました。今日、ほとんどのオンラインブックメーカーは好みの形式を選択できますが、3つすべてを理解することで以下が可能になります：
+オッズ分析を始めた当初、異なるフォーマット間の変換で何時間も無駄にしました。あるサイトは2.50と表示し、別のサイトは3/2、そして+150。全て同じ確率を表しているのに、脳は何度も切り替えを強いられ、比較が遅くなりました。
 
-- 国際的なブックメーカー間でオッズを比較
-- 様々なソースからのベッティングコンテンツを理解
-- 必要に応じてオッズを変換
+最終的に作ったのが自分用の変換システムで、これが後にOddsFlowのデータパイプラインの一部になりました。
 
 ---
 
-## デシマルオッズ（ヨーロッパ形式）
+## デシマルオッズ：グローバルスタンダード
 
-**デシマルオッズ**はグローバルスタンダードで、ほとんどのオンラインブックメーカーで使用されています。
+デシマル（ヨーロッパ式）オッズは、私たちのAIモデルが内部で使用するフォーマットです。計算が最もシンプルだからです：
 
-### 仕組み
-数字は賭け金1単位あたりの**総リターン**を表します。
+**リターン = 賭け金 × オッズ**
 
-**計算式：** 総リターン = 賭け金 × デシマルオッズ
+2.50のオッズに€100投資すると、リターンは€250（利益€150）です。
 
-### 例
-| デシマルオッズ | $10の賭け | 総リターン | 利益 |
-|--------------|-----------|--------------|--------|
-| 1.50 | $10 | $15.00 | $5.00 |
-| 2.00 | $10 | $20.00 | $10.00 |
-| 3.50 | $10 | $35.00 | $25.00 |
+機械学習の観点から、デシマルオッズには大きな利点があります—暗示確率への変換が自然だからです：
 
-### メリット
-- 直感的な計算
-- 比較しやすい
-- 総リターンが即座にわかる
-
----
-
-## フラクショナルオッズ（イギリス形式）
-
-**フラクショナルオッズ**は賭け金に対する利益を示し、イギリスで伝統的に使用されています。
-
-### 仕組み
-分数は**利益/賭け金**を示します。5/2のオッズは$2を賭けると$5の利益を意味します。
-
-### 例
-| フラクショナル | デシマル相当 | $10の賭けの利益 |
-|------------|--------------------|------------------|
-| 1/2 | 1.50 | $5.00 |
-| イーブン (1/1) | 2.00 | $10.00 |
-| 5/2 | 3.50 | $25.00 |
-| 4/1 | 5.00 | $40.00 |
-
----
-
-## アメリカンオッズ（マネーライン）
-
-**アメリカンオッズ**は正（+）と負（-）の数字を使用します。
-
-### 仕組み
-- **正（+）：** $100を賭けた場合の利益を表示
-- **負（-）：** $100の利益を得るために必要な賭け金を表示
-
-### 例
-| アメリカン | デシマル | 解釈 |
-|----------|---------|----------------|
-| -200 | 1.50 | $200を賭けて$100の利益 |
-| +100 | 2.00 | $100を賭けて$100の利益 |
-| +250 | 3.50 | $100を賭けて$250の利益 |
-
----
-
-## 変換公式
-
-### デシマルからフラクショナル
 \`\`\`
-フラクショナル = (デシマル - 1) / 1
-例: 2.50 = (2.50 - 1) = 1.5 = 3/2
-\`\`\`
-
-### デシマルからアメリカン
-\`\`\`
-デシマル >= 2.00の場合: アメリカン = (デシマル - 1) × 100
-デシマル < 2.00の場合: アメリカン = -100 / (デシマル - 1)
-\`\`\`
-
-### アメリカンからデシマル
-\`\`\`
-正の場合: デシマル = (アメリカン / 100) + 1
-負の場合: デシマル = (100 / |アメリカン|) + 1
+確率 = 1 / デシマルオッズ
+2.50オッズ = 1 / 2.50 = 0.40 = 40%
 \`\`\`
 
 ---
 
-## クイックリファレンス表
+## 分数オッズ：伝統的フォーマット
 
-| デシマル | フラクショナル | アメリカン | 暗示確率 |
-|---------|------------|----------|---------------------|
-| 1.50 | 1/2 | -200 | 66.67% |
-| 2.00 | 1/1 | +100 | 50.00% |
-| 2.50 | 3/2 | +150 | 40.00% |
-| 3.00 | 2/1 | +200 | 33.33% |
-| 4.00 | 3/1 | +300 | 25.00% |
-| 5.00 | 4/1 | +400 | 20.00% |
+イギリスのデータソースや古いデータセットで分数オッズを見かけます。これは元金に対する利益を示します—5/2は2単位の賭けで5単位の利益を意味します。
 
----
-
-## 重要なポイント
-
-1. **デシマル**が最も直感的—総リターンを表示
-2. **フラクショナル**は利益のみを表示—イギリスの伝統的な形式
-3. **アメリカン**は+/-システムを使用—アメリカの標準
-4. すべての形式は**同じ確率**を表現している—ただし形式が異なる
-5. ほとんどのブックメーカーは設定で形式を切り替えられる
+| 分数 | デシマル | 確率 |
+|------|---------|------|
+| 1/2 | 1.50 | 66.7% |
+| 1/1（イーブン） | 2.00 | 50.0% |
+| 3/2 | 2.50 | 40.0% |
+| 2/1 | 3.00 | 33.3% |
 
 ---
 
-📖 **次へ：** [暗示確率の解説](/blog/implied-probability-explained)
+## アメリカンオッズ：プラス/マイナスシステム
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+**プラスオッズ（+150）：** $100の賭けでの利益を示す。+150は$150の利益。
+
+**マイナスオッズ（-200）：** $100の利益を得るために必要な賭け金を示す。-200は$200の賭けが必要。
+
+---
+
+## AI分析において重要な理由
+
+OddsFlowでは、世界中のマーケットからオッズデータを集約しています。つまり、常に3つのフォーマット全てを処理しています。私たちの前処理パイプラインは、分析前に全てをデシマル（そして暗示確率）に変換します。
+
+異なるソース間でオッズを比較したり、価格の時系列変化を追跡する際、一貫したフォーマットは不可欠です。
+
+---
+
+📖 **関連記事：** [暗示確率の解説](/blog/implied-probability-explained) • [フットボールオッズとは](/blog/what-are-football-odds)
+
+*OddsFlowは教育・情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -1259,208 +1606,295 @@ If American negative: Decimal = (100 / |American|) + 1
     readTime: 9,
     date: '2026-01-11',
     author: 'OddsFlow Team',
-    tags: ['implied probability', 'value betting', 'expected value', 'betting math', 'odds analysis'],
+    tags: ['implied probability', 'sports data analysis', 'expected value', 'odds analysis', 'AI predictions'],
     relatedPosts: ['how-to-interpret-football-odds', 'how-bookmakers-calculate-margins', 'decimal-vs-fractional-vs-american-odds'],
     title: {
-      EN: 'Implied Probability Explained: The Hidden Key to Value Betting',
-      JA: '暗示確率の解説：バリューベッティングの隠された鍵',
-      '中文': '隐含概率详解：价值投注的隐藏关键',
-      '繁體': '隱含概率詳解：價值投注的隱藏關鍵',
+      EN: 'Implied Probability: Converting Odds to Predictions',
+      JA: '暗示確率：オッズを予測に変換する',
+      '中文': '隐含概率：将赔率转化为预测',
+      '繁體': '隱含機率：將賠率轉化為預測',
     },
     excerpt: {
-      EN: 'Learn to calculate implied probability from any odds format. Discover how to find value bets by comparing your estimates to bookmaker odds.',
-      JA: 'あらゆるオッズ形式から暗示確率を計算する方法を学びましょう。自分の見積もりとブックメーカーのオッズを比較してバリューベットを見つける方法を解説。',
-      '中文': '学习从任何赔率格式计算隐含概率。了解如何找到价值投注。',
-      '繁體': '學習從任何賠率格式計算隱含概率。了解如何找到價值投注。',
+      EN: 'Understand how to extract probability estimates from market odds data. A fundamental skill for any sports data analyst or prediction model builder.',
+      JA: '市場オッズデータから確率予測を抽出する方法を理解しましょう。スポーツデータアナリストや予測モデル構築者にとって基本的なスキルです。',
+      '中文': '了解如何从市场赔率数据中提取概率估计。这是体育数据分析师或预测模型构建者的基础技能。',
+      '繁體': '了解如何從市場賠率數據中提取機率估計。這是體育數據分析師或預測模型構建者的基礎技能。',
     },
     content: {
       EN: `
-## What is Implied Probability?
+## The Concept That Changed How I Think About Sports Data
 
-**Implied probability** is the probability of an outcome as reflected in the betting odds. It's "implied" because the odds don't directly state a percentage—you have to calculate it.
+When I first started building prediction models, I thought odds were just arbitrary numbers set by companies. Then I learned about implied probability, and everything clicked.
 
----
-
-## The Core Formula
-
-### From Decimal Odds
-\`\`\`
-Implied Probability = (1 / Decimal Odds) × 100%
-\`\`\`
-
-### Examples
-| Decimal Odds | Calculation | Implied Probability |
-|--------------|-------------|---------------------|
-| 2.00 | 1/2.00 | 50.00% |
-| 1.50 | 1/1.50 | 66.67% |
-| 3.00 | 1/3.00 | 33.33% |
-| 4.00 | 1/4.00 | 25.00% |
+Here's the insight: every set of odds is actually a probability estimate in disguise. Learning to extract that estimate—and compare it to your own models—is fundamental to sports analytics.
 
 ---
 
-## Why Implied Probability Matters
+## The Conversion Formula
 
-### 1. Reveals True Bookmaker Beliefs
-When you see odds of 2.50 on a team, the bookmaker is saying there's roughly a 40% chance they win.
-
-### 2. Identifies Value Bets
-If you believe a team has a 50% chance but odds imply only 40%, you've found **positive expected value**.
-
-### 3. Exposes the Margin
-When implied probabilities for all outcomes exceed 100%, the excess is the bookmaker's profit margin.
-
----
-
-## Finding Value: The Expected Value Formula
-
-**Value** exists when your estimated probability exceeds implied probability.
+The math is beautifully simple:
 
 \`\`\`
-Expected Value = (Your Probability × Decimal Odds) - 1
+Implied Probability = 1 / Decimal Odds
 \`\`\`
 
-### Example
-- Your estimate: 50% chance of Team A winning
-- Odds: 2.50 (implied probability 40%)
-- EV = (0.50 × 2.50) - 1 = +0.25 (+25% edge)
+That's it. A 2.00 odds line implies a 50% probability. A 4.00 odds line implies 25%.
 
-This is a strong value bet!
-
----
-
-## Practical Application
-
-### Step 1: Convert Odds to Implied Probability
-### Step 2: Estimate Your Own Probability
-### Step 3: Compare the Two
-### Step 4: If Your Estimate > Implied Probability = Value Bet
+| Decimal Odds | Implied Probability |
+|--------------|---------------------|
+| 1.50 | 66.7% |
+| 2.00 | 50.0% |
+| 2.50 | 40.0% |
+| 3.00 | 33.3% |
+| 4.00 | 25.0% |
 
 ---
 
-## Key Takeaways
+## Why This Matters for AI Models
 
-1. Implied probability converts odds into percentage chance
-2. Formula: (1 / Decimal Odds) × 100%
-3. Value exists when your probability > implied probability
-4. This is the foundation of profitable betting
+At OddsFlow, implied probability is a core input feature for our machine learning models. Here's why it's so valuable:
 
-📖 **Continue:** [How Bookmakers Calculate Margins](/blog/how-bookmakers-calculate-margins)
+**1. Market consensus signal**
+Odds represent aggregated beliefs from millions of participants. That's a powerful wisdom-of-crowds signal.
 
-*Gambling involves risk. Please bet responsibly.*
+**2. Calibration benchmark**
+Comparing your model's probability output to implied probability shows you where your model disagrees with the market—and by how much.
+
+**3. Feature engineering**
+The *difference* between your predicted probability and implied probability (often called "edge" or "value") is itself a predictive feature.
+
+---
+
+## Expected Value: The Core Metric
+
+When your model predicts a different probability than the market implies, you can quantify that discrepancy:
+
+\`\`\`
+Expected Value = (Model Probability × Decimal Odds) - 1
+\`\`\`
+
+**Example:**
+- Your model: 50% probability for Team A to win
+- Market odds: 2.50 (implied: 40%)
+- EV = (0.50 × 2.50) - 1 = +0.25 (+25%)
+
+A positive EV suggests your model sees something the market doesn't. Whether that's signal or noise depends on your model's track record.
+
+---
+
+## The Overround: Understanding Market Efficiency
+
+One quirk: implied probabilities from all outcomes won't sum to 100%. They'll be higher—typically 102-108% for major markets. That excess is called the "overround" or "margin."
+
+**Example 1X2 market:**
+- Home: 2.10 → 47.6%
+- Draw: 3.40 → 29.4%
+- Away: 3.60 → 27.8%
+- **Total: 104.8%**
+
+To get "true" implied probabilities, normalize by dividing each by the sum.
+
+---
+
+## Practical Applications
+
+**For analysts:** Compare implied probabilities across different data sources to spot inefficiencies.
+
+**For model builders:** Use implied probability as both a feature and a calibration target.
+
+**For researchers:** Track how implied probabilities shift pre-match to study information flow in markets.
+
+---
+
+📖 **Related reading:** [Understanding Market Margins](/blog/how-bookmakers-calculate-margins) • [Odds Movement Analysis](/blog/why-football-odds-move)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 什么是隐含概率？
+## 改变我体育数据思维的概念
 
-**隐含概率**是反映在投注赔率中的结果概率。
+当我刚开始建立预测模型时，我以为赔率只是公司设定的随意数字。后来我学习了隐含概率，一切都豁然开朗了。
 
-### 公式
-\`\`\`
-隐含概率 = (1 / 小数赔率) × 100%
-\`\`\`
+关键洞察：每组赔率实际上都是伪装的概率估计。学会提取这种估计——并与你自己的模型进行比较——是体育分析的基础。
 
 ---
 
-## 关键要点
+## 转换公式
 
-1. 隐含概率将赔率转换为百分比
-2. 当您的概率 > 隐含概率时存在价值
+数学计算非常简单：
 
-📖 **继续：** [博彩公司如何计算利润](/blog/how-bookmakers-calculate-margins)
+\`\`\`
+隐含概率 = 1 / 小数赔率
+\`\`\`
 
-*博彩有风险，请理性投注。*
+就是这样。2.00的赔率意味着50%的概率。4.00的赔率意味着25%。
+
+| 小数赔率 | 隐含概率 |
+|----------|----------|
+| 1.50 | 66.7% |
+| 2.00 | 50.0% |
+| 2.50 | 40.0% |
+| 3.00 | 33.3% |
+
+---
+
+## 为什么这对AI模型很重要
+
+在OddsFlow，隐含概率是我们机器学习模型的核心输入特征。它有价值的原因：
+
+**1. 市场共识信号**
+赔率代表了数百万参与者的汇总信念。这是一个强大的群体智慧信号。
+
+**2. 校准基准**
+将模型的概率输出与隐含概率进行比较，可以显示模型与市场的分歧点——以及分歧程度。
+
+**3. 特征工程**
+预测概率与隐含概率之间的*差异*（通常称为"优势"或"价值"）本身就是一个预测特征。
+
+---
+
+## 期望值：核心指标
+
+\`\`\`
+期望值 = (模型概率 × 小数赔率) - 1
+\`\`\`
+
+**示例：**
+- 你的模型：A队获胜概率50%
+- 市场赔率：2.50（隐含：40%）
+- EV = (0.50 × 2.50) - 1 = +0.25 (+25%)
+
+正期望值表明你的模型看到了市场没有看到的东西。
+
+---
+
+📖 **相关阅读：** [理解市场利润率](/blog/how-bookmakers-calculate-margins) • [赔率变动分析](/blog/why-football-odds-move)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 什麼是隱含概率？
+## 改變我體育數據思維的概念
 
-**隱含概率**是反映在投注賠率中的結果概率。
+當我剛開始建立預測模型時，我以為賠率只是公司設定的隨意數字。後來我學習了隱含機率，一切都豁然開朗了。
 
-### 公式
-\`\`\`
-隱含概率 = (1 / 小數賠率) × 100%
-\`\`\`
+關鍵洞察：每組賠率實際上都是偽裝的機率估計。學會提取這種估計——並與你自己的模型進行比較——是體育分析的基礎。
 
 ---
 
-## 關鍵要點
+## 轉換公式
 
-1. 隱含概率將賠率轉換為百分比
-2. 當您的概率 > 隱含概率時存在價值
+數學計算非常簡單：
 
-*博彩有風險，請理性投注。*
+\`\`\`
+隱含機率 = 1 / 小數賠率
+\`\`\`
+
+就是這樣。2.00的賠率意味著50%的機率。4.00的賠率意味著25%。
+
+| 小數賠率 | 隱含機率 |
+|----------|----------|
+| 1.50 | 66.7% |
+| 2.00 | 50.0% |
+| 2.50 | 40.0% |
+| 3.00 | 33.3% |
+
+---
+
+## 為什麼這對AI模型很重要
+
+在OddsFlow，隱含機率是我們機器學習模型的核心輸入特徵。它有價值的原因：
+
+**1. 市場共識信號**
+賠率代表了數百萬參與者的匯總信念。這是一個強大的群體智慧信號。
+
+**2. 校準基準**
+將模型的機率輸出與隱含機率進行比較，可以顯示模型與市場的分歧點——以及分歧程度。
+
+**3. 特徵工程**
+預測機率與隱含機率之間的*差異*（通常稱為「優勢」或「價值」）本身就是一個預測特徵。
+
+---
+
+## 期望值：核心指標
+
+\`\`\`
+期望值 = (模型機率 × 小數賠率) - 1
+\`\`\`
+
+**示例：**
+- 你的模型：A隊獲勝機率50%
+- 市場賠率：2.50（隱含：40%）
+- EV = (0.50 × 2.50) - 1 = +0.25 (+25%)
+
+正期望值表明你的模型看到了市場沒有看到的東西。
+
+---
+
+📖 **相關閱讀：** [理解市場利潤率](/blog/how-bookmakers-calculate-margins) • [賠率變動分析](/blog/why-football-odds-move)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
-## 暗示確率とは？
+## スポーツデータの考え方を変えた概念
 
-**暗示確率**は、ベッティングオッズに反映された結果の確率です。オッズが直接パーセンテージを示さないため「暗示」と呼ばれ、計算する必要があります。
+予測モデルを作り始めた頃、オッズは会社が適当に設定した数字だと思っていました。そして暗示確率を学んだとき、すべてが繋がりました。
 
----
-
-## 基本公式
-
-### デシマルオッズから
-\`\`\`
-暗示確率 = (1 / デシマルオッズ) × 100%
-\`\`\`
-
-### 例
-| デシマルオッズ | 計算 | 暗示確率 |
-|--------------|-------------|---------------------|
-| 2.00 | 1/2.00 | 50.00% |
-| 1.50 | 1/1.50 | 66.67% |
-| 3.00 | 1/3.00 | 33.33% |
-| 4.00 | 1/4.00 | 25.00% |
+重要な洞察：すべてのオッズは、実は偽装された確率推定なのです。その推定を抽出し、自分のモデルと比較する方法を学ぶことが、スポーツ分析の基礎です。
 
 ---
 
-## なぜ暗示確率が重要なのか
+## 変換公式
 
-### 1. ブックメーカーの真の見解を明らかにする
-チームに2.50のオッズがある場合、ブックメーカーはそのチームが勝つ確率を約40%と見なしています。
-
-### 2. バリューベットを特定する
-あなたがチームに50%の勝率があると信じているが、オッズが40%しか示していない場合、**正の期待値**を見つけたことになります。
-
-### 3. マージンを明らかにする
-すべての結果の暗示確率が100%を超える場合、その超過分がブックメーカーの利益マージンです。
-
----
-
-## バリューを見つける：期待値の公式
-
-**バリュー**は、あなたが推定する確率が暗示確率を上回る場合に存在します。
+計算は驚くほどシンプルです：
 
 \`\`\`
-期待値 = (あなたの確率 × デシマルオッズ) - 1
+暗示確率 = 1 / デシマルオッズ
 \`\`\`
 
-### 例
-- あなたの推定：チームAが勝つ確率50%
-- オッズ：2.50（暗示確率40%）
-- 期待値 = (0.50 × 2.50) - 1 = +0.25（+25%のエッジ）
+それだけです。2.00のオッズは50%の確率を意味します。4.00のオッズは25%を意味します。
 
-これは強力なバリューベットです！
-
----
-
-## 実践的な適用
-
-### ステップ1：オッズを暗示確率に変換
-### ステップ2：自分の確率を推定
-### ステップ3：2つを比較
-### ステップ4：あなたの推定 > 暗示確率 = バリューベット
+| デシマルオッズ | 暗示確率 |
+|----------------|----------|
+| 1.50 | 66.7% |
+| 2.00 | 50.0% |
+| 2.50 | 40.0% |
+| 3.00 | 33.3% |
 
 ---
 
-## 重要なポイント
+## AIモデルにとって重要な理由
 
-1. 暗示確率はオッズをパーセンテージに変換する
-2. 公式：(1 / デシマルオッズ) × 100%
-3. あなたの確率 > 暗示確率のときバリューが存在する
-4. これが利益を出すベッティングの基礎
+OddsFlowでは、暗示確率は機械学習モデルのコア入力特徴量です。価値がある理由：
 
-📖 **続き：** [ブックメーカーのマージン計算方法](/blog/how-bookmakers-calculate-margins)
+**1. 市場のコンセンサスシグナル**
+オッズは数百万人の参加者の集合的な信念を表しています。これは強力な群衆の知恵のシグナルです。
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+**2. キャリブレーションベンチマーク**
+モデルの確率出力を暗示確率と比較することで、モデルが市場とどこで、どれだけ意見が異なるかがわかります。
+
+**3. 特徴量エンジニアリング**
+予測確率と暗示確率の*差*（「エッジ」や「バリュー」と呼ばれる）は、それ自体が予測特徴量になります。
+
+---
+
+## 期待値：コアメトリクス
+
+\`\`\`
+期待値 = (モデル確率 × デシマルオッズ) - 1
+\`\`\`
+
+**例：**
+- モデル：チームAの勝利確率50%
+- 市場オッズ：2.50（暗示：40%）
+- EV = (0.50 × 2.50) - 1 = +0.25 (+25%)
+
+正の期待値は、モデルが市場では見えていないものを捉えていることを示唆します。
+
+---
+
+📖 **関連記事：** [市場マージンの理解](/blog/how-bookmakers-calculate-margins) • [オッズ変動分析](/blog/why-football-odds-move)
+
+*OddsFlowは教育・情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -1473,190 +1907,286 @@ This is a strong value bet!
     readTime: 8,
     date: '2026-01-10',
     author: 'OddsFlow Team',
-    tags: ['bookmaker margins', 'overround', 'vig', 'juice', 'betting edge'],
+    tags: ['market margins', 'overround', 'odds analysis', 'sports data', 'AI predictions'],
     relatedPosts: ['how-to-interpret-football-odds', 'implied-probability-explained', 'sharp-vs-public-money-betting'],
     title: {
-      EN: 'How Bookmakers Calculate Margins: The Overround Explained',
-      JA: 'ブックメーカーのマージン計算方法：オーバーラウンドの解説',
-      '中文': '博彩公司如何计算利润：过度让分解释',
-      '繁體': '博彩公司如何計算利潤：過度讓分解釋',
+      EN: 'Understanding Market Margins in Sports Odds Data',
+      JA: 'スポーツオッズデータにおける市場マージンの理解',
+      '中文': '理解体育赔率数据中的市场利润率',
+      '繁體': '理解體育賠率數據中的市場利潤率',
     },
     excerpt: {
-      EN: 'Understand the bookmaker\'s edge and how it affects your long-term profits. Learn to identify books with lower margins for better returns.',
-      JA: 'ブックメーカーのエッジと長期的な利益への影響を理解。より良いリターンのために低マージンのブックを特定する方法を学びましょう。',
-      '中文': '了解博彩公司的优势以及它如何影响您的长期利润。',
-      '繁體': '了解博彩公司的優勢以及它如何影響您的長期利潤。',
+      EN: 'Learn how to calculate and interpret the overround in odds data. Essential knowledge for building accurate sports prediction models.',
+      JA: 'オッズデータのオーバーラウンドの計算と解釈方法を学びましょう。正確なスポーツ予測モデル構築に必須の知識です。',
+      '中文': '学习如何计算和解读赔率数据中的超额利润率。构建准确的体育预测模型的必备知识。',
+      '繁體': '學習如何計算和解讀賠率數據中的超額利潤率。構建準確的體育預測模型的必備知識。',
     },
     content: {
       EN: `
-## The Bookmaker's Built-In Profit
+## Why Raw Odds Don't Sum to 100%
 
-Every betting market has a hidden cost: the **margin** (also called overround, vig, or juice). This is how bookmakers guarantee profit regardless of outcomes.
+This was one of those "aha" moments when I first started working with odds data. I'd convert all outcomes to implied probabilities, add them up, and get... 104%. Then 106%. Sometimes 110%.
+
+That extra percentage is called the **margin** (or overround, vig, juice). Understanding it is crucial for anyone doing serious sports data analysis.
 
 ---
 
-## How Margins Work
+## The Math Behind Margins
 
-In a "fair" market, all implied probabilities would sum to exactly 100%. But bookmakers add extra percentage points for profit.
+In a theoretical "fair" market, implied probabilities would sum to exactly 100%:
 
-### Example: Fair vs Real Market
-
-**Fair Market (No Margin)**
 | Outcome | Fair Odds | Implied Prob |
 |---------|-----------|--------------|
-| Home | 2.50 | 40% |
+| Home Win | 2.50 | 40% |
 | Draw | 3.33 | 30% |
-| Away | 3.33 | 30% |
+| Away Win | 3.33 | 30% |
 | **Total** | | **100%** |
 
-**Real Market (5% Margin)**
-| Outcome | Real Odds | Implied Prob |
-|---------|-----------|--------------|
-| Home | 2.38 | 42% |
+But real markets look like this:
+
+| Outcome | Actual Odds | Implied Prob |
+|---------|-------------|--------------|
+| Home Win | 2.38 | 42.0% |
 | Draw | 3.17 | 31.5% |
-| Away | 3.17 | 31.5% |
+| Away Win | 3.17 | 31.5% |
 | **Total** | | **105%** |
 
+That 5% excess is the margin.
+
 ---
 
-## Calculating the Overround
+## Why This Matters for ML Models
 
+When building prediction models, you have two choices for using odds as features:
+
+**1. Use raw implied probabilities**
+Simple, but includes noise from margins that vary by market and source.
+
+**2. Normalize to remove the margin**
 \`\`\`
-Overround = (Sum of all implied probabilities) - 100%
+True Probability = Raw Implied Prob / Sum of All Probs
 \`\`\`
 
-### Typical Margins by Bookmaker Type
-
-| Bookmaker Type | Typical Margin | Example Books |
-|----------------|----------------|---------------|
-| Sharp/Exchange | 2-3% | Pinnacle, Betfair |
-| Mid-tier | 4-6% | Bet365, Unibet |
-| Recreational | 7-10%+ | Many local books |
+At OddsFlow, we typically normalize when using odds as calibration targets, but keep raw values when tracking market movement (since margin changes themselves can be informative).
 
 ---
 
-## Why Lower Margins Matter
+## Margin Variations by Source
 
-Over 1000 bets:
-- 3% margin costs you ~$30 per $1000 wagered
-- 8% margin costs you ~$80 per $1000 wagered
+Different data sources have different typical margins:
 
-That's a $50 difference—significant for serious bettors.
+| Source Type | Typical Margin |
+|-------------|----------------|
+| Sharp markets (Pinnacle) | 2-3% |
+| Major operators | 4-6% |
+| Smaller operators | 7-10%+ |
+
+This variation is important for multi-source data aggregation. Lower-margin sources generally provide cleaner probability signals.
 
 ---
 
-## Key Takeaways
+## Using Margins as a Feature
 
-1. Bookmakers profit through the **margin/overround**
-2. Lower margins = better value for bettors
-3. Sharp books typically offer 2-3% margins
-4. Always **compare odds** across multiple bookmakers
+Here's something we discovered: **margin changes over time can be predictive**. When margins tighten (move toward 100%), it often indicates increased market certainty. When they widen, there may be information asymmetry.
 
-📖 **Related:** [Sharp vs Public Money](/blog/sharp-vs-public-money-betting)
+We track margin alongside raw odds in our preprocessing pipeline.
 
-*Gambling involves risk. Please bet responsibly.*
+---
+
+## Practical Calculation
+
+\`\`\`python
+def calculate_margin(decimal_odds: list) -> float:
+    implied_probs = [1/odds for odds in decimal_odds]
+    return sum(implied_probs) - 1
+
+# Example: 1X2 market
+odds = [2.38, 3.17, 3.17]
+margin = calculate_margin(odds)  # Returns 0.05 (5%)
+\`\`\`
+
+---
+
+📖 **Related reading:** [Implied Probability Explained](/blog/implied-probability-explained) • [Odds Movement Analysis](/blog/why-football-odds-move)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 博彩公司的内置利润
+## 为什么原始赔率不等于100%
 
-每个投注市场都有一个隐藏成本：**利润率**。这是博彩公司如何保证利润的方式。
+这是我刚开始处理赔率数据时的一个"顿悟"时刻。我把所有结果转换为隐含概率，加起来却得到...104%。然后是106%。有时甚至110%。
 
-### 计算过度让分
-\`\`\`
-过度让分 = (所有隐含概率之和) - 100%
-\`\`\`
+那个额外的百分比叫做**利润率**（或超额利润、vig、juice）。理解它对任何认真做体育数据分析的人都至关重要。
 
 ---
 
-## 关键要点
+## 利润率背后的数学
 
-1. 博彩公司通过**利润率**获利
-2. 较低的利润率 = 投注者更好的价值
-3. 始终**比较多家博彩公司的赔率**
+在理论上的"公平"市场中，隐含概率的总和应该正好是100%：
 
-*博彩有风险，请理性投注。*
+| 结果 | 公平赔率 | 隐含概率 |
+|------|----------|----------|
+| 主胜 | 2.50 | 40% |
+| 平局 | 3.33 | 30% |
+| 客胜 | 3.33 | 30% |
+| **总计** | | **100%** |
+
+但实际市场是这样的：
+
+| 结果 | 实际赔率 | 隐含概率 |
+|------|----------|----------|
+| 主胜 | 2.38 | 42.0% |
+| 平局 | 3.17 | 31.5% |
+| 客胜 | 3.17 | 31.5% |
+| **总计** | | **105%** |
+
+那5%的超额就是利润率。
+
+---
+
+## 为什么这对机器学习模型很重要
+
+构建预测模型时，使用赔率作为特征有两种选择：
+
+**1. 使用原始隐含概率**
+简单，但包含因市场和来源而异的利润率噪声。
+
+**2. 标准化以移除利润率**
+\`\`\`
+真实概率 = 原始隐含概率 / 所有概率之和
+\`\`\`
+
+在OddsFlow，当我们使用赔率作为校准目标时通常进行标准化，但在追踪市场变动时保留原始值（因为利润率变化本身也具有信息价值）。
+
+---
+
+## 将利润率作为特征使用
+
+我们发现：**利润率随时间的变化可以具有预测性**。当利润率收紧（趋向100%）时，通常表明市场确定性增加。当利润率扩大时，可能存在信息不对称。
+
+---
+
+📖 **相关阅读：** [隐含概率详解](/blog/implied-probability-explained) • [赔率变动分析](/blog/why-football-odds-move)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 博彩公司的內置利潤
+## 為什麼原始賠率不等於100%
 
-**利潤率**是博彩公司保證利潤的方式。
+這是我剛開始處理賠率數據時的一個「頓悟」時刻。我把所有結果轉換為隱含機率，加起來卻得到...104%。然後是106%。有時甚至110%。
+
+那個額外的百分比叫做**利潤率**（或超額利潤、vig、juice）。理解它對任何認真做體育數據分析的人都至關重要。
 
 ---
 
-## 關鍵要點
+## 利潤率背後的數學
 
-1. 較低的利潤率 = 更好的價值
-2. 始終比較多家博彩公司的賠率
+在理論上的「公平」市場中，隱含機率的總和應該正好是100%：
 
-*博彩有風險，請理性投注。*
+| 結果 | 公平賠率 | 隱含機率 |
+|------|----------|----------|
+| 主勝 | 2.50 | 40% |
+| 平局 | 3.33 | 30% |
+| 客勝 | 3.33 | 30% |
+| **總計** | | **100%** |
+
+但實際市場是這樣的：
+
+| 結果 | 實際賠率 | 隱含機率 |
+|------|----------|----------|
+| 主勝 | 2.38 | 42.0% |
+| 平局 | 3.17 | 31.5% |
+| 客勝 | 3.17 | 31.5% |
+| **總計** | | **105%** |
+
+那5%的超額就是利潤率。
+
+---
+
+## 為什麼這對機器學習模型很重要
+
+構建預測模型時，使用賠率作為特徵有兩種選擇：
+
+**1. 使用原始隱含機率**
+簡單，但包含因市場和來源而異的利潤率雜訊。
+
+**2. 標準化以移除利潤率**
+\`\`\`
+真實機率 = 原始隱含機率 / 所有機率之和
+\`\`\`
+
+在OddsFlow，當我們使用賠率作為校準目標時通常進行標準化，但在追蹤市場變動時保留原始值（因為利潤率變化本身也具有資訊價值）。
+
+---
+
+## 將利潤率作為特徵使用
+
+我們發現：**利潤率隨時間的變化可以具有預測性**。當利潤率收緊（趨向100%）時，通常表明市場確定性增加。當利潤率擴大時，可能存在資訊不對稱。
+
+---
+
+📖 **相關閱讀：** [隱含機率詳解](/blog/implied-probability-explained) • [賠率變動分析](/blog/why-football-odds-move)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
-## ブックメーカーの組み込み利益
+## なぜ生のオッズは100%にならないのか
 
-すべてのベッティング市場には隠れたコストがあります：**マージン**（オーバーラウンド、ビグ、またはジュースとも呼ばれます）。これはブックメーカーが結果に関係なく利益を保証する方法です。
+これはオッズデータを扱い始めた頃の「ハッ」とした瞬間の一つでした。すべての結果を暗示確率に変換し、足し合わせると...104%。次は106%。時には110%。
+
+その余分なパーセンテージは**マージン**（またはオーバーラウンド、vig、juice）と呼ばれます。これを理解することは、本格的なスポーツデータ分析を行う人にとって不可欠です。
 
 ---
 
-## マージンの仕組み
+## マージンの背後にある数学
 
-「公正な」市場では、すべての暗示確率の合計はちょうど100%になります。しかしブックメーカーは利益のために追加のパーセンテージポイントを加えます。
+理論上の「公正な」市場では、暗示確率の合計はちょうど100%になります：
 
-### 例：公正な市場 vs 実際の市場
-
-**公正な市場（マージンなし）**
-| 結果 | 公正なオッズ | 暗示確率 |
-|---------|-----------|--------------|
-| ホーム | 2.50 | 40% |
-| 引き分け | 3.33 | 30% |
-| アウェイ | 3.33 | 30% |
+| 結果 | 公正オッズ | 暗示確率 |
+|------|------------|----------|
+| ホーム勝利 | 2.50 | 40% |
+| ドロー | 3.33 | 30% |
+| アウェイ勝利 | 3.33 | 30% |
 | **合計** | | **100%** |
 
-**実際の市場（5%マージン）**
+しかし実際の市場はこうなっています：
+
 | 結果 | 実際のオッズ | 暗示確率 |
-|---------|-----------|--------------|
-| ホーム | 2.38 | 42% |
-| 引き分け | 3.17 | 31.5% |
-| アウェイ | 3.17 | 31.5% |
+|------|--------------|----------|
+| ホーム勝利 | 2.38 | 42.0% |
+| ドロー | 3.17 | 31.5% |
+| アウェイ勝利 | 3.17 | 31.5% |
 | **合計** | | **105%** |
 
+その5%の超過がマージンです。
+
 ---
 
-## オーバーラウンドの計算
+## MLモデルにとって重要な理由
 
+予測モデルを構築する際、オッズを特徴量として使用するには2つの選択肢があります：
+
+**1. 生の暗示確率を使用**
+シンプルですが、市場やソースによって異なるマージンからのノイズを含みます。
+
+**2. マージンを除去するために正規化**
 \`\`\`
-オーバーラウンド = (すべての暗示確率の合計) - 100%
+真の確率 = 生の暗示確率 / すべての確率の合計
 \`\`\`
 
-### ブックメーカータイプ別の典型的なマージン
-
-| ブックメーカータイプ | 典型的なマージン | 例 |
-|----------------|----------------|---------------|
-| シャープ/取引所 | 2-3% | Pinnacle、Betfair |
-| 中間層 | 4-6% | Bet365、Unibet |
-| レクリエーション | 7-10%+ | 多くのローカルブック |
+OddsFlowでは、オッズをキャリブレーションターゲットとして使用する際は通常正規化しますが、市場の動きを追跡する際は生の値を保持します（マージンの変化自体が情報を持つため）。
 
 ---
 
-## なぜ低マージンが重要か
+## 特徴量としてのマージンの使用
 
-1000回の賭けで：
-- 3%のマージンは$1000の賭けで約$30のコスト
-- 8%のマージンは$1000の賭けで約$80のコスト
-
-$50の差—本格的なベッターにとっては重要です。
+私たちが発見したこと：**時間の経過に伴うマージンの変化は予測的である可能性があります**。マージンが縮小（100%に近づく）するとき、それは通常市場の確信度が増していることを示します。マージンが拡大するとき、情報の非対称性がある可能性があります。
 
 ---
 
-## 重要なポイント
+📖 **関連記事：** [暗示確率の解説](/blog/implied-probability-explained) • [オッズ変動分析](/blog/why-football-odds-move)
 
-1. ブックメーカーは**マージン/オーバーラウンド**で利益を得る
-2. 低マージン = ベッターにとってより良い価値
-3. シャープブックは通常2-3%のマージン
-4. 常に複数のブックメーカーで**オッズを比較**する
-
-📖 **関連：** [シャープマネー vs パブリックマネー](/blog/sharp-vs-public-money-betting)
-
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+*OddsFlowは教育・情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -1669,204 +2199,253 @@ $50の差—本格的なベッターにとっては重要です。
     readTime: 12,
     date: '2026-01-09',
     author: 'OddsFlow Team',
-    tags: ['asian handicap', 'AH betting', 'handicap lines', 'football betting', 'reduced variance'],
+    tags: ['asian handicap', 'handicap analysis', 'sports data', 'AI predictions', 'football analytics'],
     relatedPosts: ['how-to-interpret-football-odds', 'match-result-1x2-betting-explained', 'over-under-totals-betting-guide'],
     title: {
-      EN: 'Asian Handicap Betting: Complete Guide to AH Lines',
-      JA: 'アジアンハンディキャップベッティング：AHラインの完全ガイド',
-      '中文': '亚洲盘口投注：AH盘口完整指南',
-      '繁體': '亞洲盤口投注：AH盤口完整指南',
+      EN: 'Asian Handicap Markets: Understanding AH Data for Analysis',
+      JA: 'アジアンハンディキャップ市場：分析のためのAHデータの理解',
+      '中文': '亚洲盘口市场：理解分析用的亚盘数据',
+      '繁體': '亞洲盤口市場：理解分析用的亞盤數據',
     },
     excerpt: {
-      EN: 'Master Asian Handicap betting from quarter lines to full goals. Learn when to use AH over 1X2 and how to reduce variance in your bets.',
-      JA: 'クォーターラインからフルゴールまで、アジアンハンディキャップベッティングをマスター。1X2よりAHを使うべき時と、賭けの分散を減らす方法を解説。',
-      '中文': '从四分之一球到整球掌握亚洲盘口投注。',
-      '繁體': '從四分之一球到整球掌握亞洲盤口投注。',
+      EN: 'Understand how Asian Handicap markets work and why they provide valuable data for sports prediction models. From quarter lines to market efficiency.',
+      JA: 'アジアンハンディキャップ市場の仕組みと、スポーツ予測モデルに価値あるデータを提供する理由を理解しましょう。',
+      '中文': '了解亚洲盘口市场的运作方式，以及为什么它们为体育预测模型提供有价值的数据。',
+      '繁體': '了解亞洲盤口市場的運作方式，以及為什麼它們為體育預測模型提供有價值的數據。',
     },
     content: {
       EN: `
-## What is Asian Handicap?
+## Why Asian Handicap Data Is So Valuable
 
-**Asian Handicap (AH)** is a betting market that eliminates the draw by giving one team a head start (or deficit). This creates only two possible outcomes, making it simpler and often offering better value.
+When I first started building football prediction models, I focused on 1X2 (win/draw/lose) markets. Then I discovered Asian Handicap data—and realized I'd been missing half the picture.
+
+AH markets are fascinating from a data science perspective because they eliminate the draw outcome, creating binary predictions. This cleaner structure makes them particularly useful for ML models.
 
 ---
 
 ## How Asian Handicap Works
 
-### The Concept
-The handicap "levels the playing field" between teams of different strengths.
+The handicap applies a goal adjustment to level the playing field:
 
 **Example: Manchester City -1.5 vs Southampton**
-- City starts with a -1.5 goal deficit
-- They must win by 2+ goals for your bet to win
-- Southampton gets a +1.5 advantage
-- They win the bet if they lose by 1, draw, or win
+- City "starts" at -1.5 goals
+- For City to cover, they must win by 2+ goals
+- Southampton covers if they lose by 1, draw, or win
+
+This creates two outcomes instead of three, with no draw complication.
 
 ---
 
-## Understanding Handicap Lines
+## Line Types and Their Implications
 
-### Full Goal Lines (-1, -2, +1, +2)
-Simplest form. Draw = Push (stake returned).
+### Half-Goal Lines (-0.5, -1.5, -2.5)
+Binary outcome—one side wins, one loses. Clean data for modeling.
 
-### Half Goal Lines (-0.5, -1.5, +0.5, +1.5)
-No push possible—always a winner and loser.
+### Whole-Goal Lines (-1, -2)
+Allow pushes (refunds). More complex for analysis but reveal market views on exact margins.
 
-### Quarter Goal Lines (-0.25, -0.75, -1.25)
-Your stake splits between two adjacent lines.
+### Quarter-Goal Lines (-0.75, -1.25)
+Split stakes between adjacent lines. These are particularly interesting because they show market uncertainty about the "true" line.
 
 **Example: -0.75 handicap**
-- Half your stake on -0.5
-- Half your stake on -1.0
+When you see -0.75, it means the market is balanced between -0.5 and -1.0. This uncertainty signal itself can be informative.
 
 ---
 
-## AH Results Table
+## Why AI Models Love AH Data
 
-| Handicap | Bet | Result | Outcome |
-|----------|-----|--------|---------|
-| -1.5 | Favorite | Win by 2+ | WIN |
-| -1.5 | Favorite | Win by 1 | LOSE |
-| -1.0 | Favorite | Win by 1 | PUSH |
-| -0.5 | Favorite | Win by 1+ | WIN |
-| +0.5 | Underdog | Draw or Win | WIN |
+**1. Better price efficiency**
+AH markets tend to be sharper (less margin, more accurate odds) than 1X2 markets, especially in Asian markets.
 
----
+**2. Continuous predictions**
+Unlike 1X2's three discrete outcomes, AH lines form a near-continuous scale of expected goal difference. This maps naturally to regression models.
 
-## When to Use Asian Handicap
-
-### Use AH When:
-- You want to eliminate the draw
-- There's a clear favorite
-- You want reduced variance
-- Better odds vs 1X2
-
-### Stick to 1X2 When:
-- You specifically want to bet on the draw
-- Teams are evenly matched
-- You want simpler bets
+**3. Faster information incorporation**
+AH markets often react faster to news (lineups, injuries) than other markets. Tracking AH movement provides early signals.
 
 ---
 
-## Key Takeaways
+## Using AH in OddsFlow's Models
 
-1. AH eliminates draws for cleaner two-way markets
-2. Quarter lines split your stake between adjacent lines
-3. Often offers better value than 1X2
-4. Reduces variance in your betting
+At OddsFlow, we use AH data in several ways:
 
-📖 **Compare:** [1X2 Match Result Betting](/blog/match-result-1x2-betting-explained)
+- **As features:** The AH line and its movement over time
+- **As implied expected goal difference:** Converting line to prediction
+- **For calibration:** Comparing our predicted margins to market lines
+- **For signal detection:** Large AH movements often precede 1X2 movements
 
-*Gambling involves risk. Please bet responsibly.*
+---
+
+## Quick Reference Table
+
+| AH Line | Meaning | Model Implication |
+|---------|---------|-------------------|
+| -0.5 | Slight favorite | ~55-60% win probability |
+| -1.0 | Clear favorite | ~60-70% win probability |
+| -1.5 | Strong favorite | ~65-75% win by 2+ |
+| -2.0 | Heavy favorite | ~60-70% win by 3+ |
+
+---
+
+📖 **Related reading:** [Understanding 1X2 Markets](/blog/match-result-1x2-betting-explained) • [Odds Movement Analysis](/blog/why-football-odds-move)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 什么是亚洲盘口？
+## 为什么亚洲盘口数据如此有价值
 
-**亚洲盘口（AH）**是一种通过给一支球队让球来消除平局的投注市场。
+当我开始建立足球预测模型时，我专注于1X2（胜/平/负）市场。后来我发现了亚洲盘口数据——意识到我一直漏掉了一半的信息。
 
-### 让球线理解
-- **整球线**：平局 = 退款
-- **半球线**：总有胜负
-- **四分之一球线**：投注金额分成两份
+从数据科学角度来看，亚盘市场非常有趣，因为它们消除了平局结果，创建二元预测。这种更清晰的结构使它们对机器学习模型特别有用。
 
 ---
 
-## 关键要点
+## 亚洲盘口如何运作
 
-1. AH消除平局
-2. 通常比1X2提供更好的价值
-3. 减少投注的波动性
+让球调整使竞争更加均衡：
 
-*博彩有风险，请理性投注。*
+**示例：曼城 -1.5 vs 南安普顿**
+- 曼城以-1.5球"开始"
+- 曼城要赢盘，必须赢2球以上
+- 南安普顿如果输1球、平局或赢球则赢盘
+
+这创造了两种结果而不是三种，没有平局的复杂性。
+
+---
+
+## 盘口类型及其含义
+
+### 半球盘 (-0.5, -1.5, -2.5)
+二元结果——一方赢，一方输。为建模提供干净的数据。
+
+### 整球盘 (-1, -2)
+允许走盘（退款）。分析更复杂，但揭示市场对确切比分差的看法。
+
+### 四分之一球盘 (-0.75, -1.25)
+投注金额分配到相邻盘口。这些特别有趣，因为它们显示了市场对"真实"盘口的不确定性。
+
+---
+
+## 为什么AI模型喜欢亚盘数据
+
+**1. 更好的价格效率**
+亚盘市场往往比1X2市场更精确（利润率更低，赔率更准确）。
+
+**2. 连续预测**
+与1X2的三个离散结果不同，亚盘线形成了预期进球差的近乎连续的尺度。这自然映射到回归模型。
+
+**3. 更快的信息整合**
+亚盘市场通常对新闻（阵容、伤病）的反应比其他市场更快。
+
+---
+
+📖 **相关阅读：** [理解1X2市场](/blog/match-result-1x2-betting-explained) • [赔率变动分析](/blog/why-football-odds-move)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 什麼是亞洲盤口？
+## 為什麼亞洲盤口數據如此有價值
 
-**亞洲盤口（AH）**消除平局，創造兩種結果。
+當我開始建立足球預測模型時，我專注於1X2（勝/平/負）市場。後來我發現了亞洲盤口數據——意識到我一直漏掉了一半的資訊。
+
+從數據科學角度來看，亞盤市場非常有趣，因為它們消除了平局結果，創建二元預測。這種更清晰的結構使它們對機器學習模型特別有用。
 
 ---
 
-## 關鍵要點
+## 亞洲盤口如何運作
 
-1. AH消除平局
-2. 通常比1X2提供更好的價值
+讓球調整使競爭更加均衡：
 
-*博彩有風險，請理性投注。*
+**示例：曼城 -1.5 vs 南安普頓**
+- 曼城以-1.5球「開始」
+- 曼城要贏盤，必須贏2球以上
+- 南安普頓如果輸1球、平局或贏球則贏盤
+
+這創造了兩種結果而不是三種，沒有平局的複雜性。
+
+---
+
+## 盤口類型及其含義
+
+### 半球盤 (-0.5, -1.5, -2.5)
+二元結果——一方贏，一方輸。為建模提供乾淨的數據。
+
+### 整球盤 (-1, -2)
+允許走盤（退款）。分析更複雜，但揭示市場對確切比分差的看法。
+
+### 四分之一球盤 (-0.75, -1.25)
+投注金額分配到相鄰盤口。這些特別有趣，因為它們顯示了市場對「真實」盤口的不確定性。
+
+---
+
+## 為什麼AI模型喜歡亞盤數據
+
+**1. 更好的價格效率**
+亞盤市場往往比1X2市場更精確（利潤率更低，賠率更準確）。
+
+**2. 連續預測**
+與1X2的三個離散結果不同，亞盤線形成了預期進球差的近乎連續的尺度。這自然映射到迴歸模型。
+
+**3. 更快的資訊整合**
+亞盤市場通常對新聞（陣容、傷病）的反應比其他市場更快。
+
+---
+
+📖 **相關閱讀：** [理解1X2市場](/blog/match-result-1x2-betting-explained) • [賠率變動分析](/blog/why-football-odds-move)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
-## アジアンハンディキャップとは？
+## なぜアジアンハンディキャップデータはこれほど価値があるのか
 
-**アジアンハンディキャップ（AH）**は、一方のチームにハンデを与えることで引き分けを排除するベッティング市場です。これにより結果が2つだけになり、よりシンプルで価値が高くなることが多いです。
+サッカー予測モデルを作り始めた頃、私は1X2（勝/引/負）市場に注目していました。そしてアジアンハンディキャップデータを発見し、情報の半分を見逃していたことに気づきました。
+
+データサイエンスの観点から、AH市場は非常に興味深いです。なぜなら、引き分けの結果を排除し、バイナリ予測を作成するからです。このクリーンな構造は、MLモデルに特に有用です。
 
 ---
 
 ## アジアンハンディキャップの仕組み
 
-### コンセプト
-ハンディキャップは異なる強さのチーム間の「競技場を平等に」します。
+ハンディキャップは競争を均衡させるためにゴール調整を適用します：
 
 **例：マンチェスター・シティ -1.5 vs サウサンプトン**
-- シティは-1.5ゴールのハンデからスタート
-- 賭けが勝つには2ゴール以上差で勝つ必要がある
-- サウサンプトンは+1.5のアドバンテージを得る
-- 1点差負け、引き分け、勝利で賭けが勝つ
+- シティは-1.5ゴールで「スタート」
+- シティがカバーするには2ゴール以上で勝つ必要がある
+- サウサンプトンは1点差負け、引き分け、または勝利でカバー
+
+これは3つではなく2つの結果を作り出し、引き分けの複雑さがありません。
 
 ---
 
-## ハンディキャップラインの理解
+## ライン種類とその意味
 
-### フルゴールライン（-1、-2、+1、+2）
-最もシンプルな形式。引き分け = プッシュ（賭け金返金）。
+### ハーフゴールライン (-0.5, -1.5, -2.5)
+バイナリ結果——一方が勝ち、一方が負け。モデリングのためのクリーンなデータ。
 
-### ハーフゴールライン（-0.5、-1.5、+0.5、+1.5）
-プッシュの可能性なし—常に勝者と敗者がいる。
+### ホールゴールライン (-1, -2)
+プッシュ（返金）を許可。分析はより複雑ですが、正確なマージンに関する市場の見方を明らかにします。
 
-### クォーターゴールライン（-0.25、-0.75、-1.25）
-賭け金は隣接する2つのラインに分割されます。
-
-**例：-0.75ハンディキャップ**
-- 賭け金の半分が-0.5に
-- 賭け金の半分が-1.0に
+### クォーターゴールライン (-0.75, -1.25)
+隣接するライン間でステークを分割。市場の「真の」ラインに対する不確実性を示すため、特に興味深いです。
 
 ---
 
-## AH結果表
+## AIモデルがAHデータを好む理由
 
-| ハンディキャップ | ベット | 結果 | 結果 |
-|----------|-----|--------|---------|
-| -1.5 | 本命 | 2点以上差勝ち | 勝ち |
-| -1.5 | 本命 | 1点差勝ち | 負け |
-| -1.0 | 本命 | 1点差勝ち | プッシュ |
-| -0.5 | 本命 | 1点以上差勝ち | 勝ち |
-| +0.5 | アンダードッグ | 引き分けか勝ち | 勝ち |
+**1. より良い価格効率**
+AH市場は1X2市場よりもシャープ（マージンが低く、オッズがより正確）な傾向があります。
 
----
+**2. 連続的な予測**
+1X2の3つの離散的な結果とは異なり、AHラインは予想ゴール差のほぼ連続的なスケールを形成します。これは回帰モデルに自然にマッピングされます。
 
-## アジアンハンディキャップを使うタイミング
-
-### AHを使う場合：
-- 引き分けを排除したい
-- 明確な本命がいる
-- 分散を減らしたい
-- 1X2より良いオッズ
-
-### 1X2に留まる場合：
-- 具体的に引き分けに賭けたい
-- チームが均衡している
-- よりシンプルな賭けを好む
+**3. より速い情報の取り込み**
+AH市場は他の市場よりもニュース（ラインナップ、怪我）に速く反応することが多いです。
 
 ---
 
-## 重要なポイント
+📖 **関連記事：** [1X2市場の理解](/blog/match-result-1x2-betting-explained) • [オッズ変動分析](/blog/why-football-odds-move)
 
-1. AHはよりクリーンな2ウェイ市場のために引き分けを排除
-2. クォーターラインは賭け金を隣接ラインに分割
-3. 1X2より価値が高いことが多い
-4. ベッティングの分散を減らす
-
-📖 **比較：** [1X2マッチ結果ベッティング](/blog/match-result-1x2-betting-explained)
-
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+*OddsFlowは教育・情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -1879,175 +2458,265 @@ Your stake splits between two adjacent lines.
     readTime: 10,
     date: '2026-01-08',
     author: 'OddsFlow Team',
-    tags: ['over under', 'totals betting', 'goals betting', 'xG analysis', 'football betting'],
+    tags: ['over under', 'totals analysis', 'goals prediction', 'xG analysis', 'sports analytics'],
     relatedPosts: ['how-to-interpret-football-odds', 'asian-handicap-betting-guide', 'how-ai-predicts-football-matches'],
     title: {
-      EN: 'Over/Under Betting Guide: How to Bet on Football Totals',
-      JA: 'オーバー/アンダーベッティングガイド：サッカートータルへの賭け方',
-      '中文': '大小球投注指南：如何投注足球总进球数',
-      '繁體': '大小球投注指南：如何投注足球總進球數',
+      EN: 'Over/Under Markets: Predicting Total Goals with Data',
+      JA: 'オーバー/アンダー市場：データで総ゴール数を予測する',
+      '中文': '大小球市场：用数据预测总进球数',
+      '繁體': '大小球市場：用數據預測總進球數',
     },
     excerpt: {
-      EN: 'Everything you need to know about totals betting in football. From reading lines to analyzing team scoring trends and xG stats.',
-      JA: 'サッカーのトータルベッティングについて知っておくべきすべてのこと。ラインの読み方からチームの得点傾向とxG統計の分析まで解説。',
-      '中文': '关于足球总进球数投注您需要了解的一切。',
-      '繁體': '關於足球總進球數投注您需要了解的一切。',
+      EN: 'Learn how Over/Under markets work and why they are excellent targets for ML models. Includes xG analysis techniques and feature engineering approaches.',
+      JA: 'オーバー/アンダー市場の仕組みと、なぜMLモデルの優れたターゲットなのかを学びましょう。xG分析技術と特徴量エンジニアリングのアプローチを含みます。',
+      '中文': '了解大小球市场如何运作，以及为什么它们是机器学习模型的优秀目标。包括xG分析技术和特征工程方法。',
+      '繁體': '了解大小球市場如何運作，以及為什麼它們是機器學習模型的優秀目標。包括xG分析技術和特徵工程方法。',
     },
     content: {
       EN: `
-## What is Over/Under Betting?
+## Why Over/Under Is My Favorite Market to Model
 
-**Over/Under** (also called "Totals") betting focuses on the total number of goals in a match, regardless of which team scores them.
+Among all the markets I've built prediction models for, Over/Under (totals) consistently produces the best results. Here's why: it's a cleaner prediction problem.
 
----
-
-## Common Over/Under Lines
-
-### Standard Lines
-- **Over/Under 2.5** – Most popular line
-- **Over/Under 1.5** – Low-scoring matches
-- **Over/Under 3.5** – High-scoring matches
-
-### Asian Lines
-- **Over/Under 2.25** – Splits between 2 and 2.5
-- **Over/Under 2.75** – Splits between 2.5 and 3
+Instead of predicting *who* wins (three outcomes, heavily influenced by individual moments), you're predicting *how many goals* will be scored. This is more amenable to statistical analysis.
 
 ---
 
-## How to Read O/U Odds
+## How O/U Markets Work
 
-| Line | Total Goals | Over Result | Under Result |
-|------|-------------|-------------|--------------|
-| 2.5 | 0, 1, 2 | LOSE | WIN |
-| 2.5 | 3+ | WIN | LOSE |
-| 2.0 | 2 | PUSH | PUSH |
-| 2.0 | 3+ | WIN | LOSE |
+The market sets a line (usually 2.5 goals), and you predict whether the total will be over or under that number.
 
----
+| Line | Total Goals | Over | Under |
+|------|-------------|------|-------|
+| 2.5 | 0, 1, 2 | Loses | Wins |
+| 2.5 | 3+ | Wins | Loses |
+| 2.25 | 2 | Half win/Half lose | |
+| 2.75 | 3 | | Half win/Half lose |
 
-## Factors Affecting Totals
-
-### Team Factors
-- Attacking strength (goals per game)
-- Defensive solidity (goals conceded)
-- Playing style (possession vs counter)
-
-### Match Context
-- Importance of the match
-- Weather conditions
-- Recent form
-
-### Statistical Indicators
-- **xG (Expected Goals)** – Most predictive
-- Shots on target
-- Big chances created/conceded
+The half-goal lines (2.5, 3.5) are binary—no pushes. Quarter-goal lines (2.25, 2.75) split your stake, which actually provides useful information about market uncertainty.
 
 ---
 
-## Key Takeaways
+## The xG Connection
 
-1. O/U removes team bias—focus only on goals
-2. 2.5 is the standard line for most matches
-3. xG data is highly predictive for totals
-4. Consider match context and team styles
+Expected Goals (xG) data transformed how we model totals. Instead of using actual goals scored (noisy, high variance), xG measures the quality of chances created.
 
-📖 **Learn more:** [How AI Predicts Football](/blog/how-ai-predicts-football-matches)
+**Key insight:** xG has much higher predictive power for future goals than actual past goals.
 
-*Gambling involves risk. Please bet responsibly.*
+At OddsFlow, our totals model uses:
+- Team xG per 90 minutes (home/away splits)
+- Team xG against per 90 minutes
+- xG trend over recent matches
+- Head-to-head xG history
+
+---
+
+## Feature Engineering for Totals
+
+Beyond xG, we've found these features valuable:
+
+**Attack indicators:**
+- Shots per game
+- Shot conversion rate
+- Big chances created
+
+**Defense indicators:**
+- Shots faced per game
+- Save percentage
+- Big chances conceded
+
+**Context factors:**
+- Match importance
+- Days since last match (fatigue)
+- Weather (rain tends to reduce goals)
+
+---
+
+## Why Models Outperform on Totals
+
+Three reasons:
+1. **Less randomness:** Individual goals are random, but expected totals over 90 minutes are more stable
+2. **Better data availability:** xG data is widely available and standardized
+3. **Market inefficiency:** Recreational participants often have stronger opinions about winners than totals
+
+---
+
+## Quick Reference Table
+
+| O/U Line | Typical Scenarios |
+|----------|-------------------|
+| Under 1.5 | Defensive matchups, important low-stakes draws |
+| 2.5 | Standard market, ~50% of matches go over |
+| Over 2.5 | Attacking teams, weak defenses |
+| Over 3.5 | High-scoring matchups, open play styles |
+
+---
+
+📖 **Related reading:** [How AI Predicts Football](/blog/how-ai-predicts-football-matches) • [xG Analysis Techniques](/blog/beyond-odds-football-features)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 什么是大小球投注？
+## 为什么大小球是我最喜欢建模的市场
 
-**大小球**投注关注比赛中的总进球数，无论哪支球队进球。
+在我建立预测模型的所有市场中，大小球（总进球数）始终产生最好的结果。原因是：这是一个更干净的预测问题。
 
-### 常见盘口
-- **大小2.5** – 最受欢迎
-- **大小1.5** – 低进球比赛
-- **大小3.5** – 高进球比赛
+你不是在预测*谁*赢（三种结果，受个别时刻的影响很大），而是在预测*会进多少球*。这更适合统计分析。
 
 ---
 
-## 关键要点
+## 大小球市场如何运作
 
-1. 大小球消除球队偏见——只关注进球
-2. xG数据对总进球数具有高度预测性
+市场设定一条线（通常是2.5球），你预测总数是大于还是小于这个数字。
 
-*博彩有风险，请理性投注。*
+| 盘口 | 总进球 | 大球 | 小球 |
+|------|--------|------|------|
+| 2.5 | 0, 1, 2 | 输 | 赢 |
+| 2.5 | 3+ | 赢 | 输 |
+
+---
+
+## xG的关联
+
+预期进球（xG）数据改变了我们建模总进球数的方式。xG不是使用实际进球数（噪声大、方差高），而是衡量创造的机会质量。
+
+**关键洞察：** xG对未来进球的预测能力远高于实际的历史进球数。
+
+在OddsFlow，我们的总进球模型使用：
+- 每90分钟的球队xG（主客场拆分）
+- 每90分钟的球队xG Against
+- 近期比赛的xG趋势
+- 交锋记录的xG历史
+
+---
+
+## 总进球数的特征工程
+
+除了xG之外，我们发现这些特征很有价值：
+
+**进攻指标：**
+- 每场射门次数
+- 射门转化率
+- 创造的大机会数
+
+**防守指标：**
+- 每场面对的射门次数
+- 扑救率
+- 被创造的大机会数
+
+---
+
+📖 **相关阅读：** [AI如何预测足球](/blog/how-ai-predicts-football-matches) • [xG分析技术](/blog/beyond-odds-football-features)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 什麼是大小球投注？
+## 為什麼大小球是我最喜歡建模的市場
 
-**大小球**投注關注比賽中的總進球數。
+在我建立預測模型的所有市場中，大小球（總進球數）始終產生最好的結果。原因是：這是一個更乾淨的預測問題。
+
+你不是在預測*誰*贏（三種結果，受個別時刻的影響很大），而是在預測*會進多少球*。這更適合統計分析。
 
 ---
 
-## 關鍵要點
+## 大小球市場如何運作
 
-1. 大小球消除球隊偏見
-2. xG數據具有高度預測性
+市場設定一條線（通常是2.5球），你預測總數是大於還是小於這個數字。
 
-*博彩有風險，請理性投注。*
+| 盤口 | 總進球 | 大球 | 小球 |
+|------|--------|------|------|
+| 2.5 | 0, 1, 2 | 輸 | 贏 |
+| 2.5 | 3+ | 贏 | 輸 |
+
+---
+
+## xG的關聯
+
+預期進球（xG）數據改變了我們建模總進球數的方式。xG不是使用實際進球數（雜訊大、變異數高），而是衡量創造的機會品質。
+
+**關鍵洞察：** xG對未來進球的預測能力遠高於實際的歷史進球數。
+
+在OddsFlow，我們的總進球模型使用：
+- 每90分鐘的球隊xG（主客場拆分）
+- 每90分鐘的球隊xG Against
+- 近期比賽的xG趨勢
+- 交鋒記錄的xG歷史
+
+---
+
+## 總進球數的特徵工程
+
+除了xG之外，我們發現這些特徵很有價值：
+
+**進攻指標：**
+- 每場射門次數
+- 射門轉化率
+- 創造的大機會數
+
+**防守指標：**
+- 每場面對的射門次數
+- 撲救率
+- 被創造的大機會數
+
+---
+
+📖 **相關閱讀：** [AI如何預測足球](/blog/how-ai-predicts-football-matches) • [xG分析技術](/blog/beyond-odds-football-features)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
-## オーバー/アンダーベッティングとは？
+## なぜオーバー/アンダーは私がモデリングで最も好きな市場なのか
 
-**オーバー/アンダー**（「トータル」とも呼ばれる）ベッティングは、どちらのチームが得点するかに関係なく、試合の総ゴール数に焦点を当てます。
+私が予測モデルを構築したすべての市場の中で、オーバー/アンダー（トータル）は一貫して最良の結果を出しています。理由はこうです：よりクリーンな予測問題だからです。
 
----
-
-## 一般的なオーバー/アンダーライン
-
-### 標準ライン
-- **オーバー/アンダー 2.5** – 最も人気のあるライン
-- **オーバー/アンダー 1.5** – ロースコアリングの試合
-- **オーバー/アンダー 3.5** – ハイスコアリングの試合
-
-### アジアンライン
-- **オーバー/アンダー 2.25** – 2と2.5の間で分割
-- **オーバー/アンダー 2.75** – 2.5と3の間で分割
+*誰が*勝つか（3つの結果、個々の瞬間に大きく影響される）を予測するのではなく、*何ゴール*が入るかを予測します。これは統計分析により適しています。
 
 ---
 
-## O/Uオッズの読み方
+## O/U市場の仕組み
 
-| ライン | 総ゴール数 | オーバー結果 | アンダー結果 |
-|------|-------------|-------------|--------------|
-| 2.5 | 0、1、2 | 負け | 勝ち |
+市場はライン（通常2.5ゴール）を設定し、あなたはトータルがその数字を上回るか下回るかを予測します。
+
+| ライン | 総ゴール | オーバー | アンダー |
+|--------|----------|----------|----------|
+| 2.5 | 0, 1, 2 | 負け | 勝ち |
 | 2.5 | 3+ | 勝ち | 負け |
-| 2.0 | 2 | プッシュ | プッシュ |
-| 2.0 | 3+ | 勝ち | 負け |
 
 ---
 
-## トータルに影響を与える要因
+## xGとの関連
 
-### チーム要因
-- 攻撃力（1試合あたりの得点）
-- 守備の堅さ（失点数）
-- プレースタイル（ポゼッション vs カウンター）
+期待ゴール（xG）データは、トータルのモデリング方法を変革しました。実際のゴール数（ノイズが多く、分散が高い）を使用する代わりに、xGは創出されたチャンスの質を測定します。
 
-### 試合のコンテキスト
-- 試合の重要性
-- 天候条件
-- 最近のフォーム
+**重要な洞察：** xGは過去の実際のゴールよりも将来のゴールに対してはるかに高い予測力を持っています。
 
-### 統計指標
-- **xG（期待ゴール）** – 最も予測力が高い
-- 枠内シュート
-- ビッグチャンスの創出/被創出
+OddsFlowでは、トータルモデルは以下を使用しています：
+- 90分あたりのチームxG（ホーム/アウェイ別）
+- 90分あたりのチームxG Against
+- 最近の試合のxGトレンド
+- 対戦履歴のxG
 
 ---
 
-## 重要なポイント
+## トータル予測の特徴量エンジニアリング
 
-1. O/Uはチームへのバイアスを排除—ゴールのみに集中
-2. 2.5がほとんどの試合の標準ライン
-3. xGデータはトータル予測に非常に有効
-4. 試合のコンテキストとチームスタイルを考慮
+xG以外に、これらの特徴量が価値があることがわかりました：
 
-📖 **詳細：** [AIがサッカーを予測する方法](/blog/how-ai-predicts-football-matches)
+**攻撃指標：**
+- 1試合あたりのシュート数
+- シュート決定率
+- 創出されたビッグチャンス
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+**守備指標：**
+- 1試合あたりの被シュート数
+- セーブ率
+- 被ビッグチャンス
+
+---
+
+📖 **関連記事：** [AIがサッカーを予測する方法](/blog/how-ai-predicts-football-matches) • [xG分析技術](/blog/beyond-odds-football-features)
+
+*OddsFlowは教育・情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -2060,157 +2729,222 @@ Your stake splits between two adjacent lines.
     readTime: 8,
     date: '2026-01-07',
     author: 'OddsFlow Team',
-    tags: ['1X2 betting', 'match result', 'moneyline', 'football betting', 'basic betting'],
+    tags: ['1X2 analysis', 'match result', 'three-way markets', 'football analytics', 'AI predictions'],
     relatedPosts: ['how-to-interpret-football-odds', 'asian-handicap-betting-guide', 'implied-probability-explained'],
     title: {
-      EN: 'Match Result (1X2) Betting Explained: The Classic Football Market',
-      JA: 'マッチリザルト（1X2）ベッティングの解説：クラシックなサッカー市場',
-      '中文': '比赛结果（1X2）投注详解：经典足球市场',
-      '繁體': '比賽結果（1X2）投注詳解：經典足球市場',
+      EN: '1X2 Markets Explained: Understanding Three-Way Odds Data',
+      JA: '1X2市場の解説：三択オッズデータの理解',
+      '中文': '1X2市场详解：理解三元赔率数据',
+      '繁體': '1X2市場詳解：理解三元賠率數據',
     },
     excerpt: {
-      EN: 'The foundational football betting market explained. Learn how 1X2 odds work, when to bet each outcome, and strategies for maximizing value.',
-      JA: '基本的なサッカーベッティング市場を解説。1X2オッズの仕組み、各結果に賭けるタイミング、価値を最大化する戦略を学びましょう。',
-      '中文': '基础足球投注市场详解。了解1X2赔率如何运作。',
-      '繁體': '基礎足球投注市場詳解。了解1X2賠率如何運作。',
+      EN: 'Understand how 1X2 (match result) markets work and why the three-outcome structure presents unique challenges for prediction models.',
+      JA: '1X2（試合結果）市場の仕組みと、三つの結果構造が予測モデルに独自の課題を提示する理由を理解しましょう。',
+      '中文': '了解1X2（比赛结果）市场如何运作，以及三结果结构为什么对预测模型提出独特挑战。',
+      '繁體': '了解1X2（比賽結果）市場如何運作，以及三結果結構為什麼對預測模型提出獨特挑戰。',
     },
     content: {
       EN: `
-## What is 1X2 Betting?
+## The Foundation of Football Markets
 
-**1X2** (also called Match Result or Three-Way) is the most basic football betting market:
+When I started building prediction models, 1X2 seemed like the obvious target—it's the market everyone talks about. But I quickly learned it's actually one of the *harder* markets to model accurately.
 
+Here's why: you're predicting one of three outcomes (Home win, Draw, Away win), and the draw outcome is notoriously difficult to predict. It happens about 25% of the time in most leagues, but identifying *which* matches will draw is a challenge even the best models struggle with.
+
+---
+
+## How 1X2 Markets Work
+
+The notation is simple:
 - **1** = Home team wins
 - **X** = Draw
 - **2** = Away team wins
 
----
+Each outcome has independent odds that together (when converted to probabilities) sum to more than 100% due to the margin.
 
-## How 1X2 Odds Work
-
-Each outcome has its own odds reflecting its probability:
-
-| Outcome | Symbol | Typical Odds Range |
-|---------|--------|-------------------|
-| Home Win | 1 | 1.20 – 5.00+ |
-| Draw | X | 3.00 – 4.50 |
-| Away Win | 2 | 1.30 – 8.00+ |
+| Outcome | Typical Odds Range | Implied Probability |
+|---------|-------------------|---------------------|
+| Home Win (1) | 1.20 – 5.00+ | 20% – 83% |
+| Draw (X) | 3.00 – 4.50 | 22% – 33% |
+| Away Win (2) | 1.30 – 8.00+ | 12% – 77% |
 
 ---
 
-## When to Bet Each Outcome
+## The Draw Problem
 
-### Bet Home (1) When:
-- Strong home record
-- Opponent has poor away form
-- Key players fit vs injured opponents
+This is the elephant in the room for 1X2 modeling. Draws are:
 
-### Bet Draw (X) When:
-- Teams evenly matched
-- Both teams defensive
-- Low-stakes match for both
+**Hard to predict:** The correlation between pre-match features and draw outcomes is weaker than for wins
 
-### Bet Away (2) When:
-- Away team significantly stronger
-- Home team in poor form
-- Good value in odds
+**Undervalued by the public:** Casual observers tend to pick winners, creating potential inefficiencies
+
+**Context-dependent:** Draws are more likely in certain scenarios (season-ending matches, both teams needing a point, derby matches)
+
+At OddsFlow, we've found that draw prediction improves significantly when incorporating:
+- Match importance metrics
+- Both teams' draw rates (home/away specific)
+- Goal expectancy from both sides
 
 ---
 
-## Key Takeaways
+## 1X2 vs Asian Handicap
 
-1. 1X2 is the simplest, most popular market
-2. Three outcomes: Home (1), Draw (X), Away (2)
-3. Consider form, head-to-head, and context
-4. Draw often offers value in evenly-matched games
+Many professional analysts prefer Asian Handicap to 1X2 because:
 
-📖 **Alternative:** [Asian Handicap Guide](/blog/asian-handicap-betting-guide)
+| Aspect | 1X2 | Asian Handicap |
+|--------|-----|----------------|
+| Outcomes | 3 | 2 |
+| Draw handling | Separate outcome | Eliminated |
+| Model complexity | Higher | Lower |
+| Market efficiency | Less efficient | More efficient |
 
-*Gambling involves risk. Please bet responsibly.*
+However, 1X2 remains valuable because:
+- It's the most liquid market
+- Draw inefficiencies create opportunities
+- Some models specifically target the draw
+
+---
+
+## Using 1X2 Data in Models
+
+At OddsFlow, we use 1X2 data in several ways:
+
+**As a target:** Predicting probabilities for all three outcomes
+
+**As features:** 1X2 odds movement and implied probabilities inform other models
+
+**For calibration:** Comparing our three-way probabilities to market expectations
+
+**Key insight:** When our model strongly disagrees with market draw probability, that signal is often valuable for totals predictions too.
+
+---
+
+📖 **Related reading:** [Asian Handicap Analysis](/blog/asian-handicap-betting-guide) • [Implied Probability](/blog/implied-probability-explained)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 什么是1X2投注？
+## 足球市场的基础
 
-**1X2**是最基本的足球投注市场：
+当我开始建立预测模型时，1X2似乎是明显的目标——这是每个人都在谈论的市场。但我很快发现，它实际上是*更难*准确建模的市场之一。
+
+原因在于：你在预测三种结果之一（主胜、平局、客胜），而平局结果出了名地难以预测。在大多数联赛中，平局发生概率约为25%，但识别*哪些*比赛会平局是一个即使最好的模型也难以应对的挑战。
+
+---
+
+## 1X2市场如何运作
+
+标记很简单：
 - **1** = 主队获胜
 - **X** = 平局
 - **2** = 客队获胜
 
+每个结果都有独立的赔率，当转换为概率时，由于利润率的存在，总和超过100%。
+
 ---
 
-## 关键要点
+## 平局问题
 
-1. 1X2是最简单、最受欢迎的市场
-2. 考虑状态、交锋记录和背景
+这是1X2建模中的大问题。平局：
 
-*博彩有风险，请理性投注。*
+**难以预测：** 赛前特征与平局结果之间的相关性比胜负弱
+
+**被公众低估：** 普通观众倾向于选择胜者，造成潜在的低效率
+
+**依赖上下文：** 在某些情况下平局更可能（赛季末比赛、双方都需要积分、德比战）
+
+在OddsFlow，我们发现平局预测在纳入以下因素后显著改善：
+- 比赛重要性指标
+- 双方的平局率（主客场特定）
+- 双方的预期进球数
+
+---
+
+📖 **相关阅读：** [亚洲盘口分析](/blog/asian-handicap-betting-guide) • [隐含概率](/blog/implied-probability-explained)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 什麼是1X2投注？
+## 足球市場的基礎
 
-**1X2**是最基本的足球投注市場。
+當我開始建立預測模型時，1X2似乎是明顯的目標——這是每個人都在談論的市場。但我很快發現，它實際上是*更難*準確建模的市場之一。
+
+原因在於：你在預測三種結果之一（主勝、平局、客勝），而平局結果出了名地難以預測。在大多數聯賽中，平局發生機率約為25%，但識別*哪些*比賽會平局是一個即使最好的模型也難以應對的挑戰。
 
 ---
 
-## 關鍵要點
+## 1X2市場如何運作
 
-1. 1X2是最簡單的市場
-2. 考慮狀態和交鋒記錄
+標記很簡單：
+- **1** = 主隊獲勝
+- **X** = 平局
+- **2** = 客隊獲勝
 
-*博彩有風險，請理性投注。*
+每個結果都有獨立的賠率，當轉換為機率時，由於利潤率的存在，總和超過100%。
+
+---
+
+## 平局問題
+
+這是1X2建模中的大問題。平局：
+
+**難以預測：** 賽前特徵與平局結果之間的相關性比勝負弱
+
+**被公眾低估：** 普通觀眾傾向於選擇勝者，造成潛在的低效率
+
+**依賴上下文：** 在某些情況下平局更可能（賽季末比賽、雙方都需要積分、德比戰）
+
+在OddsFlow，我們發現平局預測在納入以下因素後顯著改善：
+- 比賽重要性指標
+- 雙方的平局率（主客場特定）
+- 雙方的預期進球數
+
+---
+
+📖 **相關閱讀：** [亞洲盤口分析](/blog/asian-handicap-betting-guide) • [隱含機率](/blog/implied-probability-explained)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
-## 1X2ベッティングとは？
+## サッカー市場の基礎
 
-**1X2**（マッチリザルトまたはスリーウェイとも呼ばれる）は、最も基本的なサッカーベッティング市場です：
+予測モデルを作り始めたとき、1X2は明らかなターゲットに見えました—誰もが話題にする市場です。しかし、実際には正確にモデル化するのが*難しい*市場の一つだとすぐにわかりました。
 
+理由はこうです：3つの結果（ホーム勝利、ドロー、アウェイ勝利）のうち1つを予測していますが、ドローの結果は予測が難しいことで有名です。ほとんどのリーグで約25%の確率で発生しますが、*どの*試合がドローになるかを特定することは、最高のモデルでさえ苦労する課題です。
+
+---
+
+## 1X2市場の仕組み
+
+表記はシンプルです：
 - **1** = ホームチームの勝利
-- **X** = 引き分け
+- **X** = ドロー
 - **2** = アウェイチームの勝利
 
----
-
-## 1X2オッズの仕組み
-
-各結果にはその確率を反映した独自のオッズがあります：
-
-| 結果 | シンボル | 典型的なオッズ範囲 |
-|---------|--------|-------------------|
-| ホーム勝利 | 1 | 1.20 – 5.00+ |
-| 引き分け | X | 3.00 – 4.50 |
-| アウェイ勝利 | 2 | 1.30 – 8.00+ |
+各結果には独立したオッズがあり、確率に変換すると、マージンのために合計が100%を超えます。
 
 ---
 
-## 各結果に賭けるタイミング
+## ドロー問題
 
-### ホーム（1）に賭ける場合：
-- ホームでの成績が強い
-- 相手のアウェイフォームが悪い
-- 主力選手がフィットし、相手は怪我人がいる
+これは1X2モデリングにおける大きな問題です。ドローは：
 
-### 引き分け（X）に賭ける場合：
-- チームが均衡している
-- 両チームとも守備的
-- 両チームにとって重要でない試合
+**予測が難しい：** 試合前の特徴量とドロー結果との相関は、勝敗よりも弱い
 
-### アウェイ（2）に賭ける場合：
-- アウェイチームが明らかに強い
-- ホームチームの調子が悪い
-- オッズに良い価値がある
+**一般に過小評価される：** カジュアルな観察者は勝者を選ぶ傾向があり、潜在的な非効率性を生み出す
+
+**コンテキスト依存：** 特定のシナリオでドローの可能性が高まる（シーズン終盤の試合、両チームが勝ち点を必要とする場合、ダービーマッチ）
+
+OddsFlowでは、以下を組み込むとドロー予測が大幅に改善することがわかりました：
+- 試合重要度メトリクス
+- 両チームのドロー率（ホーム/アウェイ別）
+- 両チームからの期待ゴール数
 
 ---
 
-## 重要なポイント
+📖 **関連記事：** [アジアンハンディキャップ分析](/blog/asian-handicap-betting-guide) • [暗示確率](/blog/implied-probability-explained)
 
-1. 1X2は最もシンプルで人気のある市場
-2. 3つの結果：ホーム（1）、引き分け（X）、アウェイ（2）
-3. フォーム、直接対決、コンテキストを考慮
-4. 均衡した試合では引き分けが価値をもたらすことが多い
-
-📖 **代替：** [アジアンハンディキャップガイド](/blog/asian-handicap-betting-guide)
-
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+*OddsFlowは教育・情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -2223,160 +2957,212 @@ Each outcome has its own odds reflecting its probability:
     readTime: 11,
     date: '2026-01-06',
     author: 'OddsFlow Team',
-    tags: ['odds movement', 'line movement', 'betting markets', 'sharp action', 'market analysis'],
+    tags: ['odds movement', 'line movement', 'sports data', 'market analysis', 'AI predictions'],
     relatedPosts: ['how-to-interpret-football-odds', 'sharp-vs-public-money-betting', 'steam-moves-in-football-betting'],
     title: {
-      EN: 'Why Football Odds Move: Understanding Line Movement',
-      JA: 'なぜサッカーオッズは動くのか：ライン変動の理解',
-      '中文': '足球赔率为何变动：理解盘口变化',
-      '繁體': '足球賠率為何變動：理解盤口變化',
+      EN: 'Odds Movement: What Price Changes Tell Us About Markets',
+      JA: 'オッズの動き：価格変動が市場について教えてくれること',
+      '中文': '赔率变动：价格变化告诉我们的市场信息',
+      '繁體': '賠率變動：價格變化告訴我們的市場資訊',
     },
     excerpt: {
-      EN: 'Discover what causes odds to shift before kickoff. From injury news to sharp money, learn to read line movements like a professional.',
-      JA: 'キックオフ前にオッズが変動する原因を発見。怪我のニュースからシャープマネーまで、プロのようにライン変動を読む方法を学びましょう。',
-      '中文': '发现导致开球前赔率变化的原因。',
-      '繁體': '發現導致開球前賠率變化的原因。',
+      EN: 'Learn how to interpret odds movements as data signals. Understanding price dynamics is crucial for any sports prediction model.',
+      JA: 'オッズの動きをデータシグナルとして解釈する方法を学びましょう。価格ダイナミクスの理解はスポーツ予測モデルに不可欠です。',
+      '中文': '学习如何将赔率变动解读为数据信号。理解价格动态对于任何体育预测模型都至关重要。',
+      '繁體': '學習如何將賠率變動解讀為數據信號。理解價格動態對於任何體育預測模型都至關重要。',
     },
     content: {
       EN: `
-## Why Do Odds Change?
+## Odds Movement as Information
 
-Football odds are dynamic—they move from the moment they're posted until kickoff. Understanding **why** odds move helps you make better betting decisions.
+One of the most valuable data sources we use at OddsFlow isn't the odds themselves—it's how they *change* over time. Odds movement reveals information that static snapshots miss.
 
----
-
-## Main Causes of Odds Movement
-
-### 1. Team News
-- Injuries to key players
-- Lineup announcements
-- Tactical changes
-
-### 2. Betting Volume
-- Large bets cause adjustments
-- Public money typically moves favorites
-- Sharp money often moves underdogs
-
-### 3. Market Correction
-- Opening odds may have errors
-- Bookmakers adjust based on action
-- Lines converge across books
-
-### 4. External Factors
-- Weather changes
-- Travel issues
-- Off-field incidents
+When I first started tracking odds, I treated opening prices as the "true" values. That was a mistake. Markets learn and adjust. The evolution of prices from opening to kickoff often tells a richer story than any single price point.
 
 ---
 
-## Reading the Movement
+## Why Prices Move
 
-| Movement Type | What It Suggests |
-|---------------|------------------|
-| Odds shortening | Market expects this outcome more |
-| Odds drifting | Market losing confidence |
-| Reverse movement | Sharps betting against public |
-| Steam move | Coordinated sharp action |
+### 1. New Information
+- Lineup announcements (1-2 hours before kickoff)
+- Late injury news
+- Weather updates
+- Tactical leaks
+
+### 2. Market Efficiency Correction
+Opening odds are set by models. As sophisticated participants (often called "sharps") place bets, they reveal information about model errors. Markets adjust toward true probabilities.
+
+### 3. Volume Imbalances
+When significantly more money comes in on one side, operators adjust prices to balance their exposure. This movement may or may not reflect new information.
 
 ---
 
-## Key Takeaways
+## Movement Types and Their Meaning
 
-1. Odds move due to news, betting action, and corrections
-2. Track movements to spot value opportunities
-3. Reverse line movement often indicates sharp action
-4. Early odds often have more inefficiencies
+| Pattern | What It Often Indicates |
+|---------|-------------------------|
+| Sharp early move | Sophisticated money found value |
+| Gradual drift | Accumulation of one-sided action |
+| Late reversal | New information (lineup, weather) |
+| Synchronized move | Industry-wide adjustment |
 
-📖 **Advanced:** [Sharp vs Public Money](/blog/sharp-vs-public-money-betting)
+---
 
-*Gambling involves risk. Please bet responsibly.*
+## Using Movement in Models
+
+At OddsFlow, we extract several features from odds movement:
+
+**Opening-to-current delta:** How much has the price moved? Large moves in one direction signal information flow.
+
+**Movement timing:** Early moves (>24h before kickoff) weight differently than late moves.
+
+**Movement correlation:** When Asian Handicap moves but 1X2 doesn't, that divergence can be informative.
+
+**Movement velocity:** Sudden vs gradual changes have different implications.
+
+---
+
+## A Practical Example
+
+Opening odds: Home 2.20 | Draw 3.40 | Away 3.30
+
+24 hours later: Home 2.05 | Draw 3.50 | Away 3.50
+
+What this tells us:
+- Market has gained confidence in Home win
+- Approximately 7% probability shift toward Home
+- Could be information-driven or volume-driven
+
+The key question: Does our model agree? If we predicted Home at 2.30 and market moved to 2.05, either the market knows something we don't, or there's potential value on the other side.
+
+---
+
+📖 **Related reading:** [Market Participant Types](/blog/sharp-vs-public-money-betting) • [Understanding Market Margins](/blog/how-bookmakers-calculate-margins)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 为什么赔率会变化？
+## 赔率变动作为信息
 
-足球赔率是动态的——从发布到开球一直在变化。
+我们在OddsFlow使用的最有价值的数据源之一不是赔率本身——而是它们如何随时间*变化*。赔率变动揭示了静态快照遗漏的信息。
 
-### 赔率变动的主要原因
-1. 球队消息（伤病、阵容）
-2. 投注量
-3. 市场修正
-4. 外部因素
+当我刚开始追踪赔率时，我把开盘价当作"真实"值。那是个错误。市场会学习和调整。价格从开盘到开球的演变往往比任何单一价格点讲述更丰富的故事。
 
 ---
 
-## 关键要点
+## 价格为什么会变动
 
-1. 跟踪变动以发现价值机会
-2. 反向变动通常表明聪明钱行动
+### 1. 新信息
+- 阵容公布（开球前1-2小时）
+- 临时伤病消息
+- 天气更新
+- 战术泄露
 
-*博彩有风险，请理性投注。*
+### 2. 市场效率修正
+开盘赔率由模型设定。当精明的参与者（通常称为"聪明钱"）投注时，他们揭示了模型错误的信息。市场向真实概率调整。
+
+### 3. 投注量不平衡
+当明显更多的钱流向一方时，运营商调整价格以平衡风险敞口。
+
+---
+
+## 在模型中使用变动
+
+在OddsFlow，我们从赔率变动中提取多个特征：
+
+**开盘到当前的差值：** 价格变动了多少？一个方向的大幅变动表明信息流动。
+
+**变动时机：** 早期变动（开球前>24小时）与晚期变动的权重不同。
+
+**变动相关性：** 当亚盘变动但1X2不变时，这种分歧可能有信息价值。
+
+---
+
+📖 **相关阅读：** [市场参与者类型](/blog/sharp-vs-public-money-betting) • [理解市场利润率](/blog/how-bookmakers-calculate-margins)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 為什麼賠率會變化？
+## 賠率變動作為資訊
 
-足球賠率是動態的。
+我們在OddsFlow使用的最有價值的數據源之一不是賠率本身——而是它們如何隨時間*變化*。賠率變動揭示了靜態快照遺漏的資訊。
+
+當我剛開始追蹤賠率時，我把開盤價當作「真實」值。那是個錯誤。市場會學習和調整。價格從開盤到開球的演變往往比任何單一價格點講述更豐富的故事。
 
 ---
 
-## 關鍵要點
+## 價格為什麼會變動
 
-1. 跟蹤變動以發現價值機會
-2. 反向變動通常表明聰明錢行動
+### 1. 新資訊
+- 陣容公布（開球前1-2小時）
+- 臨時傷病消息
+- 天氣更新
+- 戰術洩露
 
-*博彩有風險，請理性投注。*
+### 2. 市場效率修正
+開盤賠率由模型設定。當精明的參與者（通常稱為「聰明錢」）投注時，他們揭示了模型錯誤的資訊。市場向真實機率調整。
+
+### 3. 投注量不平衡
+當明顯更多的錢流向一方時，營運商調整價格以平衡風險敞口。
+
+---
+
+## 在模型中使用變動
+
+在OddsFlow，我們從賠率變動中提取多個特徵：
+
+**開盤到當前的差值：** 價格變動了多少？一個方向的大幅變動表明資訊流動。
+
+**變動時機：** 早期變動（開球前>24小時）與晚期變動的權重不同。
+
+**變動相關性：** 當亞盤變動但1X2不變時，這種分歧可能有資訊價值。
+
+---
+
+📖 **相關閱讀：** [市場參與者類型](/blog/sharp-vs-public-money-betting) • [理解市場利潤率](/blog/how-bookmakers-calculate-margins)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
-## なぜオッズは変化するのか？
+## 情報としてのオッズの動き
 
-サッカーオッズは動的です—公開された瞬間からキックオフまで動き続けます。オッズが**なぜ**動くかを理解することで、より良いベッティング判断ができるようになります。
+OddsFlowで使用する最も価値のあるデータソースの一つは、オッズそのものではなく、それらが時間とともに*どのように変化するか*です。オッズの動きは、静的なスナップショットでは見逃される情報を明らかにします。
 
----
-
-## オッズ変動の主な原因
-
-### 1. チームニュース
-- 主力選手の怪我
-- スタメン発表
-- 戦術変更
-
-### 2. ベッティング量
-- 大きな賭けは調整を引き起こす
-- パブリックマネーは通常本命を動かす
-- シャープマネーはしばしばアンダードッグを動かす
-
-### 3. 市場修正
-- オープニングオッズにはエラーがある可能性
-- ブックメーカーはアクションに基づいて調整
-- 各ブック間でラインが収束
-
-### 4. 外部要因
-- 天候の変化
-- 移動の問題
-- フィールド外の事件
+オッズを追跡し始めた頃、私はオープニング価格を「真の」値として扱っていました。それは間違いでした。市場は学習し、調整します。オープニングからキックオフまでの価格の進化は、単一の価格ポイントよりもはるかに豊かなストーリーを語ることが多いのです。
 
 ---
 
-## 変動を読む
+## 価格が動く理由
 
-| 変動タイプ | 示唆すること |
-|---------------|------------------|
-| オッズ短縮 | 市場がこの結果をより予想 |
-| オッズ上昇 | 市場の信頼が低下 |
-| 逆方向変動 | シャープがパブリックに逆張り |
-| スチームムーブ | 協調的なシャープアクション |
+### 1. 新情報
+- ラインナップ発表（キックオフ1-2時間前）
+- 直前の怪我のニュース
+- 天気の更新
+- 戦術のリーク
+
+### 2. 市場効率の修正
+オープニングオッズはモデルによって設定されます。洗練された参加者（しばしば「シャープ」と呼ばれる）が賭けをすると、モデルのエラーについての情報が明らかになります。市場は真の確率に向かって調整されます。
+
+### 3. ボリュームの不均衡
+一方のサイドに著しく多くのお金が入ると、オペレーターはエクスポージャーのバランスを取るために価格を調整します。
 
 ---
 
-## 重要なポイント
+## モデルでの動きの使用
 
-1. オッズはニュース、ベッティングアクション、修正により動く
-2. 変動を追跡してバリュー機会を発見
-3. 逆方向のライン変動はしばしばシャープアクションを示す
-4. 早期のオッズにはより多くの非効率性がある
+OddsFlowでは、オッズの動きからいくつかの特徴量を抽出しています：
 
-📖 **上級：** [シャープマネー vs パブリックマネー](/blog/sharp-vs-public-money-betting)
+**オープニングから現在までのデルタ：** 価格はどれだけ動いたか？一方向への大きな動きは情報の流れを示します。
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+**動きのタイミング：** 早期の動き（キックオフの24時間以上前）は、遅い動きとは異なる重みを持ちます。
+
+**動きの相関：** アジアンハンディキャップが動いて1X2が動かない場合、その乖離は情報を持つ可能性があります。
+
+---
+
+📖 **関連記事：** [市場参加者の種類](/blog/sharp-vs-public-money-betting) • [市場マージンの理解](/blog/how-bookmakers-calculate-margins)
+
+*OddsFlowは教育・情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -2389,118 +3175,193 @@ Football odds are dynamic—they move from the moment they're posted until kicko
     readTime: 9,
     date: '2026-01-05',
     author: 'OddsFlow Team',
-    tags: ['sharp money', 'public money', 'professional betting', 'line movement', 'betting strategy'],
+    tags: ['market participants', 'sports data', 'line movement', 'AI predictions', 'market analysis'],
     relatedPosts: ['why-football-odds-move', 'steam-moves-in-football-betting', 'how-bookmakers-calculate-margins'],
     title: {
-      EN: 'Sharp vs Public Money: How Professional Bettors Move Lines',
-      JA: 'シャープマネー vs パブリックマネー：プロベッターがラインを動かす方法',
-      '中文': '聪明钱 vs 大众钱：职业玩家如何影响盘口',
-      '繁體': '聰明錢 vs 大眾錢：職業玩家如何影響盤口',
+      EN: 'Market Participant Types: Understanding Who Moves Prices',
+      JA: '市場参加者の種類：価格を動かすのは誰かを理解する',
+      '中文': '市场参与者类型：理解谁在推动价格',
+      '繁體': '市場參與者類型：理解誰在推動價格',
     },
     excerpt: {
-      EN: 'Learn to distinguish between sharp and public betting action. Understand reverse line movement and how to follow the smart money.',
-      JA: 'シャープとパブリックのベッティングアクションを見分ける方法を学びましょう。逆方向ライン変動とスマートマネーのフォロー方法を理解。',
-      '中文': '学习区分聪明钱和大众投注行为。',
-      '繁體': '學習區分聰明錢和大眾投注行為。',
+      EN: 'Learn how different market participant types affect odds data. Essential knowledge for interpreting price movements in your models.',
+      JA: '異なる市場参加者タイプがオッズデータにどう影響するかを学びましょう。モデルで価格変動を解釈するための必須知識です。',
+      '中文': '了解不同市场参与者类型如何影响赔率数据。这是在模型中解读价格变动的必备知识。',
+      '繁體': '了解不同市場參與者類型如何影響賠率數據。這是在模型中解讀價格變動的必備知識。',
     },
     content: {
       EN: `
-## Sharp Money vs Public Money
+## Why Participant Types Matter for Analysis
 
-Understanding the difference between **sharp** (professional) and **public** (recreational) betting action is crucial for identifying value.
+Not all market activity is equally informative. Understanding *who* is moving prices helps us weight different signals appropriately in our models.
 
-### Public Money Characteristics
-- Bets on favorites and popular teams
-- Influenced by media narratives
-- Smaller individual bet sizes
-- Often emotionally driven
-
-### Sharp Money Characteristics
-- Bets based on edge, not emotion
-- Often backs underdogs
-- Large bet sizes that move lines
-- Uses multiple accounts
+When I started analyzing odds data, I treated all price movements the same. Big mistake. A 10-cent move caused by recreational volume tells you something different than a 10-cent move caused by a single large participant.
 
 ---
 
-## Reverse Line Movement
+## The Two Main Categories
 
-**Reverse line movement** occurs when odds move **against** the side receiving most public bets. This signals sharp action.
+### Recreational Participants ("Public")
+- Smaller individual transaction sizes
+- Tend to favor popular teams and favorites
+- Influenced by recent results and media narratives
+- Volume is high, but individual impact is low
 
-**Example:** 70% of bets on Team A, but Team A's odds drift from 1.80 to 2.00. Sharps are on Team B.
+### Sophisticated Participants ("Sharps")
+- Larger transaction sizes
+- Rely on quantitative models or deep expertise
+- Often find value on less popular sides
+- Can move prices with single transactions
 
 ---
 
-## Key Takeaways
+## Why This Distinction Matters for Models
 
-1. Sharp money moves lines; public money creates value
-2. Watch for reverse line movement
-3. Sharps often fade public favorites
-4. Track betting percentages vs line movement
+At OddsFlow, we try to decompose price movements into their sources:
 
-📖 **Related:** [Steam Moves Explained](/blog/steam-moves-in-football-betting)
+**Information-driven movement:** When sophisticated participants act, prices often move toward true probabilities. This movement is informative.
 
-*Gambling involves risk. Please bet responsibly.*
+**Volume-driven movement:** When recreational volume accumulates on one side, operators adjust prices to balance exposure. This movement may *not* reflect new information.
+
+---
+
+## Reverse Line Movement: A Key Signal
+
+One of our most reliable features: when prices move *against* the side receiving most public attention.
+
+**Example scenario:**
+- Opening: Home 1.90 | Away 1.90
+- 70% of visible action on Home
+- Price moves to: Home 2.00 | Away 1.80
+
+Despite public preference for Home, the price moved against Home. This often indicates sophisticated money on Away.
+
+We track this discrepancy as a feature in our models.
+
+---
+
+## Practical Application
+
+When analyzing odds movement, ask:
+1. Is this move driven by volume or information?
+2. Does the direction align with public preference?
+3. How quickly did the market react?
+
+These questions help extract signal from noise.
+
+---
+
+📖 **Related reading:** [Odds Movement Analysis](/blog/why-football-odds-move) • [Steam Move Detection](/blog/steam-moves-in-football-betting)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 聪明钱 vs 大众钱
+## 为什么参与者类型对分析很重要
 
-理解**聪明钱**（职业）和**大众钱**（休闲）之间的区别对于识别价值至关重要。
+并非所有市场活动都同样具有信息价值。理解*谁*在推动价格，有助于我们在模型中适当地权衡不同的信号。
+
+当我开始分析赔率数据时，我对所有价格变动一视同仁。这是个大错误。由休闲投注量引起的10分变动与由单个大型参与者引起的10分变动传递的信息是不同的。
 
 ---
 
-## 关键要点
+## 两大主要类别
 
-1. 聪明钱移动盘口；大众钱创造价值
-2. 关注反向盘口变动
+### 休闲参与者（"大众"）
+- 个体交易规模较小
+- 倾向于支持热门球队和热门选项
+- 受近期结果和媒体叙事影响
+- 数量高，但个体影响低
 
-*博彩有风险，请理性投注。*
+### 精明参与者（"聪明钱"）
+- 交易规模较大
+- 依靠量化模型或深度专业知识
+- 经常在不太热门的选项中发现价值
+- 单笔交易就能推动价格
+
+---
+
+## 反向盘口变动：关键信号
+
+我们最可靠的特征之一：当价格朝着与大多数公众关注*相反*的方向移动时。
+
+**示例场景：**
+- 开盘：主队 1.90 | 客队 1.90
+- 70%的可见投注在主队
+- 价格变为：主队 2.00 | 客队 1.80
+
+尽管公众偏好主队，但价格却朝着不利于主队的方向移动。这通常表明精明资金在客队上。
+
+---
+
+📖 **相关阅读：** [赔率变动分析](/blog/why-football-odds-move) • [急剧变动检测](/blog/steam-moves-in-football-betting)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 關鍵要點
+## 為什麼參與者類型對分析很重要
 
-1. 聰明錢移動盤口
-2. 關注反向盤口變動
+並非所有市場活動都同樣具有資訊價值。理解*誰*在推動價格，有助於我們在模型中適當地權衡不同的信號。
 
-*博彩有風險，請理性投注。*
+當我開始分析賠率數據時，我對所有價格變動一視同仁。這是個大錯誤。由休閒投注量引起的10分變動與由單個大型參與者引起的10分變動傳遞的資訊是不同的。
+
+---
+
+## 兩大主要類別
+
+### 休閒參與者（「大眾」）
+- 個體交易規模較小
+- 傾向於支持熱門球隊和熱門選項
+- 受近期結果和媒體敘事影響
+
+### 精明參與者（「聰明錢」）
+- 交易規模較大
+- 依靠量化模型或深度專業知識
+- 經常在不太熱門的選項中發現價值
+
+---
+
+## 反向盤口變動：關鍵信號
+
+當價格朝著與大多數公眾關注*相反*的方向移動時。
+
+---
+
+📖 **相關閱讀：** [賠率變動分析](/blog/why-football-odds-move) • [急劇變動檢測](/blog/steam-moves-in-football-betting)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
-## シャープマネー vs パブリックマネー
+## なぜ参加者タイプが分析に重要なのか
 
-**シャープ**（プロ）と**パブリック**（レクリエーション）のベッティングアクションの違いを理解することは、バリューを特定するために重要です。
+すべての市場活動が同等に情報を持っているわけではありません。*誰が*価格を動かしているかを理解することは、モデルで異なるシグナルに適切に重み付けするのに役立ちます。
 
-### パブリックマネーの特徴
-- 本命や人気チームに賭ける
-- メディアのナラティブに影響される
-- 個々の賭け金額が小さい
-- 感情的に動かされることが多い
-
-### シャープマネーの特徴
-- 感情ではなくエッジに基づいて賭ける
-- しばしばアンダードッグを支持
-- ラインを動かすほどの大きな賭け金
-- 複数のアカウントを使用
+オッズデータの分析を始めた頃、私はすべての価格変動を同じように扱っていました。これは大きな間違いでした。レクリエーション的なボリュームによる10セントの動きと、単一の大口参加者による10セントの動きは、異なる情報を伝えています。
 
 ---
 
-## 逆方向ライン変動
+## 2つの主要カテゴリー
 
-**逆方向ライン変動**は、パブリックベットの大半を受けているサイドに**逆らって**オッズが動く時に発生します。これはシャープアクションのシグナルです。
+### レクリエーション参加者（「パブリック」）
+- 個々の取引サイズが小さい
+- 人気チームと本命を好む傾向
+- 最近の結果やメディアのナラティブに影響される
 
-**例：** 70%の賭けがチームAに入っているが、チームAのオッズが1.80から2.00に上昇。シャープはチームBに賭けています。
+### 洗練された参加者（「シャープ」）
+- 取引サイズが大きい
+- 定量モデルや深い専門知識に依存
+- 人気のない側で価値を見つけることが多い
 
 ---
 
-## 重要なポイント
+## 逆方向ライン変動：重要なシグナル
 
-1. シャープマネーはラインを動かし、パブリックマネーはバリューを生む
-2. 逆方向ライン変動に注目
-3. シャープはしばしばパブリックの本命に逆張り
-4. ベッティングパーセンテージとライン変動を追跡
+最も信頼できる特徴量の一つ：価格がほとんどの公衆の注目を集めている側に*逆らって*動くとき。
 
-📖 **関連：** [スチームムーブの解説](/blog/steam-moves-in-football-betting)
+---
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+📖 **関連記事：** [オッズ変動分析](/blog/why-football-odds-move) • [スチームムーブ検出](/blog/steam-moves-in-football-betting)
+
+*OddsFlowは教育・情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -2512,112 +3373,201 @@ Understanding the difference between **sharp** (professional) and **public** (re
     readTime: 7,
     date: '2026-01-04',
     author: 'OddsFlow Team',
-    tags: ['steam moves', 'sharp betting', 'odds movement', 'line shopping', 'professional betting'],
+    tags: ['steam moves', 'market signals', 'odds movement', 'sports analytics', 'AI predictions'],
     relatedPosts: ['sharp-vs-public-money-betting', 'why-football-odds-move', 'how-to-interpret-football-odds'],
     title: {
-      EN: 'Steam Moves in Football Betting: Riding the Sharp Wave',
-      JA: 'サッカーベッティングにおけるスチームムーブ：シャープの波に乗る',
-      '中文': '足球投注中的急剧变动：跟随聪明钱浪潮',
-      '繁體': '足球投注中的急劇變動：跟隨聰明錢浪潮',
+      EN: 'Steam Moves: Detecting Coordinated Market Signals',
+      JA: 'スチームムーブ：協調的な市場シグナルの検出',
+      '中文': '急剧变动：检测协调的市场信号',
+      '繁體': '急劇變動：檢測協調的市場信號',
     },
     excerpt: {
-      EN: 'What are steam moves and how can you capitalize on them? Learn to identify and react to rapid odds changes across multiple bookmakers.',
-      JA: 'スチームムーブとは何か、どう活用するか？複数のブックメーカーにまたがる急激なオッズ変化を識別し対応する方法を学びましょう。',
-      '中文': '什么是急剧变动，如何利用它们？',
-      '繁體': '什麼是急劇變動，如何利用它們？',
+      EN: 'Learn what steam moves are and how to detect them programmatically. A valuable signal source for sports prediction models.',
+      JA: 'スチームムーブとは何か、プログラムでどう検出するかを学びましょう。スポーツ予測モデルの貴重なシグナル源です。',
+      '中文': '了解什么是急剧变动以及如何以编程方式检测它们。体育预测模型的宝贵信号源。',
+      '繁體': '了解什麼是急劇變動以及如何以程式方式檢測它們。體育預測模型的寶貴信號源。',
     },
     content: {
       EN: `
-## What is a Steam Move?
+## What Is a Steam Move?
 
-A **steam move** is a rapid, coordinated shift in odds across multiple bookmakers, typically caused by sharp betting syndicates acting simultaneously.
+A **steam move** is a rapid, synchronized price change across multiple sources within a short time window (typically minutes). It's one of the clearest signals of coordinated sophisticated activity.
 
-### Characteristics
-- Happens within minutes
-- Affects multiple bookmakers
-- Moves odds 10-20+ points
-- Signals informed money
+When we first implemented steam detection at OddsFlow, the predictive power surprised us. These aren't just price changes—they're information events.
 
 ---
 
-## How to React to Steam Moves
+## Characteristics of Steam Moves
 
-### Option 1: Chase the Move
-Quickly bet the same side before odds fully adjust.
+**Speed:** Prices move within 5-15 minutes across multiple sources
 
-### Option 2: Fade the Move
-Bet against steam in recreational markets with slower adjustment.
+**Magnitude:** Typically 10-20+ basis points (e.g., 1.90 → 2.00)
 
-### Option 3: Stand Aside
-Sometimes the best action is no action.
+**Synchronization:** Multiple independent sources move in the same direction
+
+**Timing:** Often occurs when new information enters the market
 
 ---
 
-## Key Takeaways
+## How We Detect Steam
 
-1. Steam moves signal coordinated sharp action
-2. Speed is essential to capitalize
-3. Not all steam is profitable to chase
-4. Monitor line movement tools
+At OddsFlow, we monitor prices across sources and flag potential steam when:
 
-*Gambling involves risk. Please bet responsibly.*
+1. Price moves >X% within Y minutes
+2. Movement is corroborated by N+ independent sources
+3. Movement persists (not immediately reversed)
+
+The specific thresholds vary by league and market type. Major leagues require larger moves to qualify as steam due to higher baseline volatility.
+
+---
+
+## Steam as a Model Feature
+
+We use steam detection in several ways:
+
+**Binary feature:** Did steam occur on this match? (Yes/No)
+
+**Directional feature:** Which side did steam favor?
+
+**Timing feature:** How long before kickoff did steam occur?
+
+**Magnitude feature:** How large was the coordinated move?
+
+Early-occurring steam (>12 hours before kickoff) tends to be more informative than late steam.
+
+---
+
+## Important Caveats
+
+Not all steam is signal. Some causes:
+- Lineup leaks (information-driven, valuable)
+- Large recreational accumulation (volume-driven, less valuable)
+- Coordinated but misinformed activity (noise)
+
+We've learned to weight steam signals by context, not treat them as binary indicators.
+
+---
+
+📖 **Related reading:** [Odds Movement Analysis](/blog/why-football-odds-move) • [Market Participant Types](/blog/sharp-vs-public-money-betting)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
 ## 什么是急剧变动？
 
-**急剧变动**是多个博彩公司赔率的快速、协调变化。
+**急剧变动**是在短时间窗口内（通常是几分钟）多个来源同步的快速价格变化。这是协调的精明活动最清晰的信号之一。
+
+当我们在OddsFlow首次实现急剧变动检测时，其预测能力让我们惊讶。这些不仅仅是价格变化——它们是信息事件。
 
 ---
 
-## 关键要点
+## 急剧变动的特征
 
-1. 急剧变动表明协调的聪明钱行动
-2. 速度对于利用至关重要
+**速度：** 价格在5-15分钟内在多个来源变动
 
-*博彩有风险，请理性投注。*
+**幅度：** 通常10-20个基点以上（例如，1.90 → 2.00）
+
+**同步性：** 多个独立来源朝同一方向移动
+
+---
+
+## 我们如何检测急剧变动
+
+在OddsFlow，我们监控多个来源的价格，并在以下情况下标记潜在的急剧变动：
+
+1. 价格在Y分钟内变动>X%
+2. 变动得到N+个独立来源的确认
+3. 变动持续（不立即反转）
+
+---
+
+## 急剧变动作为模型特征
+
+我们以多种方式使用急剧变动检测：
+
+**二元特征：** 这场比赛发生了急剧变动吗？（是/否）
+
+**方向特征：** 急剧变动偏向哪一方？
+
+**时机特征：** 急剧变动发生在开球前多久？
+
+---
+
+📖 **相关阅读：** [赔率变动分析](/blog/why-football-odds-move) • [市场参与者类型](/blog/sharp-vs-public-money-betting)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 關鍵要點
+## 什麼是急劇變動？
 
-1. 急劇變動表明協調的聰明錢行動
-2. 速度至關重要
+**急劇變動**是在短時間窗口內（通常是幾分鐘）多個來源同步的快速價格變化。這是協調的精明活動最清晰的信號之一。
 
-*博彩有風險，請理性投注。*
+---
+
+## 急劇變動的特徵
+
+**速度：** 價格在5-15分鐘內在多個來源變動
+
+**幅度：** 通常10-20個基點以上
+
+**同步性：** 多個獨立來源朝同一方向移動
+
+---
+
+## 急劇變動作為模型特徵
+
+**二元特徵：** 這場比賽發生了急劇變動嗎？
+
+**方向特徵：** 急劇變動偏向哪一方？
+
+---
+
+📖 **相關閱讀：** [賠率變動分析](/blog/why-football-odds-move) • [市場參與者類型](/blog/sharp-vs-public-money-betting)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
 ## スチームムーブとは？
 
-**スチームムーブ**は、シャープベッティングシンジケートが同時に行動することで通常引き起こされる、複数のブックメーカーにまたがる急激で協調的なオッズの変動です。
+**スチームムーブ**は、短い時間枠（通常数分）内に複数のソースで同期して起こる急激な価格変化です。これは、協調的な洗練された活動の最も明確なシグナルの一つです。
 
-### 特徴
-- 数分以内に発生
-- 複数のブックメーカーに影響
-- オッズを10-20ポイント以上動かす
-- インフォームドマネーのシグナル
+OddsFlowでスチーム検出を初めて実装したとき、その予測力に驚きました。これらは単なる価格変化ではなく、情報イベントです。
 
 ---
 
-## スチームムーブへの対応方法
+## スチームムーブの特徴
 
-### オプション1：ムーブを追いかける
-オッズが完全に調整される前に同じサイドに素早くベット。
+**速度：** 複数のソースで5-15分以内に価格が動く
 
-### オプション2：ムーブに逆張り
-調整が遅いレクリエーション市場でスチームに逆張り。
+**規模：** 通常10-20ベーシスポイント以上（例：1.90 → 2.00）
 
-### オプション3：静観
-最良のアクションがノーアクションの場合もある。
+**同期性：** 複数の独立したソースが同じ方向に動く
 
 ---
 
-## 重要なポイント
+## スチームの検出方法
 
-1. スチームムーブは協調的なシャープアクションのシグナル
-2. 活用にはスピードが不可欠
-3. すべてのスチームが追いかける価値があるわけではない
-4. ライン変動ツールを監視
+OddsFlowでは、ソース間の価格を監視し、以下の条件で潜在的なスチームをフラグします：
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+1. Y分以内に価格が>X%動く
+2. 動きがN+の独立ソースで裏付けられる
+3. 動きが持続する（すぐに反転しない）
+
+---
+
+## モデル特徴量としてのスチーム
+
+**バイナリ特徴量：** この試合でスチームが発生したか？
+
+**方向特徴量：** スチームはどちら側を支持したか？
+
+**タイミング特徴量：** キックオフの何時間前にスチームが発生したか？
+
+---
+
+📖 **関連記事：** [オッズ変動分析](/blog/why-football-odds-move) • [市場参加者の種類](/blog/sharp-vs-public-money-betting)
+
+*OddsFlowは教育・情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -2632,153 +3582,292 @@ Sometimes the best action is no action.
     tags: ['AI predictions', 'machine learning', 'football analytics', 'xG', 'neural networks'],
     relatedPosts: ['how-to-interpret-football-odds', 'evaluating-ai-football-prediction-models', 'ai-vs-human-tipsters-comparison'],
     title: {
-      EN: 'How AI Predicts Football Matches: Inside the Machine Learning Models',
-      JA: 'AIがサッカーの試合を予測する方法：機械学習モデルの内部',
-      '中文': 'AI如何预测足球比赛：机器学习模型内部解析',
-      '繁體': 'AI如何預測足球比賽：機器學習模型內部解析',
+      EN: 'Inside Football Prediction Models: How We Build AI at OddsFlow',
+      JA: 'フットボール予測モデルの内部：OddsFlowでのAI構築方法',
+      '中文': '足球预测模型内部：我们如何在OddsFlow构建AI',
+      '繁體': '足球預測模型內部：我們如何在OddsFlow構建AI',
     },
     excerpt: {
-      EN: 'Explore how modern AI models analyze football data. From xG and form analysis to neural networks predicting match outcomes.',
-      JA: '最新のAIモデルがサッカーデータをどう分析するかを探求。xGやフォーム分析から試合結果を予測するニューラルネットワークまで解説。',
-      '中文': '探索现代AI模型如何分析足球数据。',
-      '繁體': '探索現代AI模型如何分析足球數據。',
+      EN: 'A technical look at how modern football prediction models work. From feature engineering to model architecture choices at OddsFlow.',
+      JA: '現代のサッカー予測モデルがどのように機能するかの技術的な見方。OddsFlowでの特徴量エンジニアリングからモデルアーキテクチャの選択まで。',
+      '中文': '技术视角看现代足球预测模型如何工作。从OddsFlow的特征工程到模型架构选择。',
+      '繁體': '技術視角看現代足球預測模型如何工作。從OddsFlow的特徵工程到模型架構選擇。',
     },
     content: {
       EN: `
-## How AI Models Predict Football
+## Building Prediction Models: Our Approach
 
-Modern **AI football prediction** models use machine learning to analyze vast amounts of data and identify patterns humans might miss.
-
----
-
-## Data Inputs
-
-### Team Statistics
-- Goals scored/conceded
-- xG (Expected Goals)
-- Shot accuracy
-- Possession %
-
-### Form & Context
-- Recent results
-- Home/away splits
-- Head-to-head history
-- Rest days between matches
-
-### External Factors
-- Injuries & suspensions
-- Weather conditions
-- Travel distance
-- Match importance
+After years of iteration, I want to share how we actually approach football prediction at OddsFlow. No magic—just careful data work and honest evaluation.
 
 ---
 
-## Model Types
+## The Data Foundation
 
-### Elo/Rating Systems
-Track team strength over time based on results.
+Everything starts with data quality. We aggregate from multiple sources:
 
-### Statistical Models
-Poisson distribution for goal prediction.
+**Match-level data:**
+- Historical results (5+ years)
+- xG and advanced metrics
+- Lineup information
+- In-match events
 
-### Machine Learning
-Neural networks trained on historical data.
+**Market data:**
+- Multi-source odds snapshots
+- Price movement history
+- Market timing information
 
-### Ensemble Methods
-Combine multiple models for better accuracy.
+**Contextual data:**
+- League standings and context
+- Rest days and travel
+- Competition phase importance
 
 ---
 
-## Key Takeaways
+## Feature Engineering: Where the Work Is
 
-1. AI analyzes more data points than humans can process
-2. xG and advanced metrics are crucial inputs
-3. Models improve with more training data
-4. No model is 100% accurate
+Raw data isn't useful. The real work is transforming it into predictive features.
 
-📖 **Evaluate models:** [AI Prediction Model Evaluation](/blog/evaluating-ai-football-prediction-models)
+**Team strength features:**
+- Rolling xG averages (home/away specific)
+- Elo-style power ratings
+- Recent form indicators
 
-*Gambling involves risk. Please bet responsibly.*
+**Market-derived features:**
+- Implied probabilities from opening odds
+- Opening-to-close movement
+- Cross-market discrepancies
+
+**Contextual features:**
+- Match importance index
+- Fatigue indicators
+- Head-to-head adjustments
+
+We've tested hundreds of features. Most don't add value. The discipline is in what you *don't* include.
+
+---
+
+## Model Architecture
+
+We use an ensemble approach—multiple models combined:
+
+**Base models:**
+- Gradient boosted trees (XGBoost) for tabular features
+- Poisson models for goal expectations
+- Market consensus baselines
+
+**Combination:**
+Weighted averaging based on out-of-sample performance. Weights adjust by league and market type.
+
+We deliberately avoid overly complex architectures. Football is noisy. Simple, well-calibrated models often outperform complex ones.
+
+---
+
+## What Actually Matters
+
+After years of experimentation, here's what moves the needle:
+
+1. **Data quality over quantity:** Clean, consistent data beats more features
+2. **Calibration over accuracy:** Well-calibrated probabilities matter more than win rate
+3. **Market awareness:** Using odds as features is powerful but requires care
+4. **Honest evaluation:** Out-of-sample testing on recent data, not historical curves
+
+---
+
+## Our Limitations
+
+No model is perfect. Ours struggles with:
+- Early season (small recent sample)
+- Manager changes and squad upheaval
+- Highly unusual match contexts
+- Goalkeeper-dominated matches
+
+We're transparent about uncertainty. When confidence is low, we say so.
+
+---
+
+📖 **Related reading:** [Evaluating Prediction Models](/blog/evaluating-ai-football-prediction-models) • [Feature Engineering Deep Dive](/blog/beyond-odds-football-features)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## AI如何预测足球
+## 构建预测模型：我们的方法
 
-现代**AI足球预测**模型使用机器学习分析大量数据。
+经过多年迭代，我想分享我们在OddsFlow实际进行足球预测的方法。没有魔法——只有仔细的数据工作和诚实的评估。
 
 ---
 
-## 关键要点
+## 数据基础
 
-1. AI分析比人类更多的数据点
-2. xG和高级指标是关键输入
-3. 没有模型是100%准确的
+一切从数据质量开始。我们从多个来源聚合：
 
-*博彩有风险，请理性投注。*
+**比赛级数据：**
+- 历史结果（5年以上）
+- xG和高级指标
+- 阵容信息
+- 比赛内事件
+
+**市场数据：**
+- 多来源赔率快照
+- 价格变动历史
+- 市场时机信息
+
+---
+
+## 特征工程：工作所在
+
+原始数据没有用处。真正的工作是将其转换为预测特征。
+
+**球队实力特征：**
+- 滚动xG平均值（主客场特定）
+- Elo式实力评级
+- 近期状态指标
+
+**市场衍生特征：**
+- 来自开盘赔率的隐含概率
+- 开盘到收盘的变动
+- 跨市场差异
+
+---
+
+## 模型架构
+
+我们使用集成方法——多个模型组合：
+
+**基础模型：**
+- 梯度提升树（XGBoost）用于表格特征
+- 泊松模型用于进球期望
+- 市场共识基线
+
+**组合：**
+基于样本外表现的加权平均。
+
+---
+
+## 真正重要的是什么
+
+经过多年实验，以下是关键：
+
+1. **数据质量胜过数量**
+2. **校准胜过准确性**
+3. **市场意识**
+4. **诚实评估**
+
+---
+
+📖 **相关阅读：** [评估预测模型](/blog/evaluating-ai-football-prediction-models) • [特征工程深度探讨](/blog/beyond-odds-football-features)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 關鍵要點
+## 構建預測模型：我們的方法
 
-1. AI分析更多數據點
-2. xG是關鍵輸入
-3. 沒有模型100%準確
+經過多年迭代，我想分享我們在OddsFlow實際進行足球預測的方法。沒有魔法——只有仔細的數據工作和誠實的評估。
 
-*博彩有風險，請理性投注。*
+---
+
+## 數據基礎
+
+一切從數據品質開始。我們從多個來源聚合：
+
+**比賽級數據：**
+- 歷史結果（5年以上）
+- xG和高級指標
+- 陣容資訊
+
+**市場數據：**
+- 多來源賠率快照
+- 價格變動歷史
+
+---
+
+## 特徵工程：工作所在
+
+**球隊實力特徵：**
+- 滾動xG平均值
+- Elo式實力評級
+- 近期狀態指標
+
+**市場衍生特徵：**
+- 來自開盤賠率的隱含機率
+- 開盤到收盤的變動
+
+---
+
+## 真正重要的是什麼
+
+1. **數據品質勝過數量**
+2. **校準勝過準確性**
+3. **市場意識**
+4. **誠實評估**
+
+---
+
+📖 **相關閱讀：** [評估預測模型](/blog/evaluating-ai-football-prediction-models) • [特徵工程深度探討](/blog/beyond-odds-football-features)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊參考。*
       `,
       JA: `
-## AIモデルがサッカーを予測する方法
+## 予測モデルの構築：私たちのアプローチ
 
-最新の**AIサッカー予測**モデルは、機械学習を使用して膨大な量のデータを分析し、人間が見落とす可能性のあるパターンを特定します。
-
----
-
-## データ入力
-
-### チーム統計
-- 得点/失点
-- xG（期待ゴール）
-- シュート精度
-- ポゼッション率
-
-### フォームとコンテキスト
-- 最近の結果
-- ホーム/アウェイの成績
-- 直接対決の履歴
-- 試合間の休息日数
-
-### 外部要因
-- 怪我と出場停止
-- 天候条件
-- 移動距離
-- 試合の重要性
+何年もの反復を経て、OddsFlowでのサッカー予測の実際のアプローチを共有したいと思います。魔法はありません—慎重なデータ作業と正直な評価だけです。
 
 ---
 
-## モデルタイプ
+## データの基盤
 
-### Elo/レーティングシステム
-結果に基づいてチームの強さを追跡。
+すべてはデータ品質から始まります。複数のソースから集約しています：
 
-### 統計モデル
-ゴール予測のためのポアソン分布。
+**試合レベルのデータ：**
+- 過去の結果（5年以上）
+- xGと高度な指標
+- ラインナップ情報
+- 試合内イベント
 
-### 機械学習
-過去のデータで訓練されたニューラルネットワーク。
-
-### アンサンブル方式
-精度向上のために複数のモデルを組み合わせ。
+**市場データ：**
+- マルチソースのオッズスナップショット
+- 価格変動履歴
 
 ---
 
-## 重要なポイント
+## 特徴量エンジニアリング：仕事の本質
 
-1. AIは人間が処理できるより多くのデータポイントを分析
-2. xGと高度な指標が重要な入力
-3. モデルはより多くのトレーニングデータで改善
-4. 100%正確なモデルはない
+生データは役に立ちません。本当の仕事は、それを予測特徴量に変換することです。
 
-📖 **モデル評価：** [AI予測モデルの評価](/blog/evaluating-ai-football-prediction-models)
+**チーム強度特徴量：**
+- ローリングxG平均（ホーム/アウェイ別）
+- Eloスタイルのパワーレーティング
+- 最近のフォーム指標
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+**市場由来の特徴量：**
+- オープニングオッズからの暗示確率
+- オープニングからクローズへの動き
+- クロスマーケットの乖離
+
+---
+
+## モデルアーキテクチャ
+
+アンサンブルアプローチを使用—複数のモデルを組み合わせ：
+
+**ベースモデル：**
+- テーブル特徴量用の勾配ブースティング木（XGBoost）
+- ゴール期待値用のポアソンモデル
+- 市場コンセンサスベースライン
+
+---
+
+## 本当に重要なこと
+
+1. **量より質**
+2. **精度よりキャリブレーション**
+3. **市場認識**
+4. **正直な評価**
+
+---
+
+📖 **関連記事：** [予測モデルの評価](/blog/evaluating-ai-football-prediction-models) • [特徴量エンジニアリング詳解](/blog/beyond-odds-football-features)
+
+*OddsFlowは教育・情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -2790,154 +3879,248 @@ Combine multiple models for better accuracy.
     readTime: 10,
     date: '2026-01-02',
     author: 'OddsFlow Team',
-    tags: ['AI evaluation', 'prediction accuracy', 'ROI', 'brier score', 'model validation'],
+    tags: ['AI evaluation', 'prediction accuracy', 'Brier score', 'model validation', 'sports analytics', 'machine learning metrics'],
     relatedPosts: ['how-ai-predicts-football-matches', 'ai-vs-human-tipsters-comparison', 'how-to-use-oddsflow-ai-predictions'],
     title: {
-      EN: 'Evaluating AI Football Prediction Models: Key Metrics That Matter',
-      JA: 'AIサッカー予測モデルの評価：重要な指標',
-      '中文': '评估AI足球预测模型：关键指标',
-      '繁體': '評估AI足球預測模型：關鍵指標',
+      EN: 'How We Evaluate Football Prediction Models: The Metrics That Actually Matter',
+      JA: 'サッカー予測モデルの評価方法：本当に重要な指標',
+      '中文': '如何评估足球预测模型：真正重要的指标',
+      '繁體': '如何評估足球預測模型：真正重要的指標',
     },
     excerpt: {
-      EN: 'Learn how to assess AI prediction quality. Understand accuracy, ROI, Brier scores, and what makes a trustworthy prediction model.',
-      JA: 'AI予測の品質を評価する方法を学びましょう。精度、ROI、ブライアスコア、信頼できる予測モデルの条件を理解。',
-      '中文': '学习如何评估AI预测质量。',
-      '繁體': '學習如何評估AI預測質量。',
+      EN: 'After building dozens of prediction models, here are the metrics we actually trust. Skip the hype and learn to evaluate AI systems properly.',
+      JA: '数十の予測モデルを構築した経験から、実際に信頼できる指標を紹介します。',
+      '中文': '在构建数十个预测模型之后，这些是我们真正信任的指标。',
+      '繁體': '在構建數十個預測模型之後，這些是我們真正信任的指標。',
     },
     content: {
       EN: `
-## How to Evaluate AI Prediction Models
+## Why Most "AI Prediction" Claims Fall Apart
 
-Not all AI prediction services are created equal. Here's how to assess their quality.
+Here's something I learned the hard way: anyone can claim 70% accuracy. Making that number meaningful is a completely different story.
 
----
-
-## Key Metrics
-
-### 1. Win Rate / Accuracy
-Percentage of correct predictions.
-- Average tipster: 50-55%
-- Good model: 55-60%
-- Excellent model: 60%+
-
-### 2. ROI (Return on Investment)
-Profit as percentage of total stakes.
-- Break-even: 0%
-- Good: 5-10%
-- Excellent: 10%+
-
-### 3. Brier Score
-Measures probability calibration (lower is better).
-- Random: 0.25
-- Good: <0.20
-- Excellent: <0.18
-
-### 4. Sample Size
-More predictions = more reliable metrics.
-- Minimum: 500 picks
-- Ideal: 1000+ picks
+When I started evaluating prediction systems—both our own at OddsFlow and competitors'—I quickly realized that most published metrics are either misleading or incomplete. This article shares the framework we actually use internally.
 
 ---
 
-## Red Flags
+## The Metrics We Trust
 
-- No historical performance data
-- Unrealistic win rates (70%+)
-- No ROI tracking
-- Cherry-picked results
+### Accuracy Alone Is Meaningless
+
+Yes, we track hit rate. But here's the problem: if you only predict heavy favorites, you can hit 60%+ while providing zero useful insight.
+
+That's why we always pair accuracy with **calibration**—does a 70% prediction actually happen 70% of the time across hundreds of samples?
+
+| What We Measure | Why It Matters |
+|-----------------|----------------|
+| Raw accuracy | Baseline sanity check |
+| Accuracy by confidence tier | Does high confidence mean anything? |
+| Calibration curve | Predicted vs actual outcome rates |
+
+### Brier Score: Our Primary Metric
+
+If I had to pick one number, it's the Brier score. It penalizes overconfidence and rewards well-calibrated probabilities.
+
+- **Random guessing:** 0.25
+- **Good model:** < 0.20
+- **Excellent model:** < 0.18
+
+We publish our Brier scores on the [AI Performance](/performance) page because we believe in transparency.
+
+### Sample Size Is Non-Negotiable
+
+Any metric under 500 predictions is essentially noise. We don't draw conclusions until we have at least 1,000 samples per market type. It's boring but necessary.
 
 ---
 
-## Key Takeaways
+## Red Flags We've Learned to Spot
 
-1. Evaluate win rate AND ROI together
-2. Demand transparency in track records
-3. Large sample sizes are essential
-4. Beware of too-good-to-be-true claims
+After reviewing many prediction services, these patterns always indicate problems:
 
-*Gambling involves risk. Please bet responsibly.*
+- **No historical data available** — if they can't show you past performance, there's probably a reason
+- **Suspiciously high win rates** — anything over 65% sustained is almost certainly cherry-picked
+- **Selective reporting** — showing only winning streaks or certain leagues
+- **No probability outputs** — just "pick this team" with no confidence level
+
+---
+
+## How We Evaluate Our Own Models
+
+At OddsFlow, every model update goes through this pipeline:
+
+1. **Backtest on held-out data** — never evaluate on training data
+2. **Check calibration across bins** — are our 60% predictions hitting near 60%?
+3. **Compare to market baseline** — can we beat closing odds?
+4. **Run for 3+ months live** — paper performance doesn't count
+
+We've killed plenty of models that looked great in backtesting but failed live. That's the process.
+
+---
+
+## What This Means For You
+
+When evaluating any prediction system—including ours—ask these questions:
+
+1. What's the sample size behind those numbers?
+2. Are they showing calibration, not just accuracy?
+3. Can you verify the historical track record?
+4. Are they honest about limitations and losing streaks?
+
+The best systems are the ones that tell you when they're uncertain.
+
+📖 **Related reading:** [How We Build AI Models](/blog/how-ai-predicts-football-matches) • [AI vs Human Analysis](/blog/ai-vs-human-tipsters-comparison)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 关键指标
+## 为什么大多数"AI预测"说法站不住脚
 
-### 胜率
-- 普通：50-55%
-- 良好：55-60%
-- 优秀：60%+
+这是我在实践中学到的教训：任何人都可以声称70%的准确率。让这个数字有意义则完全是另一回事。
 
-### ROI
-- 良好：5-10%
-- 优秀：10%+
+当我开始评估预测系统——包括OddsFlow自己的和竞争对手的——我很快意识到，大多数公布的指标要么具有误导性，要么不完整。
 
 ---
 
-## 关键要点
+## 我们信任的指标
 
-1. 同时评估胜率和ROI
-2. 要求历史记录透明
-3. 大样本量至关重要
+### 准确率本身毫无意义
 
-*博彩有风险，请理性投注。*
+是的，我们跟踪命中率。但问题是：如果你只预测大热门，你可以达到60%+的命中率，但提供零有用的洞察。
+
+这就是为什么我们总是将准确率与**校准度**配对——一个70%的预测在数百个样本中是否真的发生70%的时间？
+
+### Brier分数：我们的主要指标
+
+如果我必须选择一个数字，那就是Brier分数。它惩罚过度自信并奖励校准良好的概率。
+
+- **随机猜测：** 0.25
+- **好模型：** < 0.20
+- **优秀模型：** < 0.18
+
+### 样本量不可协商
+
+任何少于500个预测的指标本质上都是噪音。我们在每种市场类型至少有1,000个样本之前不会下结论。
+
+---
+
+## 我们学会发现的危险信号
+
+- **没有历史数据可用** — 如果他们无法向你展示过去的表现，可能有原因
+- **可疑的高胜率** — 任何持续超过65%的几乎肯定是精心挑选的
+- **选择性报告** — 只展示连胜或某些联赛
+- **没有概率输出** — 只是"选这个队"而没有置信度
+
+---
+
+## 这对你意味着什么
+
+在评估任何预测系统时——包括我们的——问这些问题：
+
+1. 那些数字背后的样本量是多少？
+2. 他们是否展示校准度，而不仅仅是准确率？
+3. 你能验证历史记录吗？
+4. 他们对局限性和连败诚实吗？
+
+📖 **相关阅读：** [我们如何构建AI模型](/blog/how-ai-predicts-football-matches) • [AI与人类分析对比](/blog/ai-vs-human-tipsters-comparison)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 關鍵要點
+## 為什麼大多數「AI預測」說法站不住腳
 
-1. 同時評估勝率和ROI
-2. 要求歷史記錄透明
+這是我在實踐中學到的教訓：任何人都可以聲稱70%的準確率。讓這個數字有意義則完全是另一回事。
 
-*博彩有風險，請理性投注。*
+---
+
+## 我們信任的指標
+
+### 準確率本身毫無意義
+
+如果你只預測大熱門，你可以達到60%+的命中率，但提供零有用的洞察。這就是為什麼我們總是將準確率與**校準度**配對。
+
+### Brier分數：我們的主要指標
+
+- **隨機猜測：** 0.25
+- **好模型：** < 0.20
+- **優秀模型：** < 0.18
+
+### 樣本量不可協商
+
+任何少於500個預測的指標本質上都是噪音。
+
+---
+
+## 我們學會發現的危險信號
+
+- **沒有歷史數據可用**
+- **可疑的高勝率** — 任何持續超過65%的幾乎肯定是精心挑選的
+- **選擇性報告**
+- **沒有概率輸出**
+
+---
+
+## 這對你意味著什麼
+
+1. 那些數字背後的樣本量是多少？
+2. 他們是否展示校準度？
+3. 你能驗證歷史記錄嗎？
+
+📖 **相關閱讀：** [我們如何構建AI模型](/blog/how-ai-predicts-football-matches)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和信息參考。*
       `,
       JA: `
-## AI予測モデルの評価方法
+## なぜほとんどの「AI予測」の主張は崩壊するのか
 
-すべてのAI予測サービスが同等に作られているわけではありません。品質を評価する方法を紹介します。
+これは私が身をもって学んだことです：誰でも70%の精度を主張できます。その数字を意味のあるものにすることは全く別の話です。
 
----
-
-## 主要指標
-
-### 1. 勝率/精度
-正しい予測の割合。
-- 平均的なティップスター：50-55%
-- 良いモデル：55-60%
-- 優秀なモデル：60%+
-
-### 2. ROI（投資収益率）
-総賭け金に対する利益の割合。
-- 損益分岐点：0%
-- 良い：5-10%
-- 優秀：10%+
-
-### 3. ブライアスコア
-確率のキャリブレーションを測定（低いほど良い）。
-- ランダム：0.25
-- 良い：<0.20
-- 優秀：<0.18
-
-### 4. サンプルサイズ
-予測数が多いほど信頼性の高い指標。
-- 最低：500ピック
-- 理想：1000+ピック
+予測システムを評価し始めたとき—OddsFlow自身のものと競合他社のもの—公開されているほとんどのメトリクスが誤解を招くか不完全であることにすぐに気づきました。
 
 ---
 
-## 警告サイン
+## 私たちが信頼するメトリクス
 
-- 過去のパフォーマンスデータがない
-- 非現実的な勝率（70%+）
-- ROI追跡がない
-- 都合の良い結果だけを選択
+### 精度だけでは意味がない
+
+はい、命中率を追跡します。しかし問題は：重い優勝候補だけを予測すれば、ゼロの有用な洞察を提供しながら60%以上を達成できることです。
+
+だから私たちは常に精度と**キャリブレーション**を組み合わせます—70%の予測は数百のサンプルで実際に70%の確率で起こりますか？
+
+### ブライアスコア：私たちの主要メトリクス
+
+1つの数字を選ぶなら、ブライアスコアです。過信を罰し、適切にキャリブレーションされた確率を報酬します。
+
+- **ランダム推測：** 0.25
+- **良いモデル：** < 0.20
+- **優秀なモデル：** < 0.18
+
+### サンプルサイズは譲れない
+
+500予測未満のメトリクスは本質的にノイズです。市場タイプごとに少なくとも1,000サンプルを持つまで結論を出しません。
 
 ---
 
-## 重要なポイント
+## 私たちが見つけることを学んだ警告サイン
 
-1. 勝率とROIを一緒に評価
-2. トラックレコードの透明性を要求
-3. 大きなサンプルサイズが不可欠
-4. あまりに良すぎる主張には注意
+- **利用可能な履歴データがない** — 過去のパフォーマンスを見せられないなら、おそらく理由がある
+- **疑わしく高い勝率** — 65%以上の持続はほぼ確実にチェリーピッキング
+- **選択的報告** — 勝ちストリークや特定のリーグだけを表示
+- **確率出力がない** — 信頼度レベルなしで「このチームを選べ」だけ
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+---
+
+## これがあなたにとって意味すること
+
+予測システムを評価するとき—私たちのものを含めて—これらの質問をしてください：
+
+1. それらの数字の背後にあるサンプルサイズは？
+2. 精度だけでなくキャリブレーションを示していますか？
+3. 履歴記録を確認できますか？
+4. 限界と負けストリークについて正直ですか？
+
+📖 **関連記事：** [AIモデルの構築方法](/blog/how-ai-predicts-football-matches) • [AI vs 人間分析](/blog/ai-vs-human-tipsters-comparison)
+
+*OddsFlowは教育および情報提供目的でAI搭載のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -2949,176 +4132,265 @@ More predictions = more reliable metrics.
     readTime: 9,
     date: '2025-12-31',
     author: 'OddsFlow Team',
-    tags: ['AI vs human', 'tipsters', 'prediction comparison', 'betting analysis', 'model performance'],
+    tags: ['AI analysis', 'human expertise', 'prediction comparison', 'sports analytics', 'machine learning', 'data science'],
     relatedPosts: ['how-ai-predicts-football-matches', 'evaluating-ai-football-prediction-models', 'how-to-use-oddsflow-ai-predictions'],
     title: {
-      EN: 'AI vs Human Tipsters: Which Produces Better Football Predictions?',
-      JA: 'AI vs 人間ティップスター：どちらがより良いサッカー予測を生み出すか？',
-      '中文': 'AI vs 人类专家：谁的足球预测更准确？',
-      '繁體': 'AI vs 人類專家：誰的足球預測更準確？',
+      EN: 'AI vs Human Analysis: Where Algorithms Excel and Where They Struggle',
+      JA: 'AI vs 人間分析：アルゴリズムが優れる場所と苦戦する場所',
+      '中文': 'AI vs 人类分析：算法擅长与不足之处',
+      '繁體': 'AI vs 人類分析：算法擅長與不足之處',
     },
     excerpt: {
-      EN: 'An honest comparison of AI and human prediction performance. When to trust algorithms and when human insight still has the edge.',
-      JA: 'AIと人間の予測パフォーマンスの正直な比較。アルゴリズムを信頼すべき時と、人間の洞察がまだ優位な時を解説。',
-      '中文': 'AI与人类预测表现的真实比较。',
-      '繁體': 'AI與人類預測表現的真實比較。',
+      EN: 'After years of building models and watching human analysts, here is an honest breakdown of what each approach does well—and what it misses.',
+      JA: '長年モデルを構築し人間のアナリストを観察してきた経験から、各アプローチの長所と短所を正直に解説します。',
+      '中文': '经过多年构建模型和观察人类分析师，这里是对每种方法优缺点的诚实分析。',
+      '繁體': '經過多年構建模型和觀察人類分析師，這裡是對每種方法優缺點的誠實分析。',
     },
     content: {
       EN: `
-## AI vs Human: An Honest Comparison
+## The Question Everyone Asks
 
-Both AI and human tipsters have strengths and weaknesses. Understanding them helps you make better decisions.
+"Is AI better than human analysts?"
 
----
+I've been asked this hundreds of times since we started OddsFlow. The honest answer: it depends entirely on what you're measuring and what context you're in.
 
-## AI Strengths
-
-- Processes vast data quickly
-- No emotional bias
-- Consistent methodology
-- Covers many matches simultaneously
-
-## AI Weaknesses
-
-- May miss qualitative factors
-- Struggles with unusual situations
-- Black box decision making
-- Dependent on data quality
+After building prediction systems and also working with experienced football analysts, I've developed a clear picture of where each approach shines—and where it falls flat.
 
 ---
 
-## Human Strengths
+## Where AI Genuinely Excels
 
-- Contextual understanding
-- Qualitative insight (team morale, etc.)
-- Adapts to new situations
-- Can explain reasoning
+### Processing Scale
 
-## Human Weaknesses
+This is the obvious one, but it matters more than people realize. Our models analyze every match across 50+ leagues simultaneously. No human can maintain that coverage with consistent depth.
 
-- Emotional bias
-- Cognitive limitations
-- Inconsistency
-- Limited match coverage
+### Consistency Under Pressure
+
+AI doesn't get nervous before a derby. It doesn't have a favorite team. It doesn't remember that one bad call from last week and overcompensate. The same inputs always produce the same analysis.
+
+### Pattern Recognition Across Large Datasets
+
+When I look at xG trends over 5 seasons across 20 leagues, I see... a lot of numbers. Our models see patterns that would take humans months to identify—if they spotted them at all.
+
+| AI Advantage | Example |
+|--------------|---------|
+| Scale | 500+ matches/week analyzed identically |
+| Consistency | Same methodology every single time |
+| Speed | Market data processed in milliseconds |
+| Memory | Full historical context, never forgotten |
 
 ---
 
-## When to Trust AI
+## Where Humans Still Win
 
-- High-volume betting
-- Data-rich markets
-- Removing emotional bias
+### Context That Doesn't Appear in Data
 
-## When to Trust Humans
+A manager's press conference tone. The atmosphere at the stadium. A star player going through a divorce. These things affect matches but don't show up in any dataset.
 
-- Local league expertise
+### Novel Situations
+
+COVID-era matches. Stadium relocations. Unprecedented weather. AI models trained on historical patterns struggle when the patterns break. Experienced analysts adapt faster.
+
+### Explaining the "Why"
+
+When our model says 62% home win probability, it's drawing from thousands of weighted features. Good human analysts can articulate causal reasoning in ways that models fundamentally cannot.
+
+---
+
+## The Real Answer: Combination
+
+Here's what I've learned works best:
+
+**Use AI for:**
+- Initial screening and coverage
+- Removing emotional bias from analysis
+- Tracking markets systematically
+- Quantifying what can be quantified
+
+**Use human judgment for:**
+- Final context check before major decisions
 - Unusual match circumstances
-- Recent squad changes
+- Recent developments not yet in data
+- Gut-checking model outputs that seem off
+
+At OddsFlow, we don't pretend our AI replaces human thinking. We position it as a tool that handles the quantitative heavy lifting so analysts can focus on what they do best.
 
 ---
 
-## Key Takeaways
+## Why "AI vs Human" Is the Wrong Frame
 
-1. Best approach: Combine AI data with human insight
-2. AI excels at scale and consistency
-3. Humans excel at context and adaptation
-4. Neither is perfect—diversify your sources
+The real question isn't which is better. It's: how do you combine both effectively?
 
-*Gambling involves risk. Please bet responsibly.*
+Pure AI analysis misses important context. Pure human analysis is inconsistent and can't scale. The magic happens when you use each for what it does best.
+
+📖 **Related reading:** [How We Build AI Models](/blog/how-ai-predicts-football-matches) • [Evaluating Prediction Quality](/blog/evaluating-ai-football-prediction-models)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## AI与人类的优劣势
+## 每个人都问的问题
 
-### AI优势
-- 快速处理大量数据
-- 无情绪偏见
-- 一致的方法论
+"AI比人类分析师更好吗？"
 
-### 人类优势
-- 上下文理解
-- 定性洞察
-- 适应新情况
+自从我们创立OddsFlow以来，我被问过这个问题无数次。诚实的回答是：这完全取决于你在测量什么以及你所处的情境。
 
 ---
 
-## 关键要点
+## AI真正擅长的地方
 
-1. 最佳方法：结合AI数据与人类洞察
-2. AI擅长规模和一致性
-3. 人类擅长上下文和适应
+### 处理规模
 
-*博彩有风险，请理性投注。*
+这是显而易见的，但它比人们意识到的更重要。我们的模型同时分析50多个联赛的每场比赛。没有人能以一致的深度保持这种覆盖范围。
+
+### 压力下的一致性
+
+AI不会在德比赛前紧张。它没有最爱的球队。它不会记住上周的一个糟糕判断然后过度补偿。
+
+### 大数据集中的模式识别
+
+当我查看5个赛季20个联赛的xG趋势时，我看到的是大量数字。我们的模型能看到人类需要数月才能识别的模式。
+
+---
+
+## 人类仍然获胜的地方
+
+### 数据中不出现的背景
+
+教练的新闻发布会语气。体育场的氛围。一个球星正在经历离婚。这些事情影响比赛但不会出现在任何数据集中。
+
+### 新情况
+
+疫情时代的比赛。体育场搬迁。前所未有的天气。基于历史模式训练的AI模型在模式打破时会困难重重。
+
+### 解释"为什么"
+
+当我们的模型说62%主场获胜概率时，它是从数千个加权特征中得出的。好的人类分析师能以模型根本无法做到的方式阐明因果推理。
+
+---
+
+## 真正的答案：组合
+
+**使用AI用于：**
+- 初步筛选和覆盖
+- 从分析中消除情绪偏见
+- 系统地跟踪市场
+
+**使用人类判断用于：**
+- 重大决策前的最终背景检查
+- 不寻常的比赛情况
+- 数据中尚未包含的最新发展
+
+📖 **相关阅读：** [我们如何构建AI模型](/blog/how-ai-predicts-football-matches) • [评估预测质量](/blog/evaluating-ai-football-prediction-models)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 關鍵要點
+## 每個人都問的問題
 
-1. 結合AI數據與人類洞察
-2. AI擅長規模和一致性
-3. 人類擅長上下文
+"AI比人類分析師更好嗎？"
 
-*博彩有風險，請理性投注。*
+誠實的回答是：這完全取決於你在測量什麼以及你所處的情境。
+
+---
+
+## AI真正擅長的地方
+
+### 處理規模
+
+我們的模型同時分析50多個聯賽的每場比賽。沒有人能以一致的深度保持這種覆蓋範圍。
+
+### 壓力下的一致性
+
+AI不會在德比賽前緊張。它沒有最愛的球隊。
+
+### 大數據集中的模式識別
+
+我們的模型能看到人類需要數月才能識別的模式。
+
+---
+
+## 人類仍然獲勝的地方
+
+### 數據中不出現的背景
+
+教練的新聞發布會語氣。體育場的氛圍。這些事情影響比賽但不會出現在任何數據集中。
+
+### 新情況
+
+基於歷史模式訓練的AI模型在模式打破時會困難重重。
+
+---
+
+## 真正的答案：組合
+
+**使用AI用於：**
+- 初步篩選和覆蓋
+- 從分析中消除情緒偏見
+
+**使用人類判斷用於：**
+- 重大決策前的最終背景檢查
+- 不尋常的比賽情況
+
+📖 **相關閱讀：** [我們如何構建AI模型](/blog/how-ai-predicts-football-matches)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和信息參考。*
       `,
       JA: `
-## AI vs 人間：正直な比較
+## みんなが聞く質問
 
-AIと人間のティップスターの両方に長所と短所があります。それらを理解することで、より良い判断ができるようになります。
+「AIは人間のアナリストより優れていますか？」
 
----
-
-## AIの長所
-
-- 膨大なデータを高速処理
-- 感情的バイアスがない
-- 一貫した方法論
-- 多くの試合を同時にカバー
-
-## AIの弱点
-
-- 定性的要因を見逃す可能性
-- 異常な状況への対応が困難
-- ブラックボックス的な意思決定
-- データ品質に依存
+OddsFlowを始めて以来、この質問を何百回も受けてきました。正直な答え：測定しているものと、どのような状況にあるかによって完全に異なります。
 
 ---
 
-## 人間の長所
+## AIが本当に優れている場所
 
-- 文脈的理解
-- 定性的洞察（チームの士気など）
-- 新しい状況への適応
-- 推論を説明できる
+### 処理規模
 
-## 人間の弱点
+これは明らかですが、人々が認識している以上に重要です。私たちのモデルは50以上のリーグのすべての試合を同時に分析します。
 
-- 感情的バイアス
-- 認知的限界
-- 一貫性の欠如
-- カバーできる試合数の制限
+### プレッシャー下での一貫性
+
+AIはダービー前に緊張しません。お気に入りのチームがありません。先週の悪いコールを覚えて過剰補正することもありません。
+
+### 大規模データセットでのパターン認識
+
+5シーズン20リーグにわたるxGトレンドを見ると、私は多くの数字を見ます。私たちのモデルは人間が何ヶ月もかけて特定するパターンを見つけます。
 
 ---
 
-## AIを信頼すべき時
+## 人間がまだ勝つ場所
 
-- 大量のベッティング
-- データが豊富な市場
-- 感情的バイアスの排除
+### データに現れないコンテキスト
 
-## 人間を信頼すべき時
+監督の記者会見のトーン。スタジアムの雰囲気。スター選手が離婚中。これらは試合に影響しますが、どのデータセットにも現れません。
 
-- ローカルリーグの専門知識
+### 新しい状況
+
+COVID時代の試合。スタジアム移転。前例のない天候。歴史的パターンで訓練されたAIモデルは、パターンが崩れると苦戦します。
+
+### 「なぜ」を説明する
+
+私たちのモデルが62%のホーム勝利確率と言うとき、何千もの加重機能から引き出しています。良い人間のアナリストは、モデルが根本的にできない方法で因果推論を明確に表現できます。
+
+---
+
+## 本当の答え：組み合わせ
+
+**AIを使う場面：**
+- 初期スクリーニングとカバレッジ
+- 分析から感情的バイアスを取り除く
+- 市場を体系的に追跡
+
+**人間の判断を使う場面：**
+- 重要な決定前の最終コンテキストチェック
 - 異常な試合状況
-- 最近のスクワッド変更
+- データにまだない最近の展開
 
----
+📖 **関連記事：** [AIモデルの構築方法](/blog/how-ai-predicts-football-matches) • [予測品質の評価](/blog/evaluating-ai-football-prediction-models)
 
-## 重要なポイント
-
-1. 最良のアプローチ：AIデータと人間の洞察を組み合わせる
-2. AIはスケールと一貫性に優れる
-3. 人間はコンテキストと適応に優れる
-4. どちらも完璧ではない—ソースを多様化
-
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+*OddsFlowは教育および情報提供目的でAI搭載のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -3130,149 +4402,269 @@ AIと人間のティップスターの両方に長所と短所があります。
     readTime: 8,
     date: '2025-12-30',
     author: 'OddsFlow Team',
-    tags: ['OddsFlow', 'AI predictions', 'betting guide', 'prediction tool', 'football betting'],
+    tags: ['OddsFlow', 'AI predictions', 'sports analytics', 'prediction tool', 'football analysis', 'data-driven insights'],
     relatedPosts: ['how-to-interpret-football-odds', 'how-ai-predicts-football-matches', 'responsible-football-betting-guide'],
     title: {
-      EN: 'How to Use OddsFlow AI Predictions: Maximize Your Edge',
-      JA: 'OddsFlow AI予測の使い方：エッジを最大化する',
-      '中文': '如何使用OddsFlow AI预测：最大化您的优势',
-      '繁體': '如何使用OddsFlow AI預測：最大化您的優勢',
+      EN: 'Getting the Most from OddsFlow: A Practical Guide to Our AI Analysis',
+      JA: 'OddsFlowを最大限に活用する：AI分析の実践ガイド',
+      '中文': '充分利用OddsFlow：AI分析实用指南',
+      '繁體': '充分利用OddsFlow：AI分析實用指南',
     },
     excerpt: {
-      EN: 'A practical guide to getting the most from OddsFlow predictions. Learn to interpret confidence levels, combine with your analysis, and manage stakes.',
-      JA: 'OddsFlow予測を最大限に活用するための実践ガイド。信頼度レベルの解釈、自分の分析との組み合わせ、ステーク管理の方法を学びましょう。',
-      '中文': '充分利用OddsFlow预测的实用指南。',
-      '繁體': '充分利用OddsFlow預測的實用指南。',
+      EN: 'A walkthrough of how to interpret our predictions, understand confidence levels, and integrate OddsFlow data into your own analysis workflow.',
+      JA: '予測の解釈方法、信頼度レベルの理解、OddsFlowデータを分析ワークフローに統合する方法を解説します。',
+      '中文': '如何解读我们的预测、理解置信度级别，并将OddsFlow数据整合到您的分析工作流程中。',
+      '繁體': '如何解讀我們的預測、理解置信度級別，並將OddsFlow數據整合到您的分析工作流程中。',
     },
     content: {
       EN: `
-## Getting Started with OddsFlow
+## What You're Actually Looking At
 
-OddsFlow provides AI-powered football predictions across multiple leagues and bet types. Here's how to use them effectively.
+When you open OddsFlow, you see probability estimates—not guarantees. I want to be clear about what that means and how to use these numbers effectively.
 
----
-
-## Understanding Predictions
-
-### Confidence Levels
-
-| Level | What It Means | Suggested Action |
-|-------|---------------|------------------|
-| High | 65%+ probability | Consider larger stake |
-| Medium | 55-65% probability | Standard stake |
-| Low | <55% probability | Small stake or skip |
-
-### Probability vs Odds
-
-Always compare our probability estimate to bookmaker implied probability. If OddsFlow > Implied = potential value.
+Our models output probabilities based on historical patterns, current odds data, and various match features. This guide explains how to interpret those outputs and combine them with your own judgment.
 
 ---
 
-## Best Practices
+## Understanding Confidence Tiers
 
-### Do:
-- Compare our predictions to your own analysis
-- Check confidence levels before betting
-- Track your results over time
-- Use proper bankroll management
+We categorize predictions into confidence levels not because higher confidence means "definite win," but because it reflects how strongly the model's probability estimate differs from baseline expectations.
 
-### Don't:
-- Blindly follow every prediction
-- Ignore low confidence warnings
-- Bet more than you can afford
-- Chase losses
+| Confidence | Model Probability | What This Actually Means |
+|------------|-------------------|--------------------------|
+| High | 65%+ | Strong divergence from market baseline |
+| Medium | 55-65% | Moderate signal, typical range |
+| Low | Below 55% | Weaker signal, proceed with caution |
+
+**Important:** High confidence doesn't mean the outcome is certain. It means the model has identified stronger-than-usual patterns in the data.
 
 ---
 
-## Key Takeaways
+## How to Use This in Practice
 
-1. Use confidence levels to guide stake sizing
-2. Compare AI probability to bookmaker odds
-3. Combine with your own research
-4. Always bet responsibly
+### Step 1: Compare to Market Prices
 
-📖 **Safety first:** [Responsible Betting Guide](/blog/responsible-football-betting-guide)
+Our most useful output is the gap between our probability estimate and the implied probability from current odds.
 
-*Gambling involves risk. Please bet responsibly.*
+- If we say 62% and the market implies 55%, that's a meaningful difference
+- If we say 58% and the market implies 57%, that's essentially noise
+
+### Step 2: Check Match Context
+
+Our models don't know about things like:
+- Manager just got fired yesterday
+- Key player returned from injury 2 days ago
+- Local derby with unusual atmosphere
+
+You need to apply this context yourself.
+
+### Step 3: Track Over Time
+
+One prediction means nothing. The value of any analytical tool shows up over hundreds of samples. Keep records and evaluate performance over at least a season.
+
+---
+
+## What OddsFlow Is NOT
+
+Let me be direct about limitations:
+
+- We're not a crystal ball. Probabilities are estimates, not certainties.
+- We're not replacing your analysis. We're supplementing it with data.
+- We're not financial advice. This is sports analytics for informational purposes.
+
+---
+
+## Best Practices I'd Recommend
+
+**Do:**
+- Cross-reference our data with your own research
+- Pay attention to confidence levels
+- Look for patterns over many matches, not individual results
+- Use the data to challenge your assumptions
+
+**Don't:**
+- Treat any single prediction as a sure thing
+- Ignore context that our models can't capture
+- Use this for purposes beyond education and entertainment
+
+---
+
+## Exploring the Platform
+
+If you're new, here's where to start:
+
+- **[Predictions Page](/predictions)** — Today's match analysis with probability breakdowns
+- **[AI Performance](/performance)** — Our historical accuracy and Brier scores (transparency matters)
+- **[Leagues](/leagues)** — Filter by the competitions you follow
+
+📖 **Related reading:** [How We Build Our Models](/blog/how-ai-predicts-football-matches) • [Understanding Responsible Use](/blog/responsible-use-of-predictions)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## OddsFlow入门
+## 你实际在看什么
 
-OddsFlow提供多个联赛的AI足球预测。
+当你打开OddsFlow时，你看到的是概率估计——而不是保证。我想清楚地说明这意味着什么，以及如何有效地使用这些数字。
 
-### 置信度水平
-- 高：65%+概率
-- 中：55-65%概率
-- 低：<55%概率
+我们的模型基于历史模式、当前赔率数据和各种比赛特征输出概率。本指南解释如何解读这些输出并将其与您自己的判断相结合。
 
 ---
 
-## 关键要点
+## 理解置信度层级
 
-1. 使用置信度指导投注金额
-2. 将AI概率与博彩公司赔率比较
-3. 结合您自己的研究
+| 置信度 | 模型概率 | 这实际意味着什么 |
+|--------|----------|------------------|
+| 高 | 65%+ | 与市场基线的强偏离 |
+| 中 | 55-65% | 中等信号，典型范围 |
+| 低 | 低于55% | 较弱信号，谨慎行事 |
 
-*博彩有风险，请理性投注。*
+**重要：** 高置信度并不意味着结果是确定的。它意味着模型在数据中识别出了比平常更强的模式。
+
+---
+
+## 如何在实践中使用
+
+### 第1步：与市场价格比较
+
+我们最有用的输出是我们的概率估计与当前赔率隐含概率之间的差距。
+
+### 第2步：检查比赛背景
+
+我们的模型不知道以下事情：
+- 教练昨天刚被解雇
+- 关键球员2天前伤愈复出
+- 具有不寻常氛围的本地德比
+
+您需要自己应用这些背景。
+
+### 第3步：长期跟踪
+
+一个预测没有意义。任何分析工具的价值都体现在数百个样本上。
+
+---
+
+## OddsFlow不是什么
+
+让我直接说明局限性：
+
+- 我们不是水晶球。概率是估计，不是确定性。
+- 我们不是替代您的分析。我们是用数据补充它。
+- 我们不是财务建议。这是用于信息目的的体育分析。
+
+---
+
+## 探索平台
+
+如果您是新手，从这里开始：
+
+- **[预测页面](/predictions)** — 今日比赛分析和概率分解
+- **[AI表现](/performance)** — 我们的历史准确性和Brier分数
+
+📖 **相关阅读：** [我们如何构建模型](/blog/how-ai-predicts-football-matches)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 關鍵要點
+## 你實際在看什麼
 
-1. 使用置信度指導投注金額
-2. 將AI概率與博彩公司賠率比較
-3. 結合您自己的研究
+當你打開OddsFlow時，你看到的是概率估計——而不是保證。
 
-*博彩有風險，請理性投注。*
+我們的模型基於歷史模式、當前賠率數據和各種比賽特徵輸出概率。
+
+---
+
+## 理解置信度層級
+
+| 置信度 | 模型概率 | 這實際意味著什麼 |
+|--------|----------|------------------|
+| 高 | 65%+ | 與市場基線的強偏離 |
+| 中 | 55-65% | 中等信號 |
+| 低 | 低於55% | 較弱信號 |
+
+**重要：** 高置信度並不意味著結果是確定的。
+
+---
+
+## 如何在實踐中使用
+
+### 第1步：與市場價格比較
+### 第2步：檢查比賽背景
+### 第3步：長期跟蹤
+
+---
+
+## OddsFlow不是什麼
+
+- 我們不是水晶球
+- 我們不是替代您的分析
+- 我們不是財務建議
+
+📖 **相關閱讀：** [我們如何構建模型](/blog/how-ai-predicts-football-matches)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和信息參考。*
       `,
       JA: `
-## OddsFlowを始める
+## 実際に見ているもの
 
-OddsFlowは複数のリーグとベットタイプにわたるAI搭載のサッカー予測を提供しています。効果的に使用する方法を紹介します。
+OddsFlowを開くと、確率推定値が表示されます—保証ではありません。これが何を意味し、これらの数字を効果的に使用する方法を明確にしたいと思います。
 
----
-
-## 予測の理解
-
-### 信頼度レベル
-
-| レベル | 意味 | 推奨アクション |
-|-------|---------------|------------------|
-| 高 | 65%+の確率 | 大きめのステークを検討 |
-| 中 | 55-65%の確率 | 標準ステーク |
-| 低 | 55%未満の確率 | 小さいステークまたはスキップ |
-
-### 確率 vs オッズ
-
-常に私たちの確率推定をブックメーカーの暗示確率と比較してください。OddsFlow > 暗示確率 = 潜在的バリュー。
+私たちのモデルは、過去のパターン、現在のオッズデータ、さまざまな試合特徴に基づいて確率を出力します。このガイドでは、それらの出力を解釈し、あなた自身の判断と組み合わせる方法を説明します。
 
 ---
 
-## ベストプラクティス
+## 信頼度レベルの理解
 
-### すべきこと：
-- 私たちの予測を自分の分析と比較する
-- ベッティング前に信頼度レベルを確認する
-- 時間をかけて結果を追跡する
-- 適切な資金管理を使用する
+| 信頼度 | モデル確率 | これが実際に意味すること |
+|--------|----------|--------------------------|
+| 高 | 65%+ | 市場ベースラインからの強い乖離 |
+| 中 | 55-65% | 中程度のシグナル、典型的な範囲 |
+| 低 | 55%未満 | 弱いシグナル、慎重に進む |
 
-### すべきでないこと：
-- すべての予測に盲目的に従う
-- 低信頼度の警告を無視する
-- 余裕のある以上に賭ける
-- 損失を追いかける
+**重要：** 高信頼度は結果が確実であることを意味しません。モデルがデータで通常より強いパターンを特定したことを意味します。
 
 ---
 
-## 重要なポイント
+## 実践での使い方
 
-1. ステークサイズのガイドに信頼度レベルを使用
-2. AI確率をブックメーカーオッズと比較
-3. 自分自身のリサーチと組み合わせる
-4. 常に責任を持ってベット
+### ステップ1：市場価格と比較
 
-📖 **安全第一：** [責任あるベッティングガイド](/blog/responsible-football-betting-guide)
+最も有用な出力は、私たちの確率推定と現在のオッズの暗示確率との間のギャップです。
 
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。*
+### ステップ2：試合のコンテキストを確認
+
+私たちのモデルは以下のことを知りません：
+- 監督が昨日解雇された
+- キー選手が2日前に怪我から復帰した
+- 異常な雰囲気のローカルダービー
+
+このコンテキストは自分で適用する必要があります。
+
+### ステップ3：時間をかけて追跡
+
+1つの予測は何の意味もありません。分析ツールの価値は何百ものサンプルで現れます。
+
+---
+
+## OddsFlowが「ではない」もの
+
+制限について直接的に述べます：
+
+- 水晶玉ではありません。確率は推定であり、確実性ではありません。
+- あなたの分析を置き換えるものではありません。データで補完しています。
+- 財務アドバイスではありません。情報目的のスポーツ分析です。
+
+---
+
+## プラットフォームの探索
+
+新しい方は、ここから始めてください：
+
+- **[予測ページ](/predictions)** — 今日の試合分析と確率内訳
+- **[AIパフォーマンス](/performance)** — 過去の精度とブライアスコア
+
+📖 **関連記事：** [モデルの構築方法](/blog/how-ai-predicts-football-matches)
+
+*OddsFlowは教育および情報提供目的でAI搭載のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -3284,178 +4676,234 @@ OddsFlowは複数のリーグとベットタイプにわたるAI搭載のサッ�
     readTime: 7,
     date: '2025-12-28',
     author: 'OddsFlow Team',
-    tags: ['responsible gambling', 'bankroll management', 'betting safety', 'problem gambling', 'self-exclusion'],
+    tags: ['responsible use', 'data literacy', 'analytical thinking', 'informed decisions', 'sports analysis ethics'],
     relatedPosts: ['how-to-use-oddsflow-ai-predictions', 'how-to-interpret-football-odds', 'how-bookmakers-calculate-margins'],
     title: {
-      EN: 'Responsible Football Betting: Protecting Your Bankroll and Wellbeing',
-      JA: '責任あるサッカーベッティング：資金とウェルビーイングの保護',
-      '中文': '负责任的足球投注：保护您的资金和身心健康',
-      '繁體': '負責任的足球投注：保護您的資金和身心健康',
+      EN: 'Using Sports Analytics Responsibly: A Framework for Healthy Decision-Making',
+      JA: 'スポーツ分析を責任を持って使用する：健全な意思決定のフレームワーク',
+      '中文': '负责任地使用体育分析：健康决策框架',
+      '繁體': '負責任地使用體育分析：健康決策框架',
     },
     excerpt: {
-      EN: 'Essential guidance on maintaining a healthy relationship with betting. Set limits, recognize warning signs, and bet for entertainment, not income.',
-      JA: 'ベッティングとの健全な関係を維持するための重要なガイダンス。制限を設定し、警告サインを認識し、収入ではなく娯楽として賭けましょう。',
-      '中文': '保持与投注健康关系的重要指导。',
-      '繁體': '保持與投注健康關係的重要指導。',
+      EN: 'Data should inform, not control. Here is our framework for using sports analytics tools in a healthy, balanced way.',
+      JA: 'データは情報を提供するべきで、支配するべきではありません。スポーツ分析ツールを健全でバランスの取れた方法で使用するためのフレームワーク。',
+      '中文': '数据应该提供信息，而不是控制。这是我们以健康、平衡的方式使用体育分析工具的框架。',
+      '繁體': '數據應該提供信息，而不是控制。這是我們以健康、平衡的方式使用體育分析工具的框架。',
     },
     content: {
       EN: `
-## The Foundation: Betting Should Be Entertainment
+## Why We're Writing This
 
-Football betting should be **fun**, not a source of stress or financial hardship. This guide helps you maintain a healthy approach.
+OddsFlow is a sports analytics platform. We provide data and probability estimates for football matches. But we also feel a responsibility to talk about how to use this kind of information in a healthy way.
 
----
-
-## Golden Rules
-
-### 1. Only Bet What You Can Afford to Lose
-Never use money needed for:
-- Rent or mortgage
-- Bills and essentials
-- Savings or investments
-
-### 2. Set Strict Limits
-- Daily/weekly/monthly loss limits
-- Time limits on betting sessions
-- Stick to limits NO MATTER WHAT
-
-### 3. Never Chase Losses
-The urge to "win back" losses leads to bigger losses. Accept losing streaks as normal.
-
-### 4. Take Breaks
-Regular breaks help maintain perspective. Step away if you feel emotional.
+Data should be a tool for understanding, not an obsession. Here's the framework we recommend.
 
 ---
 
-## Warning Signs of Problem Gambling
+## Principles for Healthy Engagement
 
-- Betting more than you can afford
-- Chasing losses
-- Lying about betting
-- Neglecting responsibilities
-- Borrowing money to bet
-- Feeling anxious when not betting
+### 1. Treat Analysis as Entertainment and Education
+
+Our predictions are interesting to study. They reveal patterns in football, show how markets work, and teach concepts from statistics and machine learning.
+
+But they're not a roadmap to guaranteed outcomes. Football is inherently unpredictable—that's part of what makes it compelling.
+
+### 2. Maintain Perspective
+
+If you find yourself:
+- Checking predictions constantly throughout the day
+- Feeling anxious when you can't access the data
+- Letting match outcomes affect your mood significantly
+
+...it might be time to step back. Sports analysis should add to your enjoyment of football, not become a source of stress.
+
+### 3. Set Boundaries
+
+Decide in advance how you'll use this data:
+- For learning about prediction models?
+- For having informed discussions with friends?
+- For understanding how odds markets work?
+
+Having a clear purpose helps maintain a healthy relationship with any information tool.
 
 ---
 
-## Getting Help
+## For Those Who Use Analytics for Decisions
 
-If you or someone you know needs help:
+If you use sports data to inform any kind of decision-making:
+
+- **Never risk what you can't afford to lose** — this applies to money, time, or emotional energy
+- **Accept uncertainty** — even excellent models are wrong frequently
+- **Don't chase outcomes** — one result doesn't validate or invalidate a system
+- **Take breaks** — stepping away provides perspective
+
+---
+
+## Resources for Support
+
+If you or someone you know is struggling with compulsive behaviors around sports or gambling:
+
 - **GamCare:** gamcare.org.uk
 - **Gambling Therapy:** gamblingtherapy.org
 - **BeGambleAware:** begambleaware.org
 
+There's no shame in seeking support. These organizations provide confidential, professional help.
+
 ---
 
-## Key Takeaways
+## Our Commitment
 
-1. Bet for entertainment, not income
-2. Set and stick to strict limits
-3. Never chase losses
-4. Seek help if you see warning signs
+At OddsFlow, we believe in:
 
-*Gambling involves risk. Please bet responsibly. You must be 18+ to gamble.*
+1. **Transparency** — we publish our accuracy metrics so you know exactly what you're getting
+2. **Education** — we explain how our models work, not just what they predict
+3. **Honest limitations** — we tell you what our AI can't do
+4. **Promoting healthy use** — we'd rather have engaged, healthy users than obsessed ones
+
+Sports analytics should make football more interesting, not less enjoyable.
+
+📖 **Related reading:** [How to Use OddsFlow](/blog/how-to-use-oddsflow-ai-predictions) • [Understanding Our Models](/blog/how-ai-predicts-football-matches)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 黄金法则
+## 为什么我们要写这篇文章
 
-### 1. 只投注您能承受损失的金额
-### 2. 设定严格的限制
-### 3. 永远不要追逐损失
-### 4. 定期休息
+OddsFlow是一个体育分析平台。我们为足球比赛提供数据和概率估计。但我们也感到有责任谈论如何以健康的方式使用这类信息。
 
----
-
-## 问题赌博的警告信号
-
-- 投注超过承受能力
-- 追逐损失
-- 撒谎关于投注
+数据应该是理解的工具，而不是执念。
 
 ---
 
-## 关键要点
+## 健康参与的原则
 
-1. 将投注视为娱乐，而非收入来源
-2. 设定并坚守严格限制
-3. 永远不要追逐损失
-4. 如果发现警告信号，请寻求帮助
+### 1. 将分析视为娱乐和教育
 
-*博彩有风险，请理性投注。必须年满18岁。*
+我们的预测研究起来很有趣。它们揭示了足球中的模式，展示了市场如何运作，并教授统计学和机器学习的概念。
+
+但它们不是通往保证结果的路线图。足球本质上是不可预测的——这也是它引人入胜的部分原因。
+
+### 2. 保持视角
+
+如果你发现自己：
+- 整天不断检查预测
+- 无法访问数据时感到焦虑
+- 让比赛结果显著影响你的情绪
+
+...可能是时候退后一步了。体育分析应该增加你对足球的享受，而不是成为压力来源。
+
+### 3. 设定界限
+
+提前决定你将如何使用这些数据：
+- 用于学习预测模型？
+- 用于与朋友进行知情讨论？
+- 用于理解赔率市场如何运作？
+
+---
+
+## 对于使用分析进行决策的人
+
+- **永远不要冒你承受不起的风险** — 这适用于金钱、时间或情感能量
+- **接受不确定性** — 即使是优秀的模型也经常出错
+- **不要追逐结果** — 一个结果不能验证或否定一个系统
+- **休息一下** — 离开一段时间可以提供视角
+
+---
+
+## 我们的承诺
+
+在OddsFlow，我们相信：
+
+1. **透明度** — 我们发布准确性指标
+2. **教育** — 我们解释模型如何工作
+3. **诚实的局限性** — 我们告诉你AI不能做什么
+4. **促进健康使用** — 我们宁愿拥有参与的健康用户
+
+📖 **相关阅读：** [如何使用OddsFlow](/blog/how-to-use-oddsflow-ai-predictions)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 黃金法則
+## 為什麼我們要寫這篇文章
 
-1. 只投注您能承受損失的金額
-2. 設定嚴格的限制
-3. 永遠不要追逐損失
+OddsFlow是一個體育分析平台。我們為足球比賽提供數據和概率估計。但我們也感到有責任談論如何以健康的方式使用這類信息。
 
 ---
 
-## 關鍵要點
+## 健康參與的原則
 
-1. 將投注視為娛樂
-2. 設定並堅守限制
-3. 如果發現警告信號，請尋求幫助
+### 1. 將分析視為娛樂和教育
 
-*博彩有風險，請理性投注。必須年滿18歲。*
+我們的預測研究起來很有趣。但它們不是通往保證結果的路線圖。
+
+### 2. 保持視角
+
+如果你發現自己整天不斷檢查預測...可能是時候退後一步了。
+
+### 3. 設定界限
+
+提前決定你將如何使用這些數據。
+
+---
+
+## 我們的承諾
+
+1. **透明度**
+2. **教育**
+3. **誠實的局限性**
+4. **促進健康使用**
+
+📖 **相關閱讀：** [如何使用OddsFlow](/blog/how-to-use-oddsflow-ai-predictions)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和信息參考。*
       `,
       JA: `
-## 基本：ベッティングは娯楽であるべき
+## なぜこれを書いているのか
 
-サッカーベッティングは**楽しい**ものであるべきで、ストレスや経済的困難の原因であってはなりません。このガイドは健全なアプローチを維持するのに役立ちます。
+OddsFlowはスポーツ分析プラットフォームです。サッカーの試合のデータと確率推定を提供しています。しかし、この種の情報を健全な方法で使用する方法について話す責任も感じています。
 
----
-
-## ゴールデンルール
-
-### 1. 失っても良い金額だけを賭ける
-決して以下に必要なお金を使わない：
-- 家賃やローン
-- 請求書や必需品
-- 貯蓄や投資
-
-### 2. 厳格な制限を設定
-- 日次/週次/月次の損失制限
-- ベッティングセッションの時間制限
-- 何があっても制限を守る
-
-### 3. 損失を追いかけない
-損失を「取り戻したい」という衝動は、より大きな損失につながります。連敗を通常のこととして受け入れましょう。
-
-### 4. 休憩を取る
-定期的な休憩は視野を維持するのに役立ちます。感情的になったら離れましょう。
+データは理解のためのツールであるべきで、執着ではありません。
 
 ---
 
-## ギャンブル依存症の警告サイン
+## 健全な関わりの原則
 
-- 余裕以上に賭けている
-- 損失を追いかけている
-- ベッティングについて嘘をつく
-- 責任を怠る
-- 賭けるためにお金を借りる
-- ベッティングしていないと不安を感じる
+### 1. 分析を娯楽と教育として扱う
+
+私たちの予測は研究するのに興味深いです。サッカーのパターンを明らかにし、市場がどのように機能するかを示し、統計学と機械学習のコンセプトを教えます。
+
+しかし、保証された結果へのロードマップではありません。サッカーは本質的に予測不可能です—それが魅力的な理由の一部です。
+
+### 2. 視点を維持する
+
+もし自分が：
+- 一日中予測を常にチェックしている
+- データにアクセスできないと不安を感じる
+- 試合結果が気分に大きく影響する
+
+...少し距離を置く時かもしれません。
+
+### 3. 境界を設定する
+
+このデータをどのように使用するか事前に決める：
+- 予測モデルについて学ぶため？
+- 友人と情報に基づいた議論をするため？
+- オッズ市場がどのように機能するかを理解するため？
 
 ---
 
-## 助けを求める
+## 私たちのコミットメント
 
-あなたや知り合いが助けを必要としている場合：
-- **GamCare:** gamcare.org.uk
-- **Gambling Therapy:** gamblingtherapy.org
-- **BeGambleAware:** begambleaware.org
+OddsFlowでは、以下を信じています：
 
----
+1. **透明性** — 精度メトリクスを公開
+2. **教育** — モデルがどのように機能するかを説明
+3. **正直な制限** — AIができないことを伝える
+4. **健全な使用の促進**
 
-## 重要なポイント
+📖 **関連記事：** [OddsFlowの使い方](/blog/how-to-use-oddsflow-ai-predictions)
 
-1. 収入ではなく娯楽のために賭ける
-2. 厳格な制限を設定し守る
-3. 損失を追いかけない
-4. 警告サインに気づいたら助けを求める
-
-*ギャンブルにはリスクが伴います。責任を持ってベットしてください。18歳以上である必要があります。*
+*OddsFlowは教育および情報提供目的でAI搭載のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -3467,342 +4915,257 @@ If you or someone you know needs help:
     readTime: 8,
     date: '2026-01-14',
     author: 'OddsFlow Team',
-    tags: ['asian handicap', 'quarter handicap', 'handicap betting', 'football odds', 'betting guide'],
+    tags: ['asian handicap', 'quarter handicap', 'football odds', 'probability analysis', 'sports data', 'market analysis'],
     relatedPosts: ['how-to-interpret-football-odds', 'how-bookmakers-calculate-margins', 'over-under-goals-explained'],
     title: {
-      EN: 'Asian Handicap Explained: 0, ±0.25, ±0.5, ±0.75, ±1.0 (Simple Rules)',
-      JA: 'アジアンハンディキャップ解説：0, ±0.25, ±0.5, ±0.75, ±1.0（シンプルルール）',
-      '中文': '亚洲盘口详解：0, ±0.25, ±0.5, ±0.75, ±1.0（简单规则）',
-      '繁體': '亞洲盤口詳解：0, ±0.25, ±0.5, ±0.75, ±1.0（簡單規則）',
-      ES: 'Hándicap Asiático Explicado: 0, ±0.25, ±0.5, ±0.75, ±1.0',
-      PT: 'Handicap Asiático Explicado: 0, ±0.25, ±0.5, ±0.75, ±1.0',
-      DE: 'Asian Handicap Erklärt: 0, ±0.25, ±0.5, ±0.75, ±1.0',
-      FR: 'Handicap Asiatique Expliqué: 0, ±0.25, ±0.5, ±0.75, ±1.0',
-      KO: '아시안 핸디캡 설명: 0, ±0.25, ±0.5, ±0.75, ±1.0',
-      ID: 'Asian Handicap Dijelaskan: 0, ±0.25, ±0.5, ±0.75, ±1.0',
+      EN: 'Asian Handicap Lines as Probability Signals: A Data-Driven Guide',
+      JA: '確率シグナルとしてのアジアンハンディキャップ：データ駆動型ガイド',
+      '中文': '作为概率信号的亚洲盘口：数据驱动指南',
+      '繁體': '作為概率信號的亞洲盤口：數據驅動指南',
+      ES: 'Líneas de Hándicap Asiático como Señales de Probabilidad',
+      PT: 'Linhas de Handicap Asiático como Sinais de Probabilidade',
+      DE: 'Asian Handicap Linien als Wahrscheinlichkeitssignale',
+      FR: 'Lignes de Handicap Asiatique comme Signaux de Probabilité',
+      KO: '확률 신호로서의 아시안 핸디캡 라인',
+      ID: 'Garis Asian Handicap sebagai Sinyal Probabilitas',
     },
     excerpt: {
-      EN: 'Learn Asian Handicap lines step-by-step, including quarter lines like ±0.25 and ±0.75, and how to interpret them as structured probabilities.',
-      JA: 'アジアンハンディキャップラインを段階的に学び、±0.25や±0.75のクォーターラインを含め、構造化された確率として解釈する方法を学びます。',
-      '中文': '逐步学习亚洲盘口，包括±0.25和±0.75等四分之一盘，以及如何将它们解读为结构化概率。',
-      '繁體': '逐步學習亞洲盤口，包括±0.25和±0.75等四分之一盤，以及如何將它們解讀為結構化概率。',
-      ES: 'Aprenda las líneas de Hándicap Asiático paso a paso, incluyendo líneas cuartos como ±0.25 y ±0.75.',
-      PT: 'Aprenda as linhas de Handicap Asiático passo a passo, incluindo linhas de quarto como ±0.25 e ±0.75.',
-      DE: 'Lernen Sie Asian Handicap Linien Schritt für Schritt, einschließlich Viertellinien wie ±0.25 und ±0.75.',
-      FR: 'Apprenez les lignes de Handicap Asiatique étape par étape, y compris les lignes quart comme ±0.25 et ±0.75.',
-      KO: '아시안 핸디캡 라인을 단계별로 배우세요. ±0.25 및 ±0.75와 같은 쿼터 라인을 포함합니다.',
-      ID: 'Pelajari garis Asian Handicap langkah demi langkah, termasuk garis kuartal seperti ±0.25 dan ±0.75.',
+      EN: 'How to read Asian Handicap lines as probability data, including quarter lines like ±0.25 and ±0.75. A practical framework for sports analysis.',
+      JA: 'アジアンハンディキャップラインを確率データとして読み取る方法。スポーツ分析のための実践的フレームワーク。',
+      '中文': '如何将亚洲盘口解读为概率数据，包括±0.25和±0.75等四分之一盘。体育分析的实用框架。',
+      '繁體': '如何將亞洲盤口解讀為概率數據，包括±0.25和±0.75等四分之一盤。體育分析的實用框架。',
+      ES: 'Cómo leer las líneas de Hándicap Asiático como datos de probabilidad.',
+      PT: 'Como ler linhas de Handicap Asiático como dados de probabilidade.',
+      DE: 'Wie man Asian Handicap Linien als Wahrscheinlichkeitsdaten liest.',
+      FR: 'Comment lire les lignes de Handicap Asiatique comme données de probabilité.',
+      KO: '아시안 핸디캡 라인을 확률 데이터로 읽는 방법.',
+      ID: 'Cara membaca garis Asian Handicap sebagai data probabilitas.',
     },
     content: {
       EN: `
-## Introduction
+## Why Asian Handicap Is Useful for Analysis
 
-Asian Handicap (AH) is popular because it removes "draw confusion" by shifting the score with a handicap. The problem is: quarter lines (±0.25, ±0.75) look complicated at first. Once you see the pattern, it becomes mechanical.
+When I first started building football models, I found Asian Handicap lines confusing. Why all the decimals? What's with the quarter lines?
 
-> If you want the bigger framework first, read [How to Interpret Football Odds](/blog/how-to-interpret-football-odds).
+Then I realized: AH lines are actually one of the cleanest ways to express "how much stronger is team A than team B" in a single number.
 
----
-
-## 1) The Core Idea
-
-Asian Handicap changes the match result by adding a handicap to one team:
-
-- **AH -0.5** means the team must win (draw is a loss)
-- **AH +0.5** means the team can draw and still "win" the handicap bet
-
-You're not changing the real match score—only the settlement logic.
+This guide breaks down the mechanics, but more importantly, shows how to read AH data as probability signals for your own analysis.
 
 ---
 
-## 2) The Main Lines (What They Mean)
+## The Core Concept
 
-### 0 (Draw No Bet style)
-- Win → win
-- Draw → stake returned
-- Loss → loss
+Asian Handicap adjusts the final score by applying a virtual handicap to one team. This eliminates the draw outcome and creates a cleaner two-way market.
 
-### ±0.5
-- **-0.5:** must win
-- **+0.5:** win or draw
+| Line | What It Means |
+|------|---------------|
+| -0.5 | Must win outright |
+| +0.5 | Can draw and still cover |
+| -1.0 | Must win by 2+; win by 1 = push |
+| +1.0 | Lose by 1 = push; lose by 2+ = doesn't cover |
 
-### ±1.0
-- **-1.0:** win by 2+ to win; win by 1 = refund
-- **+1.0:** lose by 1 = refund; lose by 2+ = loss
+The handicap itself tells you something about perceived team strength—a team at -1.5 is seen as significantly stronger than one at -0.5.
 
 ---
 
-## 3) Quarter Lines (The Only "Tricky" Part)
+## Quarter Lines: Simpler Than They Look
 
-Quarter lines are **split bets**. Think of them as half your stake on two nearby lines.
+Quarter lines (±0.25, ±0.75) confused me until I learned they're just split positions:
 
-### -0.25 = half on 0 and half on -0.5
-- Team wins → win (both halves win)
-- Draw → half refund (0 half refunded), half loss (-0.5 half loses)
-- Team loses → loss
+- **-0.25** = half at 0, half at -0.5
+- **+0.75** = half at +0.5, half at +1.0
 
-### +0.25 = half on 0 and half on +0.5
-- Team wins → win
-- Draw → half refund (0 half), half win (+0.5 half)
-- Team loses → loss
-
-### -0.75 = half on -0.5 and half on -1.0
-- Win by 2+ → win both halves
-- Win by 1 → -0.5 wins, -1.0 refunds → **half win**
-- Draw/Loss → loss
-
-### +0.75 = half on +0.5 and half on +1.0
-- Win/Draw → win
-- Lose by 1 → +0.5 loses, +1.0 refunds → **half loss**
-- Lose by 2+ → loss
-
-That's it. Quarter lines look scary, but they're just a split.
+If the match lands between the two lines, you get a partial result. That's it—no special math needed.
 
 ---
 
-## 4) How to Interpret AH Odds Like Probabilities
+## Reading AH as Probability Data
 
-Once you understand settlement, you can treat AH prices as probability signals:
+Here's where it gets interesting for analysis. Every AH price can be converted to implied probability:
 
-- **Shorter price** = higher implied probability of covering the line
-- **Longer price** = lower implied probability of covering
+**Formula:** P = 1 / Decimal Odds
 
-To keep comparisons consistent across matches or sources:
-- Convert odds → implied probability
-- Remove margin if needed
+A team at -0.5 with odds of 1.85 implies roughly 54% probability of winning outright.
 
-📖 **Related:** [How Bookmakers Calculate Margins](/blog/how-bookmakers-calculate-margins)
+When I compare AH lines across different matches, I convert everything to probabilities first. This makes patterns visible that raw odds obscure.
 
 ---
 
-## 5) How AH Helps Models (OddsFlow Angle)
+## How We Use AH at OddsFlow
 
-AH is useful because it encodes "strength difference" more directly than 1X2.
+AH data is valuable for our models because it captures team strength differential more directly than 1X2 markets. Common features we extract:
 
-**Common AH-derived features:**
-- Line itself (e.g., -0.25 vs -0.75 is a big difference)
-- Fair probability of covering the line
-- Line movement over time (does handicap shift closer to kickoff?)
+- **Line value:** -0.75 vs -0.25 indicates different strength gaps
+- **Fair probability:** after removing margin, what does the market really think?
+- **Line movement:** if handicap shifts from -0.5 to -0.75 before kickoff, that's meaningful
+- **Cross-market consistency:** does AH align with totals and 1X2?
 
-AH becomes especially powerful when combined with totals.
-
-📖 **Related:** [Over/Under Goals Explained](/blog/over-under-goals-explained)
+This isn't about finding edges—it's about understanding what market data is telling us.
 
 ---
 
-## Quick Recap
+## Quick Reference
 
-1. Whole lines (0, ±0.5, ±1.0) are straightforward outcomes
-2. Quarter lines are half-stake splits
-3. Convert prices into probability signals for consistent interpretation
+| Line | Coverage Condition | Probability Signal |
+|------|-------------------|-------------------|
+| 0 | Win covers, draw pushes | Near 50-50 perceived |
+| -0.5 | Must win | Slight favorite |
+| -1.0 | Win by 2+, win by 1 pushes | Clear favorite |
+| Quarter lines | Split between adjacent lines | Between those thresholds |
 
 ---
 
-## FAQ
+## Common Questions
 
-### What does -0.25 mean in Asian Handicap?
-It's half on 0 and half on -0.5, so a draw becomes half refund + half loss.
+**What's the practical difference between -0.25 and -0.5?**
+-0.25 gives you insurance on a draw (half refund). -0.5 is all-or-nothing.
 
-### What does +0.75 mean?
-Half on +0.5 and half on +1.0, so losing by 1 becomes half loss + half refund.
+**Does AH tell me who will win?**
+No. It tells you what the market thinks about relative strength at a specific moment.
 
-### Is Asian Handicap the same as Draw No Bet?
-AH 0 behaves like Draw No Bet (win = win, draw = refund, loss = loss).
+📖 **Related reading:** [Over/Under as Tempo Signals](/blog/over-under-goals-explained) • [Understanding Market Margins](/blog/how-bookmakers-calculate-margins)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 简介
+## 为什么亚洲盘口对分析有用
 
-亚洲盘口（AH）之所以受欢迎，是因为它通过设置让球来消除"平局困惑"。问题在于：四分之一盘（±0.25, ±0.75）一开始看起来很复杂。一旦看到规律，就变得机械化了。
+当我刚开始构建足球模型时，我发现亚洲盘口让我很困惑。为什么有这么多小数？四分之一盘是怎么回事？
 
----
-
-## 1) 核心概念
-
-亚洲盘口通过给一方球队添加让球来改变比赛结果：
-
-- **AH -0.5** 意味着该队必须获胜（平局算输）
-- **AH +0.5** 意味着该队可以平局仍然"赢得"盘口投注
-
-你并没有改变真实比分——只是结算逻辑。
+后来我意识到：亚洲盘口实际上是用单一数字表达"A队比B队强多少"的最清晰方式之一。
 
 ---
 
-## 2) 主要盘口（含义）
+## 核心概念
 
-### 0（平局退款型）
-- 赢 → 赢
-- 平 → 退还本金
-- 输 → 输
+亚洲盘口通过对一支球队应用虚拟让球来调整最终比分。这消除了平局结果，创建了更清晰的双向市场。
 
-### ±0.5
-- **-0.5:** 必须获胜
-- **+0.5:** 赢或平
+| 盘口 | 含义 |
+|------|------|
+| -0.5 | 必须直接获胜 |
+| +0.5 | 可以平局仍然覆盖 |
+| -1.0 | 必须赢2球以上；赢1球=推 |
+| +1.0 | 输1球=推；输2球以上=不覆盖 |
 
-### ±1.0
-- **-1.0:** 赢2球以上赢；赢1球=退款
-- **+1.0:** 输1球=退款；输2球以上=输
+盘口本身告诉你一些关于感知球队实力的信息——-1.5的球队被认为比-0.5的球队强得多。
 
 ---
 
-## 3) 四分之一盘（唯一"棘手"的部分）
+## 四分之一盘：比看起来简单
 
-四分之一盘是**分注**。把它们想象成你的一半赌注在两个相邻的盘口上。
+四分之一盘（±0.25, ±0.75）让我困惑，直到我了解到它们只是分割仓位：
 
-### -0.25 = 一半在0，一半在-0.5
-- 球队获胜 → 赢（两半都赢）
-- 平局 → 一半退款，一半输
-- 球队失败 → 输
-
-### +0.25 = 一半在0，一半在+0.5
-- 球队获胜 → 赢
-- 平局 → 一半退款，一半赢
-- 球队失败 → 输
-
-### -0.75 = 一半在-0.5，一半在-1.0
-- 赢2球以上 → 两半都赢
-- 赢1球 → -0.5赢，-1.0退款 → **赢一半**
-- 平/输 → 输
-
-### +0.75 = 一半在+0.5，一半在+1.0
-- 赢/平 → 赢
-- 输1球 → +0.5输，+1.0退款 → **输一半**
-- 输2球以上 → 输
-
-就是这样。四分之一盘看起来可怕，但它们只是分注。
+- **-0.25** = 一半在0，一半在-0.5
+- **+0.75** = 一半在+0.5，一半在+1.0
 
 ---
 
-## 快速回顾
+## 将亚洲盘口作为概率数据阅读
 
-1. 整数盘口（0, ±0.5, ±1.0）是简单的结果
-2. 四分之一盘是半注拆分
-3. 将价格转换为概率信号以进行一致的解读
+这里是分析变得有趣的地方。每个亚洲盘口价格都可以转换为隐含概率：
+
+**公式：** P = 1 / 小数赔率
+
+-0.5赔率1.85的球队意味着大约54%的直接获胜概率。
 
 ---
 
-## 常见问题
+## 我们在OddsFlow如何使用亚洲盘口
 
-### 亚洲盘口中-0.25是什么意思？
-一半在0，一半在-0.5，所以平局变成一半退款+一半输。
+亚洲盘口数据对我们的模型很有价值，因为它比1X2市场更直接地捕捉球队实力差异。
 
-### +0.75是什么意思？
-一半在+0.5，一半在+1.0，所以输1球变成一半输+一半退款。
+- **盘口值：** -0.75 vs -0.25表示不同的实力差距
+- **公平概率：** 移除利润率后，市场真正认为什么？
+- **盘口变动：** 如果盘口在开赛前从-0.5移动到-0.75，这是有意义的
+- **跨市场一致性：** 亚洲盘口与大小球和1X2一致吗？
 
-### 亚洲盘口0和平局退款一样吗？
-AH 0的表现类似于平局退款（赢=赢，平=退款，输=输）。
+📖 **相关阅读：** [大小球作为节奏信号](/blog/over-under-goals-explained)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 簡介
+## 為什麼亞洲盤口對分析有用
 
-亞洲盤口（AH）之所以受歡迎，是因為它通過設置讓球來消除"平局困惑"。問題在於：四分之一盤（±0.25, ±0.75）一開始看起來很複雜。一旦看到規律，就變得機械化了。
+當我剛開始構建足球模型時，我發現亞洲盤口讓我很困惑。為什麼有這麼多小數？四分之一盤是怎麼回事？
 
----
-
-## 1) 核心概念
-
-亞洲盤口通過給一方球隊添加讓球來改變比賽結果：
-
-- **AH -0.5** 意味著該隊必須獲勝（平局算輸）
-- **AH +0.5** 意味著該隊可以平局仍然"贏得"盤口投注
+後來我意識到：亞洲盤口實際上是用單一數字表達「A隊比B隊強多少」的最清晰方式之一。
 
 ---
 
-## 2) 主要盤口
+## 核心概念
 
-### 0（平局退款型）
-- 贏 → 贏
-- 平 → 退還本金
-- 輸 → 輸
+亞洲盤口通過對一支球隊應用虛擬讓球來調整最終比分。
 
-### ±0.5
-- **-0.5:** 必須獲勝
-- **+0.5:** 贏或平
-
-### ±1.0
-- **-1.0:** 贏2球以上贏；贏1球=退款
-- **+1.0:** 輸1球=退款；輸2球以上=輸
+| 盤口 | 含義 |
+|------|------|
+| -0.5 | 必須直接獲勝 |
+| +0.5 | 可以平局仍然覆蓋 |
+| -1.0 | 必須贏2球以上 |
 
 ---
 
-## 3) 四分之一盤
+## 四分之一盤：比看起來簡單
 
-四分之一盤是**分注**。
-
-### -0.25 = 一半在0，一半在-0.5
-### +0.25 = 一半在0，一半在+0.5
-### -0.75 = 一半在-0.5，一半在-1.0
-### +0.75 = 一半在+0.5，一半在+1.0
+- **-0.25** = 一半在0，一半在-0.5
+- **+0.75** = 一半在+0.5，一半在+1.0
 
 ---
 
-## 快速回顧
+## 將亞洲盤口作為概率數據閱讀
 
-1. 整數盤口是簡單的結果
-2. 四分之一盤是半注拆分
-3. 將價格轉換為概率信號
+**公式：** P = 1 / 小數賠率
 
----
+📖 **相關閱讀：** [大小球作為節奏信號](/blog/over-under-goals-explained)
 
-## 常見問題
-
-### 亞洲盤口中-0.25是什麼意思？
-一半在0，一半在-0.5，所以平局變成一半退款+一半輸。
+*OddsFlow提供AI驅動的體育分析，僅供教育和信息參考。*
       `,
       JA: `
-## はじめに
+## なぜアジアンハンディキャップが分析に役立つのか
 
-アジアンハンディキャップ（AH）は、ハンディキャップでスコアをシフトすることで「ドローの混乱」を取り除くため人気があります。問題は、クォーターライン（±0.25、±0.75）が最初は複雑に見えることです。パターンを見れば、機械的になります。
+サッカーモデルを構築し始めた頃、アジアンハンディキャップのラインは混乱しました。なぜこんなに多くの小数点があるのか？クォーターラインとは何か？
 
----
-
-## 1) コアコンセプト
-
-アジアンハンディキャップは、一方のチームにハンディキャップを追加して試合結果を変更します：
-
-- **AH -0.5** はチームが勝たなければならない（引き分けは負け）
-- **AH +0.5** はチームが引き分けでもハンディキャップベットに「勝つ」ことができる
+そして気づきました：AHラインは実際に「チームAがチームBよりどれだけ強いか」を単一の数字で表現する最もクリーンな方法の1つです。
 
 ---
 
-## 2) メインライン
+## 核心コンセプト
 
-### 0（ドローノーベットスタイル）
-- 勝ち → 勝ち
-- 引き分け → 賭け金返還
-- 負け → 負け
+アジアンハンディキャップは、一方のチームに仮想ハンディキャップを適用して最終スコアを調整します。
 
-### ±0.5
-- **-0.5:** 勝たなければならない
-- **+0.5:** 勝ちまたは引き分け
-
-### ±1.0
-- **-1.0:** 2点差以上で勝ち；1点差勝ち=返金
-- **+1.0:** 1点差負け=返金；2点差以上負け=負け
+| ライン | 意味 |
+|--------|------|
+| -0.5 | 完全に勝たなければならない |
+| +0.5 | 引き分けでもカバー可能 |
+| -1.0 | 2点差以上で勝ち；1点差勝ち=プッシュ |
 
 ---
 
-## 3) クォーターライン
+## クォーターライン：見た目より簡単
 
-クォーターラインは**スプリットベット**です。
-
-### -0.25 = 半分は0、半分は-0.5
-### +0.25 = 半分は0、半分は+0.5
-### -0.75 = 半分は-0.5、半分は-1.0
-### +0.75 = 半分は+0.5、半分は+1.0
+- **-0.25** = 半分は0、半分は-0.5
+- **+0.75** = 半分は+0.5、半分は+1.0
 
 ---
 
-## クイックリキャップ
+## AHを確率データとして読む
 
-1. 整数ライン（0、±0.5、±1.0）は単純な結果
-2. クォーターラインはハーフステークスプリット
-3. 一貫した解釈のために価格を確率信号に変換
+**公式：** P = 1 / 小数オッズ
+
+-0.5オッズ1.85のチームは、約54%の完勝確率を意味します。
 
 ---
 
-## FAQ
+## OddsFlowでのAHの使い方
 
-### アジアンハンディキャップで-0.25とは？
-半分は0、半分は-0.5なので、引き分けは半分返金+半分負けになります。
+AHデータは1X2市場よりもチーム強度差をより直接的に捉えるため、モデルにとって価値があります。
+
+- **ライン値：** -0.75 vs -0.25は異なる強度差を示す
+- **公正確率：** マージンを除去した後、市場は本当に何を考えているか？
+- **ライン移動：** キックオフ前にハンディキャップが-0.5から-0.75に移動した場合、それは意味がある
+
+📖 **関連記事：** [オーバー/アンダーをテンポシグナルとして](/blog/over-under-goals-explained)
+
+*OddsFlowは教育および情報提供目的でAI搭載のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -3814,302 +5177,236 @@ AH 0的表现类似于平局退款（赢=赢，平=退款，输=输）。
     readTime: 7,
     date: '2026-01-14',
     author: 'OddsFlow Team',
-    tags: ['over under', 'totals market', 'goals betting', 'football odds', 'betting guide'],
+    tags: ['over under', 'totals market', 'match tempo', 'sports analytics', 'probability signals', 'football data'],
     relatedPosts: ['how-to-interpret-football-odds', 'implied-probability-explained', 'btts-odds-explained'],
     title: {
-      EN: 'Over/Under Goals Odds: What Totals Reveal About Match Tempo',
-      JA: 'オーバー/アンダーゴールオッズ：トータルが試合テンポについて明らかにすること',
-      '中文': '大小球赔率：总进球数揭示的比赛节奏',
-      '繁體': '大小球賠率：總進球數揭示的比賽節奏',
-      ES: 'Cuotas Over/Under: Lo Que los Totales Revelan Sobre el Ritmo del Partido',
-      PT: 'Odds Over/Under: O Que os Totais Revelam Sobre o Ritmo da Partida',
-      DE: 'Over/Under Quoten: Was Totals Über das Spieltempo Verraten',
-      FR: 'Cotes Over/Under: Ce Que les Totaux Révèlent sur le Rythme du Match',
-      KO: '오버/언더 골 배당: 토탈이 경기 템포에 대해 말하는 것',
-      ID: 'Odds Over/Under: Apa yang Ditunjukkan Total Tentang Tempo Pertandingan',
+      EN: 'Using Totals Data to Understand Match Tempo: An Analytical Guide',
+      JA: 'トータルデータを使って試合テンポを理解する：分析ガイド',
+      '中文': '使用大小球数据理解比赛节奏：分析指南',
+      '繁體': '使用大小球數據理解比賽節奏：分析指南',
+      ES: 'Usando Datos de Totales para Entender el Tempo del Partido',
+      PT: 'Usando Dados de Totais para Entender o Tempo da Partida',
+      DE: 'Totals-Daten Nutzen um Spieltempo zu Verstehen',
+      FR: 'Utiliser les Données de Totaux pour Comprendre le Tempo du Match',
+      KO: '토탈 데이터를 사용하여 경기 템포 이해하기',
+      ID: 'Menggunakan Data Total untuk Memahami Tempo Pertandingan',
     },
     excerpt: {
-      EN: 'Learn how Over/Under lines work, how totals reflect match tempo and scoring expectation, and how to translate totals odds into probability signals.',
-      JA: 'オーバー/アンダーラインの仕組み、トータルが試合テンポと得点期待をどのように反映するか、トータルオッズを確率信号に変換する方法を学びます。',
-      '中文': '学习大小球盘口如何运作，总进球数如何反映比赛节奏和得分预期，以及如何将大小球赔率转换为概率信号。',
-      '繁體': '學習大小球盤口如何運作，總進球數如何反映比賽節奏和得分預期，以及如何將大小球賠率轉換為概率信號。',
-      ES: 'Aprenda cómo funcionan las líneas Over/Under, cómo los totales reflejan el ritmo del partido.',
-      PT: 'Aprenda como as linhas Over/Under funcionam, como os totais refletem o ritmo da partida.',
-      DE: 'Erfahren Sie, wie Over/Under-Linien funktionieren und wie Totals das Spieltempo widerspiegeln.',
-      FR: 'Apprenez comment fonctionnent les lignes Over/Under et comment les totaux reflètent le rythme du match.',
-      KO: '오버/언더 라인이 어떻게 작동하는지, 토탈이 경기 템포와 득점 기대치를 어떻게 반영하는지 배우세요.',
-      ID: 'Pelajari cara kerja garis Over/Under, bagaimana total mencerminkan tempo pertandingan.',
+      EN: 'How Over/Under lines encode expected scoring environment. A practical framework for reading totals as probability data.',
+      JA: 'オーバー/アンダーラインが予想される得点環境をどのようにエンコードするか。トータルを確率データとして読むための実践的フレームワーク。',
+      '中文': '大小球盘口如何编码预期得分环境。将大小球作为概率数据阅读的实用框架。',
+      '繁體': '大小球盤口如何編碼預期得分環境。將大小球作為概率數據閱讀的實用框架。',
+      ES: 'Cómo las líneas Over/Under codifican el ambiente de puntuación esperado.',
+      PT: 'Como as linhas Over/Under codificam o ambiente de pontuação esperado.',
+      DE: 'Wie Over/Under-Linien die erwartete Torumgebung kodieren.',
+      FR: 'Comment les lignes Over/Under encodent l\'environnement de score attendu.',
+      KO: '오버/언더 라인이 예상 득점 환경을 어떻게 인코딩하는지.',
+      ID: 'Bagaimana garis Over/Under mengkodekan lingkungan skor yang diharapkan.',
     },
     content: {
       EN: `
-## Introduction
+## Why Totals Data Is Underrated
 
-Totals (Over/Under) markets are popular because they don't require picking a winner. More importantly, totals often summarize a match's **expected tempo** and scoring environment.
+When most people think about football analysis, they focus on who wins. But I've found that totals (Over/Under) markets often contain more useful information about match dynamics than outcome markets.
 
-This guide shows:
-- What the main lines mean
-- How to read totals prices
-- How totals connect with other markets like BTTS
+Here's the key insight: totals encode the expected scoring environment—how open or defensive a match is likely to be—without requiring you to predict the winner.
 
 ---
 
-## 1) What Totals Lines Mean
+## Understanding the Lines
 
-The line is the "goal threshold":
+The concept is simple:
 
-- **Over 2.5** wins if total goals ≥ 3
-- **Under 2.5** wins if total goals ≤ 2
+| Line | What It Means |
+|------|---------------|
+| Over 2.5 | 3+ total goals |
+| Under 2.5 | 0-2 total goals |
+| Over 3.0 | 4+ goals to cover fully |
+| Quarter lines (2.25, 2.75) | Split positions, like AH |
 
-Some lines are quarter/half lines too:
-- **2.25 / 2.75** behave like split stakes (similar logic to Asian Handicap)
+The line itself tells you something about market expectations. A match priced at Over/Under 3.5 is expected to be more open than one at 2.0.
 
 ---
 
-## 2) Convert Totals Odds Into Probability Signals
+## Reading Totals as Probability Data
 
-Once you have a price, you can convert:
+Every totals price converts to implied probability:
 
-**P = 1 / Decimal Odds**
+**Formula:** P = 1 / Decimal Odds
 
 **Example:**
-- Over 2.5 @ 1.80 → 55.56% implied
-- Under 2.5 @ 2.05 → 48.78% implied
+- Over 2.5 @ 1.80 → ~56% implied probability
+- Under 2.5 @ 2.05 → ~49% implied probability
 
-If the sum exceeds 100%, that's margin.
-
-📖 **Related:** [How Bookmakers Calculate Margins](/blog/how-bookmakers-calculate-margins)
+When these sum to more than 100%, the difference is the bookmaker's margin. Removing margin gives you the "fair" probability the market assigns.
 
 ---
 
-## 3) What Totals "Say" About Tempo
+## What Totals Tell You About Match Character
 
-Totals combine many match factors into one number:
-- Expected chance creation
-- Defensive stability
-- Game-state tendency (do teams chase goals?)
-- Style matchup (pressing vs low block)
+I use totals as a tempo indicator. They compress multiple factors into one number:
 
-**Practical reading:**
-- **Lower line (2.0 / 2.25)** often suggests a slower scoring environment
-- **Higher line (3.0 / 3.25)** suggests higher expected goals
+- **Team offensive quality** — do both teams create chances?
+- **Defensive organization** — are clean sheets likely?
+- **Style matchup** — pressing teams vs deep blocks
+- **Game state tendencies** — do teams push for goals when behind?
 
----
-
-## 4) Quarter Totals (2.25 / 2.75) in One Sentence
-
-Totals quarter lines are split stakes:
-
-- **Over 2.25** = half on Over 2.0 + half on Over 2.5
-- **Under 2.75** = half on Under 2.5 + half on Under 3.0
-
-You don't need to memorize everything—just remember "split into two nearby lines."
+A match at 3.25 tells a different story than one at 2.0, even if you don't know which team will win.
 
 ---
 
-## 5) Why Totals Matter for AI Features
+## Quarter Lines: Split Positions
 
-Totals are useful because they act like a proxy for "expected goals environment."
+Quarter totals (2.25, 2.75) work like Asian Handicap quarter lines—they're split stakes:
 
-**Model features often include:**
-- Totals line value
-- Fair probability for Over/Under (after de-vig)
-- Totals movement (does it rise/fall close to kickoff?)
-- Relationship signals: totals + 1X2 + handicap consistency
+- **Over 2.25** = half on Over 2.0, half on Over 2.5
+- **Under 2.75** = half on Under 2.5, half on Under 3.0
 
-Totals pair naturally with BTTS.
-
-📖 **Related:** [BTTS Odds Explained](/blog/btts-odds-explained)
+If the match lands between the two lines, you get a partial result.
 
 ---
 
-## Quick Recap
+## How We Use Totals at OddsFlow
 
-1. Totals are a clean way to express expected scoring environment
-2. Prices convert into probabilities
-3. Quarter lines split into two adjacent lines
-4. Totals help models capture match tempo
+Totals data feeds into our models as a proxy for expected match tempo. Common features:
 
----
+- **Line value:** higher = more open expected
+- **Fair probability:** after removing margin
+- **Line movement:** shifts toward kickoff are signals
+- **Cross-market consistency:** do totals align with handicap and 1X2?
 
-## FAQ
+Totals pair naturally with BTTS data for a fuller picture of scoring distribution.
 
-### What does Over 2.5 mean?
-It wins if the match has 3 or more total goals.
+📖 **Related reading:** [BTTS as Scoring Distribution](/blog/btts-odds-explained) • [Asian Handicap Guide](/blog/asian-handicap-explained)
 
-### Why do totals lines move?
-Markets update beliefs about scoring environment over time.
-
-### How do I handle Over 2.25 / 2.75?
-Treat them as a split stake across two nearby lines.
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 简介
+## 为什么大小球数据被低估
 
-大小球市场很受欢迎，因为它们不需要选择获胜者。更重要的是，大小球通常总结了比赛的**预期节奏**和得分环境。
+当大多数人想到足球分析时，他们关注谁会赢。但我发现大小球市场通常包含比结果市场更有用的关于比赛动态的信息。
 
----
-
-## 1) 大小球盘口的含义
-
-盘口是"进球阈值"：
-
-- **大2.5** 如果总进球≥3则赢
-- **小2.5** 如果总进球≤2则赢
-
-一些盘口也是四分之一/半球盘：
-- **2.25 / 2.75** 表现为分注（类似亚洲盘口逻辑）
+关键洞察是：大小球编码了预期的得分环境——比赛可能有多开放或防守——而不需要你预测获胜者。
 
 ---
 
-## 2) 将大小球赔率转换为概率信号
+## 理解盘口
 
-一旦你有了价格，你可以转换：
+| 盘口 | 含义 |
+|------|------|
+| 大2.5 | 3+总进球 |
+| 小2.5 | 0-2总进球 |
+| 四分之一盘（2.25, 2.75） | 分割仓位 |
 
-**P = 1 / 十进制赔率**
+盘口本身告诉你一些关于市场预期的信息。定价在大/小3.5的比赛预期比2.0的更开放。
+
+---
+
+## 将大小球作为概率数据阅读
+
+**公式：** P = 1 / 小数赔率
 
 **例子：**
-- 大2.5 @ 1.80 → 55.56%隐含概率
-- 小2.5 @ 2.05 → 48.78%隐含概率
-
-如果总和超过100%，那就是利润率。
+- 大2.5 @ 1.80 → ~56%隐含概率
+- 小2.5 @ 2.05 → ~49%隐含概率
 
 ---
 
-## 3) 大小球"说明"的节奏
+## 大小球告诉你关于比赛特性的什么
 
-大小球将许多比赛因素结合为一个数字：
-- 预期创造机会
-- 防守稳定性
-- 比赛状态趋势（球队是否追逐进球？）
-- 风格对决（高压vs低位防守）
+我使用大小球作为节奏指标。它们将多个因素压缩为一个数字：
 
-**实际解读：**
-- **较低盘口（2.0 / 2.25）** 通常暗示较慢的得分环境
-- **较高盘口（3.0 / 3.25）** 暗示较高的预期进球
+- **球队进攻质量** — 两队都创造机会吗？
+- **防守组织** — 零封可能吗？
+- **风格匹配** — 高压球队vs深度防守
+- **比赛状态趋势** — 落后时球队是否追逐进球？
 
 ---
 
-## 4) 四分之一大小球（2.25 / 2.75）一句话
+## 我们在OddsFlow如何使用大小球
 
-大小球四分之一盘是分注：
+大小球数据作为预期比赛节奏的代理输入我们的模型。
 
-- **大2.25** = 一半在大2.0 + 一半在大2.5
-- **小2.75** = 一半在小2.5 + 一半在小3.0
+📖 **相关阅读：** [BTTS作为得分分布](/blog/btts-odds-explained) • [亚洲盘口指南](/blog/asian-handicap-explained)
 
----
-
-## 快速回顾
-
-1. 大小球是表达预期得分环境的简洁方式
-2. 价格转换为概率
-3. 四分之一盘分为两个相邻盘口
-4. 大小球帮助模型捕捉比赛节奏
-
----
-
-## 常见问题
-
-### 大2.5是什么意思？
-如果比赛有3个或更多总进球，则获胜。
-
-### 为什么大小球盘口会移动？
-市场随时间更新对得分环境的信念。
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 簡介
+## 為什麼大小球數據被低估
 
-大小球市場很受歡迎，因為它們不需要選擇獲勝者。更重要的是，大小球通常總結了比賽的**預期節奏**和得分環境。
-
----
-
-## 1) 大小球盤口的含義
-
-盤口是"進球閾值"：
-
-- **大2.5** 如果總進球≥3則贏
-- **小2.5** 如果總進球≤2則贏
+當大多數人想到足球分析時，他們關注誰會贏。但我發現大小球市場通常包含比結果市場更有用的關於比賽動態的信息。
 
 ---
 
-## 2) 將大小球賠率轉換為概率信號
+## 理解盤口
 
-**P = 1 / 十進制賠率**
+| 盤口 | 含義 |
+|------|------|
+| 大2.5 | 3+總進球 |
+| 小2.5 | 0-2總進球 |
 
-**例子：**
-- 大2.5 @ 1.80 → 55.56%隱含概率
-- 小2.5 @ 2.05 → 48.78%隱含概率
-
----
-
-## 3) 大小球"說明"的節奏
-
-大小球將許多比賽因素結合為一個數字：
-- 預期創造機會
-- 防守穩定性
-- 比賽狀態趨勢
+盤口本身告訴你一些關於市場預期的信息。
 
 ---
 
-## 快速回顧
+## 將大小球作為概率數據閱讀
 
-1. 大小球是表達預期得分環境的簡潔方式
-2. 價格轉換為概率
-3. 四分之一盤分為兩個相鄰盤口
+**公式：** P = 1 / 小數賠率
 
 ---
 
-## 常見問題
+## 大小球告訴你關於比賽特性的什麼
 
-### 大2.5是什麼意思？
-如果比賽有3個或更多總進球，則獲勝。
+我使用大小球作為節奏指標。它們將多個因素壓縮為一個數字。
+
+📖 **相關閱讀：** [BTTS作為得分分布](/blog/btts-odds-explained)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和信息參考。*
       `,
       JA: `
-## はじめに
+## なぜトータルデータは過小評価されているのか
 
-トータル（オーバー/アンダー）マーケットは、勝者を選ぶ必要がないため人気があります。さらに重要なのは、トータルが試合の**予想されるテンポ**と得点環境を要約することが多いことです。
+ほとんどの人がサッカー分析を考えるとき、誰が勝つかに焦点を当てます。しかし私は、トータル市場が結果市場よりも試合のダイナミクスについてより有用な情報を含んでいることが多いと発見しました。
 
----
-
-## 1) トータルラインの意味
-
-ラインは「ゴール閾値」です：
-
-- **オーバー2.5** は総ゴール≥3で勝ち
-- **アンダー2.5** は総ゴール≤2で勝ち
+重要な洞察は：トータルは予想される得点環境をエンコードします—試合がどれだけオープンか守備的かを—勝者を予測する必要なしに。
 
 ---
 
-## 2) トータルオッズを確率信号に変換
+## ラインの理解
 
-**P = 1 / 小数オッズ**
+| ライン | 意味 |
+|--------|------|
+| オーバー2.5 | 3+総ゴール |
+| アンダー2.5 | 0-2総ゴール |
+| クォーターライン | スプリットポジション |
+
+---
+
+## トータルを確率データとして読む
+
+**公式：** P = 1 / 小数オッズ
 
 **例：**
-- オーバー2.5 @ 1.80 → 55.56%暗示確率
-- アンダー2.5 @ 2.05 → 48.78%暗示確率
+- オーバー2.5 @ 1.80 → ~56%暗示確率
 
 ---
 
-## 3) トータルがテンポについて「語る」こと
+## トータルが試合の特徴について教えてくれること
 
-トータルは多くの試合要因を1つの数字に組み合わせます：
-- 予想されるチャンス創出
-- 守備の安定性
-- ゲーム状態の傾向
+私はトータルをテンポ指標として使用します。複数の要因を1つの数字に圧縮します：
 
----
-
-## クイックリキャップ
-
-1. トータルは予想される得点環境を表現する明確な方法
-2. 価格は確率に変換される
-3. クォーターラインは2つの隣接するラインに分割
+- **チーム攻撃力** — 両チームがチャンスを作るか？
+- **守備組織** — クリーンシートが可能か？
 
 ---
 
-## FAQ
+## OddsFlowでのトータルの使い方
 
-### オーバー2.5とは？
-試合で3ゴール以上あれば勝ちです。
+トータルデータは予想される試合テンポのプロキシとしてモデルに入力されます。
+
+📖 **関連記事：** [BTTSを得点分布として](/blog/btts-odds-explained)
+
+*OddsFlowは教育および情報提供目的でAI搭載のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -4121,264 +5418,231 @@ Treat them as a split stake across two nearby lines.
     readTime: 6,
     date: '2026-01-14',
     author: 'OddsFlow Team',
-    tags: ['btts', 'both teams to score', 'football odds', 'betting guide', 'scoring odds'],
+    tags: ['btts', 'both teams to score', 'scoring distribution', 'sports analytics', 'probability signals', 'football data'],
     relatedPosts: ['how-to-interpret-football-odds', 'over-under-goals-explained', 'asian-handicap-explained'],
     title: {
-      EN: 'BTTS Odds Explained: Read Scoreline Risk Without Guessing Exact Scores',
-      JA: 'BTTSオッズ解説：正確なスコアを推測せずにスコアラインリスクを読む',
-      '中文': '双方进球赔率详解：无需猜测精确比分即可读懂得分风险',
-      '繁體': '雙方進球賠率詳解：無需猜測精確比分即可讀懂得分風險',
-      ES: 'Cuotas BTTS Explicadas: Lea el Riesgo de Marcador Sin Adivinar Scores Exactos',
-      PT: 'Odds BTTS Explicadas: Leia o Risco do Placar Sem Adivinhar Scores Exatos',
-      DE: 'BTTS Quoten Erklärt: Spielstand-Risiko Lesen Ohne Genaue Scores zu Raten',
-      FR: 'Cotes BTTS Expliquées: Lisez le Risque du Score Sans Deviner les Scores Exacts',
-      KO: 'BTTS 배당 설명: 정확한 스코어를 맞추지 않고 스코어라인 위험 읽기',
-      ID: 'Odds BTTS Dijelaskan: Baca Risiko Skor Tanpa Menebak Skor Tepat',
+      EN: 'BTTS Data: Understanding Scoring Distribution Without Exact Scores',
+      JA: 'BTTSデータ：正確なスコアなしで得点分布を理解する',
+      '中文': 'BTTS数据：无需精确比分即可理解得分分布',
+      '繁體': 'BTTS數據：無需精確比分即可理解得分分布',
+      ES: 'Datos BTTS: Entendiendo la Distribución de Goles Sin Scores Exactos',
+      PT: 'Dados BTTS: Entendendo a Distribuição de Gols Sem Scores Exatos',
+      DE: 'BTTS-Daten: Torverteilung Verstehen Ohne Genaue Ergebnisse',
+      FR: 'Données BTTS: Comprendre la Distribution des Buts Sans Scores Exacts',
+      KO: 'BTTS 데이터: 정확한 스코어 없이 득점 분포 이해하기',
+      ID: 'Data BTTS: Memahami Distribusi Skor Tanpa Skor Tepat',
     },
     excerpt: {
-      EN: 'Learn what BTTS means, how to interpret BTTS odds as probabilities, and how BTTS connects with totals for clearer match scoring signals.',
-      JA: 'BTTSの意味、BTTSオッズを確率として解釈する方法、BTTSがトータルとどのように連携してより明確な試合得点信号を提供するかを学びます。',
-      '中文': '学习BTTS的含义，如何将BTTS赔率解读为概率，以及BTTS如何与大小球连接以获得更清晰的比赛得分信号。',
-      '繁體': '學習BTTS的含義，如何將BTTS賠率解讀為概率，以及BTTS如何與大小球連接以獲得更清晰的比賽得分信號。',
-      ES: 'Aprenda qué significa BTTS, cómo interpretar las cuotas BTTS como probabilidades.',
-      PT: 'Aprenda o que BTTS significa, como interpretar odds BTTS como probabilidades.',
-      DE: 'Erfahren Sie, was BTTS bedeutet und wie Sie BTTS-Quoten als Wahrscheinlichkeiten interpretieren.',
-      FR: 'Apprenez ce que signifie BTTS, comment interpréter les cotes BTTS comme des probabilités.',
-      KO: 'BTTS가 무엇을 의미하는지, BTTS 배당을 확률로 해석하는 방법을 배우세요.',
-      ID: 'Pelajari apa arti BTTS, cara menginterpretasikan odds BTTS sebagai probabilitas.',
+      EN: 'How BTTS markets encode scoring distribution expectations. A practical guide to reading BTTS as probability data alongside totals.',
+      JA: 'BTTS市場が得点分布の期待をどのようにエンコードするか。トータルと一緒にBTTSを確率データとして読むための実践ガイド。',
+      '中文': 'BTTS市场如何编码得分分布预期。将BTTS与大小球一起作为概率数据阅读的实用指南。',
+      '繁體': 'BTTS市場如何編碼得分分布預期。將BTTS與大小球一起作為概率數據閱讀的實用指南。',
+      ES: 'Cómo los mercados BTTS codifican las expectativas de distribución de goles.',
+      PT: 'Como os mercados BTTS codificam as expectativas de distribuição de gols.',
+      DE: 'Wie BTTS-Märkte Torverteilungserwartungen kodieren.',
+      FR: 'Comment les marchés BTTS encodent les attentes de distribution des buts.',
+      KO: 'BTTS 시장이 득점 분포 기대치를 어떻게 인코딩하는지.',
+      ID: 'Bagaimana pasar BTTS mengkodekan ekspektasi distribusi skor.',
     },
     content: {
       EN: `
-## Introduction
+## What BTTS Actually Tells You
 
-BTTS (Both Teams To Score) is a simple market with a powerful meaning: it describes whether the match is likely to feature goals from both sides, without needing a specific final score.
+BTTS (Both Teams To Score) seems simple—will both teams score at least once? But I've found it's actually one of the most useful markets for understanding match scoring *structure* rather than just volume.
 
-If you want to understand scoring risk, BTTS is often easier than trying to predict 2–1 or 1–1.
-
----
-
-## 1) What BTTS Means
-
-- **BTTS Yes** wins if both teams score at least one goal
-- **BTTS No** wins if at least one team scores zero (0–0, 1–0, 2–0, etc.)
+While totals tell you about expected goal count, BTTS tells you about distribution. Together, they paint a clearer picture.
 
 ---
 
-## 2) Convert BTTS Odds to Probability
+## The Basics
 
-Same conversion:
+| Market | Covers |
+|--------|--------|
+| BTTS Yes | Both teams score at least 1 |
+| BTTS No | At least one team scores 0 (0-0, 1-0, 2-0, etc.) |
 
-**P = 1 / odds**
+This is completely independent of who wins. A 5-1 result is BTTS Yes just like a 1-1.
+
+---
+
+## Converting to Probability
+
+Same formula as always:
+
+**P = 1 / Decimal Odds**
 
 **Example:**
-- BTTS Yes @ 1.75 → 57.14% implied
-- BTTS No @ 2.10 → 47.62% implied
+- BTTS Yes @ 1.75 → ~57% implied probability
+- BTTS No @ 2.10 → ~48% implied probability
 
-Sum above 100% = margin
-
-📖 **Related:** [How Bookmakers Calculate Margins](/blog/how-bookmakers-calculate-margins)
+The sum exceeds 100%—that's the bookmaker margin.
 
 ---
 
-## 3) How BTTS Relates to Totals (Why Both Together Are Useful)
+## Why BTTS + Totals Together Is Powerful
 
-**Totals** answer: "How many goals overall?"
-**BTTS** answers: "Are goals distributed across both teams?"
+This is where it gets useful for analysis. BTTS and totals answer different questions:
 
-**Common combinations:**
-- **High totals + BTTS Yes favored** → open match, both sides likely to contribute
-- **High totals + BTTS No favored** → one-sided scoring pattern more likely
-- **Low totals + BTTS Yes favored** → can suggest a tight 1–1 type environment
-- **Low totals + BTTS No favored** → clean-sheet risk is higher
+- **Totals:** How many goals total?
+- **BTTS:** How are those goals distributed?
 
-This isn't about certainty—it's about *structure*.
+| Pattern | What It Suggests |
+|---------|------------------|
+| High totals + BTTS Yes | Open, back-and-forth match expected |
+| High totals + BTTS No | One-sided scoring more likely (e.g., 3-0, 4-0) |
+| Low totals + BTTS Yes | Tight match, maybe 1-1 type |
+| Low totals + BTTS No | Clean sheet risk elevated |
 
-📖 **Related:** [Over/Under Goals Explained](/blog/over-under-goals-explained)
-
----
-
-## 4) Why BTTS Helps Models
-
-BTTS provides a different angle than 1X2:
-- It captures "both sides threat" in one variable
-- It can improve scoring distribution signals
-- It combines well with totals and handicap features
-
-**Useful features:**
-- Fair BTTS probability (after de-vig)
-- BTTS movement over time
-- BTTS vs totals consistency
+Reading both markets together gives you more signal than either alone.
 
 ---
 
-## Quick Recap
+## How We Use BTTS at OddsFlow
 
-1. BTTS is about whether both teams score at least once
-2. Convert odds into probability to compare consistently
-3. Read BTTS together with totals for match scoring structure
+BTTS data helps our models understand scoring distribution:
+
+- **Fair probability:** after removing margin
+- **Movement patterns:** BTTS shifts toward kickoff
+- **Cross-market consistency:** does BTTS align with totals and handicap?
+- **Historical patterns:** team-level BTTS rates over time
+
+This isn't about predicting individual matches—it's about capturing structural patterns across many matches.
 
 ---
 
-## FAQ
+## Common Questions
 
-### What does BTTS mean?
-Both Teams To Score.
+**Can BTTS Yes happen with Under 2.5?**
+Yes. A 1-1 match is BTTS Yes but Under 2.5.
 
-### Does BTTS require Over 2.5?
-No. BTTS can happen in a 1–1 (Under 2.5) match.
+**Is BTTS more predictable than 1X2?**
+It's a different dimension entirely. Some matches have clearer BTTS signals than winner signals.
 
-### Why do BTTS odds move?
-Market belief about scoring distribution can change over time.
+📖 **Related reading:** [Totals as Tempo Indicators](/blog/over-under-goals-explained) • [Asian Handicap Guide](/blog/asian-handicap-explained)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 简介
+## BTTS实际上告诉你什么
 
-BTTS（双方进球）是一个简单的市场，具有强大的含义：它描述比赛是否可能出现双方进球，而无需特定的最终比分。
+BTTS（双方进球）看起来很简单——两队都会进至少一球吗？但我发现它实际上是理解比赛得分*结构*而不仅仅是数量的最有用的市场之一。
 
-如果你想了解得分风险，BTTS通常比预测2-1或1-1更容易。
-
----
-
-## 1) BTTS的含义
-
-- **BTTS 是** 如果两队都至少进一球则获胜
-- **BTTS 否** 如果至少一队进零球则获胜（0-0, 1-0, 2-0等）
+大小球告诉你预期的进球数量，BTTS告诉你分布。两者结合，画出更清晰的图景。
 
 ---
 
-## 2) 将BTTS赔率转换为概率
+## 基础知识
 
-同样的转换：
+| 市场 | 覆盖 |
+|------|------|
+| BTTS 是 | 两队都至少进1球 |
+| BTTS 否 | 至少一队进0球 |
 
-**P = 1 / 赔率**
+这与谁获胜完全无关。5-1的结果是BTTS是，就像1-1一样。
+
+---
+
+## 转换为概率
+
+**公式：** P = 1 / 小数赔率
 
 **例子：**
-- BTTS 是 @ 1.75 → 57.14%隐含概率
-- BTTS 否 @ 2.10 → 47.62%隐含概率
-
-总和超过100% = 利润率
+- BTTS 是 @ 1.75 → ~57%隐含概率
+- BTTS 否 @ 2.10 → ~48%隐含概率
 
 ---
 
-## 3) BTTS与大小球的关系
+## 为什么BTTS + 大小球一起很强大
 
-**大小球**回答："总共多少进球？"
-**BTTS**回答："进球是否分布在两队？"
+| 模式 | 它暗示什么 |
+|------|-----------|
+| 高大小球 + BTTS是 | 开放、来回的比赛预期 |
+| 高大小球 + BTTS否 | 单边得分更可能 |
+| 低大小球 + BTTS是 | 紧张比赛，可能是1-1类型 |
+| 低大小球 + BTTS否 | 零封风险升高 |
 
-**常见组合：**
-- **高大小球 + BTTS是看好** → 开放比赛，双方都可能得分
-- **高大小球 + BTTS否看好** → 单边得分模式更可能
-- **低大小球 + BTTS是看好** → 可能暗示紧张的1-1类型环境
-- **低大小球 + BTTS否看好** → 零封风险更高
-
----
-
-## 快速回顾
-
-1. BTTS是关于两队是否都至少进一球
-2. 将赔率转换为概率以进行一致比较
-3. 将BTTS与大小球一起阅读以了解比赛得分结构
+一起阅读两个市场比单独任何一个给你更多信号。
 
 ---
 
-## 常见问题
+## 我们在OddsFlow如何使用BTTS
 
-### BTTS是什么意思？
-双方进球。
+BTTS数据帮助我们的模型理解得分分布。
 
-### BTTS需要大2.5吗？
-不需要。BTTS可以在1-1（小2.5）的比赛中发生。
+📖 **相关阅读：** [大小球作为节奏指标](/blog/over-under-goals-explained) • [亚洲盘口指南](/blog/asian-handicap-explained)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 簡介
+## BTTS實際上告訴你什麼
 
-BTTS（雙方進球）是一個簡單的市場，具有強大的含義：它描述比賽是否可能出現雙方進球，而無需特定的最終比分。
-
----
-
-## 1) BTTS的含義
-
-- **BTTS 是** 如果兩隊都至少進一球則獲勝
-- **BTTS 否** 如果至少一隊進零球則獲勝
+BTTS（雙方進球）看起來很簡單——兩隊都會進至少一球嗎？但我發現它實際上是理解比賽得分*結構*而不僅僅是數量的最有用的市場之一。
 
 ---
 
-## 2) 將BTTS賠率轉換為概率
+## 基礎知識
 
-**P = 1 / 賠率**
-
-**例子：**
-- BTTS 是 @ 1.75 → 57.14%隱含概率
-- BTTS 否 @ 2.10 → 47.62%隱含概率
-
----
-
-## 3) BTTS與大小球的關係
-
-**大小球**回答："總共多少進球？"
-**BTTS**回答："進球是否分布在兩隊？"
+| 市場 | 覆蓋 |
+|------|------|
+| BTTS 是 | 兩隊都至少進1球 |
+| BTTS 否 | 至少一隊進0球 |
 
 ---
 
-## 快速回顧
+## 為什麼BTTS + 大小球一起很強大
 
-1. BTTS是關於兩隊是否都至少進一球
-2. 將賠率轉換為概率以進行一致比較
-3. 將BTTS與大小球一起閱讀
+| 模式 | 它暗示什麼 |
+|------|-----------|
+| 高大小球 + BTTS是 | 開放、來回的比賽預期 |
+| 高大小球 + BTTS否 | 單邊得分更可能 |
 
----
+📖 **相關閱讀：** [大小球作為節奏指標](/blog/over-under-goals-explained)
 
-## 常見問題
-
-### BTTS是什麼意思？
-雙方進球。
+*OddsFlow提供AI驅動的體育分析，僅供教育和信息參考。*
       `,
       JA: `
-## はじめに
+## BTTSが実際に教えてくれること
 
-BTTS（Both Teams To Score）は、特定の最終スコアを必要とせずに、試合で両チームがゴールを決める可能性があるかどうかを説明する、シンプルですが強力な意味を持つマーケットです。
+BTTS（Both Teams To Score）は単純に見えます—両チームが少なくとも1点ずつ決めるか？しかし、試合の得点*構造*を理解するのに最も有用なマーケットの1つであることがわかりました。
 
----
-
-## 1) BTTSの意味
-
-- **BTTS はい** は両チームが少なくとも1ゴールを決めれば勝ち
-- **BTTS いいえ** は少なくとも1チームが0ゴールなら勝ち（0-0、1-0、2-0など）
+トータルは予想されるゴール数を教えてくれ、BTTSは分布を教えてくれます。一緒に、より明確な絵を描きます。
 
 ---
 
-## 2) BTTSオッズを確率に変換
+## 基本
 
-**P = 1 / オッズ**
+| マーケット | カバー |
+|----------|--------|
+| BTTS はい | 両チームが少なくとも1ゴール |
+| BTTS いいえ | 少なくとも1チームが0ゴール |
+
+---
+
+## 確率への変換
+
+**公式：** P = 1 / 小数オッズ
 
 **例：**
-- BTTS はい @ 1.75 → 57.14%暗示確率
-- BTTS いいえ @ 2.10 → 47.62%暗示確率
+- BTTS はい @ 1.75 → ~57%暗示確率
 
 ---
 
-## 3) BTTSとトータルの関係
+## なぜBTTS + トータルが一緒に強力なのか
 
-**トータル**は「全体で何ゴール？」に答える
-**BTTS**は「ゴールは両チームに分配されているか？」に答える
-
----
-
-## クイックリキャップ
-
-1. BTTSは両チームが少なくとも1回得点するかどうかについて
-2. 一貫して比較するためにオッズを確率に変換
-3. 試合の得点構造のためにBTTSとトータルを一緒に読む
+| パターン | 何を示唆するか |
+|---------|---------------|
+| 高トータル + BTTS はい | オープンな行き来する試合が予想される |
+| 高トータル + BTTS いいえ | 一方的な得点がより可能性高い |
 
 ---
 
-## FAQ
+## OddsFlowでのBTTSの使い方
 
-### BTTSとは？
-両チーム得点。
+BTTSデータは、モデルが得点分布を理解するのに役立ちます。
 
-### BTTSにはオーバー2.5が必要？
-いいえ。BTTSは1-1（アンダー2.5）の試合でも起こりえます。
+📖 **関連記事：** [トータルをテンポ指標として](/blog/over-under-goals-explained)
+
+*OddsFlowは教育および情報提供目的でAI搭載のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -4390,246 +5654,231 @@ BTTS（Both Teams To Score）は、特定の最終スコアを必要とせずに
     readTime: 7,
     date: '2026-01-14',
     author: 'OddsFlow Team',
-    tags: ['opening odds', 'closing odds', 'odds timing', 'football betting', 'market analysis'],
+    tags: ['opening odds', 'closing odds', 'odds timing', 'sports analytics', 'market data', 'time series analysis'],
     relatedPosts: ['how-to-interpret-football-odds', 'odds-movement-drift-steam', 'oddsflow-odds-to-features'],
     title: {
-      EN: 'Opening vs Closing Odds: Why Timing Changes Prediction Quality',
-      JA: 'オープニングvsクロージングオッズ：なぜタイミングが予測品質を変えるのか',
-      '中文': '开盘vs收盘赔率：为什么时机改变预测质量',
-      '繁體': '開盤vs收盤賠率：為什麼時機改變預測品質',
-      ES: 'Cuotas de Apertura vs Cierre: Por Qué el Timing Cambia la Calidad de Predicción',
-      PT: 'Odds de Abertura vs Fechamento: Por Que o Timing Muda a Qualidade da Previsão',
-      DE: 'Eröffnungs- vs Schlussquoten: Warum Timing die Vorhersagequalität Verändert',
-      FR: 'Cotes d\'Ouverture vs Fermeture: Pourquoi le Timing Change la Qualité de Prédiction',
-      KO: '오프닝 vs 클로징 배당: 타이밍이 예측 품질을 바꾸는 이유',
-      ID: 'Odds Pembukaan vs Penutupan: Mengapa Waktu Mengubah Kualitas Prediksi',
+      EN: 'Opening vs Closing Data: How Timing Affects Market Information Quality',
+      JA: 'オープニング vs クロージングデータ：タイミングが市場情報品質にどう影響するか',
+      '中文': '开盘vs收盘数据：时机如何影响市场信息质量',
+      '繁體': '開盤vs收盤數據：時機如何影響市場信息質量',
+      ES: 'Datos de Apertura vs Cierre: Cómo el Timing Afecta la Calidad de Información',
+      PT: 'Dados de Abertura vs Fechamento: Como o Timing Afeta a Qualidade da Informação',
+      DE: 'Eröffnungs- vs Schlussdaten: Wie Timing die Informationsqualität Beeinflusst',
+      FR: 'Données d\'Ouverture vs Fermeture: Comment le Timing Affecte la Qualité d\'Information',
+      KO: '오프닝 vs 클로징 데이터: 타이밍이 시장 정보 품질에 미치는 영향',
+      ID: 'Data Pembukaan vs Penutupan: Bagaimana Waktu Mempengaruhi Kualitas Informasi',
     },
     excerpt: {
-      EN: 'Learn the difference between opening, live, and closing odds, why timing matters, and how to use timing safely in analysis and model evaluation.',
-      JA: 'オープニング、ライブ、クロージングオッズの違い、タイミングが重要な理由、分析とモデル評価でタイミングを安全に使用する方法を学びます。',
-      '中文': '学习开盘、实时和收盘赔率的区别，为什么时机很重要，以及如何在分析和模型评估中安全使用时机。',
-      '繁體': '學習開盤、即時和收盤賠率的區別，為什麼時機很重要，以及如何在分析和模型評估中安全使用時機。',
-      ES: 'Aprenda la diferencia entre cuotas de apertura, en vivo y cierre.',
-      PT: 'Aprenda a diferença entre odds de abertura, ao vivo e fechamento.',
-      DE: 'Erfahren Sie den Unterschied zwischen Eröffnungs-, Live- und Schlussquoten.',
-      FR: 'Apprenez la différence entre les cotes d\'ouverture, en direct et de clôture.',
-      KO: '오프닝, 라이브, 클로징 배당의 차이점을 배우세요.',
-      ID: 'Pelajari perbedaan antara odds pembukaan, langsung, dan penutupan.',
+      EN: 'Understanding when market data is captured matters for analysis. Here is how opening, current, and closing snapshots differ as information sources.',
+      JA: '市場データがいつキャプチャされるかを理解することは分析に重要です。オープニング、現在、クロージングのスナップショットが情報源としてどのように異なるか。',
+      '中文': '理解何时捕获市场数据对分析很重要。这里是开盘、当前和收盘快照作为信息源如何不同。',
+      '繁體': '理解何時捕獲市場數據對分析很重要。這裡是開盤、當前和收盤快照作為信息源如何不同。',
+      ES: 'Entender cuándo se capturan los datos del mercado es importante para el análisis.',
+      PT: 'Entender quando os dados do mercado são capturados é importante para a análise.',
+      DE: 'Zu verstehen, wann Marktdaten erfasst werden, ist wichtig für die Analyse.',
+      FR: 'Comprendre quand les données du marché sont capturées est important pour l\'analyse.',
+      KO: '시장 데이터가 언제 캡처되는지 이해하는 것이 분석에 중요합니다.',
+      ID: 'Memahami kapan data pasar diambil penting untuk analisis.',
     },
     content: {
       EN: `
-## Introduction
+## Why Timing Matters in Market Data
 
-Odds are not static. They evolve as information arrives and pricing adjusts. That's why timing matters: opening odds and closing odds can represent very different "snapshots" of belief.
+One of the first lessons I learned when building prediction models: the *when* of data collection matters as much as the *what*.
 
-This guide explains:
-- What "opening" and "closing" mean
-- What timing implies
-- How timing becomes clean features for prediction systems
+Opening odds and closing odds for the same match can look quite different. Understanding why—and how to handle this in analysis—is fundamental to working with market data properly.
 
 ---
 
-## 1) Definitions
+## The Three Timestamps
 
-- **Opening odds:** first widely available price
-- **Current odds:** latest price at any moment
-- **Closing odds:** final pre-kickoff price (last stable snapshot)
+| Snapshot | What It Represents |
+|----------|-------------------|
+| Opening | First widely available price |
+| Current | Latest price at any moment |
+| Closing | Final pre-kickoff price |
 
----
-
-## 2) Why Timing Changes the Signal
-
-Timing affects what's included in the price:
-- **Early stages:** less info is fully incorporated
-- **Later stages:** more updates are reflected (lineups, late news, rebalancing)
-
-This doesn't mean "closing is always right."
-It means "closing is a denser summary of available info."
+Each represents a different information state. Closing odds have absorbed more updates: lineup announcements, late news, market rebalancing. Opening odds reflect earlier beliefs.
 
 ---
 
-## 3) What This Means for Analysis
+## What This Means for Analysis
 
-If you compare matches, you should compare them at similar timestamps:
-- Opening-to-opening comparisons
-- Closing-to-closing comparisons
+The key insight: later prices contain more incorporated information, but that doesn't make them "better" for all purposes.
 
-Mixing timestamps can create confusion (and unreliable conclusions).
+**When comparing matches:**
+- Compare opening-to-opening or closing-to-closing
+- Mixing timestamps creates unreliable comparisons
 
----
-
-## 4) Timing Features for AI Models
-
-Good timing-based features include:
-- Open → now probability delta
-- Now → close delta
-- Speed of movement (how fast changes accumulate)
-- Stability score (smooth vs choppy)
-
-These features are often more useful than a single "latest odds" snapshot.
+**For model building:**
+- Be explicit about which timestamp your features use
+- Time-series features (open → close delta) are often more useful than single snapshots
 
 ---
 
-## 5) Timing Warning for Backtests (Important)
+## Common Timing Features in Our Models
 
-If your historical dataset includes closing odds, but your model is supposed to make predictions earlier, you must align evaluation timing correctly. Otherwise, it looks better on paper than it behaves in real use.
+At OddsFlow, we extract several timing-based features:
 
-📖 **Related:** [Backtesting Football Models](/blog/backtesting-football-models)
+- **Opening probability** — earliest market belief
+- **Closing probability** — final pre-match belief
+- **Movement delta** — change from open to close
+- **Movement velocity** — how fast changes accumulate
+- **Stability score** — smooth vs volatile path
 
----
-
-## Quick Recap
-
-1. Opening/current/closing are different informational snapshots
-2. Compare like-for-like timestamps
-3. Timing becomes powerful model features when handled consistently
+The movement pattern often contains signal that static snapshots miss.
 
 ---
 
-## FAQ
+## The Backtest Warning
 
-### What is closing odds?
-The final pre-kickoff price snapshot.
+This is important for anyone evaluating prediction systems (including ours):
 
-### Is closing odds always better?
-Not "always," but it's usually more information-dense than early prices.
+If your model makes predictions using data available at time T, you must evaluate against benchmarks using data from time T—not later.
 
-### Why is timing important for backtests?
-Using late prices to judge early predictions can distort results.
+Using closing odds to evaluate predictions made with opening data will make your system look artificially good. We're careful about this in our own evaluation, and you should be too.
+
+---
+
+## Practical Takeaways
+
+1. **Always know which timestamp your data represents**
+2. **Compare apples to apples** — same timestamp comparisons
+3. **Movement patterns contain signal** — not just final values
+4. **Backtest honestly** — match evaluation timing to prediction timing
+
+📖 **Related reading:** [Odds Movement Patterns](/blog/odds-movement-drift-steam) • [How We Build Features](/blog/oddsflow-odds-to-features)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 简介
+## 为什么时机在市场数据中很重要
 
-赔率不是静态的。它们随着信息到达和定价调整而演变。这就是为什么时机很重要：开盘赔率和收盘赔率可以代表非常不同的"信念快照"。
+我在构建预测模型时学到的第一课之一：数据收集的*何时*与*什么*一样重要。
 
----
-
-## 1) 定义
-
-- **开盘赔率：** 第一个广泛可用的价格
-- **当前赔率：** 任何时刻的最新价格
-- **收盘赔率：** 开赛前的最终价格（最后的稳定快照）
+同一场比赛的开盘赔率和收盘赔率可能看起来相当不同。理解原因——以及如何在分析中处理这个问题——是正确处理市场数据的基础。
 
 ---
 
-## 2) 为什么时机改变信号
+## 三个时间戳
 
-时机影响价格中包含的内容：
-- **早期阶段：** 较少的信息被完全纳入
-- **后期阶段：** 更多更新被反映（阵容、最新消息、再平衡）
+| 快照 | 它代表什么 |
+|------|-----------|
+| 开盘 | 第一个广泛可用的价格 |
+| 当前 | 任何时刻的最新价格 |
+| 收盘 | 开赛前的最终价格 |
 
-这并不意味着"收盘总是正确的"。
-它意味着"收盘是可用信息的更密集摘要"。
-
----
-
-## 3) 这对分析意味着什么
-
-如果你比较比赛，你应该在相似的时间戳进行比较：
-- 开盘对开盘比较
-- 收盘对收盘比较
-
-混合时间戳可能造成混乱（和不可靠的结论）。
+每个代表不同的信息状态。收盘赔率吸收了更多更新：阵容公告、最新消息、市场再平衡。
 
 ---
 
-## 4) AI模型的时机特征
+## 这对分析意味着什么
 
-好的基于时机的特征包括：
-- 开盘→现在的概率变化
-- 现在→收盘的变化
-- 移动速度（变化累积的速度）
-- 稳定性分数（平滑vs波动）
+关键洞察：后期价格包含更多纳入的信息，但这并不使它们对所有目的都"更好"。
 
----
-
-## 快速回顾
-
-1. 开盘/当前/收盘是不同的信息快照
-2. 比较相同类型的时间戳
-3. 当一致处理时，时机成为强大的模型特征
+**比较比赛时：**
+- 比较开盘对开盘或收盘对收盘
+- 混合时间戳会造成不可靠的比较
 
 ---
 
-## 常见问题
+## 我们模型中的常见时机特征
 
-### 什么是收盘赔率？
-开赛前的最终价格快照。
+- **开盘概率** — 最早的市场信念
+- **收盘概率** — 最终的赛前信念
+- **变动差值** — 从开盘到收盘的变化
+- **稳定性分数** — 平滑vs波动路径
 
-### 收盘赔率总是更好吗？
-不是"总是"，但通常比早期价格信息更密集。
+---
+
+## 实用要点
+
+1. **始终知道你的数据代表哪个时间戳**
+2. **比较同类** — 相同时间戳比较
+3. **变动模式包含信号** — 不仅仅是最终值
+
+📖 **相关阅读：** [赔率变动模式](/blog/odds-movement-drift-steam)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-## 簡介
+## 為什麼時機在市場數據中很重要
 
-賠率不是靜態的。它們隨著信息到達和定價調整而演變。這就是為什麼時機很重要。
-
----
-
-## 1) 定義
-
-- **開盤賠率：** 第一個廣泛可用的價格
-- **當前賠率：** 任何時刻的最新價格
-- **收盤賠率：** 開賽前的最終價格
+我在構建預測模型時學到的第一課之一：數據收集的*何時*與*什麼*一樣重要。
 
 ---
 
-## 2) 為什麼時機改變信號
+## 三個時間戳
 
-時機影響價格中包含的內容：
-- **早期階段：** 較少的信息被完全納入
-- **後期階段：** 更多更新被反映
-
----
-
-## 快速回顧
-
-1. 開盤/當前/收盤是不同的信息快照
-2. 比較相同類型的時間戳
-3. 時機成為強大的模型特徵
+| 快照 | 它代表什麼 |
+|------|-----------|
+| 開盤 | 第一個廣泛可用的價格 |
+| 當前 | 任何時刻的最新價格 |
+| 收盤 | 開賽前的最終價格 |
 
 ---
 
-## 常見問題
+## 這對分析意味著什麼
 
-### 什麼是收盤賠率？
-開賽前的最終價格快照。
+**比較比賽時：**
+- 比較開盤對開盤或收盤對收盤
+- 混合時間戳會造成不可靠的比較
+
+---
+
+## 實用要點
+
+1. **始終知道你的數據代表哪個時間戳**
+2. **比較同類** — 相同時間戳比較
+
+📖 **相關閱讀：** [賠率變動模式](/blog/odds-movement-drift-steam)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和信息參考。*
       `,
       JA: `
-## はじめに
+## なぜ市場データでタイミングが重要なのか
 
-オッズは静的ではありません。情報が到着し、価格設定が調整されるにつれて進化します。だからこそタイミングが重要です。
+予測モデルを構築するときに学んだ最初のレッスンの1つ：データ収集の*いつ*は*何を*と同じくらい重要です。
 
----
-
-## 1) 定義
-
-- **オープニングオッズ：** 最初に広く利用可能な価格
-- **現在のオッズ：** 任意の時点での最新価格
-- **クロージングオッズ：** キックオフ前の最終価格
+同じ試合のオープニングオッズとクロージングオッズはかなり異なることがあります。
 
 ---
 
-## 2) なぜタイミングがシグナルを変えるか
+## 3つのタイムスタンプ
 
-タイミングは価格に含まれる内容に影響します：
-- **初期段階：** 完全に組み込まれている情報が少ない
-- **後期段階：** より多くの更新が反映される
-
----
-
-## クイックリキャップ
-
-1. オープニング/現在/クロージングは異なる情報スナップショット
-2. 同様のタイムスタンプを比較する
-3. 一貫して処理されると、タイミングは強力なモデル機能になる
+| スナップショット | 何を表すか |
+|----------------|-----------|
+| オープニング | 最初に広く利用可能な価格 |
+| 現在 | 任意の時点での最新価格 |
+| クロージング | キックオフ前の最終価格 |
 
 ---
 
-## FAQ
+## これが分析に意味すること
 
-### クロージングオッズとは？
-キックオフ前の最終価格スナップショット。
+**試合を比較するとき：**
+- オープニング対オープニングまたはクロージング対クロージングで比較
+- タイムスタンプを混在させると信頼できない比較になる
+
+---
+
+## 私たちのモデルでの一般的なタイミング機能
+
+- **オープニング確率** — 最も早い市場の信念
+- **クロージング確率** — 試合前の最終的な信念
+- **動きのデルタ** — オープンからクローズへの変化
+
+---
+
+## 実践的なポイント
+
+1. **データがどのタイムスタンプを表すか常に把握する**
+2. **同じものを比較** — 同じタイムスタンプ比較
+3. **動きのパターンにシグナルがある** — 最終値だけでなく
+
+📖 **関連記事：** [オッズ変動パターン](/blog/odds-movement-drift-steam)
+
+*OddsFlowは教育および情報提供目的でAI搭載のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -4641,247 +5890,363 @@ Using late prices to judge early predictions can distort results.
     readTime: 7,
     date: '2026-01-14',
     author: 'OddsFlow Team',
-    tags: ['odds movement', 'drift', 'steam', 'football betting', 'market analysis'],
+    tags: ['odds movement analysis', 'market signals', 'AI features', 'data science', 'time series analysis', 'sports analytics'],
     relatedPosts: ['how-to-interpret-football-odds', 'opening-vs-closing-odds', 'bookmaker-consensus-odds'],
     title: {
-      EN: 'Odds Movement 101: Drift, Steam, Stability, and Late Shifts',
-      JA: 'オッズ変動101：ドリフト、スチーム、安定性、レイトシフト',
-      '中文': '赔率变动101：漂移、蒸汽、稳定性和临门变化',
-      '繁體': '賠率變動101：漂移、蒸汽、穩定性和臨門變化',
-      ES: 'Movimiento de Cuotas 101: Drift, Steam, Estabilidad y Cambios Tardíos',
-      PT: 'Movimento de Odds 101: Drift, Steam, Estabilidade e Mudanças Tardias',
-      DE: 'Quotenbewegung 101: Drift, Steam, Stabilität und Späte Verschiebungen',
-      FR: 'Mouvement des Cotes 101: Drift, Steam, Stabilité et Changements Tardifs',
-      KO: '배당 변동 101: 드리프트, 스팀, 안정성, 레이트 시프트',
-      ID: 'Pergerakan Odds 101: Drift, Steam, Stabilitas, dan Pergeseran Terlambat',
+      EN: 'Reading Market Signals: What Odds Movement Patterns Actually Tell Us',
+      JA: '市場シグナルの読み方：オッズ変動パターンが実際に伝えること',
+      '中文': '解读市场信号：赔率变动模式究竟告诉我们什么',
+      '繁體': '解讀市場信號：賠率變動模式究竟告訴我們什麼',
+      ES: 'Leyendo Señales del Mercado: Qué Nos Dicen los Patrones de Movimiento',
+      PT: 'Lendo Sinais do Mercado: O Que os Padrões de Movimento Nos Dizem',
+      DE: 'Marktsignale Lesen: Was Quotenbewegungsmuster Uns Sagen',
+      FR: 'Lecture des Signaux du Marché: Ce Que les Mouvements Nous Disent',
+      KO: '시장 신호 읽기: 배당 변동 패턴이 알려주는 것',
+      ID: 'Membaca Sinyal Pasar: Apa yang Pola Pergerakan Odds Sampaikan',
     },
     excerpt: {
-      EN: 'Learn the basics of odds movement, what drift and steam mean, how to read stability, and why late shifts are different from random noise.',
-      JA: 'オッズ変動の基本、ドリフトとスチームの意味、安定性の読み方、なぜレイトシフトがランダムノイズと異なるかを学びます。',
-      '中文': '学习赔率变动的基础知识，漂移和蒸汽的含义，如何读取稳定性，以及为什么临门变化与随机噪音不同。',
-      '繁體': '學習賠率變動的基礎知識，漂移和蒸汽的含義，如何讀取穩定性，以及為什麼臨門變化與隨機噪音不同。',
-      ES: 'Aprenda los conceptos básicos del movimiento de cuotas.',
-      PT: 'Aprenda os fundamentos do movimento de odds.',
-      DE: 'Lernen Sie die Grundlagen der Quotenbewegung.',
-      FR: 'Apprenez les bases du mouvement des cotes.',
-      KO: '배당 변동의 기본을 배우세요.',
-      ID: 'Pelajari dasar-dasar pergerakan odds.',
+      EN: 'How we extract meaningful features from odds movement data—drift, steam, stability metrics—and why these patterns matter for AI prediction models.',
+      JA: 'オッズ変動データから意味のある特徴を抽出する方法——ドリフト、スチーム、安定性指標——そしてこれらのパターンがAI予測モデルにとって重要な理由。',
+      '中文': '我们如何从赔率变动数据中提取有意义的特征——漂移、蒸汽、稳定性指标——以及这些模式对AI预测模型的重要性。',
+      '繁體': '我們如何從賠率變動數據中提取有意義的特徵——漂移、蒸汽、穩定性指標——以及這些模式對AI預測模型的重要性。',
+      ES: 'Cómo extraemos características significativas de datos de movimiento de cuotas.',
+      PT: 'Como extraímos recursos significativos dos dados de movimento de odds.',
+      DE: 'Wie wir aussagekräftige Merkmale aus Quotenbewegungsdaten extrahieren.',
+      FR: 'Comment nous extrayons des caractéristiques significatives des données de mouvement.',
+      KO: '배당 변동 데이터에서 의미 있는 특징을 추출하는 방법.',
+      ID: 'Bagaimana kami mengekstrak fitur bermakna dari data pergerakan odds.',
     },
     content: {
       EN: `
-## Introduction
+## The First Time I Noticed Something Interesting
 
-Odds movement is easy to overinterpret. A safer approach is to treat movement as a **measurable signal**, not a story.
+When I started tracking odds data for our models, I made the same mistake most people make: I only looked at opening and closing prices. Two data points per match. That's it.
 
-This guide defines the main movement types and shows how to quantify them.
+Then one day, I actually plotted the full timeline for a match. The line wasn't straight—it had curves, sudden drops, periods of stability, and last-minute spikes. I realized I'd been throwing away 90% of the signal.
 
----
-
-## 1) Drift vs Steam
-
-- **Steam:** odds shorten → implied probability rises
-- **Drift:** odds lengthen → implied probability falls
-
-Always translate to probability first; it prevents "number illusion."
+That's when I started thinking about odds movement not as noise, but as structured data.
 
 ---
 
-## 2) Stability: The Underrated Concept
+## Steam and Drift: The Basic Vocabulary
 
-Two matches can end at similar closing odds but behave differently:
-- **Stable market:** small smooth adjustments
-- **Choppy market:** multiple swings up and down
+Let me give you the terms we use internally:
 
-Stability is useful because it captures uncertainty or disagreement.
+**Steam** is when odds shorten—the implied probability goes up. If a team opens at 3.00 (33% implied) and drops to 2.50 (40% implied), that's steam. Something is pulling the market toward that outcome.
 
----
+**Drift** is the opposite. Odds lengthen, implied probability drops. Maybe the market is backing away from an outcome, or money is flowing elsewhere.
 
-## 3) Late Shifts (Why They're Treated Differently)
-
-Late movement happens close to kickoff, when:
-- Last-minute updates are processed
-- Positions and pricing get finalized
-
-Late shifts aren't automatically "better," but they're often structurally different than early noise.
+Here's the thing though: the labels aren't what matters. What matters is *how* and *when* the movement happens.
 
 ---
 
-## 4) How to Quantify Movement (Simple Features)
+## Stability Is the Feature Nobody Talks About
 
-Instead of "it moved," measure:
-- **Δ (delta):** open → now probability change
-- **Velocity:** change per hour (or per update)
-- **Volatility:** how much it swings over time
-- **Late intensity:** portion of movement in the final window
+Two matches can end at exactly the same closing odds but take completely different paths to get there.
 
-This is exactly the type of structure AI models can learn from.
+Match A opens at 2.00, stays between 1.95-2.05 all day, closes at 2.00. Stable.
 
----
+Match B opens at 2.00, swings to 2.40, drops to 1.80, bounces to 2.20, closes at 2.00. Choppy.
 
-## 5) How to Connect Movement to Your Content Strategy
+From a closing-odds perspective, they're identical. But from a signal perspective? Totally different stories.
 
-Movement articles are great for SEO because they answer "why did odds change?" with clear definitions, not hype.
-
-Keep the tone:
-- Explain first
-- Measure second
-- Avoid dramatic claims
+We measure stability using standard deviation of the odds path, and it turns out to be one of our more predictive features. High volatility often indicates market uncertainty or conflicting information.
 
 ---
 
-## Quick Recap
+## Late Movement Gets Special Treatment
 
-1. Steam = odds shorten, Drift = odds lengthen
-2. Stability matters as much as direction
-3. Late shifts deserve separate attention
-4. Quantify movement into clean features
+Here's something we learned from analyzing millions of matches: movement in the last few hours before kickoff behaves differently than early movement.
+
+Why? Late movement incorporates:
+- Final lineup confirmations
+- Last-minute injury news
+- Weather updates
+- Information that wasn't available earlier
+
+We separate our movement features into "early" (before T-4 hours) and "late" (final 4 hours) windows. The late window tends to be more informative, but also more noisy if you're not careful about how you process it.
 
 ---
 
-## FAQ
+## How We Turn Movement Into Features
 
-### What does steam mean?
-Odds shorten and implied probability rises.
+Raw odds movement is messy. Here's how we clean it up:
 
-### What does drift mean?
-Odds lengthen and implied probability falls.
+**Delta (Δ):** The simple change from opening to current implied probability. If it opened at 35% and now sits at 42%, delta is +7 percentage points.
 
-### Does movement mean the outcome is guaranteed?
-No. Movement reflects updated pricing and belief, not certainty.
+**Velocity:** How fast is it moving? A 7-point change over 24 hours is very different from 7 points in 30 minutes.
+
+**Volatility:** The standard deviation of the path. Are we getting there smoothly or through chaos?
+
+**Late intensity:** What percentage of the total movement happened in the final window?
+
+These become columns in our feature matrix. The model learns which patterns are predictive.
+
+---
+
+## A Real Example
+
+Let me walk you through one we tracked recently. Match was scheduled for 3pm. Here's what the home win probability looked like:
+
+- 9am (opening): 45%
+- 11am: 46%
+- 1pm: 47%
+- 2pm: 52% (jump)
+- 2:30pm: 54%
+- Kickoff: 55%
+
+See that jump at 2pm? That's classic late steam—probably lineup news or a significant late piece of information. The smooth rise from 45-47% in the morning? That's gradual market adjustment.
+
+Our model treats these differently. The late jump gets flagged as a separate signal. The morning drift gets measured for consistency.
+
+---
+
+## What I Tell New Team Members
+
+When someone joins our data team, I always say: odds movement isn't about predicting where prices go. It's about extracting information from *how* they got there.
+
+The market is a giant information processor. Every price change reflects someone's decision. We're not trying to outsmart the market—we're trying to measure what it's telling us.
+
+---
+
+## Key Takeaways
+
+1. Steam = probability rising, Drift = probability falling
+2. Stability is a feature, not just noise
+3. Late movement deserves separate analysis
+4. Turn raw movement into structured features (delta, velocity, volatility)
+
+📖 **Related reading:** [Opening vs Closing Odds](/blog/opening-vs-closing-odds) • [Bookmaker Consensus](/blog/bookmaker-consensus-odds)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 简介
+## 我第一次注意到有趣的事情
 
-赔率变动很容易被过度解读。更安全的方法是将变动视为**可测量的信号**，而不是故事。
+当我开始为我们的模型跟踪赔率数据时，我犯了大多数人都会犯的错误：我只看开盘和收盘价格。每场比赛两个数据点，仅此而已。
 
----
+然后有一天，我真正绘制了一场比赛的完整时间线。这条线不是直的——它有曲线、突然下降、稳定期和最后一刻的飙升。我意识到我一直在丢弃90%的信号。
 
-## 1) 漂移 vs 蒸汽
-
-- **蒸汽：** 赔率缩短 → 隐含概率上升
-- **漂移：** 赔率延长 → 隐含概率下降
-
-始终先转换为概率；这可以防止"数字幻觉"。
+那时我开始把赔率变动不当作噪音，而是当作结构化数据来思考。
 
 ---
 
-## 2) 稳定性：被低估的概念
+## 蒸汽和漂移：基本词汇
 
-两场比赛可以以相似的收盘赔率结束，但表现不同：
-- **稳定市场：** 小幅平滑调整
-- **波动市场：** 多次上下波动
+让我给你我们内部使用的术语：
 
-稳定性很有用，因为它捕捉了不确定性或分歧。
+**蒸汽**是赔率缩短——隐含概率上升。如果一支球队开盘3.00（33%隐含概率），然后降到2.50（40%隐含概率），这就是蒸汽。某些东西正在将市场拉向那个结果。
 
----
+**漂移**是相反的。赔率延长，隐含概率下降。也许市场正在远离某个结果，或者资金正在流向其他地方。
 
-## 3) 临门变化
-
-临门变动发生在接近开赛时，当：
-- 最后一分钟的更新被处理
-- 仓位和定价被最终确定
+但关键是：标签不是重点。重点是变动*如何*以及*何时*发生。
 
 ---
 
-## 4) 如何量化变动
+## 稳定性是没人谈论的特征
 
-不是说"它变了"，而是测量：
-- **Δ（差值）：** 开盘→现在的概率变化
-- **速度：** 每小时（或每次更新）的变化
-- **波动性：** 随时间的波动程度
-- **临门强度：** 最终窗口中的变动比例
+两场比赛可以以完全相同的收盘赔率结束，但到达那里的路径完全不同。
 
----
+比赛A开盘2.00，全天保持在1.95-2.05之间，收盘2.00。稳定。
 
-## 快速回顾
+比赛B开盘2.00，波动到2.40，降到1.80，反弹到2.20，收盘2.00。波动。
 
-1. 蒸汽=赔率缩短，漂移=赔率延长
-2. 稳定性与方向一样重要
-3. 临门变化值得单独关注
-4. 将变动量化为清晰的特征
+从收盘赔率的角度来看，它们是相同的。但从信号的角度来看？完全不同的故事。
+
+我们使用赔率路径的标准差来测量稳定性，结果发现它是我们更具预测性的特征之一。高波动性通常表明市场不确定性或信息冲突。
 
 ---
 
-## 常见问题
+## 临门变动得到特殊处理
 
-### 蒸汽是什么意思？
-赔率缩短，隐含概率上升。
+这是我们从分析数百万场比赛中学到的：开球前最后几个小时的变动与早期变动表现不同。
 
-### 漂移是什么意思？
-赔率延长，隐含概率下降。
+为什么？临门变动包含：
+- 最终阵容确认
+- 最后一刻的伤病消息
+- 天气更新
+- 之前不可用的信息
+
+我们将变动特征分为"早期"（T-4小时之前）和"临门"（最后4小时）窗口。临门窗口往往更有信息量，但如果不小心处理也会更嘈杂。
+
+---
+
+## 我们如何将变动转化为特征
+
+原始赔率变动是混乱的。以下是我们如何清理它：
+
+**Delta (Δ)：** 从开盘到当前隐含概率的简单变化。如果开盘35%，现在是42%，delta是+7个百分点。
+
+**速度：** 移动有多快？24小时内7个点的变化与30分钟内7个点完全不同。
+
+**波动性：** 路径的标准差。我们是平稳到达还是经历混乱？
+
+**临门强度：** 总变动中有多少百分比发生在最后窗口？
+
+这些成为我们特征矩阵中的列。模型学习哪些模式具有预测性。
+
+---
+
+## 关键要点
+
+1. 蒸汽=概率上升，漂移=概率下降
+2. 稳定性是一个特征，不仅仅是噪音
+3. 临门变动值得单独分析
+4. 将原始变动转化为结构化特征（delta、速度、波动性）
+
+📖 **相关阅读：** [开盘vs收盘赔率](/blog/opening-vs-closing-odds) • [博彩公司共识](/blog/bookmaker-consensus-odds)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息目的。*
       `,
       '繁體': `
-## 簡介
+## 我第一次注意到有趣的事情
 
-賠率變動很容易被過度解讀。更安全的方法是將變動視為**可測量的信號**。
+當我開始為我們的模型追蹤賠率數據時，我犯了大多數人都會犯的錯誤：我只看開盤和收盤價格。每場比賽兩個數據點，僅此而已。
 
----
+然後有一天，我真正繪製了一場比賽的完整時間線。這條線不是直的——它有曲線、突然下降、穩定期和最後一刻的飆升。我意識到我一直在丟棄90%的信號。
 
-## 1) 漂移 vs 蒸汽
-
-- **蒸汽：** 賠率縮短 → 隱含概率上升
-- **漂移：** 賠率延長 → 隱含概率下降
+那時我開始把賠率變動不當作噪音，而是當作結構化數據來思考。
 
 ---
 
-## 2) 穩定性
+## 蒸汽和漂移：基本詞彙
 
-兩場比賽可以以相似的收盤賠率結束，但表現不同：
-- **穩定市場：** 小幅平滑調整
-- **波動市場：** 多次上下波動
+讓我給你我們內部使用的術語：
 
----
+**蒸汽**是賠率縮短——隱含概率上升。如果一支球隊開盤3.00（33%隱含概率），然後降到2.50（40%隱含概率），這就是蒸汽。某些東西正在將市場拉向那個結果。
 
-## 快速回顧
+**漂移**是相反的。賠率延長，隱含概率下降。也許市場正在遠離某個結果，或者資金正在流向其他地方。
 
-1. 蒸汽=賠率縮短，漂移=賠率延長
-2. 穩定性與方向一樣重要
-3. 臨門變化值得單獨關注
+但關鍵是：標籤不是重點。重點是變動*如何*以及*何時*發生。
 
 ---
 
-## 常見問題
+## 穩定性是沒人談論的特徵
 
-### 蒸汽是什麼意思？
-賠率縮短，隱含概率上升。
+兩場比賽可以以完全相同的收盤賠率結束，但到達那裡的路徑完全不同。
+
+比賽A開盤2.00，全天保持在1.95-2.05之間，收盤2.00。穩定。
+
+比賽B開盤2.00，波動到2.40，降到1.80，反彈到2.20，收盤2.00。波動。
+
+從收盤賠率的角度來看，它們是相同的。但從信號的角度來看？完全不同的故事。
+
+我們使用賠率路徑的標準差來測量穩定性，結果發現它是我們更具預測性的特徵之一。高波動性通常表明市場不確定性或資訊衝突。
+
+---
+
+## 臨門變動得到特殊處理
+
+這是我們從分析數百萬場比賽中學到的：開球前最後幾個小時的變動與早期變動表現不同。
+
+為什麼？臨門變動包含：
+- 最終陣容確認
+- 最後一刻的傷病消息
+- 天氣更新
+- 之前不可用的資訊
+
+我們將變動特徵分為「早期」（T-4小時之前）和「臨門」（最後4小時）窗口。臨門窗口往往更有資訊量，但如果不小心處理也會更嘈雜。
+
+---
+
+## 我們如何將變動轉化為特徵
+
+原始賠率變動是混亂的。以下是我們如何清理它：
+
+**Delta (Δ)：** 從開盤到當前隱含概率的簡單變化。
+**速度：** 移動有多快？
+**波動性：** 路徑的標準差。
+**臨門強度：** 總變動中有多少百分比發生在最後窗口？
+
+這些成為我們特徵矩陣中的列。模型學習哪些模式具有預測性。
+
+---
+
+## 關鍵要點
+
+1. 蒸汽=概率上升，漂移=概率下降
+2. 穩定性是一個特徵，不僅僅是噪音
+3. 臨門變動值得單獨分析
+4. 將原始變動轉化為結構化特徵
+
+📖 **相關閱讀：** [開盤vs收盤賠率](/blog/opening-vs-closing-odds) • [博彩公司共識](/blog/bookmaker-consensus-odds)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊目的。*
       `,
       JA: `
-## はじめに
+## 初めて興味深いことに気づいた時
 
-オッズの動きは過大解釈しやすいです。より安全なアプローチは、動きを**測定可能なシグナル**として扱うことです。
+モデル用のオッズデータを追跡し始めた時、私は多くの人と同じ間違いを犯しました：オープニングとクロージングの価格だけを見ていたのです。1試合あたり2つのデータポイント。それだけ。
 
----
+ある日、試合の完全なタイムラインを実際にプロットしました。線は直線ではありませんでした——カーブ、急落、安定期、そして直前のスパイクがありました。私は信号の90%を捨てていたことに気づきました。
 
-## 1) ドリフト vs スチーム
-
-- **スチーム：** オッズが短くなる → 暗示確率が上昇
-- **ドリフト：** オッズが長くなる → 暗示確率が下落
+それが、オッズの動きをノイズではなく、構造化されたデータとして考え始めたきっかけです。
 
 ---
 
-## 2) 安定性
+## スチームとドリフト：基本用語
 
-2つの試合は同様のクロージングオッズで終わることができますが、異なる振る舞いをします：
-- **安定した市場：** 小さく滑らかな調整
-- **不安定な市場：** 複数の上下スイング
+社内で使用している用語を説明します：
 
----
+**スチーム**はオッズが短くなること——暗示確率が上昇します。チームが3.00（33%暗示）で開き、2.50（40%暗示）に下がった場合、それがスチームです。何かが市場をその結果に引っ張っています。
 
-## クイックリキャップ
+**ドリフト**は逆です。オッズが長くなり、暗示確率が下がります。市場がある結果から離れているか、お金が他に流れているのかもしれません。
 
-1. スチーム=オッズが短くなる、ドリフト=オッズが長くなる
-2. 安定性は方向と同じくらい重要
-3. 遅いシフトは別の注意に値する
+ただし重要なのは：ラベルではありません。重要なのは動きが*いつ*、*どのように*起こるかです。
 
 ---
 
-## FAQ
+## 安定性は誰も語らない特徴
 
-### スチームとは？
-オッズが短くなり、暗示確率が上昇。
+2つの試合がまったく同じクロージングオッズで終わっても、そこに至る経路は完全に異なる場合があります。
 
-### ドリフトとは？
-オッズが長くなり、暗示確率が下落。
+試合A：2.00で開き、1日中1.95-2.05の間で推移し、2.00で閉じる。安定。
+
+試合B：2.00で開き、2.40に揺れ、1.80に下がり、2.20に跳ね返り、2.00で閉じる。不安定。
+
+クロージングオッズの観点からは、同一です。しかし信号の観点からは？まったく異なるストーリーです。
+
+オッズパスの標準偏差を使用して安定性を測定し、それが最も予測力のある特徴の1つであることがわかりました。
+
+---
+
+## 遅い動きは特別扱いされる
+
+何百万試合を分析して学んだこと：キックオフ前の最後の数時間の動きは、早期の動きとは異なる振る舞いをします。
+
+なぜか？遅い動きには以下が含まれます：
+- 最終ラインナップの確認
+- 直前の負傷ニュース
+- 天気の更新
+- 以前は入手できなかった情報
+
+私たちは動きの特徴を「早期」（T-4時間前）と「遅い」（最後の4時間）ウィンドウに分けています。
+
+---
+
+## 動きを特徴に変換する方法
+
+生のオッズの動きは乱雑です。クリーンアップの方法：
+
+**Delta (Δ)：** オープニングから現在の暗示確率への単純な変化。
+**速度：** どれだけ速く動いているか？
+**ボラティリティ：** パスの標準偏差。
+**遅い強度：** 最終ウィンドウで発生した総動きの割合。
+
+これらは特徴マトリックスの列になります。モデルはどのパターンが予測的かを学習します。
+
+---
+
+## 重要なポイント
+
+1. スチーム=確率上昇、ドリフト=確率下降
+2. 安定性はノイズではなく特徴
+3. 遅い動きは別の分析に値する
+4. 生の動きを構造化された特徴に変換する
+
+📖 **関連記事：** [オープニングvsクロージングオッズ](/blog/opening-vs-closing-odds) • [ブックメーカーコンセンサス](/blog/bookmaker-consensus-odds)
+
+*OddsFlowは教育および情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -4893,248 +6258,325 @@ No. Movement reflects updated pricing and belief, not certainty.
     readTime: 6,
     date: '2026-01-14',
     author: 'OddsFlow Team',
-    tags: ['bookmaker consensus', 'odds comparison', 'football betting', 'market analysis', 'dispersion'],
+    tags: ['market consensus', 'data aggregation', 'AI features', 'noise reduction', 'statistical analysis', 'sports analytics'],
     relatedPosts: ['how-to-interpret-football-odds', 'how-bookmakers-calculate-margins', 'odds-movement-drift-steam'],
     title: {
-      EN: 'Bookmaker Consensus: Why Comparing Multiple Sources Reduces Noise',
-      JA: 'ブックメーカーコンセンサス：複数のソースを比較するとノイズが減る理由',
-      '中文': '博彩公司共识：为什么比较多个来源可以减少噪音',
-      '繁體': '博彩公司共識：為什麼比較多個來源可以減少噪音',
-      ES: 'Consenso de Casas de Apuestas: Por Qué Comparar Múltiples Fuentes Reduce el Ruido',
-      PT: 'Consenso de Casas de Apostas: Por Que Comparar Múltiplas Fontes Reduz o Ruído',
-      DE: 'Buchmacher-Konsens: Warum der Vergleich Mehrerer Quellen Rauschen Reduziert',
-      FR: 'Consensus des Bookmakers: Pourquoi Comparer Plusieurs Sources Réduit le Bruit',
-      KO: '북메이커 합의: 여러 소스를 비교하면 노이즈가 줄어드는 이유',
-      ID: 'Konsensus Bandar: Mengapa Membandingkan Beberapa Sumber Mengurangi Noise',
+      EN: 'Multi-Source Analysis: How We Aggregate Market Data for Better Signals',
+      JA: 'マルチソース分析：より良いシグナルのために市場データを集約する方法',
+      '中文': '多源分析：我们如何聚合市场数据获得更好的信号',
+      '繁體': '多源分析：我們如何聚合市場數據獲得更好的信號',
+      ES: 'Análisis Multi-Fuente: Cómo Agregamos Datos de Mercado para Mejores Señales',
+      PT: 'Análise Multi-Fonte: Como Agregamos Dados de Mercado para Melhores Sinais',
+      DE: 'Multi-Quellen-Analyse: Wie Wir Marktdaten für Bessere Signale Aggregieren',
+      FR: 'Analyse Multi-Sources: Comment Nous Agrégons les Données de Marché',
+      KO: '다중 소스 분석: 더 나은 신호를 위해 시장 데이터를 집계하는 방법',
+      ID: 'Analisis Multi-Sumber: Bagaimana Kami Mengagregasi Data Pasar',
     },
     excerpt: {
-      EN: 'Learn how bookmaker consensus works, why single-source odds can be noisy, and how to use averages, medians, and dispersion for cleaner signals.',
-      JA: 'ブックメーカーコンセンサスの仕組み、単一ソースのオッズがノイジーになる理由、よりクリーンなシグナルのために平均、中央値、分散を使用する方法を学びます。',
-      '中文': '学习博彩公司共识如何运作，为什么单一来源的赔率可能有噪音，以及如何使用平均值、中位数和离散度获得更清晰的信号。',
-      '繁體': '學習博彩公司共識如何運作，為什麼單一來源的賠率可能有噪音，以及如何使用平均值、中位數和離散度獲得更清晰的信號。',
-      ES: 'Aprenda cómo funciona el consenso de casas de apuestas.',
-      PT: 'Aprenda como funciona o consenso de casas de apostas.',
-      DE: 'Erfahren Sie, wie der Buchmacher-Konsens funktioniert.',
-      FR: 'Apprenez comment fonctionne le consensus des bookmakers.',
-      KO: '북메이커 합의가 어떻게 작동하는지 배우세요.',
-      ID: 'Pelajari cara kerja konsensus bandar.',
+      EN: 'Why we aggregate odds from multiple sources, how dispersion reveals market uncertainty, and the features we extract from consensus data.',
+      JA: 'なぜ複数のソースからオッズを集約するのか、分散が市場の不確実性を明らかにする方法、コンセンサスデータから抽出する特徴。',
+      '中文': '为什么我们要聚合多个来源的赔率，离散度如何揭示市场不确定性，以及我们从共识数据中提取的特征。',
+      '繁體': '為什麼我們要聚合多個來源的賠率，離散度如何揭示市場不確定性，以及我們從共識數據中提取的特徵。',
+      ES: 'Por qué agregamos cuotas de múltiples fuentes y qué características extraemos.',
+      PT: 'Por que agregamos odds de múltiplas fontes e quais recursos extraímos.',
+      DE: 'Warum wir Quoten aus mehreren Quellen aggregieren und welche Features wir extrahieren.',
+      FR: 'Pourquoi nous agrégeons les cotes de plusieurs sources et quelles caractéristiques nous extrayons.',
+      KO: '여러 소스에서 배당을 집계하는 이유와 추출하는 특징.',
+      ID: 'Mengapa kami mengagregasi odds dari berbagai sumber dan fitur apa yang kami ekstrak.',
     },
     content: {
       EN: `
-## Introduction
+## Why One Data Source Isn't Enough
 
-One bookmaker's price is a snapshot. Multiple bookmakers create a clearer picture.
+Early in building our prediction system, we made a rookie mistake. We picked one odds provider and built everything around it. It was clean, simple, and totally wrong.
 
-Consensus helps you:
-- Reduce single-source quirks
-- Spot disagreement
-- Build more stable features for prediction
+The problem became obvious when that provider had a glitch one weekend. Their prices went weird for a few hours, and our entire model started outputting garbage. That's when we realized: relying on a single source is like building a house on one pillar.
 
----
-
-## 1) What "Consensus" Means
-
-Consensus = a combined view of the market built from multiple prices.
-
-**Common methods:**
-- **Average** implied probability
-- **Median** implied probability (more robust to outliers)
+Now we aggregate data from multiple sources, and it's made everything more robust.
 
 ---
 
-## 2) Disagreement Is a Signal (Dispersion)
+## The Power of Consensus
 
-Two matches can share the same average price, but differ in dispersion:
-- **Low dispersion:** books agree
-- **High dispersion:** books disagree (pricing uncertainty)
+Think about it this way. If you ask one person the temperature outside, you get one estimate. Ask ten people, and you get something closer to truth—especially if most agree.
 
-You can compute dispersion using:
-- Range (max-min)
-- Standard deviation
-- Interquartile range
+The same principle applies to market data. Different providers have different quirks:
+- Some react faster to news
+- Some have higher margins
+- Some specialize in certain leagues
 
----
-
-## 3) Why This Matters for AI Systems
-
-Consensus features are strong because they:
-- Reduce noise from a single feed
-- Provide a stability layer for time-series movement
-- Improve comparability across matches
-
-**Useful features:**
-- Consensus fair probabilities (de-vig)
-- Dispersion metrics
-- Outlier flags (one source far away)
+When we combine them, the quirks average out. What remains is a cleaner signal.
 
 ---
 
-## 4) Practical Linking: Consensus + Overround + Movement
+## How We Build Consensus Features
 
-Consensus is most meaningful when you:
-- Remove margin
-- Track movement over time
+Here's our actual process:
 
-📖 **Related:** [How Bookmakers Calculate Margins](/blog/how-bookmakers-calculate-margins)
+**Step 1:** Collect odds from multiple sources for the same match.
 
----
+**Step 2:** Convert everything to implied probability (so we're comparing apples to apples).
 
-## Quick Recap
+**Step 3:** Calculate the **median** probability across sources. Why median instead of mean? Because it's resistant to outliers. If one source has a weird price, it doesn't pull the whole average.
 
-1. Consensus combines multiple sources for stability
-2. Dispersion reveals market disagreement
-3. Use median for outlier resistance
-4. Consensus + de-vig + movement = powerful feature set
+**Step 4:** Measure **dispersion**—how spread out the sources are.
+
+That dispersion metric turned out to be surprisingly useful. When sources agree closely (low dispersion), the market is confident. When they're all over the place (high dispersion), there's genuine uncertainty or new information being processed.
 
 ---
 
-## FAQ
+## Dispersion as a Feature
 
-### Why not use one bookmaker only?
-Single-source prices can include quirks; consensus reduces that noise.
+Let me give you a real example. Two matches both have median home win probability of 55%. Seems similar, right?
 
-### Is average or median better?
-Median is more stable when there are outliers.
+Match A: Sources range from 53% to 57%. Tight cluster. Low dispersion.
 
-### What does high dispersion mean?
-Disagreement across sources, which can reflect uncertainty or inconsistent pricing.
+Match B: Sources range from 48% to 62%. Wide spread. High dispersion.
+
+Match A is a consensus. Everyone sees roughly the same picture. Match B has disagreement—maybe there's unclear injury news, or one source knows something others don't.
+
+We feed dispersion into our models as a separate feature. It helps the model understand not just what the market thinks, but how confident the market is about what it thinks.
+
+---
+
+## Why This Matters for Predictions
+
+Single-source data has hidden risks:
+- Provider-specific biases
+- Delayed updates on certain leagues
+- Technical glitches that poison your training data
+
+Consensus smooths all of this out. And dispersion gives you a read on market confidence.
+
+Together, they create features that are more stable and more informative than raw single-source prices.
+
+---
+
+## What We Track
+
+For every match, we generate:
+- **Consensus probability:** Median implied probability across sources
+- **Dispersion score:** Standard deviation of probabilities
+- **Outlier count:** How many sources are more than 3 points from median
+- **Agreement trend:** Is dispersion shrinking or growing as kickoff approaches?
+
+These become columns in our feature table. The model learns to weight them appropriately.
+
+---
+
+## Key Takeaways
+
+1. Single-source data is fragile; consensus is robust
+2. Median handles outliers better than mean
+3. Dispersion is a feature, not just noise
+4. Track agreement changes over time for additional signal
+
+📖 **Related reading:** [How Margins Work](/blog/how-bookmakers-calculate-margins) • [Odds Movement](/blog/odds-movement-drift-steam)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 简介
+## 为什么一个数据源不够
 
-一个博彩公司的价格是一个快照。多个博彩公司创造了更清晰的画面。
+在构建我们预测系统的早期，我们犯了一个新手错误。我们选择了一个赔率提供商，并围绕它构建了一切。它很简洁、很简单，但完全错误。
 
-共识帮助你：
-- 减少单一来源的异常
-- 发现分歧
-- 为预测构建更稳定的特征
+问题在某个周末变得明显，当那个提供商出现故障时。他们的价格几个小时内变得很奇怪，我们整个模型开始输出垃圾。那时我们意识到：依赖单一来源就像在一根柱子上建房子。
 
----
-
-## 1) "共识"的含义
-
-共识=从多个价格构建的市场综合视图。
-
-**常见方法：**
-- **平均**隐含概率
-- **中位数**隐含概率（对异常值更稳健）
+现在我们聚合来自多个来源的数据，这使一切更加稳健。
 
 ---
 
-## 2) 分歧是一个信号（离散度）
+## 共识的力量
 
-两场比赛可以有相同的平均价格，但离散度不同：
-- **低离散度：** 博彩公司一致
-- **高离散度：** 博彩公司不一致（定价不确定性）
+这样想吧。如果你问一个人外面的温度，你得到一个估计。问十个人，你会得到更接近真实的东西——特别是如果大多数人同意的话。
 
-你可以使用以下方法计算离散度：
-- 范围（最大-最小）
-- 标准差
-- 四分位距
+同样的原则适用于市场数据。不同的提供商有不同的特点：
+- 有些对新闻反应更快
+- 有些利润更高
+- 有些专门研究某些联赛
 
----
-
-## 3) 为什么这对AI系统很重要
-
-共识特征很强，因为它们：
-- 减少单一信息源的噪音
-- 为时间序列变动提供稳定层
-- 提高比赛之间的可比性
+当我们组合它们时，这些特点会被平均掉。剩下的是更清晰的信号。
 
 ---
 
-## 快速回顾
+## 我们如何构建共识特征
 
-1. 共识结合多个来源以获得稳定性
-2. 离散度揭示市场分歧
-3. 使用中位数抵抗异常值
-4. 共识+去利润+变动=强大的特征集
+这是我们的实际过程：
+
+**步骤1：** 从多个来源收集同一场比赛的赔率。
+
+**步骤2：** 将所有内容转换为隐含概率（这样我们就在比较相同的东西）。
+
+**步骤3：** 计算跨来源的**中位数**概率。为什么用中位数而不是平均值？因为它对异常值有抵抗力。如果一个来源有奇怪的价格，它不会拉动整个平均值。
+
+**步骤4：** 测量**离散度**——来源之间的分散程度。
+
+那个离散度指标结果出奇地有用。当来源紧密一致（低离散度）时，市场是自信的。当它们分散各处（高离散度）时，存在真正的不确定性或正在处理新信息。
 
 ---
 
-## 常见问题
+## 离散度作为特征
 
-### 为什么不只用一个博彩公司？
-单一来源的价格可能包含异常；共识减少了这种噪音。
+让我给你一个真实的例子。两场比赛的中位数主场胜概率都是55%。看起来相似，对吧？
 
-### 平均值还是中位数更好？
-当有异常值时，中位数更稳定。
+比赛A：来源范围从53%到57%。紧密集群。低离散度。
+
+比赛B：来源范围从48%到62%。宽分布。高离散度。
+
+比赛A是共识。每个人看到的画面大致相同。比赛B存在分歧——也许有不明确的伤病消息，或者一个来源知道其他人不知道的事情。
+
+我们将离散度作为单独的特征输入到我们的模型中。它帮助模型理解的不仅是市场认为什么，还有市场对其想法有多自信。
+
+---
+
+## 我们跟踪什么
+
+对于每场比赛，我们生成：
+- **共识概率：** 跨来源的中位数隐含概率
+- **离散度得分：** 概率的标准差
+- **异常值计数：** 有多少来源与中位数相差超过3个点
+- **一致性趋势：** 随着开球临近，离散度是在收缩还是增长？
+
+这些成为我们特征表中的列。模型学习适当地加权它们。
+
+---
+
+## 关键要点
+
+1. 单源数据是脆弱的；共识是稳健的
+2. 中位数比平均值更好地处理异常值
+3. 离散度是一个特征，不仅仅是噪音
+4. 跟踪一致性随时间的变化以获得额外信号
+
+📖 **相关阅读：** [利润如何计算](/blog/how-bookmakers-calculate-margins) • [赔率变动](/blog/odds-movement-drift-steam)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息目的。*
       `,
       '繁體': `
-## 簡介
+## 為什麼一個數據源不夠
 
-一個博彩公司的價格是一個快照。多個博彩公司創造了更清晰的畫面。
+在構建我們預測系統的早期，我們犯了一個新手錯誤。我們選擇了一個賠率提供商，並圍繞它構建了一切。它很簡潔、很簡單，但完全錯誤。
 
----
+問題在某個週末變得明顯，當那個提供商出現故障時。他們的價格幾個小時內變得很奇怪，我們整個模型開始輸出垃圾。那時我們意識到：依賴單一來源就像在一根柱子上建房子。
 
-## 1) "共識"的含義
-
-共識=從多個價格構建的市場綜合視圖。
-
-**常見方法：**
-- **平均**隱含概率
-- **中位數**隱含概率
+現在我們聚合來自多個來源的數據，這使一切更加穩健。
 
 ---
 
-## 2) 分歧是一個信號（離散度）
+## 共識的力量
 
-兩場比賽可以有相同的平均價格，但離散度不同：
-- **低離散度：** 博彩公司一致
-- **高離散度：** 博彩公司不一致
+這樣想吧。如果你問一個人外面的溫度，你得到一個估計。問十個人，你會得到更接近真實的東西——特別是如果大多數人同意的話。
 
----
+同樣的原則適用於市場數據。不同的提供商有不同的特點：
+- 有些對新聞反應更快
+- 有些利潤更高
+- 有些專門研究某些聯賽
 
-## 快速回顧
-
-1. 共識結合多個來源以獲得穩定性
-2. 離散度揭示市場分歧
-3. 使用中位數抵抗異常值
+當我們組合它們時，這些特點會被平均掉。剩下的是更清晰的信號。
 
 ---
 
-## 常見問題
+## 我們如何構建共識特徵
 
-### 為什麼不只用一個博彩公司？
-單一來源的價格可能包含異常；共識減少了這種噪音。
+這是我們的實際過程：
+
+**步驟1：** 從多個來源收集同一場比賽的賠率。
+
+**步驟2：** 將所有內容轉換為隱含概率。
+
+**步驟3：** 計算跨來源的**中位數**概率。為什麼用中位數而不是平均值？因為它對異常值有抵抗力。
+
+**步驟4：** 測量**離散度**——來源之間的分散程度。
+
+---
+
+## 離散度作為特徵
+
+讓我給你一個真實的例子。兩場比賽的中位數主場勝概率都是55%。
+
+比賽A：來源範圍從53%到57%。低離散度。
+
+比賽B：來源範圍從48%到62%。高離散度。
+
+比賽A是共識。比賽B存在分歧——也許有不明確的傷病消息。
+
+我們將離散度作為單獨的特徵輸入到我們的模型中。它幫助模型理解市場對其想法有多自信。
+
+---
+
+## 關鍵要點
+
+1. 單源數據是脆弱的；共識是穩健的
+2. 中位數比平均值更好地處理異常值
+3. 離散度是一個特徵，不僅僅是噪音
+4. 追蹤一致性隨時間的變化
+
+📖 **相關閱讀：** [利潤如何計算](/blog/how-bookmakers-calculate-margins) • [賠率變動](/blog/odds-movement-drift-steam)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊目的。*
       `,
       JA: `
-## はじめに
+## なぜ1つのデータソースでは不十分なのか
 
-1つのブックメーカーの価格はスナップショットです。複数のブックメーカーがより明確な全体像を作成します。
+予測システムを構築する初期に、私たちは初心者の間違いを犯しました。1つのオッズプロバイダーを選び、すべてをそれを中心に構築しました。クリーンでシンプルでしたが、完全に間違っていました。
 
----
+問題はある週末に明らかになりました。そのプロバイダーに障害が発生したのです。価格が数時間おかしくなり、モデル全体がゴミを出力し始めました。そこで気づきました：単一のソースに依存することは、1本の柱の上に家を建てるようなものです。
 
-## 1) 「コンセンサス」の意味
-
-コンセンサス=複数の価格から構築された市場の複合ビュー。
-
-**一般的な方法：**
-- **平均**暗示確率
-- **中央値**暗示確率（外れ値に対してより堅牢）
+今では複数のソースからデータを集約しており、すべてがより堅牢になりました。
 
 ---
 
-## 2) 不一致はシグナル（分散）
+## コンセンサスの力
 
-2つの試合は同じ平均価格を共有できますが、分散が異なります：
-- **低分散：** ブックが同意
-- **高分散：** ブックが不同意
+こう考えてください。外の温度を1人に聞くと、1つの推定が得られます。10人に聞くと、真実に近いものが得られます——特にほとんどが同意している場合は。
 
----
+同じ原則が市場データにも適用されます。異なるプロバイダーには異なる癖があります：
+- ニュースに速く反応するものもある
+- マージンが高いものもある
+- 特定のリーグに特化しているものもある
 
-## クイックリキャップ
-
-1. コンセンサスは安定性のために複数のソースを組み合わせる
-2. 分散は市場の不一致を明らかにする
-3. 外れ値耐性のために中央値を使用
+それらを組み合わせると、癖は平均化されます。残るのはよりクリーンな信号です。
 
 ---
 
-## FAQ
+## コンセンサス特徴の構築方法
 
-### なぜ1つのブックメーカーだけを使わないのか？
-単一ソースの価格には癖が含まれる可能性があります。コンセンサスはそのノイズを減らします。
+これが私たちの実際のプロセスです：
+
+**ステップ1：** 同じ試合のオッズを複数のソースから収集。
+
+**ステップ2：** すべてを暗示確率に変換（同じ基準で比較するため）。
+
+**ステップ3：** ソース全体の**中央値**確率を計算。なぜ平均ではなく中央値か？外れ値に強いからです。
+
+**ステップ4：** **分散**を測定——ソースがどれだけ散らばっているか。
+
+---
+
+## 特徴としての分散
+
+実際の例を挙げましょう。2つの試合がどちらも中央値ホーム勝率55%。似ているように見えますよね？
+
+試合A：ソースの範囲は53%から57%。低分散。
+
+試合B：ソースの範囲は48%から62%。高分散。
+
+試合Aはコンセンサス。試合Bには意見の相違があります——おそらく不明確な負傷ニュースがあるか、1つのソースが他が知らないことを知っています。
+
+分散を別の特徴としてモデルに入力します。市場が何を考えているかだけでなく、市場がどれだけ自信を持っているかを理解するのに役立ちます。
+
+---
+
+## 重要なポイント
+
+1. 単一ソースデータは脆弱；コンセンサスは堅牢
+2. 中央値は平均より外れ値をうまく処理
+3. 分散はノイズではなく特徴
+4. 一致の変化を追跡して追加信号を得る
+
+📖 **関連記事：** [マージンの仕組み](/blog/how-bookmakers-calculate-margins) • [オッズの動き](/blog/odds-movement-drift-steam)
+
+*OddsFlowは教育および情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -5146,269 +6588,344 @@ Disagreement across sources, which can reflect uncertainty or inconsistent prici
     readTime: 8,
     date: '2026-01-14',
     author: 'OddsFlow Team',
-    tags: ['oddsflow', 'machine learning', 'feature engineering', 'football prediction', 'AI model'],
+    tags: ['feature engineering', 'machine learning pipeline', 'data transformation', 'AI predictions', 'sports analytics', 'data science'],
     relatedPosts: ['how-to-interpret-football-odds', 'opening-vs-closing-odds', 'bookmaker-consensus-odds'],
     title: {
-      EN: 'How OddsFlow Turns Odds Into Features (Simple + Technical Guide)',
-      JA: 'OddsFlowがオッズを特徴量に変換する方法（シンプル＋技術ガイド）',
-      '中文': 'OddsFlow如何将赔率转化为特征（简单+技术指南）',
-      '繁體': 'OddsFlow如何將賠率轉化為特徵（簡單+技術指南）',
-      ES: 'Cómo OddsFlow Convierte Cuotas en Características (Guía Simple + Técnica)',
-      PT: 'Como OddsFlow Transforma Odds em Features (Guia Simples + Técnico)',
-      DE: 'Wie OddsFlow Quoten in Features Umwandelt (Einfacher + Technischer Leitfaden)',
-      FR: 'Comment OddsFlow Transforme les Cotes en Features (Guide Simple + Technique)',
-      KO: 'OddsFlow가 배당을 피처로 변환하는 방법 (심플 + 기술 가이드)',
-      ID: 'Bagaimana OddsFlow Mengubah Odds Menjadi Fitur (Panduan Sederhana + Teknis)',
+      EN: 'Inside Our Feature Pipeline: How Raw Data Becomes Prediction Input',
+      JA: '特徴パイプラインの内部：生データが予測入力になるまで',
+      '中文': '深入我们的特征管道：原始数据如何变成预测输入',
+      '繁體': '深入我們的特徵管道：原始數據如何變成預測輸入',
+      ES: 'Dentro de Nuestro Pipeline: Cómo los Datos Crudos se Convierten en Predicciones',
+      PT: 'Dentro do Nosso Pipeline: Como Dados Brutos se Tornam Entrada de Previsão',
+      DE: 'In Unserer Feature-Pipeline: Wie Rohdaten zu Vorhersage-Input Werden',
+      FR: 'Dans Notre Pipeline: Comment les Données Brutes Deviennent des Prédictions',
+      KO: '피처 파이프라인 내부: 원시 데이터가 예측 입력이 되는 과정',
+      ID: 'Di Dalam Pipeline Fitur Kami: Bagaimana Data Mentah Menjadi Input Prediksi',
     },
     excerpt: {
-      EN: 'See how OddsFlow converts odds into structured features: de-vig probabilities, movement signals, consensus metrics, and cross-market consistency checks.',
-      JA: 'OddsFlowがオッズを構造化された特徴量に変換する方法を見る：デビッグ確率、変動シグナル、コンセンサス指標、クロスマーケット一貫性チェック。',
-      '中文': '了解OddsFlow如何将赔率转换为结构化特征：去利润概率、变动信号、共识指标和跨市场一致性检查。',
-      '繁體': '了解OddsFlow如何將賠率轉換為結構化特徵：去利潤概率、變動信號、共識指標和跨市場一致性檢查。',
-      ES: 'Vea cómo OddsFlow convierte las cuotas en características estructuradas.',
-      PT: 'Veja como OddsFlow converte odds em features estruturadas.',
-      DE: 'Sehen Sie, wie OddsFlow Quoten in strukturierte Features umwandelt.',
-      FR: 'Découvrez comment OddsFlow convertit les cotes en features structurées.',
-      KO: 'OddsFlow가 배당을 구조화된 피처로 변환하는 방법을 확인하세요.',
-      ID: 'Lihat bagaimana OddsFlow mengubah odds menjadi fitur terstruktur.',
+      EN: 'A look at how we transform raw market data into structured features—probability normalization, movement signals, consensus metrics, and cross-market validation.',
+      JA: '生の市場データを構造化された特徴に変換する方法——確率正規化、動きのシグナル、コンセンサス指標、クロスマーケット検証。',
+      '中文': '了解我们如何将原始市场数据转换为结构化特征——概率标准化、变动信号、共识指标和跨市场验证。',
+      '繁體': '了解我們如何將原始市場數據轉換為結構化特徵——概率標準化、變動信號、共識指標和跨市場驗證。',
+      ES: 'Cómo transformamos datos de mercado en características estructuradas.',
+      PT: 'Como transformamos dados de mercado em características estruturadas.',
+      DE: 'Wie wir Marktdaten in strukturierte Merkmale umwandeln.',
+      FR: 'Comment nous transformons les données de marché en caractéristiques structurées.',
+      KO: '시장 데이터를 구조화된 특징으로 변환하는 방법.',
+      ID: 'Bagaimana kami mengubah data pasar menjadi fitur terstruktur.',
     },
     content: {
       EN: `
-## Introduction
+## The Mistake Most People Make
 
-Odds aren't "answers." They're input signals. OddsFlow treats odds like structured data and converts them into features that models can learn from.
+When people first approach prediction modeling, they tend to use raw numbers directly. "The odds are 2.50, so I'll just plug 2.50 into my model."
 
-Below is a simple explanation first, then a more technical breakdown.
+This is like feeding a recipe to someone who doesn't know what flour is. The model has no context. It doesn't understand that 2.50 means roughly 40% probability, or that the same probability looked like 45% two hours ago.
 
----
-
-## Part A — Simple View (For Everyone)
-
-OddsFlow turns raw odds into:
-1. **Fair probabilities** (remove margin)
-2. **Movement signals** (how probability changes over time)
-3. **Consensus signals** (agreement across sources)
-4. **Cross-market structure** (1X2 vs AH vs totals alignment)
-
-This helps the model understand:
-- What the market implies
-- How confident/stable the pricing is
-- Whether different market types tell a consistent story
+Our entire feature engineering philosophy is built around one principle: give the model context, not just numbers.
 
 ---
 
-## Part B — Technical View (Feature Pipeline)
+## What We Actually Build
 
-### Step 1: Standardize Odds Formats
-Convert all formats to decimal.
+Every match that flows through our system goes through eight transformation stages. Let me walk you through them like I would explain to someone joining our team.
 
-### Step 2: Convert to Implied Probability
-P = 1/odds
+### Stage 1: Format Standardization
 
-### Step 3: Remove Margin (De-vig)
-Normalize probabilities.
+We receive data in decimal, fractional, and American formats. All of it gets converted to decimal first. Why? Because decimal is the cleanest for math—multiply by stake, get total return. Simple.
 
-📖 **Related:** [How Bookmakers Calculate Margins](/blog/how-bookmakers-calculate-margins)
+### Stage 2: Probability Conversion
 
-### Step 4: Align Timestamps
-Store open, mid, close snapshots consistently.
+Decimal odds become implied probabilities. The formula is simple: divide 1 by the odds to get probability. A 2.50 odd becomes 0.40, or 40%.
 
-📖 **Related:** [Opening vs Closing Odds](/blog/opening-vs-closing-odds)
+But here's the catch: if you add up probabilities across a market, you get more than 100%. That extra bit is the margin—the house edge.
 
-### Step 5: Build Movement Features
-Deltas, velocity, volatility, late intensity.
+### Stage 3: Margin Removal (De-vigging)
 
-📖 **Related:** [Odds Movement 101](/blog/odds-movement-drift-steam)
+We strip out that margin to get "fair" probabilities. Now the numbers represent actual implied chances, not distorted ones.
 
-### Step 6: Consensus + Dispersion
-Median probability, dispersion metrics.
+This step is critical. Without it, you're training on biased data. A team that's really 45% might show as 42% in raw numbers because of how margin is distributed.
 
-📖 **Related:** [Bookmaker Consensus](/blog/bookmaker-consensus-odds)
+### Stage 4: Timestamp Alignment
 
-### Step 7: Cross-Market Consistency
-Do 1X2, AH, totals agree on match structure?
+We store snapshots at consistent intervals: opening, mid-day, and closing. This lets us track how probabilities evolve over time.
 
-### Step 8: Evaluation Signals
-Use proper probability scoring + calibration.
+Without proper timestamps, you can't build movement features. And movement features are some of the most predictive signals we have.
 
-📖 **Related:** [Accuracy vs Calibration](/blog/accuracy-vs-calibration-football-predictions)
+### Stage 5: Movement Features
+
+Now the interesting part. We calculate:
+- **Delta:** How much probability changed from open to now
+- **Velocity:** Rate of change per hour
+- **Volatility:** How choppy the path was
+- **Late intensity:** How much of the movement happened in the final hours
+
+Each of these becomes a column in our feature table.
+
+### Stage 6: Consensus Metrics
+
+We aggregate across multiple data sources:
+- **Median probability:** Central tendency across providers
+- **Dispersion:** How spread out the opinions are
+- **Outlier flags:** Is one source wildly different?
+
+High dispersion often means uncertainty. Low dispersion means agreement. Both are informative.
+
+### Stage 7: Cross-Market Validation
+
+Different market types (1X2, Asian Handicap, Over/Under) should tell consistent stories. If 1X2 says the home team is favored, but the handicap suggests otherwise, something's off.
+
+We flag these inconsistencies. Sometimes they're arbitrage opportunities being corrected. Sometimes they're data errors. Either way, the model should know.
+
+### Stage 8: Evaluation Metrics
+
+Finally, we add signals that help evaluate our own predictions:
+- Brier score components
+- Calibration buckets
+- Baseline comparison metrics
+
+This closes the loop. We're not just predicting—we're measuring how well our predictions performed.
 
 ---
 
-## Quick Recap
+## Why Not Just Use Raw Data?
 
-1. Odds are inputs, not answers
-2. Convert → de-vig → timestamp → movement → consensus
-3. Cross-market consistency adds validation
-4. Proper evaluation completes the loop
+I get asked this a lot. Here's the simple answer: raw data is noisy and inconsistent.
+
+Different sources report at different times. Margins vary by provider. Formats differ by region. If you feed all that directly into a model, you're training on chaos.
+
+Feature engineering is about creating a common language. Every match gets described the same way, regardless of where the data came from. That consistency is what lets the model learn patterns.
 
 ---
 
-## FAQ
+## A Practical Example
 
-### Why convert odds into features instead of using odds directly?
-Feature conversion reduces distortion and makes signals comparable across sources and time.
+Let's say we're looking at a Premier League match. Here's what the raw data might look like from one source:
 
-### What are the most useful odds features?
-De-vig probabilities, movement metrics, and consensus/dispersion.
+- Home win: 1.85 (opens), 1.80 (closes)
+- Draw: 3.60
+- Away win: 4.50
 
-### Why do cross-market checks matter?
-They help validate match structure (winner/handicap/tempo signals together).
+And here's what our pipeline produces:
+
+| Feature | Value |
+|---------|-------|
+| home_fair_prob | 0.52 |
+| draw_fair_prob | 0.26 |
+| away_fair_prob | 0.22 |
+| home_delta | +0.02 |
+| home_velocity | 0.003/hr |
+| volatility | 0.008 |
+| late_intensity | 0.65 |
+| dispersion | 0.015 |
+| cross_market_align | 0.94 |
+
+That second table is what the model actually sees. Structured, normalized, and rich with context.
+
+---
+
+## Key Takeaways
+
+1. Raw data is messy; features are structured
+2. Probability conversion and de-vigging create a fair baseline
+3. Movement and consensus add temporal and cross-source context
+4. Cross-market checks catch inconsistencies
+5. Good features make models smarter
+
+📖 **Related reading:** [Opening vs Closing](/blog/opening-vs-closing-odds) • [Market Consensus](/blog/bookmaker-consensus-odds) • [Movement Analysis](/blog/odds-movement-drift-steam)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-## 简介
+## 大多数人犯的错误
 
-赔率不是"答案"。它们是输入信号。OddsFlow将赔率视为结构化数据，并将其转换为模型可以学习的特征。
+当人们第一次接触预测建模时，他们倾向于直接使用原始数字。"赔率是2.50，所以我就把2.50放进我的模型里。"
 
-下面首先是简单的解释，然后是更技术性的分解。
+这就像把食谱交给一个不知道什么是面粉的人。模型没有上下文。它不理解2.50意味着大约40%的概率，或者两个小时前同样的概率看起来像45%。
 
----
-
-## A部分 — 简单视图（适合所有人）
-
-OddsFlow将原始赔率转换为：
-1. **公平概率**（去除利润）
-2. **变动信号**（概率如何随时间变化）
-3. **共识信号**（跨来源的一致性）
-4. **跨市场结构**（1X2 vs 亚盘 vs 大小球对齐）
-
-这帮助模型理解：
-- 市场暗示了什么
-- 定价有多自信/稳定
-- 不同市场类型是否讲述一致的故事
+我们整个特征工程理念都建立在一个原则上：给模型上下文，而不仅仅是数字。
 
 ---
 
-## B部分 — 技术视图（特征管道）
+## 我们实际构建的是什么
 
-### 步骤1：标准化赔率格式
-将所有格式转换为十进制。
+每场流经我们系统的比赛都经过八个转换阶段。让我像向新加入团队的人解释一样带你了解它们。
 
-### 步骤2：转换为隐含概率
-P = 1/赔率
+### 阶段1：格式标准化
 
-### 步骤3：去除利润（去利润）
-标准化概率。
+我们收到小数、分数和美式格式的数据。所有这些首先都转换为小数。为什么？因为小数对数学来说最干净——乘以投注额，得到总回报。简单。
 
-### 步骤4：对齐时间戳
-一致地存储开盘、中间、收盘快照。
+### 阶段2：概率转换
 
-### 步骤5：构建变动特征
-差值、速度、波动性、临门强度。
+小数赔率变成隐含概率。公式很简单：用1除以赔率得到概率。2.50的赔率变成0.40，即40%。
 
-### 步骤6：共识+离散度
-中位数概率、离散度指标。
+但这里有个问题：如果你把一个市场的概率加起来，你会得到超过100%。那个额外的部分就是利润——庄家优势。
 
-### 步骤7：跨市场一致性
-1X2、亚盘、大小球是否对比赛结构达成一致？
+### 阶段3：去除利润（去利润化）
 
-### 步骤8：评估信号
-使用适当的概率评分+校准。
+我们剔除那个利润以获得"公平"概率。现在数字代表实际的隐含机会，而不是扭曲的机会。
+
+这一步至关重要。没有它，你就是在有偏差的数据上训练。一支真正45%的球队在原始数字中可能显示为42%，因为利润的分布方式。
+
+### 阶段4：时间戳对齐
+
+我们在一致的时间间隔存储快照：开盘、日中和收盘。这让我们能够跟踪概率随时间的演变。
+
+没有适当的时间戳，你无法构建变动特征。而变动特征是我们拥有的最具预测性的信号之一。
+
+### 阶段5：变动特征
+
+现在是有趣的部分。我们计算：
+- **Delta：** 从开盘到现在概率变化了多少
+- **速度：** 每小时的变化率
+- **波动性：** 路径有多颠簸
+- **临门强度：** 最后几个小时发生了多少变动
+
+这些中的每一个都成为我们特征表中的一列。
+
+### 阶段6：共识指标
+
+我们跨多个数据源进行聚合：
+- **中位数概率：** 提供商之间的集中趋势
+- **离散度：** 意见分布有多分散
+- **异常值标志：** 是否有一个来源差异很大？
+
+高离散度通常意味着不确定性。低离散度意味着一致性。两者都有信息价值。
+
+### 阶段7：跨市场验证
+
+不同的市场类型（1X2、亚盘、大小球）应该讲述一致的故事。如果1X2说主队受青睐，但盘口表明相反，那就有问题了。
+
+我们标记这些不一致。有时它们是正在纠正的套利机会。有时它们是数据错误。无论如何，模型应该知道。
+
+### 阶段8：评估指标
+
+最后，我们添加帮助评估我们自己预测的信号：
+- Brier分数组件
+- 校准桶
+- 基线比较指标
+
+这就完成了循环。我们不仅在预测——我们在衡量我们的预测表现如何。
 
 ---
 
-## 快速回顾
+## 关键要点
 
-1. 赔率是输入，不是答案
-2. 转换→去利润→时间戳→变动→共识
-3. 跨市场一致性增加验证
-4. 适当的评估完成循环
+1. 原始数据是杂乱的；特征是结构化的
+2. 概率转换和去利润创建公平基线
+3. 变动和共识添加时间和跨源上下文
+4. 跨市场检查捕获不一致性
+5. 好的特征让模型更智能
 
----
+📖 **相关阅读：** [开盘vs收盘](/blog/opening-vs-closing-odds) • [市场共识](/blog/bookmaker-consensus-odds) • [变动分析](/blog/odds-movement-drift-steam)
 
-## 常见问题
-
-### 为什么将赔率转换为特征而不是直接使用赔率？
-特征转换减少失真，使信号在来源和时间之间可比。
-
-### 最有用的赔率特征是什么？
-去利润概率、变动指标和共识/离散度。
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息目的。*
       `,
       '繁體': `
-## 簡介
+## 大多數人犯的錯誤
 
-賠率不是"答案"。它們是輸入信號。OddsFlow將賠率視為結構化數據，並將其轉換為模型可以學習的特徵。
+當人們第一次接觸預測建模時，他們傾向於直接使用原始數字。「賠率是2.50，所以我就把2.50放進我的模型裡。」
 
----
+這就像把食譜交給一個不知道什麼是麵粉的人。模型沒有上下文。它不理解2.50意味著大約40%的概率，或者兩個小時前同樣的概率看起來像45%。
 
-## A部分 — 簡單視圖
-
-OddsFlow將原始賠率轉換為：
-1. **公平概率**（去除利潤）
-2. **變動信號**（概率如何隨時間變化）
-3. **共識信號**（跨來源的一致性）
-4. **跨市場結構**（1X2 vs 亞盤 vs 大小球對齊）
+我們整個特徵工程理念都建立在一個原則上：給模型上下文，而不僅僅是數字。
 
 ---
 
-## B部分 — 技術視圖
+## 我們實際構建的是什麼
 
-### 步驟1：標準化賠率格式
-### 步驟2：轉換為隱含概率
-### 步驟3：去除利潤
-### 步驟4：對齊時間戳
-### 步驟5：構建變動特徵
-### 步驟6：共識+離散度
-### 步驟7：跨市場一致性
-### 步驟8：評估信號
+每場流經我們系統的比賽都經過八個轉換階段。讓我像向新加入團隊的人解釋一樣帶你了解它們。
+
+### 階段1：格式標準化
+我們收到小數、分數和美式格式的數據。所有這些首先都轉換為小數。
+
+### 階段2：概率轉換
+小數賠率變成隱含概率。公式很簡單：用1除以賠率得到概率。
+
+### 階段3：去除利潤
+我們剔除那個利潤以獲得「公平」概率。
+
+### 階段4：時間戳對齊
+我們在一致的時間間隔存儲快照：開盤、日中和收盤。
+
+### 階段5：變動特徵
+我們計算Delta、速度、波動性、臨門強度。
+
+### 階段6：共識指標
+我們跨多個數據源進行聚合。
+
+### 階段7：跨市場驗證
+不同的市場類型應該講述一致的故事。
+
+### 階段8：評估指標
+我們添加幫助評估我們自己預測的信號。
 
 ---
 
-## 快速回顧
+## 關鍵要點
 
-1. 賠率是輸入，不是答案
-2. 轉換→去利潤→時間戳→變動→共識
-3. 跨市場一致性增加驗證
+1. 原始數據是雜亂的；特徵是結構化的
+2. 概率轉換和去利潤創建公平基線
+3. 變動和共識添加時間和跨源上下文
+4. 跨市場檢查捕獲不一致性
+5. 好的特徵讓模型更智能
 
----
+📖 **相關閱讀：** [開盤vs收盤](/blog/opening-vs-closing-odds) • [市場共識](/blog/bookmaker-consensus-odds)
 
-## 常見問題
-
-### 為什麼將賠率轉換為特徵？
-特徵轉換減少失真，使信號可比。
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊目的。*
       `,
       JA: `
-## はじめに
+## 多くの人が犯す間違い
 
-オッズは「答え」ではありません。入力信号です。OddsFlowはオッズを構造化データとして扱い、モデルが学習できる特徴量に変換します。
+予測モデリングに初めて取り組む人は、生の数値をそのまま使う傾向があります。「オッズは2.50だから、2.50をモデルに入れればいい。」
 
----
+これは小麦粉が何かを知らない人にレシピを渡すようなものです。モデルにはコンテキストがありません。2.50が約40%の確率を意味すること、2時間前には同じ確率が45%だったことを理解していません。
 
-## パートA — シンプルビュー
-
-OddsFlowは生のオッズを以下に変換します：
-1. **フェア確率**（マージンを除去）
-2. **動きのシグナル**（確率が時間とともにどう変化するか）
-3. **コンセンサスシグナル**（ソース間の一致）
-4. **クロスマーケット構造**（1X2 vs AH vs トータルの整合性）
+私たちの特徴エンジニアリングの哲学全体は、1つの原則に基づいています：数字だけでなく、コンテキストをモデルに与えること。
 
 ---
 
-## パートB — テクニカルビュー（特徴量パイプライン）
+## 実際に構築するもの
 
-### ステップ1：オッズ形式の標準化
-### ステップ2：暗示確率への変換
-### ステップ3：マージンの除去
-### ステップ4：タイムスタンプの整列
-### ステップ5：動き特徴量の構築
-### ステップ6：コンセンサス+分散
-### ステップ7：クロスマーケット一貫性
-### ステップ8：評価シグナル
+システムを通過するすべての試合は、8つの変換ステージを経ます。
+
+### ステージ1：形式の標準化
+小数、分数、アメリカ形式でデータを受け取ります。すべて最初に小数に変換します。
+
+### ステージ2：確率変換
+小数オッズが暗示確率になります。公式は簡単：1をオッズで割ると確率が得られます。
+
+### ステージ3：マージン除去
+マージンを取り除いて「公正な」確率を得ます。
+
+### ステージ4：タイムスタンプ整列
+一貫した間隔でスナップショットを保存します。
+
+### ステージ5：動き特徴
+Delta、速度、ボラティリティ、遅い強度を計算します。
+
+### ステージ6：コンセンサス指標
+複数のデータソース間で集約します。
+
+### ステージ7：クロスマーケット検証
+異なる市場タイプが一貫したストーリーを語るべきです。
+
+### ステージ8：評価指標
+自分の予測を評価するのに役立つシグナルを追加します。
 
 ---
 
-## クイックリキャップ
+## 重要なポイント
 
-1. オッズは入力であり、答えではない
-2. 変換→デビッグ→タイムスタンプ→動き→コンセンサス
-3. クロスマーケット一貫性が検証を追加
+1. 生データは乱雑；特徴は構造化
+2. 確率変換とデビッグが公正なベースラインを作成
+3. 動きとコンセンサスが時間とクロスソースのコンテキストを追加
+4. クロスマーケットチェックが不整合をキャッチ
+5. 良い特徴がモデルを賢くする
 
----
+📖 **関連記事：** [オープニングvsクロージング](/blog/opening-vs-closing-odds) • [マーケットコンセンサス](/blog/bookmaker-consensus-odds)
 
-## FAQ
-
-### なぜオッズを直接使用せずに特徴量に変換するのか？
-特徴量変換により歪みが減り、ソースと時間の間で信号が比較可能になります。
+*OddsFlowは教育および情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -5420,310 +6937,330 @@ OddsFlowは生のオッズを以下に変換します：
     readTime: 8,
     date: '2025-01-14',
     author: 'OddsFlow Team',
-    tags: ['calibration', 'accuracy', 'brier score', 'log loss', 'probability', 'evaluation'],
+    tags: ['model evaluation', 'calibration', 'Brier score', 'probability metrics', 'AI validation', 'sports analytics'],
     relatedPosts: ['how-to-interpret-football-odds', 'oddsflow-odds-to-features', 'backtesting-football-models'],
     title: {
-      'EN': 'Accuracy vs Calibration: How to Judge Football Predictions Properly',
-      '中文': '准确率 vs 校准：如何正确评判足球预测',
-      '繁體': '準確率 vs 校準：如何正確評判足球預測',
-      'JA': '精度 vs キャリブレーション：サッカー予測を正しく評価する方法',
+      'EN': 'Why Win Rate Is a Misleading Metric: Calibration and Proper Evaluation',
+      '中文': '为什么胜率是一个误导性指标：校准和正确评估',
+      '繁體': '為什麼勝率是一個誤導性指標：校準和正確評估',
+      'JA': '勝率が誤解を招く指標である理由：キャリブレーションと適切な評価',
     },
     excerpt: {
-      'EN': 'Learn why win-rate can mislead, what calibration means, and how to evaluate probability predictions using Brier score and log loss concepts.',
-      '中文': '了解为什么胜率可能误导你，校准的含义是什么，以及如何使用Brier分数和对数损失概念评估概率预测。',
-      '繁體': '了解為什麼勝率可能誤導你，校準的含義是什麼，以及如何使用Brier分數和對數損失概念評估概率預測。',
-      'JA': '勝率がなぜ誤解を招くのか、キャリブレーションの意味、ブライアスコアと対数損失の概念を使って確率予測を評価する方法を学びます。',
+      'EN': 'How we measure prediction quality beyond simple accuracy—calibration, Brier scores, and why honest probability estimates matter more than win streaks.',
+      '中文': '我们如何衡量预测质量而不仅仅是简单准确率——校准、Brier分数，以及为什么诚实的概率估计比连胜更重要。',
+      '繁體': '我們如何衡量預測質量而不僅僅是簡單準確率——校準、Brier分數，以及為什麼誠實的概率估計比連勝更重要。',
+      'JA': '単純な精度を超えて予測品質を測定する方法——キャリブレーション、ブライアスコア、そして連勝よりも正直な確率推定が重要な理由。',
     },
     content: {
       'EN': `
-# Accuracy vs Calibration: How to Judge Football Predictions Properly
+## The Moment I Realized Win Rate Was Lying to Me
 
-Football prediction is not just "pick the winner." A good system outputs probabilities. That means evaluation must answer two questions:
+Early in my data science career, I built what I thought was a great prediction model. It had a 68% win rate on test data. I was thrilled.
 
-1. Are the probabilities useful?
-2. Are the probabilities honest?
+Then someone asked me a simple question: "What's your Brier score?"
 
-This is where accuracy and calibration diverge.
+I had no idea what that was. So I calculated it. Turns out my "68% accurate" model was actually *worse* than just using market consensus probabilities. How?
 
----
+Because my model was overconfident. It was saying 85% when it should have said 60%. The high win rate was masking terrible probability estimates.
 
-## 1) Why Win-Rate Alone Is Misleading
-
-If you always pick the favorite, your win-rate may look decent—yet your probabilities can still be wrong or overconfident.
-
-Win-rate ignores:
-- how confident you were
-- whether probabilities match reality over time
+That day I learned the difference between accuracy and calibration.
 
 ---
 
-## 2) Calibration (The Simplest Definition)
+## What Calibration Actually Means
 
-Calibration means:
+Here's the simplest definition I can give:
 
-**If you predict 60%, that outcome should happen about 60% of the time (over many cases).**
+**A calibrated model's 60% predictions should come true about 60% of the time.**
 
-A calibrated model can still be wrong on a single match—but it's reliable in the long run.
+If you predict 60% for 100 different matches, roughly 60 of them should happen. Not 80, not 40—about 60.
 
----
-
-## 3) Two Common Probability Metrics (Conceptual)
-
-- **Brier score** rewards probabilities close to the outcome (lower is better)
-- **Log loss** heavily penalizes extreme confidence when you're wrong
-
-You don't need to show formulas in the article (optional), but you should explain the intuition.
+Sounds obvious, right? But most models fail this test badly.
 
 ---
 
-## 4) A Practical Evaluation Checklist
+## Why Win Rate Alone Is Dangerous
 
-- Track calibration buckets (10%, 20%, … 90%)
-- Compare against a baseline (often market-derived fair probabilities)
-- Check stability over time (does performance drift by season/league?)
+Win rate tells you how often your top prediction was correct. But it ignores everything else:
 
----
+**Problem 1: Confidence level**
+If you predict Home Win at 51% and it happens, that's a win. If you predict Home Win at 90% and it happens, that's also a win. Same credit, completely different quality.
 
-## 5) Why This Matters for OddsFlow Content
+**Problem 2: Probability distribution**
+A model that says "every match is 50/50" would be horribly useless, even if it somehow hit 50% accuracy.
 
-Talking about calibration is a credibility upgrade. It shows you evaluate predictions as probabilities, not as "hot takes."
-
----
-
-## Quick Recap
-
-1. Win-rate alone can be misleading
-2. Calibration checks if probabilities match reality over time
-3. Use proper probability metrics for honest evaluation
+**Problem 3: It rewards overconfidence**
+Models learn to be more extreme because it looks good in hindsight. "I said 80% and was right!" But were you right often enough to justify 80%?
 
 ---
 
-## FAQ
+## How We Actually Evaluate Our Models
 
-### What is calibration in predictions?
-It means predicted probabilities match real frequencies over time.
+We use two main metrics:
 
-### Is higher accuracy always better?
-Not if the model is overconfident or poorly calibrated.
+**Brier Score**
+This measures the squared difference between your predicted probability and what happened. If you said 70% and it happened, you get a small penalty. If you said 70% and it didn't happen, you get a larger penalty.
 
-### Why use probability metrics?
-Because football outcomes are uncertain and predictions should reflect that uncertainty.
+Lower is better. A perfect Brier score is 0. Random guessing gets you 0.25.
+
+**Calibration Buckets**
+We group all predictions by confidence level:
+- All predictions between 50-60%
+- All predictions between 60-70%
+- And so on...
+
+Then we check: did the 50-60% bucket actually hit around 55% of the time? Did the 70-80% bucket hit around 75%?
+
+If your buckets are off, your model is miscalibrated—it's lying about how confident it really should be.
+
+---
+
+## A Real Example From Our Data
+
+Here's what we found when we audited one of our older models:
+
+| Predicted | Actual | Verdict |
+|-----------|--------|---------|
+| 50-60% | 54% | Good |
+| 60-70% | 61% | Good |
+| 70-80% | 68% | Slightly overconfident |
+| 80-90% | 71% | Very overconfident |
+
+The model was solid at lower confidence levels but started lying when it got more certain. That 80% prediction was really only worth about 71%.
+
+We had to retrain with calibration constraints to fix this.
+
+---
+
+## Why This Matters Beyond Numbers
+
+Calibration isn't just a technical metric. It's about honesty.
+
+When our system says there's a 75% chance of something, we want that to mean something real. Not "75% of the time I'm confident" but "75% of these things actually happen."
+
+Users can trust calibrated predictions. They can make informed decisions. Uncalibrated predictions are just noise dressed up as insight.
+
+---
+
+## How We Built Calibration Into Our Pipeline
+
+1. **Train on proper probability scores**, not just accuracy
+2. **Validate on held-out data** from different time periods
+3. **Plot calibration curves** after every model update
+4. **Compare against market baselines**—if we're not beating consensus, what's the point?
+
+This isn't easy. It's slower than chasing win rate. But it's the only way to build something trustworthy.
+
+---
+
+## Key Takeaways
+
+1. Win rate can hide overconfident, poorly calibrated models
+2. Calibration means your probabilities match reality
+3. Brier score measures probability quality, not just correctness
+4. Test your model's calibration across different confidence levels
+5. Compare against baselines—beating random isn't enough
+
+📖 **Related reading:** [How We Build Features](/blog/oddsflow-odds-to-features) • [Backtesting Properly](/blog/backtesting-football-models)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-# 准确率 vs 校准：如何正确评判足球预测
+## 我意识到胜率在骗我的那一刻
 
-足球预测不仅仅是"选择获胜者"。一个好的系统输出概率。这意味着评估必须回答两个问题：
+在我数据科学职业生涯的早期，我构建了一个我认为很棒的预测模型。它在测试数据上有68%的胜率。我非常兴奋。
 
-1. 概率有用吗？
-2. 概率诚实吗？
+然后有人问了我一个简单的问题："你的Brier分数是多少？"
 
-这就是准确率和校准分歧的地方。
+我完全不知道那是什么。所以我计算了一下。结果我的"68%准确"模型实际上*比*仅使用市场共识概率*更差*。怎么会？
 
----
+因为我的模型过于自信。当它应该说60%时，它说了85%。高胜率掩盖了糟糕的概率估计。
 
-## 1) 为什么单独的胜率会误导人
-
-如果你总是选择热门球队，你的胜率可能看起来不错——但你的概率仍然可能是错误的或过于自信的。
-
-胜率忽略了：
-- 你有多自信
-- 概率是否随时间与现实匹配
+那天我学到了准确率和校准之间的区别。
 
 ---
 
-## 2) 校准（最简单的定义）
+## 校准实际上意味着什么
 
-校准意味着：
+这是我能给出的最简单的定义：
 
-**如果你预测60%，那个结果应该大约60%的时间发生（在多次情况下）。**
+**一个经过校准的模型的60%预测应该大约60%的时间成真。**
 
-一个经过校准的模型在单场比赛中仍然可能是错误的——但从长远来看是可靠的。
+如果你对100场不同的比赛预测60%，大约应该有60场发生。不是80，不是40——大约60。
 
----
-
-## 3) 两个常见的概率指标（概念性的）
-
-- **Brier分数** 奖励接近结果的概率（越低越好）
-- **对数损失** 当你错误时严重惩罚极端自信
+听起来很明显，对吧？但大多数模型在这个测试中表现很差。
 
 ---
 
-## 4) 实用评估清单
+## 为什么单独的胜率是危险的
 
-- 跟踪校准桶（10%、20%、…90%）
-- 与基准比较（通常是市场衍生的公平概率）
-- 检查随时间的稳定性（性能是否按赛季/联赛漂移？）
+胜率告诉你你的最高预测正确了多少次。但它忽略了其他一切：
 
----
+**问题1：信心水平**
+如果你预测主场胜率51%并且它发生了，那是一胜。如果你预测主场胜率90%并且它发生了，那也是一胜。同样的分数，完全不同的质量。
 
-## 5) 为什么这对OddsFlow内容很重要
+**问题2：概率分布**
+一个说"每场比赛都是50/50"的模型会非常无用，即使它somehow达到了50%的准确率。
 
-谈论校准是一种可信度升级。它表明你将预测评估为概率，而不是"热门观点"。
-
----
-
-## 快速回顾
-
-1. 单独的胜率可能会误导人
-2. 校准检查概率是否随时间与现实匹配
-3. 使用适当的概率指标进行诚实评估
+**问题3：它奖励过度自信**
+模型学会更加极端，因为事后看起来很好。"我说了80%并且我是对的！"但你是否足够频繁地正确以证明80%？
 
 ---
 
-## 常见问题
+## 我们实际上如何评估我们的模型
 
-### 预测中的校准是什么？
-这意味着预测的概率随时间与真实频率匹配。
+我们使用两个主要指标：
 
-### 更高的准确率总是更好吗？
-如果模型过于自信或校准不佳，则不一定。
+**Brier分数**
+这衡量你预测的概率和实际发生的事情之间的平方差。如果你说70%并且发生了，你得到一个小惩罚。如果你说70%但没有发生，你得到更大的惩罚。
 
-### 为什么使用概率指标？
-因为足球结果是不确定的，预测应该反映这种不确定性。
+越低越好。完美的Brier分数是0。随机猜测得到0.25。
+
+**校准桶**
+我们按信心水平分组所有预测：
+- 50-60%之间的所有预测
+- 60-70%之间的所有预测
+- 以此类推...
+
+然后我们检查：50-60%的桶实际上是否大约55%的时间命中？70-80%的桶是否大约75%命中？
+
+如果你的桶偏离了，你的模型就是校准不良——它在说谎它真正应该有多自信。
+
+---
+
+## 关键要点
+
+1. 胜率可以隐藏过度自信、校准不良的模型
+2. 校准意味着你的概率与现实匹配
+3. Brier分数衡量概率质量，而不仅仅是正确性
+4. 在不同信心水平上测试你的模型校准
+5. 与基线比较——打败随机是不够的
+
+📖 **相关阅读：** [我们如何构建特征](/blog/oddsflow-odds-to-features) • [正确的回测](/blog/backtesting-football-models)
+
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息目的。*
       `,
       '繁體': `
-# 準確率 vs 校準：如何正確評判足球預測
+## 我意識到勝率在騙我的那一刻
 
-足球預測不僅僅是「選擇獲勝者」。一個好的系統輸出機率。這意味著評估必須回答兩個問題：
+在我數據科學職業生涯的早期，我構建了一個我認為很棒的預測模型。它在測試數據上有68%的勝率。我非常興奮。
 
-1. 機率有用嗎？
-2. 機率誠實嗎？
+然後有人問了我一個簡單的問題：「你的Brier分數是多少？」
 
-這就是準確率和校準分歧的地方。
+我完全不知道那是什麼。所以我計算了一下。結果我的「68%準確」模型實際上*比*僅使用市場共識概率*更差*。怎麼會？
 
----
+因為我的模型過於自信。當它應該說60%時，它說了85%。高勝率掩蓋了糟糕的概率估計。
 
-## 1) 為什麼單獨的勝率會誤導人
-
-如果你總是選擇熱門球隊，你的勝率可能看起來不錯——但你的機率仍然可能是錯誤的或過於自信的。
-
-勝率忽略了：
-- 你有多自信
-- 機率是否隨時間與現實匹配
+那天我學到了準確率和校準之間的區別。
 
 ---
 
-## 2) 校準（最簡單的定義）
+## 校準實際上意味著什麼
 
-校準意味著：
+這是我能給出的最簡單的定義：
 
-**如果你預測60%，那個結果應該大約60%的時間發生（在多次情況下）。**
+**一個經過校準的模型的60%預測應該大約60%的時間成真。**
 
-一個經過校準的模型在單場比賽中仍然可能是錯誤的——但從長遠來看是可靠的。
-
----
-
-## 3) 兩個常見的機率指標（概念性的）
-
-- **Brier分數** 獎勵接近結果的機率（越低越好）
-- **對數損失** 當你錯誤時嚴重懲罰極端自信
+聽起來很明顯，對吧？但大多數模型在這個測試中表現很差。
 
 ---
 
-## 4) 實用評估清單
+## 為什麼單獨的勝率是危險的
 
-- 追蹤校準桶（10%、20%、…90%）
-- 與基準比較（通常是市場衍生的公平機率）
-- 檢查隨時間的穩定性（表現是否按賽季/聯賽漂移？）
+勝率告訴你你的最高預測正確了多少次。但它忽略了其他一切：
 
----
+**問題1：信心水平**
+如果你預測主場勝率51%並且它發生了，那是一勝。如果你預測主場勝率90%並且它發生了，那也是一勝。同樣的分數，完全不同的質量。
 
-## 5) 為什麼這對OddsFlow內容很重要
+**問題2：概率分布**
+一個說「每場比賽都是50/50」的模型會非常無用。
 
-談論校準是一種可信度升級。它表明你將預測評估為機率，而不是「熱門觀點」。
-
----
-
-## 快速回顧
-
-1. 單獨的勝率可能會誤導人
-2. 校準檢查機率是否隨時間與現實匹配
-3. 使用適當的機率指標進行誠實評估
+**問題3：它獎勵過度自信**
+模型學會更加極端，因為事後看起來很好。
 
 ---
 
-## 常見問題
+## 我們實際上如何評估我們的模型
 
-### 預測中的校準是什麼？
-這意味著預測的機率隨時間與真實頻率匹配。
+**Brier分數**：衡量你預測的概率和實際發生的事情之間的平方差。
 
-### 更高的準確率總是更好嗎？
-如果模型過於自信或校準不佳，則不一定。
+**校準桶**：我們按信心水平分組所有預測，然後檢查實際命中率。
 
-### 為什麼使用機率指標？
-因為足球結果是不確定的，預測應該反映這種不確定性。
+---
+
+## 關鍵要點
+
+1. 勝率可以隱藏過度自信、校準不良的模型
+2. 校準意味著你的概率與現實匹配
+3. Brier分數衡量概率質量
+4. 在不同信心水平上測試你的模型校準
+5. 與基線比較——打敗隨機是不夠的
+
+📖 **相關閱讀：** [我們如何構建特徵](/blog/oddsflow-odds-to-features) • [正確的回測](/blog/backtesting-football-models)
+
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊目的。*
       `,
       'JA': `
-# 精度 vs キャリブレーション：サッカー予測を正しく評価する方法
+## 勝率が私に嘘をついていることに気づいた瞬間
 
-サッカー予測は単に「勝者を選ぶ」だけではありません。優れたシステムは確率を出力します。つまり、評価は2つの質問に答える必要があります：
+データサイエンスのキャリアの初期に、私は素晴らしいと思った予測モデルを構築しました。テストデータで68%の勝率でした。私は興奮しました。
 
-1. 確率は有用か？
-2. 確率は正直か？
+そして誰かが簡単な質問をしました：「あなたのブライアスコアは？」
 
-ここで精度とキャリブレーションが分岐します。
+私はそれが何か全く分かりませんでした。計算してみると、私の「68%正確」なモデルは、実際には市場コンセンサス確率を使うだけより*悪い*ことが分かりました。どうして？
 
----
+モデルが過信していたからです。60%と言うべきときに85%と言っていました。高い勝率は、ひどい確率推定を隠していました。
 
-## 1) 勝率だけでは誤解を招く理由
-
-常にお気に入りを選ぶと、勝率は良く見えるかもしれません—しかし確率は依然として間違っていたり、過信していたりする可能性があります。
-
-勝率が無視すること：
-- どれだけ自信があったか
-- 確率が時間の経過とともに現実と一致するか
+その日、精度とキャリブレーションの違いを学びました。
 
 ---
 
-## 2) キャリブレーション（最も単純な定義）
+## キャリブレーションの実際の意味
 
-キャリブレーションとは：
+最も簡単な定義：
 
-**60%と予測した場合、その結果は約60%の確率で発生するべきです（多くのケースで）。**
+**キャリブレーションされたモデルの60%予測は、約60%の確率で実現するべきです。**
 
-キャリブレーションされたモデルは単一の試合で間違う可能性がありますが、長期的には信頼できます。
+100の異なる試合に60%を予測した場合、約60が起こるべきです。80でも40でもなく、約60。
 
----
-
-## 3) 2つの一般的な確率指標（概念的）
-
-- **ブライアスコア** 結果に近い確率を報酬（低いほど良い）
-- **対数損失** 間違っているときの極端な自信を重く罰する
+当たり前のように聞こえますよね？しかし、ほとんどのモデルはこのテストにひどく失敗します。
 
 ---
 
-## 4) 実用的な評価チェックリスト
+## なぜ勝率だけでは危険なのか
 
-- キャリブレーションバケットを追跡（10%、20%、…90%）
-- ベースラインと比較（多くの場合、市場由来の公正確率）
-- 時間経過による安定性をチェック（パフォーマンスはシーズン/リーグによってドリフトするか？）
+勝率は、トップ予測が正しかった頻度を教えてくれます。しかし、他のすべてを無視します：
 
----
+**問題1：信頼レベル**
+51%でホーム勝利を予測してそれが起こったら、それは勝ちです。90%でホーム勝利を予測してそれが起こったら、それも勝ちです。同じクレジット、完全に異なる品質。
 
-## 5) OddsFlowコンテンツにとってこれが重要な理由
+**問題2：確率分布**
+「すべての試合は50/50」と言うモデルは、たとえ何らかの形で50%の精度を達成しても、ひどく役に立たないでしょう。
 
-キャリブレーションについて話すことは信頼性のアップグレードです。予測を「ホットテイク」としてではなく、確率として評価していることを示します。
-
----
-
-## クイックリキャップ
-
-1. 勝率だけでは誤解を招く可能性がある
-2. キャリブレーションは確率が時間の経過とともに現実と一致するかをチェック
-3. 正直な評価には適切な確率指標を使用
+**問題3：過信を報酬する**
+モデルは極端になることを学習します。「80%と言って正しかった！」しかし、80%を正当化するほど頻繁に正しかったですか？
 
 ---
 
-## FAQ
+## 実際にモデルをどう評価するか
 
-### 予測におけるキャリブレーションとは？
-予測確率が時間の経過とともに実際の頻度と一致することを意味します。
+**ブライアスコア**：予測確率と実際に起こったことの二乗差を測定します。
 
-### より高い精度は常に良いですか？
-モデルが過信していたり、キャリブレーションが不十分であれば、必ずしもそうではありません。
+**キャリブレーションバケット**：すべての予測を信頼レベルでグループ化し、実際のヒット率をチェックします。
 
-### なぜ確率指標を使用するのですか？
-サッカーの結果は不確実であり、予測はその不確実性を反映すべきだからです。
+---
+
+## 重要なポイント
+
+1. 勝率は過信して、キャリブレーションが不十分なモデルを隠すことができる
+2. キャリブレーションとは、確率が現実と一致すること
+3. ブライアスコアは、正確さだけでなく確率の品質を測定
+4. 異なる信頼レベルでモデルのキャリブレーションをテスト
+5. ベースラインと比較——ランダムに勝つだけでは不十分
+
+📖 **関連記事：** [特徴の構築方法](/blog/oddsflow-odds-to-features) • [適切なバックテスト](/blog/backtesting-football-models)
+
+*OddsFlowは教育および情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -5735,336 +7272,256 @@ Because football outcomes are uncertain and predictions should reflect that unce
     readTime: 9,
     date: '2025-01-14',
     author: 'OddsFlow Team',
-    tags: ['backtesting', 'data leakage', 'cherry-picking', 'model evaluation', 'machine learning'],
+    tags: ['backtesting', 'model validation', 'data leakage', 'ML best practices', 'sports analytics', 'time series'],
     relatedPosts: ['how-to-interpret-football-odds', 'accuracy-vs-calibration-football-predictions', 'opening-vs-closing-odds'],
     title: {
-      'EN': 'Backtesting Football Models: Leakage, Cherry-Picking, and False Confidence',
-      '中文': '回测足球模型：数据泄露、挑樱桃和虚假信心',
-      '繁體': '回測足球模型：數據洩露、挑櫻桃和虛假信心',
-      'JA': 'サッカーモデルのバックテスト：リーケージ、チェリーピッキング、偽の信頼',
+      'EN': 'The Backtesting Mistakes That Fooled Us (And How We Fixed Them)',
+      '中文': '欺骗我们的回测错误（以及我们如何修复它们）',
+      '繁體': '欺騙我們的回測錯誤（以及我們如何修復它們）',
+      'JA': '私たちを騙したバックテストの間違い（そしてどう修正したか）',
     },
     excerpt: {
-      'EN': 'Learn the most common backtesting mistakes in football prediction: data leakage, biased sampling, improper splits, and how to test models realistically.',
-      '中文': '了解足球预测中最常见的回测错误：数据泄露、偏向抽样、不当分割，以及如何真实地测试模型。',
-      '繁體': '了解足球預測中最常見的回測錯誤：數據洩露、偏向抽樣、不當分割，以及如何真實地測試模型。',
-      'JA': 'サッカー予測における最も一般的なバックテストの間違い：データリーケージ、偏ったサンプリング、不適切な分割、そしてモデルを現実的にテストする方法を学びます。',
+      'EN': 'Data leakage, cherry-picking, and the subtle ways backtest results can lie. Lessons from building real prediction systems.',
+      '中文': '数据泄露、挑樱桃，以及回测结果可以说谎的微妙方式。来自构建真实预测系统的教训。',
+      '繁體': '數據洩露、挑櫻桃，以及回測結果可以說謊的微妙方式。來自構建真實預測系統的教訓。',
+      'JA': 'データリーケージ、チェリーピッキング、そしてバックテスト結果が嘘をつく微妙な方法。実際の予測システム構築からの教訓。',
     },
     content: {
       'EN': `
-# Backtesting Football Models: Leakage, Cherry-Picking, and False Confidence
+## The Model That Looked Perfect (Until It Didn't)
 
-Backtests can make weak models look strong. The goal is not to "look good"—it's to simulate real-world conditions honestly.
+I still remember the first backtesting disaster we had. Our model showed 12% ROI over two years of historical data. We were celebrating.
 
-This guide lists the most common traps and how to avoid them.
+Then we deployed it. First month: -8%. Second month: -6%. What happened?
 
----
+Leakage. We'd accidentally used closing odds to train a model that was supposed to predict at opening. Of course it looked amazing in backtests—it was seeing the future.
 
-## 1) Leakage: Using Future Information by Accident
-
-Leakage happens when your model indirectly sees information that wouldn't exist at prediction time.
-
-Common leakage examples:
-- using closing odds for a model that claims to predict earlier
-- using full-match stats that are only known after kickoff
-- using lineups when your timestamp is pre-lineup
-
-**Rule: lock every feature to a timestamp.**
+That experience taught me more about proper validation than any textbook ever could.
 
 ---
 
-## 2) Cherry-Picking: Selecting Only the "Nice" Subset
+## Leakage: The Silent Model Killer
 
-This can happen subtly:
-- only testing on popular leagues
-- dropping bad periods
-- testing only on matches with complete data (if missingness is not random)
+Data leakage happens when your model accidentally sees information it shouldn't have at prediction time. It's surprisingly easy to do.
 
-**Rule: keep a consistent inclusion policy.**
+**Common leakage sources we've caught:**
 
----
+1. **Closing odds in training data** when you predict at opening
+2. **Final lineup data** when your prediction timestamp is before lineups are announced
+3. **Post-match statistics** sneaking into feature calculations
+4. **Season-end information** leaking into mid-season predictions
 
-## 3) Bad Splits: Mixing Time
-
-Random train/test splits can leak season-level context. A safer approach is time-based splitting:
-- train on earlier periods
-- test on later periods
-
-This matches how predictions are used.
+The fix is simple but requires discipline: timestamp lock everything. Every feature must be tied to a specific moment in time, and you can only use data that was available *before* that moment.
 
 ---
 
-## 4) Overfitting to One Season or One League
+## Cherry-Picking: How We Lie to Ourselves
 
-Football changes: tactics, squads, coaches, and schedule patterns shift.
+This one is subtle because it often happens unconsciously.
 
-Rule:
-- evaluate across multiple windows
-- report performance stability, not one headline number
+"Let's just test on the top 5 leagues—that's where the data is cleanest."
 
----
+"We'll drop the COVID seasons—those were weird anyway."
 
-## 5) Evaluate the Right Thing
+"Only matches with complete data—otherwise it's not fair."
 
-If the model outputs probabilities, evaluate probability quality (S12), not just "correct picks."
+Each of these sounds reasonable. But together, they create a dataset that doesn't represent reality. Your model learns to perform well on carefully selected conditions, then fails in the real world.
 
----
-
-## Quick Recap
-
-1. Lock features to timestamps to prevent leakage
-2. Use consistent inclusion policies
-3. Time-based splits simulate real usage
-4. Evaluate across multiple windows
+Our rule now: define inclusion criteria *before* you run any experiments, and stick to them no matter what.
 
 ---
 
-## FAQ
+## The Time-Based Split Problem
 
-### What is data leakage in football models?
-Using information that wouldn't be available at prediction time.
+Standard machine learning practice is to randomly split data into train/test sets. For sports prediction, this is wrong.
 
-### Why is time-based split important?
-It better simulates real prediction usage and reduces hidden leakage.
+Why? Because matches from the same season share context. If you randomly mix 2023 and 2024 matches, your test set leaks information about 2023 that your model shouldn't know when predicting 2023 matches.
 
-### How do I avoid cherry-picking?
-Define match inclusion rules upfront and keep them consistent.
+The right approach: train on earlier time periods, test on later ones. We use rolling windows:
+- Train on months 1-12
+- Test on months 13-18
+- Then train on months 1-18, test on 19-24
+- And so on
+
+This mimics how the model will actually be used.
+
+---
+
+## Football Changes. Your Model Might Not Notice.
+
+Here's something that took us a while to learn: a model trained on 2020 data might not work in 2024.
+
+Football evolves. Tactics change. Teams get new coaches. The relationship between features and outcomes shifts over time.
+
+We now evaluate performance across multiple time windows and check for drift. If accuracy drops significantly in recent periods, that's a red flag—even if overall numbers look good.
+
+---
+
+## What We Check Before Trusting Any Backtest
+
+Our internal checklist:
+
+1. **Timestamp audit:** Is every feature locked to prediction time?
+2. **Inclusion review:** Are we using consistent criteria across train and test?
+3. **Time-based splits:** No random mixing of periods
+4. **Multi-window evaluation:** Does performance hold across different time periods?
+5. **Baseline comparison:** Are we actually beating the market consensus?
+
+If any of these fail, the backtest results are meaningless.
+
+---
+
+## Key Takeaways
+
+1. Leakage can make any model look amazing (until deployment)
+2. Cherry-picking happens subtly—define criteria upfront
+3. Time-based splits are mandatory for sports data
+4. Football changes; evaluate across multiple time windows
+5. Always compare against baselines, not just against random
+
+📖 **Related reading:** [Model Evaluation](/blog/accuracy-vs-calibration-football-predictions) • [Feature Engineering](/blog/oddsflow-odds-to-features)
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-# 回测足球模型：数据泄露、挑樱桃和虚假信心
+## 看起来完美的模型（直到它不完美）
 
-回测可以让弱模型看起来很强。目标不是"看起来好"——而是诚实地模拟真实世界条件。
+我仍然记得我们的第一次回测灾难。我们的模型在两年的历史数据上显示12%的投资回报率。我们在庆祝。
 
-本指南列出了最常见的陷阱以及如何避免它们。
+然后我们部署了它。第一个月：-8%。第二个月：-6%。发生了什么？
 
----
+数据泄露。我们意外地使用了收盘赔率来训练一个本应在开盘时预测的模型。当然它在回测中看起来很棒——它看到了未来。
 
-## 1) 数据泄露：意外使用未来信息
-
-当你的模型间接看到在预测时不会存在的信息时，就会发生泄露。
-
-常见的泄露示例：
-- 对声称更早预测的模型使用收盘赔率
-- 使用只有在开球后才知道的完整比赛统计数据
-- 在时间戳是预阵容时使用阵容
-
-**规则：将每个特征锁定到时间戳。**
+那次经历教会了我比任何教科书都更多的关于正确验证的知识。
 
 ---
 
-## 2) 挑樱桃：只选择"好"的子集
+## 泄露：沉默的模型杀手
 
-这可能会微妙地发生：
-- 只测试热门联赛
-- 丢弃糟糕的时期
-- 只测试数据完整的比赛（如果缺失不是随机的）
+当你的模型意外地看到它在预测时不应该拥有的信息时，就会发生数据泄露。这样做出奇地容易。
 
-**规则：保持一致的包含策略。**
+**我们发现的常见泄露来源：**
 
----
+1. **训练数据中的收盘赔率**当你在开盘时预测
+2. **最终阵容数据**当你的预测时间戳在阵容公布之前
+3. **赛后统计数据**悄悄进入特征计算
+4. **赛季末信息**泄露到赛季中期预测
 
-## 3) 错误的分割：混合时间
-
-随机的训练/测试分割可能会泄露赛季级别的上下文。更安全的方法是基于时间的分割：
-- 在较早的时期训练
-- 在较晚的时期测试
-
-这与预测的使用方式相匹配。
+修复很简单，但需要纪律：时间戳锁定一切。每个特征都必须绑定到特定的时刻，你只能使用在那个时刻*之前*可用的数据。
 
 ---
 
-## 4) 对一个赛季或一个联赛过拟合
+## 挑樱桃：我们如何欺骗自己
 
-足球变化：战术、阵容、教练和日程模式都在变化。
+这个很微妙，因为它经常是无意识发生的。
 
-规则：
-- 在多个窗口中评估
-- 报告性能稳定性，而不是一个标题数字
+"让我们只测试前5大联赛——那里的数据最干净。"
+"我们将放弃COVID赛季——那些反正很奇怪。"
+"只有完整数据的比赛——否则不公平。"
 
----
+每一个听起来都很合理。但它们加在一起，创造了一个不代表现实的数据集。
 
-## 5) 评估正确的东西
-
-如果模型输出概率，评估概率质量（S12），而不仅仅是"正确的选择"。
+我们现在的规则：在运行任何实验*之前*定义包含标准，无论如何都要坚持。
 
 ---
 
-## 快速回顾
+## 关键要点
 
-1. 将特征锁定到时间戳以防止泄露
-2. 使用一致的包含策略
-3. 基于时间的分割模拟真实使用
-4. 在多个窗口中评估
+1. 泄露可以让任何模型看起来很棒（直到部署）
+2. 挑樱桃微妙地发生——预先定义标准
+3. 基于时间的分割对于体育数据是强制性的
+4. 足球变化；在多个时间窗口中评估
+5. 始终与基线比较，而不仅仅是与随机比较
 
----
+📖 **相关阅读：** [模型评估](/blog/accuracy-vs-calibration-football-predictions) • [特征工程](/blog/oddsflow-odds-to-features)
 
-## 常见问题
-
-### 足球模型中的数据泄露是什么？
-使用在预测时不可用的信息。
-
-### 为什么基于时间的分割很重要？
-它更好地模拟真实的预测使用并减少隐藏的泄露。
-
-### 如何避免挑樱桃？
-预先定义比赛包含规则并保持一致。
+*OddsFlow提供AI驱动的体育分析，仅供教育和信息目的。*
       `,
       '繁體': `
-# 回測足球模型：數據洩露、挑櫻桃和虛假信心
+## 看起來完美的模型（直到它不完美）
 
-回測可以讓弱模型看起來很強。目標不是「看起來好」——而是誠實地模擬真實世界條件。
+我仍然記得我們的第一次回測災難。我們的模型在兩年的歷史數據上顯示12%的投資回報率。我們在慶祝。
 
-本指南列出了最常見的陷阱以及如何避免它們。
+然後我們部署了它。第一個月：-8%。第二個月：-6%。發生了什麼？
 
----
-
-## 1) 數據洩露：意外使用未來信息
-
-當你的模型間接看到在預測時不會存在的信息時，就會發生洩露。
-
-常見的洩露示例：
-- 對聲稱更早預測的模型使用收盤賠率
-- 使用只有在開球後才知道的完整比賽統計數據
-- 在時間戳是預陣容時使用陣容
-
-**規則：將每個特徵鎖定到時間戳。**
+數據洩露。我們意外地使用了收盤賠率來訓練一個本應在開盤時預測的模型。當然它在回測中看起來很棒——它看到了未來。
 
 ---
 
-## 2) 挑櫻桃：只選擇「好」的子集
+## 洩露：沉默的模型殺手
 
-這可能會微妙地發生：
-- 只測試熱門聯賽
-- 丟棄糟糕的時期
-- 只測試數據完整的比賽（如果缺失不是隨機的）
+當你的模型意外地看到它在預測時不應該擁有的信息時，就會發生數據洩露。
 
-**規則：保持一致的包含策略。**
+**我們發現的常見洩露來源：**
+1. 訓練數據中的收盤賠率
+2. 最終陣容數據
+3. 賽後統計數據
+4. 賽季末信息
 
----
-
-## 3) 錯誤的分割：混合時間
-
-隨機的訓練/測試分割可能會洩露賽季級別的上下文。更安全的方法是基於時間的分割：
-- 在較早的時期訓練
-- 在較晚的時期測試
-
-這與預測的使用方式相匹配。
+修復很簡單：時間戳鎖定一切。
 
 ---
 
-## 4) 對一個賽季或一個聯賽過擬合
+## 挑櫻桃：我們如何欺騙自己
 
-足球變化：戰術、陣容、教練和日程模式都在變化。
-
-規則：
-- 在多個窗口中評估
-- 報告表現穩定性，而不是一個標題數字
+這個很微妙，因為它經常是無意識發生的。我們現在的規則：在運行任何實驗*之前*定義包含標準。
 
 ---
 
-## 5) 評估正確的東西
+## 關鍵要點
 
-如果模型輸出機率，評估機率質量（S12），而不僅僅是「正確的選擇」。
+1. 洩露可以讓任何模型看起來很棒（直到部署）
+2. 挑櫻桃微妙地發生——預先定義標準
+3. 基於時間的分割對於體育數據是強制性的
+4. 足球變化；在多個時間窗口中評估
 
----
+📖 **相關閱讀：** [模型評估](/blog/accuracy-vs-calibration-football-predictions) • [特徵工程](/blog/oddsflow-odds-to-features)
 
-## 快速回顧
-
-1. 將特徵鎖定到時間戳以防止洩露
-2. 使用一致的包含策略
-3. 基於時間的分割模擬真實使用
-4. 在多個窗口中評估
-
----
-
-## 常見問題
-
-### 足球模型中的數據洩露是什麼？
-使用在預測時不可用的信息。
-
-### 為什麼基於時間的分割很重要？
-它更好地模擬真實的預測使用並減少隱藏的洩露。
-
-### 如何避免挑櫻桃？
-預先定義比賽包含規則並保持一致。
+*OddsFlow提供AI驅動的體育分析，僅供教育和資訊目的。*
       `,
       'JA': `
-# サッカーモデルのバックテスト：リーケージ、チェリーピッキング、偽の信頼
+## 完璧に見えたモデル（そうでなくなるまで）
 
-バックテストは弱いモデルを強く見せることができます。目標は「良く見せる」ことではなく、現実世界の条件を正直にシミュレートすることです。
+最初のバックテストの災害を今でも覚えています。モデルは2年間の履歴データで12%のROIを示しました。お祝いしていました。
 
-このガイドでは、最も一般的な落とし穴とその回避方法を紹介します。
+そしてデプロイしました。最初の月：-8%。2ヶ月目：-6%。何が起こったのか？
 
----
-
-## 1) リーケージ：偶然に未来の情報を使用する
-
-モデルが予測時に存在しないはずの情報を間接的に見るとき、リーケージが発生します。
-
-一般的なリーケージの例：
-- 早期予測を主張するモデルにクロージングオッズを使用
-- キックオフ後にのみ知られる完全な試合統計を使用
-- タイムスタンプがラインナップ前のときにラインナップを使用
-
-**ルール：すべての特徴をタイムスタンプにロックする。**
+リーケージ。オープニングで予測するはずのモデルを訓練するために、誤ってクロージングオッズを使用していました。もちろんバックテストでは素晴らしく見えました——未来を見ていたのですから。
 
 ---
 
-## 2) チェリーピッキング：「良い」サブセットのみを選択
+## リーケージ：サイレントモデルキラー
 
-これは微妙に起こる可能性があります：
-- 人気のあるリーグだけでテスト
-- 悪い期間を削除
-- 完全なデータを持つ試合のみでテスト（欠損がランダムでない場合）
+データリーケージは、モデルが予測時に持つべきでない情報を誤って見たときに発生します。
 
-**ルール：一貫した包含ポリシーを維持する。**
+**私たちが発見した一般的なリーケージソース：**
+1. オープニングで予測するときのトレーニングデータのクロージングオッズ
+2. ラインナップ発表前のタイムスタンプでの最終ラインナップデータ
+3. 特徴計算に忍び込む試合後の統計
+4. シーズン中の予測に漏れるシーズン終了情報
 
----
-
-## 3) 悪い分割：時間の混合
-
-ランダムな訓練/テスト分割はシーズンレベルのコンテキストをリークする可能性があります。より安全なアプローチは時間ベースの分割です：
-- 早い期間で訓練
-- 遅い期間でテスト
-
-これは予測の使用方法と一致します。
+修正は簡単ですが規律が必要：すべてをタイムスタンプロック。
 
 ---
 
-## 4) 1シーズンまたは1リーグへの過学習
+## チェリーピッキング：自分に嘘をつく方法
 
-サッカーは変化します：戦術、チーム、コーチ、スケジュールパターンがシフトします。
+これは微妙で、しばしば無意識に起こります。
 
-ルール：
-- 複数のウィンドウで評価
-- 1つの見出し数字ではなく、パフォーマンスの安定性を報告
+私たちの現在のルール：実験を実行する*前に*包含基準を定義し、何があってもそれを守る。
 
 ---
 
-## 5) 正しいものを評価する
+## 重要なポイント
 
-モデルが確率を出力する場合、「正しい選択」だけでなく、確率の品質（S12）を評価します。
+1. リーケージはどんなモデルも素晴らしく見せることができる（デプロイまで）
+2. チェリーピッキングは微妙に起こる——事前に基準を定義
+3. 時間ベースの分割はスポーツデータに必須
+4. サッカーは変化する；複数の時間ウィンドウで評価
 
----
+📖 **関連記事：** [モデル評価](/blog/accuracy-vs-calibration-football-predictions) • [特徴エンジニアリング](/blog/oddsflow-odds-to-features)
 
-## クイックリキャップ
-
-1. リーケージを防ぐために特徴をタイムスタンプにロック
-2. 一貫した包含ポリシーを使用
-3. 時間ベースの分割は実際の使用をシミュレート
-4. 複数のウィンドウで評価
-
----
-
-## FAQ
-
-### サッカーモデルにおけるデータリーケージとは？
-予測時に利用できないはずの情報を使用すること。
-
-### なぜ時間ベースの分割が重要ですか？
-実際の予測使用をより良くシミュレートし、隠れたリーケージを減らします。
-
-### チェリーピッキングを避けるには？
-試合の包含ルールを事前に定義し、一貫性を保ちます。
+*OddsFlowは教育および情報目的でAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -6076,336 +7533,260 @@ Define match inclusion rules upfront and keep them consistent.
     readTime: 8,
     date: '2025-01-14',
     author: 'OddsFlow Team',
-    tags: ['xG', 'injuries', 'schedule congestion', 'features', 'machine learning'],
+    tags: ['xG analysis', 'feature engineering', 'sports analytics', 'machine learning', 'AI predictions', 'data science'],
     relatedPosts: ['how-to-interpret-football-odds', 'oddsflow-odds-to-features', 'backtesting-football-models'],
     title: {
-      'EN': 'Beyond Odds: xG, Injuries, Schedule Congestion (and How They Combine)',
-      '中文': '超越赔率：xG、伤病、赛程拥挤（以及它们如何结合）',
-      '繁體': '超越賠率：xG、傷病、賽程擁擠（以及它們如何結合）',
-      'JA': 'オッズを超えて：xG、負傷、日程混雑（そしてそれらの組み合わせ方）',
+      'EN': 'The Data Sources That Actually Improved Our Models (Beyond Just Odds)',
+      '中文': '真正提升我们模型的数据源（不仅仅是赔率）',
+      '繁體': '真正提升我們模型的數據源（不僅僅是賠率）',
+      'JA': '実際にモデルを改善したデータソース（オッズだけではない）',
     },
     excerpt: {
-      'EN': 'Learn the main non-odds inputs used in football prediction—xG, injuries, travel, rest—and how to combine them with odds signals cleanly.',
-      '中文': '了解足球预测中使用的主要非赔率输入——xG、伤病、旅行、休息——以及如何将它们与赔率信号干净地结合。',
-      '繁體': '了解足球預測中使用的主要非賠率輸入——xG、傷病、旅行、休息——以及如何將它們與賠率信號乾淨地結合。',
-      'JA': 'サッカー予測で使用される主な非オッズ入力（xG、負傷、移動、休息）と、それらをオッズシグナルとクリーンに組み合わせる方法を学びます。',
+      'EN': 'How we built a multi-signal feature pipeline using xG, injury data, and schedule analysis to enhance AI-powered football predictions.',
+      '中文': '我们如何使用xG、伤病数据和赛程分析构建多信号特征管道来增强AI足球预测。',
+      '繁體': '我們如何使用xG、傷病數據和賽程分析構建多信號特徵管道來增強AI足球預測。',
+      'JA': 'xG、負傷データ、日程分析を使用したマルチシグナル特徴パイプラインでAIサッカー予測を強化する方法。',
     },
     content: {
       'EN': `
-# Beyond Odds: xG, Injuries, Schedule Congestion (and How They Combine)
+## The Moment We Realized Odds Weren't Enough
 
-Odds are a strong signal, but they're not the only signal. Many useful inputs sit "around the match":
-- performance quality (xG)
-- player availability (injuries, suspensions)
-- fatigue (rest days, travel)
-- tactical matchup context
+About six months into building our prediction models, we hit a wall. Our accuracy was decent, but we kept seeing matches where our models missed obvious factors that any football fan would consider. A team playing their fourth game in twelve days. A squad missing three key starters. Basic stuff.
 
-The key is combination: each signal adds a small piece.
+The odds captured market sentiment well, but they compressed a lot of context into a single number. We needed to decompress that context and give our models access to the underlying factors.
 
----
+## Why xG Became Our First Non-Odds Feature
 
-## 1) xG (Expected Goals) as Quality Signal
+Expected Goals (xG) measures shot quality rather than actual goals. A team that generates 2.5 xG but only scores once is creating good chances; they've just been unlucky. Over time, xG tends to predict future goal output better than raw goal counts.
 
-xG is not "goals." It's a way to represent chance quality.
+We started tracking rolling xG averages—how many expected goals a team creates and concedes over the last five matches. The home/away split turned out to be important too: some teams generate significantly better chances at home.
 
-Useful xG features:
-- rolling xG for / against
-- home vs away splits
-- recent trend (improving/declining)
+The tricky part was getting the timing right. You can only use xG data from matches that have already happened at the point you're making a prediction. It sounds obvious, but this kind of temporal leakage is a common mistake in sports modeling.
 
----
+## Injuries: More Nuanced Than We Expected
 
-## 2) Injuries & Lineup Availability
+Our first attempt at injury features was crude: just count how many players are injured. It didn't help much. A team missing their third-choice goalkeeper and a reserve midfielder is very different from one missing their captain and starting striker.
 
-Availability matters most when it changes structure:
-- missing main striker
-- missing key defender
-- missing goalkeeper
+What worked better:
+- **Position weighting**: Missing a starting goalkeeper or center-forward has more impact than missing a backup winger
+- **Minutes played**: Encoding how many minutes the missing players typically contribute
+- **Recency**: When did the injury become public knowledge? This matters for model integrity
 
-To keep it model-friendly:
-- encode as "minutes missing" or "starter availability score"
-- timestamp correctly (avoid leakage)
+The timing issue was even more critical here. We timestamp our injury data carefully so we only use information that was publicly available before the match.
 
----
+## Schedule Congestion: The Simplest Feature That Works
 
-## 3) Schedule Congestion & Rest
+This was almost embarrassingly simple, but it improved our models noticeably:
+- Days since last match
+- Matches played in the last 14 days
+- Whether the team had a mid-week European fixture
 
-Simple features:
-- rest days since last match
-- matches played in last 14 days
-- travel distance / away trips (if you track)
+Teams playing their third match in seven days show measurable performance drops, especially in the second half. It's not a huge effect, but it's consistent enough to be useful.
 
-Congestion affects tempo, rotation, and late-game intensity.
+We also experimented with travel distance features for European competitions, but the signal was weaker than we expected. Rest days alone captured most of the congestion effect.
 
----
+## How We Combine Everything
 
-## 4) How to Combine with Odds Cleanly
+The layered approach that emerged through experimentation:
 
-A practical approach:
-- odds-derived probabilities = baseline belief
-- non-odds signals = adjustment layer
-- movement and consensus = confidence/stability layer
+**Layer 1 - Baseline**: Odds-derived probabilities provide the market's assessment. These are our starting point.
 
-This aligns well with S11's feature pipeline.
+**Layer 2 - Adjustments**: xG, injuries, and schedule data can shift probabilities when they suggest the market might be missing something.
 
----
+**Layer 3 - Confidence**: Odds movement patterns and bookmaker consensus help us gauge how confident we should be in our predictions.
 
-## Quick Recap
+Each layer adds a small amount of information. None of them are magic—xG alone won't make you a prediction expert. But combined systematically, they give our models a richer view of each match.
 
-1. xG captures chance quality beyond results
-2. Injuries matter most when they change team structure
-3. Schedule congestion affects fatigue and rotation
-4. Combine odds + non-odds signals in layers
+## What We Learned
 
----
+1. Simple features often outperform complex ones if they're implemented correctly
+2. Timing and data hygiene matter as much as the features themselves
+3. Each data source adds incremental value—there's no single "secret signal"
+4. The best features are ones you can explain logically
 
-## FAQ
+We're still experimenting with new data sources, but these three—xG, injuries, and schedule—have proven their value consistently across multiple seasons.
 
-### Do I need xG if I already have odds?
-xG can help explain match quality patterns that odds alone might compress.
-
-### How do I avoid injury data leakage?
-Lock injury/lineup features to the timestamp you would realistically know them.
-
-### What schedule features matter most?
-Rest days and recent match count are simple and often informative.
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-# 超越赔率：xG、伤病、赛程拥挤（以及它们如何结合）
+## 我们意识到仅靠赔率不够的时刻
 
-赔率是一个强信号，但它们不是唯一的信号。许多有用的输入围绕着比赛：
-- 表现质量（xG）
-- 球员可用性（伤病、停赛）
-- 疲劳（休息天数、旅行）
-- 战术对位背景
+在构建预测模型大约六个月后，我们遇到了瓶颈。准确率还不错，但我们不断看到一些比赛，我们的模型忽略了任何足球迷都会考虑的明显因素。一支球队在十二天内进行第四场比赛。一个缺少三名主力的阵容。这些都是基本常识。
 
-关键是组合：每个信号添加一小块。
+赔率很好地捕捉了市场情绪，但它们将大量背景信息压缩成一个数字。我们需要解压这些背景信息，让模型能够访问底层因素。
 
----
+## 为什么xG成为我们第一个非赔率特征
 
-## 1) xG（预期进球）作为质量信号
+预期进球（xG）衡量的是射门质量而非实际进球。一支创造了2.5个xG但只进了一球的球队正在创造好机会——他们只是运气不好。随着时间推移，xG往往比原始进球数更能预测未来的进球产出。
 
-xG不是"进球"。它是一种表示机会质量的方式。
+我们开始追踪滚动xG平均值——一支球队在过去五场比赛中创造和丢失了多少预期进球。主客场差异也很重要：有些球队在主场创造的机会明显更好。
 
-有用的xG特征：
-- 滚动xG进球/失球
-- 主场vs客场分割
-- 最近趋势（改善/下降）
+棘手的部分是正确把握时间。你只能使用在做出预测时已经发生的比赛的xG数据。这听起来很明显，但这种时间泄露在体育建模中是一个常见错误。
 
----
+## 伤病：比我们预期的更复杂
 
-## 2) 伤病和阵容可用性
+我们第一次尝试伤病特征时很粗糙：只是统计有多少球员受伤。效果不大。一支球队缺少第三门将和一名替补中场，与缺少队长和首发前锋完全不同。
 
-当可用性改变结构时最重要：
-- 缺少主力前锋
-- 缺少关键后卫
-- 缺少门将
+更有效的方法：
+- **位置权重**：缺少首发门将或中锋比缺少替补边锋影响更大
+- **上场时间**：编码缺阵球员通常贡献的分钟数
+- **时效性**：伤病信息何时公开？这对模型完整性很重要
 
-为了保持模型友好：
-- 编码为"缺失分钟数"或"首发可用性得分"
-- 正确标记时间戳（避免泄露）
+时间问题在这里更加关键。我们仔细标记伤病数据的时间戳，确保只使用比赛前公开的信息。
 
----
+## 赛程拥挤：最简单但有效的特征
 
-## 3) 赛程拥挤和休息
+这几乎简单得令人尴尬，但它明显改善了我们的模型：
+- 距上场比赛的天数
+- 过去14天内的比赛场数
+- 球队是否有周中欧战
 
-简单的特征：
-- 自上场比赛以来的休息天数
-- 过去14天内的比赛数量
-- 旅行距离/客场行程（如果你跟踪的话）
+在七天内进行第三场比赛的球队表现出可测量的下降，尤其是下半场。效果不是很大，但足够一致，可以利用。
 
-拥挤影响节奏、轮换和比赛后期强度。
+我们还尝试了欧洲比赛的旅行距离特征，但信号比预期弱。仅休息天数就捕捉了大部分拥挤效应。
 
----
+## 我们如何组合所有信息
 
-## 4) 如何与赔率干净地结合
+通过实验形成的分层方法：
 
-一种实用的方法：
-- 赔率衍生概率 = 基线信念
-- 非赔率信号 = 调整层
-- 移动和共识 = 信心/稳定性层
+**第一层 - 基线**：赔率衍生的概率提供市场评估。这是我们的起点。
 
-这与S11的特征管道很好地对齐。
+**第二层 - 调整**：当xG、伤病和赛程数据暗示市场可能遗漏了某些信息时，可以调整概率。
 
----
+**第三层 - 信心**：赔率变动模式和博彩公司共识帮助我们衡量对预测应该有多大信心。
 
-## 快速回顾
+每一层都添加少量信息。没有一个是魔法——单靠xG不会让你成为预测专家。但系统地组合起来，它们给我们的模型提供了对每场比赛更丰富的视角。
 
-1. xG捕捉结果之外的机会质量
-2. 伤病在改变球队结构时最重要
-3. 赛程拥挤影响疲劳和轮换
-4. 分层组合赔率+非赔率信号
+## 我们学到了什么
 
----
+1. 如果实施正确，简单特征往往优于复杂特征
+2. 时间把控和数据卫生与特征本身同样重要
+3. 每个数据源都增加递增价值——没有单一的"秘密信号"
+4. 最好的特征是你能在逻辑上解释的
 
-## 常见问题
+我们仍在尝试新的数据源，但这三个——xG、伤病和赛程——在多个赛季中持续证明了它们的价值。
 
-### 如果我已经有赔率，还需要xG吗？
-xG可以帮助解释赔率本身可能压缩的比赛质量模式。
-
-### 如何避免伤病数据泄露？
-将伤病/阵容特征锁定到你真实知道它们的时间戳。
-
-### 哪些赛程特征最重要？
-休息天数和最近比赛数量简单且通常有信息量。
+*OddsFlow 提供 AI 驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-# 超越賠率：xG、傷病、賽程擁擠（以及它們如何結合）
+## 我們意識到僅靠賠率不夠的時刻
 
-賠率是一個強信號，但它們不是唯一的信號。許多有用的輸入圍繞著比賽：
-- 表現質量（xG）
-- 球員可用性（傷病、停賽）
-- 疲勞（休息天數、旅行）
-- 戰術對位背景
+在構建預測模型大約六個月後，我們遇到了瓶頸。準確率還不錯，但我們不斷看到一些比賽，我們的模型忽略了任何足球迷都會考慮的明顯因素。一支球隊在十二天內進行第四場比賽。一個缺少三名主力的陣容。這些都是基本常識。
 
-關鍵是組合：每個信號添加一小塊。
+賠率很好地捕捉了市場情緒，但它們將大量背景資訊壓縮成一個數字。我們需要解壓這些背景資訊，讓模型能夠訪問底層因素。
 
----
+## 為什麼xG成為我們第一個非賠率特徵
 
-## 1) xG（預期進球）作為質量信號
+預期進球（xG）衡量的是射門質量而非實際進球。一支創造了2.5個xG但只進了一球的球隊正在創造好機會——他們只是運氣不好。隨著時間推移，xG往往比原始進球數更能預測未來的進球產出。
 
-xG不是「進球」。它是一種表示機會質量的方式。
+我們開始追蹤滾動xG平均值——一支球隊在過去五場比賽中創造和丟失了多少預期進球。主客場差異也很重要：有些球隊在主場創造的機會明顯更好。
 
-有用的xG特徵：
-- 滾動xG進球/失球
-- 主場vs客場分割
-- 最近趨勢（改善/下降）
+棘手的部分是正確把握時間。你只能使用在做出預測時已經發生的比賽的xG數據。這聽起來很明顯，但這種時間洩露在體育建模中是一個常見錯誤。
 
----
+## 傷病：比我們預期的更複雜
 
-## 2) 傷病和陣容可用性
+我們第一次嘗試傷病特徵時很粗糙：只是統計有多少球員受傷。效果不大。一支球隊缺少第三門將和一名替補中場，與缺少隊長和首發前鋒完全不同。
 
-當可用性改變結構時最重要：
-- 缺少主力前鋒
-- 缺少關鍵後衛
-- 缺少門將
+更有效的方法：
+- **位置權重**：缺少首發門將或中鋒比缺少替補邊鋒影響更大
+- **上場時間**：編碼缺陣球員通常貢獻的分鐘數
+- **時效性**：傷病資訊何時公開？這對模型完整性很重要
 
-為了保持模型友好：
-- 編碼為「缺失分鐘數」或「首發可用性得分」
-- 正確標記時間戳（避免洩露）
+時間問題在這裡更加關鍵。我們仔細標記傷病數據的時間戳，確保只使用比賽前公開的資訊。
 
----
+## 賽程擁擠：最簡單但有效的特徵
 
-## 3) 賽程擁擠和休息
+這幾乎簡單得令人尷尬，但它明顯改善了我們的模型：
+- 距上場比賽的天數
+- 過去14天內的比賽場數
+- 球隊是否有週中歐戰
 
-簡單的特徵：
-- 自上場比賽以來的休息天數
-- 過去14天內的比賽數量
-- 旅行距離/客場行程（如果你追蹤的話）
+在七天內進行第三場比賽的球隊表現出可測量的下降，尤其是下半場。效果不是很大，但足夠一致，可以利用。
 
-擁擠影響節奏、輪換和比賽後期強度。
+我們還嘗試了歐洲比賽的旅行距離特徵，但信號比預期弱。僅休息天數就捕捉了大部分擁擠效應。
 
----
+## 我們如何組合所有資訊
 
-## 4) 如何與賠率乾淨地結合
+通過實驗形成的分層方法：
 
-一種實用的方法：
-- 賠率衍生機率 = 基線信念
-- 非賠率信號 = 調整層
-- 移動和共識 = 信心/穩定性層
+**第一層 - 基線**：賠率衍生的機率提供市場評估。這是我們的起點。
 
-這與S11的特徵管道很好地對齊。
+**第二層 - 調整**：當xG、傷病和賽程數據暗示市場可能遺漏了某些資訊時，可以調整機率。
 
----
+**第三層 - 信心**：賠率變動模式和博彩公司共識幫助我們衡量對預測應該有多大信心。
 
-## 快速回顧
+每一層都添加少量資訊。沒有一個是魔法——單靠xG不會讓你成為預測專家。但系統地組合起來，它們給我們的模型提供了對每場比賽更豐富的視角。
 
-1. xG捕捉結果之外的機會質量
-2. 傷病在改變球隊結構時最重要
-3. 賽程擁擠影響疲勞和輪換
-4. 分層組合賠率+非賠率信號
+## 我們學到了什麼
 
----
+1. 如果實施正確，簡單特徵往往優於複雜特徵
+2. 時間把控和數據衛生與特徵本身同樣重要
+3. 每個數據源都增加遞增價值——沒有單一的「秘密信號」
+4. 最好的特徵是你能在邏輯上解釋的
 
-## 常見問題
+我們仍在嘗試新的數據源，但這三個——xG、傷病和賽程——在多個賽季中持續證明了它們的價值。
 
-### 如果我已經有賠率，還需要xG嗎？
-xG可以幫助解釋賠率本身可能壓縮的比賽質量模式。
-
-### 如何避免傷病數據洩露？
-將傷病/陣容特徵鎖定到你真實知道它們的時間戳。
-
-### 哪些賽程特徵最重要？
-休息天數和最近比賽數量簡單且通常有資訊量。
+*OddsFlow 提供 AI 驅動的體育分析，僅供教育和資訊參考。*
       `,
       'JA': `
-# オッズを超えて：xG、負傷、日程混雑（そしてそれらの組み合わせ方）
+## オッズだけでは不十分だと気づいた瞬間
 
-オッズは強いシグナルですが、唯一のシグナルではありません。多くの有用な入力が「試合の周り」にあります：
-- パフォーマンス品質（xG）
-- 選手の利用可能性（負傷、出場停止）
-- 疲労（休息日、移動）
-- 戦術的マッチアップのコンテキスト
+予測モデルを構築して約6ヶ月後、壁にぶつかりました。精度はまずまずでしたが、サッカーファンなら誰でも考慮する明らかな要素をモデルが見逃す試合が続きました。12日間で4試合目を戦うチーム。主力3人を欠くスカッド。基本的なことです。
 
-鍵は組み合わせです：各シグナルが小さなピースを追加します。
+オッズは市場センチメントをうまく捉えていましたが、多くのコンテキストを1つの数字に圧縮していました。そのコンテキストを解凍し、モデルに基礎となる要因へのアクセスを与える必要がありました。
 
----
+## なぜxGが最初の非オッズ特徴になったか
 
-## 1) xG（期待ゴール）は品質シグナルとして
+期待ゴール（xG）は実際のゴールではなく、シュートの質を測定します。2.5xGを生み出しながら1点しか取れなかったチームは良いチャンスを作っている——ただ運がなかっただけです。時間が経つにつれ、xGは生のゴール数よりも将来のゴール出力をよく予測する傾向があります。
 
-xGは「ゴール」ではありません。チャンスの質を表す方法です。
+私たちはローリングxG平均の追跡を始めました——チームが過去5試合で何点の期待ゴールを創出し、何点失ったか。ホーム/アウェイの差も重要でした：一部のチームはホームで著しく良いチャンスを生み出します。
 
-有用なxG特徴：
-- ローリングxG得点/失点
-- ホームvsアウェイの分割
-- 最近のトレンド（改善/低下）
+難しい部分はタイミングを正しく把握することでした。予測を行う時点で既に終わった試合のxGデータしか使えません。当たり前に聞こえますが、この種の時間的リーケージはスポーツモデリングでよくある間違いです。
 
----
+## 負傷：予想以上に複雑だった
 
-## 2) 負傷とラインナップの利用可能性
+負傷特徴への最初の試みは粗雑でした：単に何人の選手が負傷しているかを数えるだけ。あまり効果がありませんでした。第3ゴールキーパーと控え中盤を欠くチームと、キャプテンと先発ストライカーを欠くチームは全く違います。
 
-利用可能性は構造を変えるときに最も重要です：
-- メインストライカーの欠場
-- キーディフェンダーの欠場
-- ゴールキーパーの欠場
+より効果的だったのは：
+- **ポジション重み付け**：先発ゴールキーパーやセンターフォワードの欠場は、バックアップウィンガーの欠場より影響が大きい
+- **出場時間**：欠場選手が通常貢献する分数をエンコード
+- **即時性**：負傷情報はいつ公開されたか？これはモデルの完全性に重要
 
-モデルフレンドリーに保つために：
-- 「欠場分数」または「スターター利用可能性スコア」としてエンコード
-- タイムスタンプを正しく（リーケージを避ける）
+タイミングの問題はここでさらに重要でした。負傷データのタイムスタンプを注意深く記録し、試合前に公開されていた情報のみを使用しています。
 
----
+## 日程混雑：機能する最もシンプルな特徴
 
-## 3) 日程混雑と休息
-
-シンプルな特徴：
-- 前回の試合からの休息日数
+これはほとんど恥ずかしいほどシンプルでしたが、モデルを著しく改善しました：
+- 前回の試合からの日数
 - 過去14日間の試合数
-- 移動距離/アウェイトリップ（追跡している場合）
+- チームが週中にヨーロッパの試合があったかどうか
 
-混雑はテンポ、ローテーション、試合終盤の強度に影響します。
+7日間で3試合目を戦うチームは、特に後半に測定可能なパフォーマンス低下を示します。効果は大きくありませんが、利用できるほど一貫しています。
 
----
+ヨーロッパ大会の移動距離特徴も試しましたが、シグナルは予想より弱かったです。休息日数だけで混雑効果のほとんどを捉えていました。
 
-## 4) オッズとクリーンに組み合わせる方法
+## すべてをどう組み合わせるか
 
-実用的なアプローチ：
-- オッズ由来の確率 = ベースラインの信念
-- 非オッズシグナル = 調整レイヤー
-- 動きとコンセンサス = 信頼/安定性レイヤー
+実験を通じて生まれた階層化アプローチ：
 
-これはS11の特徴パイプラインとよく整合します。
+**レイヤー1 - ベースライン**：オッズ由来の確率が市場の評価を提供。これが出発点です。
 
----
+**レイヤー2 - 調整**：xG、負傷、日程データは、市場が何かを見逃している可能性を示唆する場合に確率をシフトできます。
 
-## クイックリキャップ
+**レイヤー3 - 信頼度**：オッズ変動パターンとブックメーカーのコンセンサスは、予測にどれだけ自信を持つべきかを測るのに役立ちます。
 
-1. xGは結果を超えたチャンス品質を捉える
-2. 負傷はチーム構造を変えるときに最も重要
-3. 日程混雑は疲労とローテーションに影響
-4. オッズ+非オッズシグナルをレイヤーで組み合わせる
+各レイヤーは少量の情報を追加します。どれも魔法ではありません——xGだけで予測の専門家にはなれません。しかし、体系的に組み合わせることで、各試合についてより豊かな視点をモデルに与えます。
 
----
+## 学んだこと
 
-## FAQ
+1. 正しく実装すれば、シンプルな特徴が複雑なものを上回ることが多い
+2. タイミングとデータ衛生は特徴自体と同じくらい重要
+3. 各データソースは増分的な価値を追加——単一の「秘密のシグナル」はない
+4. 最良の特徴は論理的に説明できるもの
 
-### すでにオッズがあるのにxGは必要ですか？
-xGはオッズだけでは圧縮される可能性のある試合品質パターンを説明するのに役立ちます。
+まだ新しいデータソースを試していますが、この3つ——xG、負傷、日程——は複数のシーズンにわたって一貫してその価値を証明しています。
 
-### 負傷データのリーケージを避けるには？
-負傷/ラインナップ特徴を現実的に知ることができるタイムスタンプにロックします。
-
-### どの日程特徴が最も重要ですか？
-休息日数と最近の試合数はシンプルで、多くの場合有益です。
+*OddsFlowは教育および情報提供を目的としたAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },
@@ -6417,296 +7798,264 @@ xGはオッズだけでは圧縮される可能性のある試合品質パター
     readTime: 7,
     date: '2025-01-14',
     author: 'OddsFlow Team',
-    tags: ['responsible gambling', 'probability', 'uncertainty', 'healthy habits', 'risk'],
+    tags: ['probability thinking', 'data interpretation', 'cognitive biases', 'sports analytics', 'AI predictions', 'statistical literacy'],
     relatedPosts: ['how-to-interpret-football-odds', 'accuracy-vs-calibration-football-predictions'],
     title: {
-      'EN': 'Responsible Use of Predictions: Risk, Uncertainty, and Healthy Habits',
-      '中文': '负责任地使用预测：风险、不确定性和健康习惯',
-      '繁體': '負責任地使用預測：風險、不確定性和健康習慣',
-      'JA': '予測の責任ある使用：リスク、不確実性、健康的な習慣',
+      'EN': 'How to Think About Probability (Without Fooling Yourself)',
+      '中文': '如何正确理解概率（避免自我欺骗）',
+      '繁體': '如何正確理解機率（避免自我欺騙）',
+      'JA': '確率の正しい考え方（自分を騙さないために）',
     },
     excerpt: {
-      'EN': 'Predictions are probabilities, not guarantees. Learn how to interpret uncertainty, avoid overconfidence, and keep a healthy approach to sports analytics.',
-      '中文': '预测是概率，不是保证。了解如何解释不确定性、避免过度自信，以及保持对体育分析的健康态度。',
-      '繁體': '預測是機率，不是保證。了解如何解釋不確定性、避免過度自信，以及保持對體育分析的健康態度。',
-      'JA': '予測は確率であり、保証ではありません。不確実性の解釈方法、過信を避ける方法、スポーツ分析への健康的なアプローチを学びます。',
+      'EN': 'Probability predictions are tools for better thinking, not crystal balls. Learn to interpret AI-generated forecasts without falling into common cognitive traps.',
+      '中文': '概率预测是更好思考的工具，而非水晶球。学习如何解读AI生成的预测而不落入常见认知陷阱。',
+      '繁體': '機率預測是更好思考的工具，而非水晶球。學習如何解讀AI生成的預測而不落入常見認知陷阱。',
+      'JA': '確率予測は水晶玉ではなく、より良い思考のためのツールです。よくある認知の罠に陥らずにAI生成予測を解釈する方法を学びます。',
     },
     content: {
       'EN': `
-# Responsible Use of Predictions: Risk, Uncertainty, and Healthy Habits
+## What I Wish Someone Had Told Me Earlier
 
-A prediction is a probability statement—not a promise. Sports are noisy, and even strong forecasts will be wrong often. A responsible approach protects your mindset and keeps analytics useful.
+When I first started working with prediction models, I made a mistake that seems obvious in hindsight: I treated high-probability predictions like guarantees. A 75% forecast felt like "this will happen." And when it didn't, I'd question the entire model.
 
-> If you are under the legal age in your country, avoid betting activity. This page is about interpretation and healthy habits.
+It took a while to internalize that a 75% prediction is supposed to be wrong 25% of the time. That's not a flaw—that's literally what 75% means. Understanding this changed how I think about all probabilistic forecasts.
 
----
+## The Difference Between Probability and Certainty
 
-## 1) The Mindset Shift: From Certainty to Probability
+Here's the mental shift that helped me:
 
-Good prediction behavior looks like:
-- "This is more likely than that"
+**Old thinking**: "The model says 65% for Team A, so Team A will probably win."
 
-not
-- "This will happen"
+**Better thinking**: "If we saw 100 situations exactly like this, Team A would win around 65 times."
 
-A 60% event fails 40% of the time. That's normal.
+Neither framing is wrong exactly, but the second one reminds you that the other 35 outcomes are real possibilities, not just theoretical footnotes. Every match is one draw from a probability distribution, not a predetermined outcome.
 
----
+## The Cognitive Traps That Get Everyone
 
-## 2) Avoid the Most Common Mental Traps
+After years of working with predictions, I've watched smart people (including myself) fall into the same traps repeatedly:
 
-- **Outcome bias:** judging a forecast only by one result
-- **Overconfidence:** treating strong confidence as certainty
-- **Recency effect:** over-weighting the last match
-- **Narrative addiction:** believing stories more than signals
+**Outcome bias**: Judging a prediction entirely by whether it was "right" this time. A 60% prediction that doesn't happen isn't necessarily wrong—it might be perfectly calibrated. You need many predictions to evaluate quality.
 
----
+**The hot hand fallacy**: Thinking recent correct predictions mean the model is "on a roll." Predictions don't have momentum. Each one is independent.
 
-## 3) Use Predictions as a Learning Tool
+**Narrative seduction**: Finding a story to explain every outcome after the fact. "Of course they lost—their striker was tired." These post-hoc narratives feel satisfying but don't help you evaluate the prediction itself.
 
-A healthy approach:
-- track probabilities and outcomes
-- review patterns over time
-- focus on calibration (S12) rather than single wins/losses
+**Overconfidence in precision**: Treating 62.3% as meaningfully different from 61.8%. The difference is noise. Round to the nearest 5% in your head and you'll think more clearly.
 
----
+## How to Actually Use Predictions Well
 
-## 4) Keep Your Product Messaging Safe and Credible
+The approach that's worked for me:
 
-If you publish predictions content:
-- use "probability language"
-- add disclaimers
-- avoid absolute claims
+**Track everything over time**. A single prediction tells you almost nothing. A hundred predictions tell you whether the model is calibrated—whether 60% events really happen about 60% of the time.
 
-This increases trust, which helps SEO, brand reputation, and long-term retention.
+**Focus on the edges**. The most interesting predictions are the ones where the model strongly disagrees with consensus or where the probability is unusually high or low. These are the cases worth paying attention to.
 
----
+**Update your priors**. If you're consistently surprised by outcomes, ask why. Maybe you're overweighting certain factors, or maybe the model is capturing something you're missing.
 
-## Quick Recap
+**Accept variance**. Even a perfectly calibrated model will have runs of "wrong" predictions. Three incorrect 70% forecasts in a row is not that unlikely (about 2.7% chance). Variance is part of probability, not evidence of model failure.
 
-1. Uncertainty is normal
-2. Long-run reliability matters more than single-match emotion
-3. Keep probability language consistent
+## Why This Matters Beyond Football
 
----
+Thinking clearly about probability is a life skill, not just a sports analytics skill. Weather forecasts, medical diagnoses, business projections—they all involve the same kind of probabilistic reasoning. Getting better at interpreting one domain helps with all of them.
 
-## FAQ
+The goal isn't to be right about every prediction. The goal is to be well-calibrated: to have your confidence levels match actual outcomes over time. A forecaster who says "70% confident" and is right 70% of the time is doing their job perfectly—even though they're wrong 30% of the time.
 
-### Are predictions guaranteed?
-No—predictions describe likelihood, not certainty.
+## My Current Framework
 
-### What's the healthiest way to use predictions?
-Treat them as learning signals and evaluate over time.
+After a lot of trial and error, here's how I approach predictions now:
 
-### Why talk about calibration?
-Because it checks whether probabilities are honest in the long run.
+1. Look at the probability, not just the most likely outcome
+2. Remember that "unlikely" things happen—that's why they're called unlikely, not impossible
+3. Evaluate performance over samples, not individual cases
+4. Be skeptical of explanations that only emerge after the outcome is known
+5. Embrace uncertainty as information, not failure
+
+Probability thinking takes practice. But once it clicks, you'll never look at forecasts the same way again.
+
+*OddsFlow provides AI-powered sports analysis for educational and informational purposes.*
       `,
       '中文': `
-# 负责任地使用预测：风险、不确定性和健康习惯
+## 我希望早点知道的事
 
-预测是概率陈述——不是承诺。体育是嘈杂的，即使强有力的预测也经常会错误。负责任的方法保护你的心态并保持分析的有用性。
+当我刚开始使用预测模型时，我犯了一个事后看来很明显的错误：我把高概率预测当作保证。75%的预测感觉就像"这会发生"。当它没发生时，我会质疑整个模型。
 
-> 如果你在你的国家未达法定年龄，请避免博彩活动。本页是关于解释和健康习惯。
+我花了一段时间才真正理解，75%的预测应该有25%的时间是错误的。这不是缺陷——这就是75%的字面意思。理解这一点改变了我对所有概率预测的看法。
 
----
+## 概率与确定性的区别
 
-## 1) 心态转变：从确定性到概率
+帮助我的心态转变是这样的：
 
-良好的预测行为看起来像：
-- "这比那更有可能"
+**旧思维**："模型说A队65%，所以A队可能会赢。"
 
-而不是
-- "这会发生"
+**更好的思维**："如果我们看到100个完全相同的情况，A队大约会赢65次。"
 
-60%的事件有40%的时间失败。这是正常的。
+两种框架都不完全错误，但第二种提醒你，其他35个结果是真实的可能性，而不只是理论上的脚注。每场比赛都是从概率分布中抽取的一次，而不是预先确定的结果。
 
----
+## 每个人都会陷入的认知陷阱
 
-## 2) 避免最常见的心理陷阱
+多年来与预测打交道，我看到聪明人（包括我自己）反复陷入同样的陷阱：
 
-- **结果偏差：** 仅通过一个结果来判断预测
-- **过度自信：** 将强烈的信心视为确定性
-- **近因效应：** 过度权重最后一场比赛
-- **叙事成瘾：** 相信故事多于信号
+**结果偏差**：完全根据这次预测是否"正确"来判断。60%的预测没有发生并不一定是错误的——它可能校准得很好。你需要很多预测才能评估质量。
 
----
+**热手谬误**：认为最近的正确预测意味着模型"状态火热"。预测没有动量。每一个都是独立的。
 
-## 3) 将预测用作学习工具
+**叙事诱惑**：事后为每个结果找一个故事。"当然他们输了——他们的前锋累了。"这些事后叙事感觉令人满足，但对评估预测本身没有帮助。
 
-健康的方法：
-- 跟踪概率和结果
-- 随时间审查模式
-- 关注校准（S12）而不是单个输赢
+**对精度过度自信**：把62.3%当作与61.8%有意义地不同。这个差异是噪音。在脑海中四舍五入到最近的5%，你会思考得更清楚。
 
----
+## 如何真正用好预测
 
-## 4) 保持你的产品信息安全和可信
+对我有效的方法：
 
-如果你发布预测内容：
-- 使用"概率语言"
-- 添加免责声明
-- 避免绝对声明
+**长期跟踪一切**。单个预测几乎什么都不能告诉你。一百个预测能告诉你模型是否校准良好——60%的事件是否真的发生了大约60%的时间。
 
-这增加了信任，有助于SEO、品牌声誉和长期留存。
+**关注边缘情况**。最有趣的预测是模型与共识强烈不同的预测，或者概率异常高或低的预测。这些是值得关注的情况。
 
----
+**更新你的先验**。如果你经常对结果感到惊讶，问问为什么。也许你过度重视某些因素，或者模型捕捉到了你遗漏的东西。
 
-## 快速回顾
+**接受方差**。即使是完美校准的模型也会有连续"错误"预测的情况。三个70%的预测连续错误并不罕见（大约2.7%的概率）。方差是概率的一部分，不是模型失败的证据。
 
-1. 不确定性是正常的
-2. 长期可靠性比单场情绪更重要
-3. 保持概率语言一致
+## 为什么这超越了足球
 
----
+清晰地思考概率是一种生活技能，而不仅仅是体育分析技能。天气预报、医学诊断、商业预测——它们都涉及同样的概率推理。在一个领域变得更好有助于所有领域。
 
-## 常见问题
+目标不是每个预测都正确。目标是校准良好：让你的信心水平随时间与实际结果相匹配。一个说"70%有信心"并且70%的时间正确的预测者做得很完美——即使他们30%的时间是错的。
 
-### 预测有保证吗？
-不——预测描述的是可能性，而不是确定性。
+## 我现在的框架
 
-### 使用预测最健康的方式是什么？
-将它们视为学习信号并随时间评估。
+经过大量的试错，这是我现在处理预测的方式：
 
-### 为什么谈论校准？
-因为它检查概率在长期内是否诚实。
+1. 看概率，不仅仅是最可能的结果
+2. 记住"不太可能"的事情会发生——这就是为什么它们叫不太可能，而不是不可能
+3. 在样本上评估表现，而不是个别案例
+4. 对只有在知道结果后才出现的解释持怀疑态度
+5. 把不确定性当作信息，而不是失败
+
+概率思维需要练习。但一旦领悟，你看预测的方式将永远改变。
+
+*OddsFlow 提供 AI 驱动的体育分析，仅供教育和信息参考。*
       `,
       '繁體': `
-# 負責任地使用預測：風險、不確定性和健康習慣
+## 我希望早點知道的事
 
-預測是機率陳述——不是承諾。體育是嘈雜的，即使強有力的預測也經常會錯誤。負責任的方法保護你的心態並保持分析的有用性。
+當我剛開始使用預測模型時，我犯了一個事後看來很明顯的錯誤：我把高機率預測當作保證。75%的預測感覺就像「這會發生」。當它沒發生時，我會質疑整個模型。
 
-> 如果你在你的國家未達法定年齡，請避免博彩活動。本頁是關於解釋和健康習慣。
+我花了一段時間才真正理解，75%的預測應該有25%的時間是錯誤的。這不是缺陷——這就是75%的字面意思。理解這一點改變了我對所有機率預測的看法。
 
----
+## 機率與確定性的區別
 
-## 1) 心態轉變：從確定性到機率
+幫助我的心態轉變是這樣的：
 
-良好的預測行為看起來像：
-- 「這比那更有可能」
+**舊思維**：「模型說A隊65%，所以A隊可能會贏。」
 
-而不是
-- 「這會發生」
+**更好的思維**：「如果我們看到100個完全相同的情況，A隊大約會贏65次。」
 
-60%的事件有40%的時間失敗。這是正常的。
+兩種框架都不完全錯誤，但第二種提醒你，其他35個結果是真實的可能性，而不只是理論上的腳註。每場比賽都是從機率分佈中抽取的一次，而不是預先確定的結果。
 
----
+## 每個人都會陷入的認知陷阱
 
-## 2) 避免最常見的心理陷阱
+多年來與預測打交道，我看到聰明人（包括我自己）反覆陷入同樣的陷阱：
 
-- **結果偏差：** 僅通過一個結果來判斷預測
-- **過度自信：** 將強烈的信心視為確定性
-- **近因效應：** 過度權重最後一場比賽
-- **敘事成癮：** 相信故事多於信號
+**結果偏差**：完全根據這次預測是否「正確」來判斷。60%的預測沒有發生並不一定是錯誤的——它可能校準得很好。你需要很多預測才能評估質量。
 
----
+**熱手謬誤**：認為最近的正確預測意味著模型「狀態火熱」。預測沒有動量。每一個都是獨立的。
 
-## 3) 將預測用作學習工具
+**敘事誘惑**：事後為每個結果找一個故事。「當然他們輸了——他們的前鋒累了。」這些事後敘事感覺令人滿足，但對評估預測本身沒有幫助。
 
-健康的方法：
-- 追蹤機率和結果
-- 隨時間審查模式
-- 關注校準（S12）而不是單個輸贏
+**對精度過度自信**：把62.3%當作與61.8%有意義地不同。這個差異是雜訊。在腦海中四捨五入到最近的5%，你會思考得更清楚。
 
----
+## 如何真正用好預測
 
-## 4) 保持你的產品資訊安全和可信
+對我有效的方法：
 
-如果你發佈預測內容：
-- 使用「機率語言」
-- 添加免責聲明
-- 避免絕對聲明
+**長期追蹤一切**。單個預測幾乎什麼都不能告訴你。一百個預測能告訴你模型是否校準良好——60%的事件是否真的發生了大約60%的時間。
 
-這增加了信任，有助於SEO、品牌聲譽和長期留存。
+**關注邊緣情況**。最有趣的預測是模型與共識強烈不同的預測，或者機率異常高或低的預測。這些是值得關注的情況。
 
----
+**更新你的先驗**。如果你經常對結果感到驚訝，問問為什麼。也許你過度重視某些因素，或者模型捕捉到了你遺漏的東西。
 
-## 快速回顧
+**接受變異**。即使是完美校準的模型也會有連續「錯誤」預測的情況。三個70%的預測連續錯誤並不罕見（大約2.7%的機率）。變異是機率的一部分，不是模型失敗的證據。
 
-1. 不確定性是正常的
-2. 長期可靠性比單場情緒更重要
-3. 保持機率語言一致
+## 為什麼這超越了足球
 
----
+清晰地思考機率是一種生活技能，而不僅僅是體育分析技能。天氣預報、醫學診斷、商業預測——它們都涉及同樣的機率推理。在一個領域變得更好有助於所有領域。
 
-## 常見問題
+目標不是每個預測都正確。目標是校準良好：讓你的信心水平隨時間與實際結果相匹配。一個說「70%有信心」並且70%的時間正確的預測者做得很完美——即使他們30%的時間是錯的。
 
-### 預測有保證嗎？
-不——預測描述的是可能性，而不是確定性。
+## 我現在的框架
 
-### 使用預測最健康的方式是什麼？
-將它們視為學習信號並隨時間評估。
+經過大量的試錯，這是我現在處理預測的方式：
 
-### 為什麼談論校準？
-因為它檢查機率在長期內是否誠實。
+1. 看機率，不僅僅是最可能的結果
+2. 記住「不太可能」的事情會發生——這就是為什麼它們叫不太可能，而不是不可能
+3. 在樣本上評估表現，而不是個別案例
+4. 對只有在知道結果後才出現的解釋持懷疑態度
+5. 把不確定性當作資訊，而不是失敗
+
+機率思維需要練習。但一旦領悟，你看預測的方式將永遠改變。
+
+*OddsFlow 提供 AI 驅動的體育分析，僅供教育和資訊參考。*
       `,
       'JA': `
-# 予測の責任ある使用：リスク、不確実性、健康的な習慣
+## もっと早く知りたかったこと
 
-予測は確率の声明であり、約束ではありません。スポーツはノイズが多く、強力な予測でさえ頻繁に間違います。責任あるアプローチは、マインドセットを保護し、分析を有用に保ちます。
+予測モデルを使い始めたとき、今思えば明らかな間違いを犯しました：高確率の予測を保証のように扱っていたのです。75%の予測は「これは起こる」と感じました。そして起こらなかったとき、モデル全体を疑問視しました。
 
-> あなたの国で法定年齢未満の場合は、賭博活動を避けてください。このページは解釈と健康的な習慣についてです。
+75%の予測は25%の確率で外れるものだと内在化するのに時間がかかりました。それは欠陥ではありません——それが文字通り75%の意味です。これを理解したことで、すべての確率予測に対する考え方が変わりました。
 
----
+## 確率と確実性の違い
 
-## 1) マインドセットの転換：確実性から確率へ
+私を助けた思考の転換はこうです：
 
-良い予測行動は次のように見えます：
-- 「これはあれより可能性が高い」
+**古い考え方**：「モデルはAチーム65%と言っているから、Aチームが勝つだろう。」
 
-ではなく
-- 「これは起こる」
+**より良い考え方**：「これとまったく同じ状況を100回見たら、Aチームは約65回勝つだろう。」
 
-60%のイベントは40%の確率で失敗します。それは普通です。
+どちらのフレーミングも完全に間違いではありませんが、2番目は他の35の結果が理論上の脚注ではなく、現実の可能性であることを思い出させてくれます。すべての試合は確率分布からの1回の抽出であり、あらかじめ決まった結果ではありません。
 
----
+## 誰もが陥る認知の罠
 
-## 2) 最も一般的なメンタルトラップを避ける
+何年も予測に携わってきて、賢い人々（自分を含め）が同じ罠に繰り返し陥るのを見てきました：
 
-- **結果バイアス：** 1つの結果だけで予測を判断する
-- **過信：** 強い信頼を確実性として扱う
-- **近因効果：** 最後の試合を過度に重み付けする
-- **物語への依存：** シグナルよりも物語を信じる
+**結果バイアス**：今回「正しかった」かどうかだけで予測を判断すること。60%の予測が起こらなくても、必ずしも間違いではありません——完璧にキャリブレーションされている可能性があります。品質を評価するには多くの予測が必要です。
 
----
+**ホットハンドの誤謬**：最近の正しい予測がモデルが「好調」であることを意味すると考えること。予測には勢いがありません。それぞれが独立しています。
 
-## 3) 予測を学習ツールとして使用する
+**物語の誘惑**：事後にすべての結果を説明する物語を見つけること。「もちろん負けた——ストライカーが疲れていた。」これらの事後的な物語は満足感がありますが、予測自体の評価には役立ちません。
 
-健康的なアプローチ：
-- 確率と結果を追跡する
-- 時間の経過とともにパターンをレビューする
-- 単一の勝ち負けではなく、キャリブレーション（S12）に焦点を当てる
+**精度への過信**：62.3%を61.8%と意味のある違いがあるかのように扱うこと。その違いはノイズです。頭の中で5%単位に丸めれば、より明確に考えられます。
 
----
+## 予測を実際にうまく使う方法
 
-## 4) 製品メッセージを安全で信頼できるものにする
+私にとって効果的だったアプローチ：
 
-予測コンテンツを公開する場合：
-- 「確率言語」を使用する
-- 免責事項を追加する
-- 絶対的な主張を避ける
+**すべてを長期的に追跡する**。単一の予測はほとんど何も教えてくれません。100の予測は、モデルがキャリブレーションされているかどうか——60%のイベントが実際に約60%の確率で起こるかどうか——を教えてくれます。
 
-これは信頼を高め、SEO、ブランドの評判、長期的なリテンションに役立ちます。
+**エッジに注目する**。最も興味深い予測は、モデルがコンセンサスと強く異なるもの、または確率が異常に高いか低いものです。これらが注目すべきケースです。
 
----
+**事前確率を更新する**。結果に常に驚かされるなら、なぜかを問いかけてください。特定の要因を過大評価しているかもしれませんし、モデルがあなたが見逃しているものを捉えているかもしれません。
 
-## クイックリキャップ
+**分散を受け入れる**。完璧にキャリブレーションされたモデルでも、「間違った」予測が連続することがあります。70%の予測が3回連続で外れることはそれほど珍しくありません（約2.7%の確率）。分散は確率の一部であり、モデル失敗の証拠ではありません。
 
-1. 不確実性は普通
-2. 長期的な信頼性は単一試合の感情より重要
-3. 確率言語を一貫して保つ
+## なぜこれがサッカーを超えて重要なのか
 
----
+確率について明確に考えることは、スポーツ分析スキルだけでなく、人生のスキルです。天気予報、医療診断、ビジネス予測——すべて同じ種類の確率的推論を伴います。1つの領域で上達すれば、すべてに役立ちます。
 
-## FAQ
+目標はすべての予測で正しいことではありません。目標は良くキャリブレーションされていること：時間の経過とともに信頼度レベルが実際の結果と一致することです。「70%の自信」と言って70%の確率で正しい予測者は、30%の確率で間違っていても、完璧に仕事をしています。
 
-### 予測は保証されていますか？
-いいえ—予測は可能性を説明するものであり、確実性ではありません。
+## 現在のフレームワーク
 
-### 予測を使用する最も健康的な方法は？
-学習シグナルとして扱い、時間の経過とともに評価します。
+多くの試行錯誤を経て、今の予測へのアプローチはこうです：
 
-### なぜキャリブレーションについて話すのですか？
-確率が長期的に正直かどうかをチェックするからです。
+1. 最も可能性の高い結果だけでなく、確率を見る
+2. 「ありそうにない」ことは起こることを覚えておく——だからこそ「不可能」ではなく「ありそうにない」と呼ばれる
+3. 個別のケースではなく、サンプル全体でパフォーマンスを評価する
+4. 結果がわかった後にのみ現れる説明には懐疑的になる
+5. 不確実性を失敗ではなく情報として受け入れる
+
+確率思考には練習が必要です。しかし一度理解すれば、予測の見方は二度と同じではなくなります。
+
+*OddsFlowは教育および情報提供を目的としたAI駆動のスポーツ分析を提供しています。*
       `,
     },
   },

@@ -807,6 +807,21 @@ export default function PerformancePage() {
       ? allBetRecords
       : allBetRecords.filter(r => r.bet_style?.toLowerCase() === chartBetStyle.toLowerCase());
 
+    // Debug: Check what's being filtered
+    if (chartBetStyle !== 'all') {
+      console.log(`[Chart Debug] chartBetStyle: "${chartBetStyle}"`);
+      console.log(`[Chart Debug] filtered records count: ${filtered.length}`);
+      if (filtered.length > 0) {
+        console.log(`[Chart Debug] Sample record bet_style: "${filtered[0]?.bet_style}"`);
+        console.log(`[Chart Debug] Sample record bet_time: "${filtered[0]?.bet_time}"`);
+        const validDateRecords = filtered.filter(r => r.bet_time && !isNaN(new Date(r.bet_time).getTime()));
+        console.log(`[Chart Debug] Records with valid bet_time: ${validDateRecords.length}`);
+      }
+      // Check unique bet_styles in allBetRecords
+      const uniqueStyles = [...new Set(allBetRecords.map(r => r.bet_style))];
+      console.log(`[Chart Debug] Unique bet_styles in data:`, uniqueStyles);
+    }
+
     let profitMoneyline = 0;
     let profitHandicap = 0;
     let profitOU = 0;
