@@ -2282,7 +2282,7 @@ function AIPredictionsSection() {
 
         // Fetch 1x2 predictions for these matches (from predictions_match table)
         if (matchesData && matchesData.length > 0) {
-          const fixtureIds = matchesData.map(m => m.fixture_id);
+          const fixtureIds = matchesData.map((m: Prematch) => m.fixture_id);
           const { data: predictionsData } = await supabase
             .from('predictions_match')
             .select('fixture_id, prob_home, prob_draw, prob_away')
