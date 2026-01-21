@@ -240,3 +240,103 @@ export const getLeaguePlayersData = unstable_cache(
   ['league-players'],
   { revalidate: 300 } // 5 minutes
 );
+
+// Player detail data type (full stats for individual player page)
+export interface PlayerDetailData {
+  id: number;
+  player_id: number | null;
+  player_name: string | null;
+  firstname: string | null;
+  lastname: string | null;
+  photo: string | null;
+  age: number | null;
+  birth_date: string | null;
+  birth_country: string | null;
+  nationality: string | null;
+  height: string | null;
+  weight: string | null;
+  injured: boolean | null;
+  position: string | null;
+  number: number | null;
+  captain: boolean | null;
+  rating: number | null;
+  team_id: number | null;
+  team_name: string | null;
+  team_logo: string | null;
+  league_id: number | null;
+  league_name: string | null;
+  league_logo: string | null;
+  season: number | null;
+  appearances: number | null;
+  lineups: number | null;
+  minutes: number | null;
+  goals_total: number | null;
+  conceded: number | null;
+  assists: number | null;
+  shots_total: number | null;
+  shots_on: number | null;
+  passes_total: number | null;
+  passes_key: number | null;
+  tackles_total: number | null;
+  interceptions: number | null;
+  duels_total: number | null;
+  duels_won: number | null;
+  fouls_drawn: number | null;
+  fouls_committed: number | null;
+  cards_yellow: number | null;
+  cards_red: number | null;
+  penalty_scored: number | null;
+  penalty_missed: number | null;
+}
+
+// Fetch player by ID (server-side)
+async function fetchPlayerById(playerId: number): Promise<PlayerDetailData | null> {
+  if (!supabase) return null;
+
+  try {
+    const { data, error } = await supabase
+      .from('player_stats')
+      .select('*')
+      .eq('id', playerId)
+      .single();
+
+    if (error || !data) return null;
+    return data as PlayerDetailData;
+  } catch {
+    return null;
+  }
+}
+
+// Cached player data fetcher (5 minute cache)
+export const getPlayerData = unstable_cache(
+  async (playerId: number) => {
+    return await fetchPlayerById(playerId);
+  },
+  ['player-detail'],
+  { revalidate: 300 } // 5 minutes
+);
+
+// Convert player name to URL slug (e.g., "Harry Kane" -> "harry-kane")
+export function playerNameToSlug(name: string | null): string {
+  if (!name) return '';
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single
+    .trim();
+}
+
+// Extract player ID from URL segment (supports both "3049" and "harry-kane-3049")
+export function extractPlayerIdFromSlug(slug: string): number | null {
+  // Try to extract ID from end of slug (e.g., "harry-kane-3049" -> 3049)
+  const match = slug.match(/(\d+)$/);
+  if (match) {
+    return parseInt(match[1], 10);
+  }
+  // If the entire slug is a number, use it directly
+  if (/^\d+$/.test(slug)) {
+    return parseInt(slug, 10);
+  }
+  return null;
+}

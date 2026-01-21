@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { supabase, TeamStatistics, PlayerStats, getTeamStatsByName, getPlayerStatsByTeam } from '@/lib/supabase';
+import { playerNameToSlug } from '@/lib/team-data';
 import { User } from '@supabase/supabase-js';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
@@ -1552,7 +1553,7 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
                               </td>
                               <td className="text-center py-3 px-3">
                                 <Link
-                                  href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
+                                  href={localePath(`/leagues/${leagueSlug}/player/${playerNameToSlug(player.player_name)}-${player.id}`)}
                                   className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors border border-emerald-500/20"
                                 >
                                   {t('viewProfile')}
@@ -1646,7 +1647,7 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
                           {/* Row 3: View Profile */}
                           <div className="flex justify-end pt-3">
                             <Link
-                              href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
+                              href={localePath(`/leagues/${leagueSlug}/player/${playerNameToSlug(player.player_name)}-${player.id}`)}
                               className="px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors border border-emerald-500/20"
                             >
                               {t('viewProfile')}

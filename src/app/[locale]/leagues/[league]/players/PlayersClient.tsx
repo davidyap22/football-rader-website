@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
-import { LeaguePlayerData } from "@/lib/team-data";
+import { LeaguePlayerData, playerNameToSlug } from "@/lib/team-data";
 import { locales, localeNames, localeToTranslationCode, type Locale } from "@/i18n/config";
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 
@@ -240,7 +240,7 @@ function TopPlayerCard({
 }) {
   return (
     <Link
-      href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
+      href={localePath(`/leagues/${leagueSlug}/player/${playerNameToSlug(player.player_name)}-${player.id}`)}
       className="group flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-gray-900/80 to-gray-800/50 border border-white/10 hover:border-emerald-500/30 transition-all"
     >
       <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-sm">
@@ -687,7 +687,7 @@ export default function PlayersClient({
                 return (
                   <Link
                     key={player.id}
-                    href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
+                    href={localePath(`/leagues/${leagueSlug}/player/${playerNameToSlug(player.player_name)}-${player.id}`)}
                     className={`group relative p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/50 border transition-all hover:shadow-lg overflow-hidden ${
                       isTop5
                         ? "border-amber-500/50 hover:border-amber-400/70 hover:shadow-amber-500/20"

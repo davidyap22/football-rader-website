@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { supabase, TeamStatistics, getTeamStatisticsByLeague, PlayerStats, getPlayerStatsByTeam, Coach, getCoachesByTeamIds } from '@/lib/supabase';
+import { playerNameToSlug } from '@/lib/team-data';
 import { User } from '@supabase/supabase-js';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
@@ -1835,7 +1836,7 @@ export default function LeagueDetailPage() {
                                                 </td>
                                                 <td className="text-center py-2.5 px-2">
                                                   <Link
-                                                    href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
+                                                    href={localePath(`/leagues/${leagueSlug}/player/${playerNameToSlug(player.player_name)}-${player.id}`)}
                                                     onClick={(e) => e.stopPropagation()}
                                                     className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/30 transition-colors"
                                                   >
@@ -1934,7 +1935,7 @@ export default function LeagueDetailPage() {
                                             {/* Row 3: View Profile */}
                                             <div className="flex justify-end">
                                               <Link
-                                                href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
+                                                href={localePath(`/leagues/${leagueSlug}/player/${playerNameToSlug(player.player_name)}-${player.id}`)}
                                                 onClick={(e) => e.stopPropagation()}
                                                 className="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/30 transition-colors"
                                               >
