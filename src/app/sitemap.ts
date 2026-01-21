@@ -59,17 +59,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
-  // Blog posts
+  // Blog posts - must match actual blog post IDs in /blog/[id]/page.tsx
   const blogSlugs = [
-    'getting-started-oddsflow',
-    'understanding-odds-formats',
-    'bankroll-management',
-    'ai-prediction-accuracy',
-    'premier-league-analysis',
-    'home-advantage-myth',
-    'new-features-jan-2026',
-    'fifa-world-cup-2026',
-    'community-features',
+    'how-to-interpret-football-odds',
+    'what-are-football-odds',
+    'decimal-vs-fractional-vs-american-odds',
+    'implied-probability-explained',
+    'how-bookmakers-calculate-margins',
+    'asian-handicap-betting-guide',
+    'over-under-totals-betting-guide',
+    'match-result-1x2-betting-explained',
+    'why-football-odds-move',
+    'sharp-vs-public-money-betting',
+    'steam-moves-in-football-betting',
+    'how-ai-predicts-football-matches',
+    'evaluating-ai-football-prediction-models',
+    'ai-vs-human-tipsters-comparison',
+    'how-to-use-oddsflow-ai-predictions',
+    'responsible-football-betting-guide',
+    'asian-handicap-explained',
+    'over-under-goals-explained',
+    'btts-odds-explained',
+    'opening-vs-closing-odds',
+    'odds-movement-drift-steam',
+    'bookmaker-consensus-odds',
+    'oddsflow-odds-to-features',
+    'accuracy-vs-calibration-football-predictions',
+    'backtesting-football-models',
+    'beyond-odds-football-features',
+    'responsible-use-of-predictions',
   ];
 
   const blogPosts: MetadataRoute.Sitemap = [];
