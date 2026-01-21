@@ -181,6 +181,7 @@ export interface LeaguePlayerData {
   player_name: string | null;
   photo: string | null;
   team_name: string | null;
+  team_logo: string | null;
   position: string | null;
   nationality: string | null;
   age: number | null;
