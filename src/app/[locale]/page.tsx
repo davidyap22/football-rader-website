@@ -67,6 +67,7 @@ const translations: Record<string, Record<string, string>> = {
     todaysTopPicks: "Today's Top Picks",
     predictionsSubtitle: "AI-analyzed matches with the highest confidence scores",
     viewAllPredictions: "View All Predictions",
+    viewAnalysis: "View Analysis",
     // CTA
     readyToMake: "Ready to Make",
     smarterPredictions: "Smarter Predictions",
@@ -231,6 +232,7 @@ const translations: Record<string, Record<string, string>> = {
     todaysTopPicks: "今日精选",
     predictionsSubtitle: "AI 分析的最高置信度比赛",
     viewAllPredictions: "查看所有预测",
+    viewAnalysis: "查看分析",
     // CTA
     readyToMake: "准备好做出",
     smarterPredictions: "更明智的预测",
@@ -395,6 +397,7 @@ const translations: Record<string, Record<string, string>> = {
     todaysTopPicks: "今日精選",
     predictionsSubtitle: "AI 分析的最高置信度比賽",
     viewAllPredictions: "查看所有預測",
+    viewAnalysis: "查看分析",
     // CTA
     readyToMake: "準備好做出",
     smarterPredictions: "更明智的預測",
@@ -559,6 +562,7 @@ const translations: Record<string, Record<string, string>> = {
     todaysTopPicks: "Pilihan Teratas Hari Ini",
     predictionsSubtitle: "Pertandingan yang dianalisis AI dengan skor kepercayaan tertinggi",
     viewAllPredictions: "Lihat Semua Prediksi",
+    viewAnalysis: "Lihat Analisis",
     // CTA
     readyToMake: "Siap Membuat",
     smarterPredictions: "Prediksi Lebih Cerdas",
@@ -717,6 +721,7 @@ const translations: Record<string, Record<string, string>> = {
     todaysTopPicks: "Mejores Selecciones de Hoy",
     predictionsSubtitle: "Partidos analizados por IA con las puntuaciones de confianza más altas",
     viewAllPredictions: "Ver Todas las Predicciones",
+    viewAnalysis: "Ver Analisis",
     readyToMake: "¿Listo para Hacer",
     smarterPredictions: "Predicciones Más Inteligentes",
     ctaSubtitle: "Únase a miles de usuarios que confían en OddsFlow para su análisis de fútbol. Comience su prueba gratuita hoy — sin tarjeta de crédito.",
@@ -880,6 +885,7 @@ const translations: Record<string, Record<string, string>> = {
     todaysTopPicks: "Melhores Escolhas de Hoje",
     predictionsSubtitle: "Partidas analisadas por IA com as maiores pontuações de confiança",
     viewAllPredictions: "Ver Todas as Previsões",
+    viewAnalysis: "Ver Analise",
     readyToMake: "Pronto para Fazer",
     smarterPredictions: "Previsões Mais Inteligentes",
     ctaSubtitle: "Junte-se a milhares de usuários que confiam no OddsFlow para análise de futebol. Comece seu teste gratuito hoje — sem cartão de crédito.",
@@ -1043,6 +1049,7 @@ const translations: Record<string, Record<string, string>> = {
     todaysTopPicks: "今日のトップピック",
     predictionsSubtitle: "最高信頼度のAI分析試合",
     viewAllPredictions: "すべての予測を見る",
+    viewAnalysis: "分析を見る",
     readyToMake: "準備はできましたか？",
     smarterPredictions: "より賢い予測を",
     ctaSubtitle: "OddsFlowを信頼する数千のユーザーに参加。今すぐ無料トライアルを開始 — クレジットカード不要。",
@@ -1206,6 +1213,7 @@ const translations: Record<string, Record<string, string>> = {
     todaysTopPicks: "오늘의 추천",
     predictionsSubtitle: "가장 높은 신뢰도의 AI 분석 경기",
     viewAllPredictions: "모든 예측 보기",
+    viewAnalysis: "분석 보기",
     readyToMake: "준비되셨나요?",
     smarterPredictions: "더 스마트한 예측을",
     ctaSubtitle: "OddsFlow를 신뢰하는 수천 명의 사용자와 함께하세요. 오늘 무료 체험을 시작하세요 — 신용카드 불필요.",
@@ -1369,6 +1377,7 @@ const translations: Record<string, Record<string, string>> = {
     todaysTopPicks: "Heutige Top-Tipps",
     predictionsSubtitle: "KI-analysierte Spiele mit den höchsten Konfidenzwerten",
     viewAllPredictions: "Alle Vorhersagen ansehen",
+    viewAnalysis: "Analyse ansehen",
     readyToMake: "Bereit für",
     smarterPredictions: "Klügere Vorhersagen",
     ctaSubtitle: "Schließen Sie sich tausenden Nutzern an, die OddsFlow für ihre Fußballanalyse vertrauen. Starten Sie heute Ihre kostenlose Testversion — keine Kreditkarte erforderlich.",
@@ -1532,6 +1541,7 @@ const translations: Record<string, Record<string, string>> = {
     todaysTopPicks: "Meilleurs Choix du Jour",
     predictionsSubtitle: "Matchs analysés par l'IA avec les scores de confiance les plus élevés",
     viewAllPredictions: "Voir Toutes les Prédictions",
+    viewAnalysis: "Voir l'Analyse",
     readyToMake: "Prêt à Faire des",
     smarterPredictions: "Prédictions Plus Intelligentes",
     ctaSubtitle: "Rejoignez des milliers d'utilisateurs qui font confiance à OddsFlow pour leur analyse de football. Commencez votre essai gratuit aujourd'hui — sans carte de crédit.",
@@ -2489,15 +2499,23 @@ function AIPredictionsSection() {
                         </div>
 
                         {/* 1x2 Probabilities Row */}
-                        <div className="flex items-center justify-end gap-1.5">
-                          <span className="px-2 py-1 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                            {probs.home}%
-                          </span>
-                          <span className="px-2 py-1 rounded text-xs font-semibold bg-gray-700/50 text-gray-300 border border-gray-600/30">
-                            {probs.draw}%
-                          </span>
-                          <span className="px-2 py-1 rounded text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
-                            {probs.away}%
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5">
+                            <span className="px-2 py-1 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                              {probs.home}%
+                            </span>
+                            <span className="px-2 py-1 rounded text-xs font-semibold bg-gray-700/50 text-gray-300 border border-gray-600/30">
+                              {probs.draw}%
+                            </span>
+                            <span className="px-2 py-1 rounded text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+                              {probs.away}%
+                            </span>
+                          </div>
+                          <span className="text-emerald-400 text-xs font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                            {t('viewAnalysis')}
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
                           </span>
                         </div>
                       </div>
@@ -2575,6 +2593,11 @@ function AIPredictionsSection() {
                             </span>
                             <span className="px-2.5 py-1 rounded text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 group-hover:bg-cyan-500/30 transition-colors">
                               {probs.away}%
+                            </span>
+                            <span className="ml-2 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
                             </span>
                           </div>
                         </div>
