@@ -4,11 +4,8 @@ import { createContext, useContext, useState, useEffect, useCallback, useRef, Re
 import { usePathname, useSearchParams } from 'next/navigation';
 
 // Main menu routes that should trigger loading
-const MAIN_ROUTES = [
-  '/predictions',
-  '/leagues',
-  '/performance',
-];
+// Disabled - no loading screen for any routes
+const MAIN_ROUTES: string[] = [];
 
 // Loading images array - from public/loading/
 const LOADING_IMAGES = [

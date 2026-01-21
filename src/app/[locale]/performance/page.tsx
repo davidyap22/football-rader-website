@@ -790,7 +790,17 @@ export default function PerformancePage() {
   }, {} as Record<string, string>));
 
   // Helper to derive bet type from selection
-  const getBetTypeFromSelection = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
+  const getBetTypeFromRecord = (record: { type?: string | null; selection?: string | null }): 'moneyline' | 'handicap' | 'ou' => {
+    // Use the type column directly if available (most accurate)
+    if (record.type) {
+      const t = record.type.toLowerCase();
+      if (t.includes('1x2') || t.includes('moneyline') || t === 'home' || t === 'draw' || t === 'away') return 'moneyline';
+      if (t.includes('handicap') || t.includes('hdp') || t.includes('ah')) return 'handicap';
+      if (t.includes('over') || t.includes('under') || t.includes('o/u') || t.includes('ou') || t.includes('goal')) return 'ou';
+    }
+
+    // Fallback to selection-based inference
+    const selection = record.selection;
     if (!selection) return 'ou';
     const sel = selection.toLowerCase();
     // Handicap bets - check for HDP in selection (e.g., HOME_HDP_-0.75, AWAY_HDP_+0.5)
@@ -834,7 +844,7 @@ export default function PerformancePage() {
       totalProfit += profit;
       totalInvested += invested;
 
-      const betType = getBetTypeFromSelection(r.selection);
+      const betType = getBetTypeFromRecord(r);
       if (betType === 'moneyline') profitMoneyline += profit;
       else if (betType === 'handicap') profitHandicap += profit;
       else profitOU += profit;
@@ -856,7 +866,7 @@ export default function PerformancePage() {
     // Use index as x-axis key to ensure unique positions, store date for display
     const dailyData = sortedRecords.map((r, index) => {
       const profit = r.profit || 0;
-      const betType = getBetTypeFromSelection(r.selection);
+      const betType = getBetTypeFromRecord(r);
       cumulative += profit;
       if (betType === 'moneyline') cumulativeML += profit;
       else if (betType === 'handicap') cumulativeHDP += profit;
@@ -906,7 +916,7 @@ export default function PerformancePage() {
       const fixtureId = String(r.fixture_id);
       const profit = r.profit || 0;
       const invested = r.stake_money || 0;
-      const betType = getBetTypeFromSelection(r.selection);
+      const betType = getBetTypeFromRecord(r);
 
       if (!profitMap.has(fixtureId)) {
         profitMap.set(fixtureId, {
@@ -970,7 +980,7 @@ export default function PerformancePage() {
       while (hasMore) {
         const { data: pageData, error: pageError } = await supabase
           .from('profit_summary')
-          .select('fixture_id, total_profit, total_invested, roi_percentage, total_bets, profit_moneyline, profit_handicap, profit_ou, bet_time, bet_style, profit, selection, stake_money, clock, line, odds, home_score, away_score, status, league_name')
+          .select('fixture_id, total_profit, total_invested, roi_percentage, total_bets, profit_moneyline, profit_handicap, profit_ou, bet_time, bet_style, profit, selection, type, stake_money, clock, line, odds, home_score, away_score, status, league_name')
           .order('bet_time', { ascending: true })
           .range(page * pageSize, (page + 1) * pageSize - 1);
 
