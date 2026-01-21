@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useRef } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useParams, useRouter } from 'next/navigation';
 import { supabase, Prematch, MatchPrediction, getMatchPredictions } from '@/lib/supabase';
@@ -374,6 +374,8 @@ function PredictionsContent({
   // Start with loading=false if we have initial data (SSR)
   const [loading, setLoading] = useState(initialMatches.length === 0);
   const [isDateInitialized, setIsDateInitialized] = useState(initialMatches.length > 0);
+  // Track if we've already used SSR data (using ref to avoid re-render loop)
+  const hasUsedSSRDataRef = useRef(initialMatches.length > 0);
   const [dates] = useState(getDateRange);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -583,8 +585,21 @@ function PredictionsContent({
       }
     }
 
-    // Initial fetch
-    fetchMatches();
+    // Skip initial fetch if we have SSR data for the same date
+    // This prevents overwriting SSR data with potentially stale client data
+    const initialDateStr = initialDate ? initialDate : null;
+    const currentDateStr = formatDateForQuery(selectedDate);
+    const shouldSkipInitialFetch = hasUsedSSRDataRef.current && initialDateStr === currentDateStr;
+
+    if (!shouldSkipInitialFetch) {
+      // Initial fetch only if we don't have SSR data or date has changed
+      fetchMatches();
+    }
+
+    // Mark SSR data as used after first render
+    if (hasUsedSSRDataRef.current) {
+      hasUsedSSRDataRef.current = false;
+    }
 
     // Auto-refresh every 30 seconds for live match updates
     // This ensures live status and match minutes are updated automatically
@@ -593,7 +608,7 @@ function PredictionsContent({
     }, 30000); // 30 seconds
 
     return () => clearInterval(refreshInterval);
-  }, [selectedDate, isDateInitialized]);
+  }, [selectedDate, isDateInitialized, initialDate]);
 
   const formatTime = (dateStr: string) => {
     // The database stores Malaysia time (UTC+8)
