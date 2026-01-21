@@ -6,6 +6,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { LeaguePlayerData } from "@/lib/team-data";
+import { locales, localeNames, localeToTranslationCode, type Locale } from "@/i18n/config";
+import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 
 // Props interface
 interface PlayersClientProps {
@@ -17,9 +19,9 @@ interface PlayersClientProps {
   leagueSlug: string;
 }
 
-// Translations
+// Translations - use translation codes (EN, ES, 中文, etc.)
 const translations: Record<string, Record<string, string>> = {
-  en: {
+  EN: {
     home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "Performance",
     community: "Community", news: "News", solution: "Solution", pricing: "Pricing",
     login: "Login", getStarted: "Get Started", backToLeague: "Back to League",
@@ -31,7 +33,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Top Scorers", topAssistsTitle: "Top Assists", highestRated: "Highest Rated",
     viewProfile: "View Profile",
   },
-  'zh-CN': {
+  '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "表现",
     community: "社区", news: "新闻", solution: "解决方案", pricing: "定价",
     login: "登录", getStarted: "立即开始", backToLeague: "返回联赛",
@@ -43,7 +45,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "射手榜", topAssistsTitle: "助攻榜", highestRated: "评分最高",
     viewProfile: "查看详情",
   },
-  'zh-TW': {
+  '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "表現",
     community: "社區", news: "新聞", solution: "解決方案", pricing: "定價",
     login: "登入", getStarted: "立即開始", backToLeague: "返回聯賽",
@@ -55,7 +57,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "射手榜", topAssistsTitle: "助攻榜", highestRated: "評分最高",
     viewProfile: "查看詳情",
   },
-  id: {
+  ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa",
     community: "Komunitas", news: "Berita", solution: "Solusi", pricing: "Harga",
     login: "Masuk", getStarted: "Mulai", backToLeague: "Kembali ke Liga",
@@ -67,7 +69,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Top Skor", topAssistsTitle: "Top Assist", highestRated: "Rating Tertinggi",
     viewProfile: "Lihat Profil",
   },
-  es: {
+  ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento",
     community: "Comunidad", news: "Noticias", solution: "Solución", pricing: "Precios",
     login: "Iniciar", getStarted: "Empezar", backToLeague: "Volver a Liga",
@@ -79,7 +81,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Goleadores", topAssistsTitle: "Asistencias", highestRated: "Mejor Valorados",
     viewProfile: "Ver Perfil",
   },
-  pt: {
+  PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho",
     community: "Comunidade", news: "Notícias", solution: "Solução", pricing: "Preços",
     login: "Entrar", getStarted: "Começar", backToLeague: "Voltar à Liga",
@@ -91,7 +93,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Artilheiros", topAssistsTitle: "Assistências", highestRated: "Mais Bem Avaliados",
     viewProfile: "Ver Perfil",
   },
-  ja: {
+  JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "パフォーマンス",
     community: "コミュニティ", news: "ニュース", solution: "ソリューション", pricing: "料金",
     login: "ログイン", getStarted: "始める", backToLeague: "リーグに戻る",
@@ -103,7 +105,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "得点ランキング", topAssistsTitle: "アシストランキング", highestRated: "最高評価",
     viewProfile: "プロフィール",
   },
-  ko: {
+  KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "성과",
     community: "커뮤니티", news: "뉴스", solution: "솔루션", pricing: "가격",
     login: "로그인", getStarted: "시작하기", backToLeague: "리그로 돌아가기",
@@ -115,7 +117,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "득점 순위", topAssistsTitle: "어시스트 순위", highestRated: "최고 평점",
     viewProfile: "프로필 보기",
   },
-  de: {
+  DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "Leistung",
     community: "Community", news: "Nachrichten", solution: "Lösung", pricing: "Preise",
     login: "Anmelden", getStarted: "Loslegen", backToLeague: "Zurück zur Liga",
@@ -127,7 +129,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Torjäger", topAssistsTitle: "Vorlagengeber", highestRated: "Beste Bewertung",
     viewProfile: "Profil ansehen",
   },
-  fr: {
+  FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance",
     community: "Communauté", news: "Actualités", solution: "Solution", pricing: "Tarifs",
     login: "Connexion", getStarted: "Commencer", backToLeague: "Retour à la Ligue",
@@ -140,15 +142,6 @@ const translations: Record<string, Record<string, string>> = {
     viewProfile: "Voir le Profil",
   },
 };
-
-// Flag Icon Component
-function FlagIcon({ code, size = 20 }: { code: string; size?: number }) {
-  const flags: Record<string, string> = {
-    'en': '🇬🇧', 'zh-CN': '🇨🇳', 'zh-TW': '🇹🇼', 'id': '🇮🇩', 'es': '🇪🇸',
-    'pt': '🇧🇷', 'ja': '🇯🇵', 'ko': '🇰🇷', 'de': '🇩🇪', 'fr': '🇫🇷',
-  };
-  return <span style={{ fontSize: size }}>{flags[code] || '🌐'}</span>;
-}
 
 // Custom Premium Dropdown Component
 function PremiumDropdown({
@@ -227,12 +220,6 @@ function PremiumDropdown({
   );
 }
 
-const locales = ['en', 'zh-CN', 'zh-TW', 'id', 'es', 'pt', 'ja', 'ko', 'de', 'fr'];
-const localeNames: Record<string, string> = {
-  'en': 'EN', 'zh-CN': '中文', 'zh-TW': '繁體', 'id': 'ID', 'es': 'ES',
-  'pt': 'PT', 'ja': 'JA', 'ko': 'KO', 'de': 'DE', 'fr': 'FR',
-};
-
 // Top Player Card Component
 function TopPlayerCard({
   player,
@@ -293,10 +280,12 @@ export default function PlayersClient({
   leagueSlug,
 }: PlayersClientProps) {
   const params = useParams();
-  const locale = (params.locale as string) || 'en';
+  const locale = (params.locale as Locale) || 'en';
 
-  const t = (key: string): string => translations[locale]?.[key] || translations['en'][key] || key;
-  const currentLang = { code: localeNames[locale] || 'EN' };
+  // Get translation code (e.g., 'zh' -> '中文', 'tw' -> '繁體', 'en' -> 'EN')
+  const translationCode = localeToTranslationCode[locale] || 'EN';
+  const t = (key: string): string => translations[translationCode]?.[key] || translations['EN'][key] || key;
+  const currentLang = { code: translationCode };
 
   const localePath = (path: string): string => {
     if (locale === 'en') return path;
@@ -439,7 +428,7 @@ export default function PlayersClient({
                           onClick={() => setLangDropdownOpen(false)}
                         >
                           <FlagIcon code={loc} size={20} />
-                          <span>{localeNames[loc]}</span>
+                          <span>{localeNames[loc as Locale]}</span>
                         </Link>
                       ))}
                     </div>
