@@ -26,7 +26,8 @@ import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i1
 const translations: Record<string, Record<string, string>> = {
   EN: {
     performance: "AI Performance",
-    performanceSubtitle: "Transparent AI betting results with verified track record. Is AI betting profitable? See our safest AI football tips performance.",
+    performanceTitle: "AI Football Prediction Performance",
+    performanceSubtitle: "Verified Track Record & Real-Time ROI Analysis",
     totalProfit: "Total Profit",
     winRate: "Win Rate",
     totalBets: "Total Bets",
@@ -83,7 +84,8 @@ const translations: Record<string, Record<string, string>> = {
   },
   ES: {
     performance: "Rendimiento IA",
-    performanceSubtitle: "Rastrea la precisión de nuestras predicciones de IA en las principales ligas",
+    performanceTitle: "Rendimiento de Predicciones de Fútbol IA",
+    performanceSubtitle: "Historial Verificado y Análisis de ROI en Tiempo Real",
     totalProfit: "Ganancia Total",
     winRate: "Tasa de Acierto",
     totalBets: "Apuestas Totales",
@@ -140,7 +142,8 @@ const translations: Record<string, Record<string, string>> = {
   },
   PT: {
     performance: "Desempenho IA",
-    performanceSubtitle: "Acompanhe a precisão das nossas previsões de IA nas principais ligas",
+    performanceTitle: "Desempenho de Previsões de Futebol IA",
+    performanceSubtitle: "Histórico Verificado e Análise de ROI em Tempo Real",
     totalProfit: "Lucro Total",
     winRate: "Taxa de Acerto",
     totalBets: "Apostas Totais",
@@ -197,7 +200,8 @@ const translations: Record<string, Record<string, string>> = {
   },
   DE: {
     performance: "KI-Leistung",
-    performanceSubtitle: "Verfolgen Sie die Genauigkeit unserer KI-Vorhersagen in den großen Ligen",
+    performanceTitle: "KI-Fußballvorhersage Leistung",
+    performanceSubtitle: "Verifizierte Erfolgsbilanz & Echtzeit-ROI-Analyse",
     totalProfit: "Gesamtgewinn",
     winRate: "Gewinnrate",
     totalBets: "Gesamtwetten",
@@ -253,8 +257,9 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestutzte Vorhersagen nur zu Informations- und Unterhaltungszwecken. Es werden keine Gewinne garantiert. Bitte wetten Sie verantwortungsvoll.",
   },
   FR: {
-    performance: "AI Performance",
-    performanceSubtitle: "Suivez la précision de nos prédictions IA dans les grandes ligues",
+    performance: "Performance IA",
+    performanceTitle: "Performance des Prédictions Football IA",
+    performanceSubtitle: "Historique Vérifié et Analyse ROI en Temps Réel",
     totalProfit: "Profit Total",
     winRate: "Taux de Réussite",
     totalBets: "Paris Totaux",
@@ -310,8 +315,9 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "Avertissement : OddsFlow fournit des predictions basees sur l'IA a des fins d'information et de divertissement uniquement. Aucun profit n'est garanti. Veuillez parier de maniere responsable.",
   },
   JA: {
-    performance: "AI パフォーマンス",
-    performanceSubtitle: "主要リーグでのAI予測精度を追跡",
+    performance: "AI実績",
+    performanceTitle: "AIサッカー予測の実績",
+    performanceSubtitle: "検証済みトラックレコード＆リアルタイムROI分析",
     totalProfit: "総利益",
     winRate: "勝率",
     totalBets: "総ベット数",
@@ -368,7 +374,8 @@ const translations: Record<string, Record<string, string>> = {
   },
   KO: {
     performance: "AI 성과",
-    performanceSubtitle: "주요 리그에서 AI 예측 정확도 추적",
+    performanceTitle: "AI 축구 예측 성과",
+    performanceSubtitle: "검증된 실적 및 실시간 ROI 분석",
     totalProfit: "총 수익",
     winRate: "승률",
     totalBets: "총 베팅",
@@ -424,8 +431,9 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "면책조항: OddsFlow는 정보 및 엔터테인먼트 목적으로만 AI 기반 예측을 제공합니다. 수익을 보장하지 않습니다. 책임감 있게 베팅하세요.",
   },
   '中文': {
-    performance: "AI 表现",
-    performanceSubtitle: "追踪我们AI在主要联赛中的预测准确率",
+    performance: "AI表现",
+    performanceTitle: "AI足球预测表现",
+    performanceSubtitle: "经过验证的业绩记录与实时ROI分析",
     totalProfit: "总盈利",
     winRate: "胜率",
     totalBets: "总投注",
@@ -481,8 +489,9 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。我们不保证预测的准确性，也不对任何财务损失负责。博彩有风险，请理性投注。如果您或您认识的人有赌博问题，请寻求帮助。用户必须年满 18 岁。",
   },
   '繁體': {
-    performance: "AI 表現",
-    performanceSubtitle: "追蹤我們AI在主要聯賽中的預測準確率",
+    performance: "AI表現",
+    performanceTitle: "AI足球預測表現",
+    performanceSubtitle: "經過驗證的業績記錄與實時ROI分析",
     totalProfit: "總盈利",
     winRate: "勝率",
     totalBets: "總投注",
@@ -539,7 +548,8 @@ const translations: Record<string, Record<string, string>> = {
   },
   ID: {
     performance: "Performa AI",
-    performanceSubtitle: "Hasil taruhan AI transparan dengan rekam jejak terverifikasi. Apakah taruhan AI menguntungkan? Lihat performa tips sepak bola AI teraman kami.",
+    performanceTitle: "Performa Prediksi Sepak Bola AI",
+    performanceSubtitle: "Rekam Jejak Terverifikasi & Analisis ROI Real-Time",
     totalProfit: "Total Keuntungan",
     winRate: "Tingkat Kemenangan",
     totalBets: "Total Taruhan",
@@ -1827,7 +1837,7 @@ export default function PerformanceClient({
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">{t('performance')}</span>
+              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">{t('performanceTitle')}</span>
             </h1>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">{t('performanceSubtitle')}</p>
           </div>
@@ -2388,8 +2398,11 @@ export default function PerformanceClient({
                             </span>
                           </div>
 
-                          {/* Row 2: Teams & Score */}
-                          <div className="flex items-center justify-between mb-3">
+                          {/* Row 2: Teams & Score - Clickable link to match analysis */}
+                          <Link
+                            href={localePath(`/predictions/${match.fixture_id}`)}
+                            className="flex items-center justify-between mb-3 group/match hover:bg-white/5 -mx-2 px-2 py-1 rounded-lg transition-colors"
+                          >
                             <div className="flex-1 min-w-0 mr-3">
                               <div className="flex items-center gap-2 mb-1">
                                 <div className="w-6 h-6 rounded-full bg-white/10 p-0.5 flex items-center justify-center flex-shrink-0">
@@ -2399,7 +2412,7 @@ export default function PerformanceClient({
                                     <span className="text-[8px] font-bold text-white">{(match.home_name || 'H').substring(0, 2)}</span>
                                   )}
                                 </div>
-                                <span className="text-sm text-white font-medium truncate">{match.home_name}</span>
+                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{match.home_name}</span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <div className="w-6 h-6 rounded-full bg-white/10 p-0.5 flex items-center justify-center flex-shrink-0">
@@ -2409,14 +2422,14 @@ export default function PerformanceClient({
                                     <span className="text-[8px] font-bold text-white">{(match.away_name || 'A').substring(0, 2)}</span>
                                   )}
                                 </div>
-                                <span className="text-sm text-white font-medium truncate">{match.away_name}</span>
+                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{match.away_name}</span>
                               </div>
                             </div>
                             <div className="flex flex-col items-center">
                               <span className="text-lg font-bold text-white">{match.home_score}</span>
                               <span className="text-lg font-bold text-white">{match.away_score}</span>
                             </div>
-                          </div>
+                          </Link>
 
                           {/* Row 3: Profit breakdown */}
                           <div className="flex items-center justify-between gap-2 mb-2">
@@ -2495,8 +2508,11 @@ export default function PerformanceClient({
                             </>
                           )}
 
-                          {/* Match Info */}
-                          <div className="col-span-4 relative">
+                          {/* Match Info - Clickable link to match analysis */}
+                          <Link
+                            href={localePath(`/predictions/${match.fixture_id}`)}
+                            className="col-span-4 relative group/match"
+                          >
                             <div className="flex items-center gap-2 mb-1">
                               {match.league_logo && (
                                 <div className="w-4 h-4 rounded-sm bg-white/90 p-0.5 flex items-center justify-center flex-shrink-0">
@@ -2519,6 +2535,10 @@ export default function PerformanceClient({
                                 )}
                                 {dateInfo.text}
                               </span>
+                              {/* Link indicator */}
+                              <svg className="w-3 h-3 text-gray-500 group-hover/match:text-emerald-400 transition-colors ml-auto opacity-0 group-hover/match:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
                             </div>
                             <div className="flex items-center gap-3">
                               {/* Home Team */}
@@ -2530,7 +2550,7 @@ export default function PerformanceClient({
                                     <span className="text-[10px] font-bold text-white">{(match.home_name || 'H').substring(0, 2).toUpperCase()}</span>
                                   )}
                                 </div>
-                                <span className="text-sm text-white font-medium truncate">{match.home_name}</span>
+                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{match.home_name}</span>
                               </div>
                               <span className="text-gray-500 text-xs font-medium">vs</span>
                               {/* Away Team */}
@@ -2542,10 +2562,10 @@ export default function PerformanceClient({
                                     <span className="text-[10px] font-bold text-white">{(match.away_name || 'A').substring(0, 2).toUpperCase()}</span>
                                   )}
                                 </div>
-                                <span className="text-sm text-white font-medium truncate">{match.away_name}</span>
+                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{match.away_name}</span>
                               </div>
                             </div>
-                          </div>
+                          </Link>
 
                           {/* Score */}
                           <div className="col-span-2 text-center">

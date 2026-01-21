@@ -4,54 +4,104 @@ import { setRequestLocale } from 'next-intl/server';
 import { getInitialPerformanceData } from '@/lib/performance-data';
 import PerformanceClient from './PerformanceClient';
 import { locales, type Locale } from '@/i18n/config';
+import { PerformanceDatasetJsonLd } from '@/components/JsonLd';
 
 // Generate static params for all locales
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-// SEO Metadata
+// SEO Metadata - Optimized with year, keywords, and compelling copy
+const currentYear = new Date().getFullYear();
+
 const titles: Record<string, string> = {
-  en: "AI Betting Performance | Track Record & ROI | OddsFlow",
-  es: "Rendimiento de Apuestas IA | Historial y ROI | OddsFlow",
-  pt: "Desempenho de Apostas IA | Historial e ROI | OddsFlow",
-  de: "KI-Wetten Leistung | Erfolgsbilanz & ROI | OddsFlow",
-  fr: "Performance des Paris IA | Historique & ROI | OddsFlow",
-  ja: "AIベッティング実績 | トラックレコード＆ROI | OddsFlow",
-  ko: "AI 베팅 성과 | 실적 및 ROI | OddsFlow",
-  zh: "AI投注表现 | 业绩记录与ROI | OddsFlow",
-  tw: "AI投注表現 | 業績記錄與ROI | OddsFlow",
-  id: "Performa Taruhan AI | Rekam Jejak & ROI | OddsFlow",
+  en: `AI Football Prediction Performance & Track Record (${currentYear}) | OddsFlow`,
+  es: `Rendimiento de Predicciones de Fútbol IA y Historial (${currentYear}) | OddsFlow`,
+  pt: `Desempenho de Previsões de Futebol IA e Histórico (${currentYear}) | OddsFlow`,
+  de: `KI-Fußballvorhersage Leistung & Erfolgsbilanz (${currentYear}) | OddsFlow`,
+  fr: `Performance des Prédictions Football IA & Historique (${currentYear}) | OddsFlow`,
+  ja: `AIサッカー予測の実績とトラックレコード (${currentYear}) | OddsFlow`,
+  ko: `AI 축구 예측 성과 및 실적 (${currentYear}) | OddsFlow`,
+  zh: `AI足球预测表现与业绩记录 (${currentYear}) | OddsFlow`,
+  tw: `AI足球預測表現與業績記錄 (${currentYear}) | OddsFlow`,
+  id: `Performa Prediksi Sepak Bola AI & Rekam Jejak (${currentYear}) | OddsFlow`,
 };
 
-const descriptions: Record<string, string> = {
-  en: "Transparent AI betting results with verified track record. See total profit, win rate, and ROI across 1x2, handicap, and over/under markets. Is AI betting profitable?",
-  es: "Resultados transparentes de apuestas IA con historial verificado. Ve el beneficio total, tasa de acierto y ROI en mercados 1x2, handicap y over/under.",
-  pt: "Resultados transparentes de apostas IA com historial verificado. Veja lucro total, taxa de acerto e ROI nos mercados 1x2, handicap e over/under.",
-  de: "Transparente KI-Wettergebnisse mit verifizierter Erfolgsbilanz. Sehen Sie Gesamtgewinn, Gewinnrate und ROI in 1x2-, Handicap- und Over/Under-Märkten.",
-  fr: "Résultats transparents des paris IA avec historique vérifié. Consultez le profit total, le taux de réussite et le ROI sur les marchés 1x2, handicap et over/under.",
-  ja: "検証済みトラックレコードによる透明なAIベッティング結果。1x2、ハンディキャップ、オーバー/アンダー市場での総利益、勝率、ROIをご覧ください。",
-  ko: "검증된 실적을 통한 투명한 AI 베팅 결과. 1x2, 핸디캡, 오버/언더 시장에서의 총 수익, 승률, ROI를 확인하세요.",
-  zh: "透明的AI投注结果，具有经过验证的业绩记录。查看1x2、亚盘和大小球市场的总利润、胜率和ROI。",
-  tw: "透明的AI投注結果，具有經過驗證的業績記錄。查看1x2、亞盤和大小球市場的總利潤、勝率和ROI。",
-  id: "Hasil taruhan AI transparan dengan rekam jejak terverifikasi. Lihat total keuntungan, tingkat kemenangan, dan ROI di pasar 1x2, handicap, dan over/under.",
+// Dynamic descriptions will be generated in generateMetadata with actual stats
+const baseDescriptions: Record<string, string> = {
+  en: "View OddsFlow's verified AI football betting performance. Real-time track record with detailed ROI analysis for Premier League, La Liga, Bundesliga, Serie A, and Ligue 1.",
+  es: "Ve el rendimiento verificado de apuestas de fútbol IA de OddsFlow. Historial en tiempo real con análisis detallado de ROI para La Liga, Premier League, Bundesliga y más.",
+  pt: "Veja o desempenho verificado de apostas de futebol IA do OddsFlow. Histórico em tempo real com análise detalhada de ROI para Premier League, La Liga, Bundesliga e mais.",
+  de: "Sehen Sie die verifizierte KI-Fußballwetten-Leistung von OddsFlow. Echtzeit-Erfolgsbilanz mit detaillierter ROI-Analyse für Bundesliga, Premier League, La Liga und mehr.",
+  fr: "Consultez les performances vérifiées des paris football IA d'OddsFlow. Historique en temps réel avec analyse ROI détaillée pour Ligue 1, Premier League, La Liga et plus.",
+  ja: "OddsFlowの検証済みAIサッカーベッティング実績をご覧ください。プレミアリーグ、ラ・リーガ、ブンデスリーガなどの詳細なROI分析付きリアルタイムトラックレコード。",
+  ko: "OddsFlow의 검증된 AI 축구 베팅 성과를 확인하세요. 프리미어리그, 라리가, 분데스리가 등의 상세 ROI 분석이 포함된 실시간 실적.",
+  zh: "查看OddsFlow经过验证的AI足球投注表现。包含英超、西甲、德甲、意甲、法甲详细ROI分析的实时业绩记录。",
+  tw: "查看OddsFlow經過驗證的AI足球投注表現。包含英超、西甲、德甲、意甲、法甲詳細ROI分析的實時業績記錄。",
+  id: "Lihat performa taruhan sepak bola AI OddsFlow yang terverifikasi. Rekam jejak real-time dengan analisis ROI terperinci untuk Premier League, La Liga, Bundesliga, dan lainnya.",
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const baseUrl = 'https://www.oddsflow.ai';
 
+  // Fetch stats for dynamic description (cached)
+  const { getPerformanceStats } = await import('@/lib/performance-data');
+  const stats = await getPerformanceStats(null);
+
+  // Generate dynamic description with actual stats
+  let description = baseDescriptions[locale] || baseDescriptions.en;
+  if (stats && stats.win_rate > 0) {
+    const winRateStr = stats.win_rate.toFixed(1);
+    const profitStr = stats.total_profit > 0 ? `+$${stats.total_profit.toFixed(0)}` : `$${stats.total_profit.toFixed(0)}`;
+
+    // Prepend stats to description for English
+    if (locale === 'en') {
+      description = `${winRateStr}% win rate, ${profitStr} profit. ${description}`;
+    } else {
+      description = `${winRateStr}% | ${profitStr} | ${description}`;
+    }
+  }
+
   return {
     title: titles[locale] || titles.en,
-    description: descriptions[locale] || descriptions.en,
+    description,
+    keywords: [
+      'AI football predictions',
+      'football betting performance',
+      'AI betting track record',
+      'football prediction accuracy',
+      'betting ROI analysis',
+      'Premier League predictions',
+      'La Liga predictions',
+      'Bundesliga predictions',
+      'Serie A predictions',
+      'Ligue 1 predictions',
+      'verified betting results',
+      'AI sports betting',
+    ],
     alternates: {
       canonical: locale === 'en' ? `${baseUrl}/performance` : `${baseUrl}/${locale}/performance`,
     },
     openGraph: {
       title: titles[locale] || titles.en,
-      description: descriptions[locale] || descriptions.en,
+      description,
       type: 'website',
       url: locale === 'en' ? `${baseUrl}/performance` : `${baseUrl}/${locale}/performance`,
+      images: [
+        {
+          url: '/homepage/OddsFlow Logo2.png',
+          width: 1200,
+          height: 630,
+          alt: 'OddsFlow AI Football Prediction Performance',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: titles[locale] || titles.en,
+      description,
+      images: ['/homepage/OddsFlow Logo2.png'],
     },
   };
 }
@@ -104,14 +154,25 @@ export default async function PerformancePage({ params }: { params: Promise<{ lo
   }));
 
   return (
-    <Suspense fallback={<LoadingFallback />}>
-      <PerformanceClient
-        locale={locale}
-        initialStats={initialData.stats}
-        initialChartData={initialData.chartData}
-        initialMatches={initialMatches}
-        initialTotalMatchCount={initialData.totalMatchCount}
-      />
-    </Suspense>
+    <>
+      {/* Dataset Schema for SEO - helps Google Dataset Search */}
+      {initialData.stats && (
+        <PerformanceDatasetJsonLd
+          totalProfit={initialData.stats.total_profit}
+          winRate={initialData.stats.win_rate}
+          totalBets={initialData.stats.total_bets}
+          roi={initialData.stats.roi}
+        />
+      )}
+      <Suspense fallback={<LoadingFallback />}>
+        <PerformanceClient
+          locale={locale}
+          initialStats={initialData.stats}
+          initialChartData={initialData.chartData}
+          initialMatches={initialMatches}
+          initialTotalMatchCount={initialData.totalMatchCount}
+        />
+      </Suspense>
+    </>
   );
 }

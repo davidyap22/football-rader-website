@@ -223,3 +223,79 @@ export function SportsEventJsonLd({
     />
   );
 }
+
+export function PerformanceDatasetJsonLd({
+  totalProfit,
+  winRate,
+  totalBets,
+  roi,
+  dateModified,
+}: {
+  totalProfit: number;
+  winRate: number;
+  totalBets: number;
+  roi: number;
+  dateModified?: string;
+}) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: 'OddsFlow AI Football Prediction Performance Data',
+    description: `Historical performance data for AI football predictions including win rate (${winRate.toFixed(1)}%), total profit ($${totalProfit.toFixed(0)}), ROI (${roi.toFixed(1)}%), and ${totalBets} total bets across Premier League, La Liga, Bundesliga, Serie A, and Ligue 1.`,
+    url: 'https://www.oddsflow.ai/performance',
+    keywords: [
+      'AI football predictions',
+      'betting performance',
+      'prediction accuracy',
+      'ROI analysis',
+      'win rate statistics',
+    ],
+    creator: {
+      '@type': 'Organization',
+      name: 'OddsFlow',
+      url: 'https://www.oddsflow.ai',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'OddsFlow',
+      url: 'https://www.oddsflow.ai',
+    },
+    dateModified: dateModified || new Date().toISOString(),
+    license: 'https://www.oddsflow.ai/terms-of-service',
+    temporalCoverage: '2024/..',
+    spatialCoverage: 'Europe',
+    variableMeasured: [
+      {
+        '@type': 'PropertyValue',
+        name: 'Win Rate',
+        value: `${winRate.toFixed(1)}%`,
+        description: 'Percentage of winning predictions',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Total Profit',
+        value: `$${totalProfit.toFixed(0)}`,
+        description: 'Total profit in USD',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'ROI',
+        value: `${roi.toFixed(1)}%`,
+        description: 'Return on Investment percentage',
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Total Bets',
+        value: totalBets,
+        description: 'Total number of predictions made',
+      },
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
