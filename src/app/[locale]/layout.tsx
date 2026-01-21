@@ -116,7 +116,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       images: ["/homepage/OddsFlow Logo2.png"],
     },
     icons: {
-      icon: '/favicon.ico',
+      icon: '/icon.png',
     },
     robots: {
       index: true,
