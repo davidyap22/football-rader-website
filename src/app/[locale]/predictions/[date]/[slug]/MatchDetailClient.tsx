@@ -779,7 +779,7 @@ export default function MatchDetailClient() {
       const { data, error } = await supabase
         .from('prematches')
         .select('*')
-        .eq('id', params.id)
+        .eq('fixture_id', matchId)
         .single();
 
       if (error) throw error;
@@ -793,7 +793,7 @@ export default function MatchDetailClient() {
         setLoading(false);
       }
     }
-  }, [params.id]);
+  }, [matchId]);
 
   // Fetch odds from database
   const fetchOdds = useCallback(async (fixtureId: number, isLive: boolean) => {
@@ -900,10 +900,10 @@ export default function MatchDetailClient() {
 
   // Initial data fetch
   useEffect(() => {
-    if (params.id) {
+    if (matchId) {
       fetchAllData(false);
     }
-  }, [params.id, fetchAllData]);
+  }, [matchId, fetchAllData]);
 
   // Set up polling and countdown - refresh all data every 10 seconds
   useEffect(() => {
