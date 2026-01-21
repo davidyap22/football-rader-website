@@ -220,20 +220,109 @@ function PremiumDropdown({
   );
 }
 
-// Top Player Card Component
-function TopPlayerCard({
+// Crown SVG Component
+function CrownIcon({ color, size = 24 }: { color: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+    </svg>
+  );
+}
+
+// Podium Player Component (for top 3)
+function PodiumPlayer({
   player,
   rank,
   statValue,
-  statLabel,
+  statColor,
+  leagueSlug,
+  localePath,
+  isCenter = false,
+}: {
+  player: LeaguePlayerData;
+  rank: number;
+  statValue: number | string;
+  statColor: string;
+  leagueSlug: string;
+  localePath: (path: string) => string;
+  isCenter?: boolean;
+}) {
+  const crownColors: Record<number, string> = {
+    1: '#FFD700', // Gold
+    2: '#C0C0C0', // Silver
+    3: '#CD7F32', // Bronze
+  };
+  const borderColors: Record<number, string> = {
+    1: 'border-yellow-500/60 shadow-yellow-500/30',
+    2: 'border-gray-400/60 shadow-gray-400/20',
+    3: 'border-orange-600/60 shadow-orange-600/20',
+  };
+  const bgColors: Record<number, string> = {
+    1: 'from-yellow-500/20 to-yellow-600/5',
+    2: 'from-gray-400/20 to-gray-500/5',
+    3: 'from-orange-500/20 to-orange-600/5',
+  };
+
+  return (
+    <Link
+      href={localePath(`/leagues/${leagueSlug}/player/${playerNameToSlug(player.player_name)}-${player.id}`)}
+      className={`group flex flex-col items-center transition-all duration-300 hover:scale-105 ${isCenter ? 'order-2' : rank === 2 ? 'order-1' : 'order-3'}`}
+    >
+      {/* Crown */}
+      <div className={`mb-1 ${isCenter ? 'animate-pulse' : ''}`}>
+        <CrownIcon color={crownColors[rank]} size={isCenter ? 32 : 24} />
+      </div>
+
+      {/* Photo with ring */}
+      <div className={`relative ${isCenter ? 'mb-2' : 'mb-1'}`}>
+        <div className={`${isCenter ? 'w-20 h-20' : 'w-14 h-14'} rounded-full bg-gradient-to-br ${bgColors[rank]} border-2 ${borderColors[rank]} shadow-lg overflow-hidden`}>
+          {player.photo ? (
+            <img src={player.photo} alt={player.player_name || ""} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-400 text-xl">
+              {player.player_name?.charAt(0) || "?"}
+            </div>
+          )}
+        </div>
+        {/* Rank badge */}
+        <div className={`absolute -bottom-1 left-1/2 -translate-x-1/2 ${isCenter ? 'w-7 h-7 text-sm' : 'w-5 h-5 text-xs'} rounded-full bg-gradient-to-br ${rank === 1 ? 'from-yellow-400 to-yellow-600' : rank === 2 ? 'from-gray-300 to-gray-500' : 'from-orange-400 to-orange-600'} flex items-center justify-center text-black font-bold shadow-lg`}>
+          {rank}
+        </div>
+      </div>
+
+      {/* Name */}
+      <p className={`${isCenter ? 'text-sm' : 'text-xs'} font-semibold text-white group-hover:text-emerald-400 transition-colors truncate max-w-[80px] text-center`}>
+        {player.player_name?.split(' ').pop()}
+      </p>
+
+      {/* Team */}
+      <div className="flex items-center gap-1 mt-0.5">
+        {player.team_logo && (
+          <img src={player.team_logo} alt="" className="w-3 h-3 object-contain" />
+        )}
+        <p className="text-gray-500 text-[10px] truncate max-w-[60px]">{player.team_name}</p>
+      </div>
+
+      {/* Stat */}
+      <p className={`${isCenter ? 'text-xl' : 'text-lg'} font-bold ${statColor} mt-1`}>
+        {statValue}
+      </p>
+    </Link>
+  );
+}
+
+// Small rank row for 4th and 5th place
+function SmallRankRow({
+  player,
+  rank,
+  statValue,
   statColor,
   leagueSlug,
   localePath,
 }: {
   player: LeaguePlayerData;
   rank: number;
-  statValue: number;
-  statLabel: string;
+  statValue: number | string;
   statColor: string;
   leagueSlug: string;
   localePath: (path: string) => string;
@@ -241,33 +330,113 @@ function TopPlayerCard({
   return (
     <Link
       href={localePath(`/leagues/${leagueSlug}/player/${playerNameToSlug(player.player_name)}-${player.id}`)}
-      className="group flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-gray-900/80 to-gray-800/50 border border-white/10 hover:border-emerald-500/30 transition-all"
+      className="group flex items-center gap-2 py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all"
     >
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-sm">
+      <span className="w-5 h-5 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-xs font-semibold">
         {rank}
-      </div>
+      </span>
       {player.photo ? (
-        <img src={player.photo} alt={player.player_name || ""} className="w-10 h-10 rounded-full object-cover" />
+        <img src={player.photo} alt={player.player_name || ""} className="w-7 h-7 rounded-full object-cover" />
       ) : (
-        <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-400">
+        <div className="w-7 h-7 rounded-full bg-gray-700 flex items-center justify-center text-gray-500 text-xs">
           {player.player_name?.charAt(0) || "?"}
         </div>
       )}
       <div className="flex-1 min-w-0">
-        <p className="text-white font-medium text-sm truncate group-hover:text-emerald-400 transition-colors">
+        <p className="text-white text-xs font-medium truncate group-hover:text-emerald-400 transition-colors">
           {player.player_name}
         </p>
-        <p className="text-gray-500 text-xs truncate flex items-center gap-1">
-          {player.team_logo && (
-            <img src={player.team_logo} alt="" className="w-4 h-4 object-contain" />
-          )}
-          {player.team_name}
-        </p>
+        <div className="flex items-center gap-1">
+          {player.team_logo && <img src={player.team_logo} alt="" className="w-3 h-3 object-contain" />}
+          <p className="text-gray-500 text-[10px] truncate">{player.team_name}</p>
+        </div>
       </div>
-      <div className={`text-lg font-bold ${statColor}`}>
-        {statValue}
-      </div>
+      <span className={`text-sm font-bold ${statColor}`}>{statValue}</span>
     </Link>
+  );
+}
+
+// Podium Section Component
+function PodiumSection({
+  title,
+  icon,
+  players,
+  getStatValue,
+  statColor,
+  leagueSlug,
+  localePath,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  players: LeaguePlayerData[];
+  getStatValue: (player: LeaguePlayerData) => number | string;
+  statColor: string;
+  leagueSlug: string;
+  localePath: (path: string) => string;
+}) {
+  const top3 = players.slice(0, 3);
+  const rest = players.slice(3, 5);
+
+  return (
+    <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-gray-900/90 to-gray-800/60 border border-white/10 backdrop-blur-sm">
+      {/* Header */}
+      <h2 className="text-base sm:text-lg font-bold text-white mb-4 flex items-center gap-2">
+        {icon}
+        {title}
+      </h2>
+
+      {/* Podium - Top 3 */}
+      <div className="flex items-end justify-center gap-2 sm:gap-4 mb-4 min-h-[160px]">
+        {top3[1] && (
+          <PodiumPlayer
+            player={top3[1]}
+            rank={2}
+            statValue={getStatValue(top3[1])}
+            statColor={statColor}
+            leagueSlug={leagueSlug}
+            localePath={localePath}
+          />
+        )}
+        {top3[0] && (
+          <PodiumPlayer
+            player={top3[0]}
+            rank={1}
+            statValue={getStatValue(top3[0])}
+            statColor={statColor}
+            leagueSlug={leagueSlug}
+            localePath={localePath}
+            isCenter
+          />
+        )}
+        {top3[2] && (
+          <PodiumPlayer
+            player={top3[2]}
+            rank={3}
+            statValue={getStatValue(top3[2])}
+            statColor={statColor}
+            leagueSlug={leagueSlug}
+            localePath={localePath}
+          />
+        )}
+      </div>
+
+      {/* 4th and 5th */}
+      {rest.length > 0 && (
+        <div className="space-y-1.5 pt-3 border-t border-white/5">
+          {rest.map((player, idx) => (
+            <SmallRankRow
+              key={player.id}
+              player={player}
+              rank={idx + 4}
+              statValue={getStatValue(player)}
+              statColor={statColor}
+              leagueSlug={leagueSlug}
+              localePath={localePath}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -543,70 +712,40 @@ export default function PlayersClient({
             </p>
           </div>
 
-          {/* Top Stats Section - SEO Content visible to crawlers */}
-          <div className="grid md:grid-cols-3 gap-4 mb-8">
+          {/* Top Stats Section - Podium Style Rankings */}
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6 mb-8">
             {/* Top Scorers */}
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/50 border border-white/10">
-              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <span className="text-2xl">⚽</span> {t('topScorers')}
-              </h2>
-              <div className="space-y-2">
-                {topScorers.map((player, idx) => (
-                  <TopPlayerCard
-                    key={player.id}
-                    player={player}
-                    rank={idx + 1}
-                    statValue={player.goals_total || 0}
-                    statLabel={t('goals')}
-                    statColor="text-emerald-400"
-                    leagueSlug={leagueSlug}
-                    localePath={localePath}
-                  />
-                ))}
-              </div>
-            </div>
+            <PodiumSection
+              title={t('topScorers')}
+              icon={<span className="text-xl">⚽</span>}
+              players={topScorers}
+              getStatValue={(p) => p.goals_total || 0}
+              statColor="text-emerald-400"
+              leagueSlug={leagueSlug}
+              localePath={localePath}
+            />
 
             {/* Top Assists */}
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/50 border border-white/10">
-              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <span className="text-2xl">🎯</span> {t('topAssistsTitle')}
-              </h2>
-              <div className="space-y-2">
-                {topAssists.map((player, idx) => (
-                  <TopPlayerCard
-                    key={player.id}
-                    player={player}
-                    rank={idx + 1}
-                    statValue={player.assists || 0}
-                    statLabel={t('assists')}
-                    statColor="text-cyan-400"
-                    leagueSlug={leagueSlug}
-                    localePath={localePath}
-                  />
-                ))}
-              </div>
-            </div>
+            <PodiumSection
+              title={t('topAssistsTitle')}
+              icon={<span className="text-xl">🎯</span>}
+              players={topAssists}
+              getStatValue={(p) => p.assists || 0}
+              statColor="text-cyan-400"
+              leagueSlug={leagueSlug}
+              localePath={localePath}
+            />
 
             {/* Highest Rated */}
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/50 border border-white/10">
-              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <span className="text-2xl">⭐</span> {t('highestRated')}
-              </h2>
-              <div className="space-y-2">
-                {highestRated.map((player, idx) => (
-                  <TopPlayerCard
-                    key={player.id}
-                    player={player}
-                    rank={idx + 1}
-                    statValue={Number(player.rating?.toFixed(1)) || 0}
-                    statLabel="Rating"
-                    statColor="text-amber-400"
-                    leagueSlug={leagueSlug}
-                    localePath={localePath}
-                  />
-                ))}
-              </div>
-            </div>
+            <PodiumSection
+              title={t('highestRated')}
+              icon={<span className="text-xl">⭐</span>}
+              players={highestRated}
+              getStatValue={(p) => p.rating?.toFixed(1) || '0'}
+              statColor="text-amber-400"
+              leagueSlug={leagueSlug}
+              localePath={localePath}
+            />
           </div>
 
           {/* Filters */}
