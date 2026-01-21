@@ -2735,26 +2735,32 @@ function WhyChooseSection() {
 }
 
 // ============ Animated Counter Component ============
-function AnimatedCounter({ end, suffix, duration = 2000, isVisible }: { end: number; suffix: string; duration?: number; isVisible: boolean }) {
-  const [count, setCount] = useState(0);
-  const countRef = useRef(0);
+// SEO-friendly: starts from 80% of the end value so crawlers see meaningful numbers
+function AnimatedCounter({ end, suffix, start, duration = 2000, isVisible }: { end: number; suffix: string; start?: number; duration?: number; isVisible: boolean }) {
+  // Default start is 80% of end value for SEO (crawlers will see this initial value)
+  const startValue = start ?? Math.floor(end * 0.8);
+  const [count, setCount] = useState(startValue);
+  const countRef = useRef(startValue);
   const frameRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     if (!isVisible) {
-      setCount(0);
-      countRef.current = 0;
+      // Keep showing the start value even when not visible (for SEO)
+      setCount(startValue);
+      countRef.current = startValue;
       return;
     }
 
     const startTime = performance.now();
+    const range = end - startValue; // Only animate the remaining portion
+
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
       // Easing function for smooth animation
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      const currentCount = Math.floor(easeOutQuart * end);
+      const currentCount = Math.floor(startValue + (easeOutQuart * range));
 
       if (currentCount !== countRef.current) {
         countRef.current = currentCount;
@@ -2775,7 +2781,7 @@ function AnimatedCounter({ end, suffix, duration = 2000, isVisible }: { end: num
         cancelAnimationFrame(frameRef.current);
       }
     };
-  }, [end, duration, isVisible]);
+  }, [end, startValue, duration, isVisible]);
 
   // Format number with K suffix for large numbers
   const formatNumber = (num: number) => {
@@ -2812,10 +2818,10 @@ function TrustedBySection() {
   }, []);
 
   const stats = [
-    { value: 50000, suffix: 'K+', label: t('activeUsers') },
-    { value: 120, suffix: '+', label: t('countriesServed') },
-    { value: 1000, suffix: '+', label: t('predictionsDaily') },
-    { value: 96, suffix: '%', label: t('satisfactionRate') },
+    { value: 50000, start: 40000, suffix: 'K+', label: t('activeUsers') },      // SEO sees "40K+"
+    { value: 120, start: 100, suffix: '+', label: t('countriesServed') },       // SEO sees "100+"
+    { value: 1000, start: 800, suffix: '+', label: t('predictionsDaily') },     // SEO sees "800+"
+    { value: 96, start: 90, suffix: '%', label: t('satisfactionRate') },        // SEO sees "90%"
   ];
 
   const testimonials = [
@@ -2844,7 +2850,7 @@ function TrustedBySection() {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
               </div>
               <div className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent mb-2 relative z-10">
-                <AnimatedCounter end={stat.value} suffix={stat.suffix} isVisible={isVisible} duration={2000} />
+                <AnimatedCounter end={stat.value} start={stat.start} suffix={stat.suffix} isVisible={isVisible} duration={2000} />
               </div>
               <div className="text-gray-400 text-sm relative z-10">{stat.label}</div>
             </div>
