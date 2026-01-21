@@ -9,6 +9,7 @@ import { User } from "@supabase/supabase-js";
 import CookieConsent from "@/components/CookieConsent";
 import FlagIcon from "@/components/FlagIcon";
 import { locales, localeNames, localeFlags, localeToTranslationCode, type Locale } from "@/i18n/config";
+import { generateMatchSlug } from "@/lib/slug-utils";
 
 // ============ Translations ============
 const translations: Record<string, Record<string, string>> = {
@@ -2412,7 +2413,10 @@ function AIPredictionsSection() {
               <div>
                 {matches.map((match, index) => {
                   const probs = getProbabilities(match.fixture_id);
-                  const matchUrl = localePath(`/predictions/${match.id}?date=${formatDateForUrl(match.start_date_msia)}`);
+                  // Generate SEO-friendly URL
+                  const matchSlug = `${generateMatchSlug(match.home_name, match.away_name)}-${match.fixture_id}`;
+                  const matchDate = formatDateForUrl(match.start_date_msia);
+                  const matchUrl = localePath(`/predictions/${matchDate}/${matchSlug}`);
                   return (
                     <Link
                       key={match.id}
