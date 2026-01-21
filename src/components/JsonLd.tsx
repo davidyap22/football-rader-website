@@ -224,6 +224,63 @@ export function SportsEventJsonLd({
   );
 }
 
+// ItemList of SportsEvents for predictions list page
+export function SportsEventsListJsonLd({
+  events,
+  listName,
+  listDescription,
+}: {
+  events: {
+    name: string;
+    homeTeam: string;
+    awayTeam: string;
+    startDate: string;
+    location?: string;
+    url: string;
+  }[];
+  listName: string;
+  listDescription: string;
+}) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: listName,
+    description: listDescription,
+    numberOfItems: events.length,
+    itemListElement: events.map((event, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'SportsEvent',
+        name: event.name,
+        startDate: event.startDate,
+        location: event.location
+          ? {
+              '@type': 'Place',
+              name: event.location,
+            }
+          : undefined,
+        homeTeam: {
+          '@type': 'SportsTeam',
+          name: event.homeTeam,
+        },
+        awayTeam: {
+          '@type': 'SportsTeam',
+          name: event.awayTeam,
+        },
+        url: event.url,
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
 export function PerformanceDatasetJsonLd({
   totalProfit,
   winRate,

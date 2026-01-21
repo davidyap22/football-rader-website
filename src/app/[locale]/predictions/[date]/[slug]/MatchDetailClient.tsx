@@ -9,6 +9,7 @@ import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, 
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 import { parseFixtureIdFromSlug, generateMatchSlug } from '@/lib/slug-utils';
+import { SportsEventJsonLd } from '@/components/JsonLd';
 
 // Helper function to parse LiveSignals data from database
 const parseLiveSignals = (data: LiveSignals | null): LiveSignals | null => {
@@ -1035,8 +1036,23 @@ export default function MatchDetailClient() {
     );
   }
 
+  // Generate the canonical URL for this match
+  const matchUrl = `https://www.oddsflow.ai${locale === 'en' ? '' : `/${locale}`}/predictions/${dateParam}/${slug}`;
+
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
+      {/* SportsEvent Schema for SEO */}
+      {match && (
+        <SportsEventJsonLd
+          name={`${match.home_name} vs ${match.away_name}`}
+          homeTeam={match.home_name}
+          awayTeam={match.away_name}
+          startDate={match.start_date_msia}
+          location={match.venue_name || undefined}
+          url={matchUrl}
+        />
+      )}
+
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">

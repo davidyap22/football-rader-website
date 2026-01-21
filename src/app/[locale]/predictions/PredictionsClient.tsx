@@ -73,6 +73,7 @@ function getInitialDate() {
 
 import FlagIcon from "@/components/FlagIcon";
 import { generateMatchSlug } from '@/lib/slug-utils';
+import { SportsEventsListJsonLd } from '@/components/JsonLd';
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -595,8 +596,32 @@ function PredictionsContent() {
     return acc;
   }, {} as Record<string, { logo: string; matches: Prematch[] }>);
 
+  // Generate schema data for SEO
+  const schemaEvents = matches.map(match => {
+    const matchSlug = `${generateMatchSlug(match.home_name, match.away_name)}-${match.fixture_id}`;
+    const matchDate = formatDateForQuery(selectedDate);
+    const basePath = locale === 'en' ? '' : `/${locale}`;
+    return {
+      name: `${match.home_name} vs ${match.away_name}`,
+      homeTeam: match.home_name,
+      awayTeam: match.away_name,
+      startDate: match.start_date_msia,
+      location: match.venue_name || undefined,
+      url: `https://www.oddsflow.ai${basePath}/predictions/${matchDate}/${matchSlug}`,
+    };
+  });
+
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white flex flex-col relative">
+      {/* Sports Events Schema for SEO */}
+      {matches.length > 0 && (
+        <SportsEventsListJsonLd
+          events={schemaEvents}
+          listName={`Football Predictions for ${formatDateForQuery(selectedDate)}`}
+          listDescription="AI-powered football match predictions with 1x2, Asian handicap, and over/under analysis"
+        />
+      )}
+
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <img
