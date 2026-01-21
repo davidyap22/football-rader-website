@@ -56,6 +56,15 @@ function isSameDay(date1: Date, date2: Date) {
          date1.getUTCDate() === date2.getUTCDate();
 }
 
+// Check if date is within allowed range (-3 to +3 days from today)
+function isDateInAllowedRange(date: Date): boolean {
+  const today = getUTCToday();
+  const dateUTC = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  const todayUTC = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  const diffDays = Math.round((dateUTC - todayUTC) / (1000 * 60 * 60 * 24));
+  return diffDays >= -3 && diffDays <= 3;
+}
+
 function getInitialDate() {
   // Always return today on initial render to avoid hydration mismatch
   // useEffect will load saved date from sessionStorage/URL after hydration
@@ -355,7 +364,13 @@ function PredictionsContent() {
 
     // Update URL with date parameter for SEO
     const basePath = locale === 'en' ? '/predictions' : `/${locale}/predictions`;
-    router.replace(`${basePath}?date=${dateStr}`, { scroll: false });
+
+    // For today, use clean URL without date parameter
+    if (isSameDay(date, today)) {
+      router.replace(basePath, { scroll: false });
+    } else {
+      router.replace(`${basePath}?date=${dateStr}`, { scroll: false });
+    }
   };
 
   // Simple URL builder for language switching
@@ -414,15 +429,29 @@ function PredictionsContent() {
 
   // Load date from URL parameter or sessionStorage on mount
   useEffect(() => {
+    const basePath = locale === 'en' ? '/predictions' : `/${locale}/predictions`;
+
     // First check URL parameter
     const dateParam = searchParams.get('date');
     if (dateParam) {
       const parsedDate = new Date(dateParam + 'T00:00:00Z');
       if (!isNaN(parsedDate.getTime())) {
-        setSelectedDate(parsedDate);
-        sessionStorage.setItem('oddsflow_selected_date', dateParam);
-        setIsDateInitialized(true);
-        return;
+        // Validate date is within allowed range (-3 to +3 days)
+        if (isDateInAllowedRange(parsedDate)) {
+          // If it's today, redirect to clean URL
+          if (isSameDay(parsedDate, today)) {
+            router.replace(basePath, { scroll: false });
+          }
+          setSelectedDate(parsedDate);
+          sessionStorage.setItem('oddsflow_selected_date', dateParam);
+          setIsDateInitialized(true);
+          return;
+        } else {
+          // Date outside allowed range - redirect to clean URL (today)
+          router.replace(basePath, { scroll: false });
+          setIsDateInitialized(true);
+          return;
+        }
       }
     }
 
@@ -430,28 +459,36 @@ function PredictionsContent() {
     const savedDate = sessionStorage.getItem('oddsflow_selected_date');
     if (savedDate) {
       const parsedDate = new Date(savedDate + 'T00:00:00Z');
-      if (!isNaN(parsedDate.getTime())) {
+      if (!isNaN(parsedDate.getTime()) && isDateInAllowedRange(parsedDate)) {
         setSelectedDate(parsedDate);
         setIsDateInitialized(true);
         return;
       }
     }
 
-    // No saved date found, use today (already set as initial state)
+    // No saved date found or saved date out of range, use today (already set as initial state)
     setIsDateInitialized(true);
   }, []); // Empty dependency - run once on mount
 
   // Also handle URL param changes
   useEffect(() => {
+    const basePath = locale === 'en' ? '/predictions' : `/${locale}/predictions`;
     const dateParam = searchParams.get('date');
+
     if (dateParam) {
       const parsedDate = new Date(dateParam + 'T00:00:00Z');
       if (!isNaN(parsedDate.getTime())) {
-        setSelectedDate(parsedDate);
-        sessionStorage.setItem('oddsflow_selected_date', dateParam);
+        // Validate date is within allowed range (-3 to +3 days)
+        if (isDateInAllowedRange(parsedDate)) {
+          setSelectedDate(parsedDate);
+          sessionStorage.setItem('oddsflow_selected_date', dateParam);
+        } else {
+          // Date outside allowed range - redirect to clean URL (today)
+          router.replace(basePath, { scroll: false });
+        }
       }
     }
-  }, [searchParams]);
+  }, [searchParams, locale, router]);
 
   // Translation function
   const t = (key: string): string => {
