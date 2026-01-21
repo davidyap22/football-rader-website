@@ -13,6 +13,7 @@ import { LeagueStatsSummary, LEAGUES_CONFIG } from '@/lib/leagues-data';
 const translations: Record<string, Record<string, string>> = {
   EN: {
     leagues: "Football Leagues & AI Predictions",
+    leaguesNav: "Leagues",
     leaguesSubtitle: "OddsFlow provides AI-powered predictions for Premier League, Bundesliga, Serie A, La Liga, Ligue 1, and Champions League. Browse league standings, team statistics, and get data-driven betting insights.",
     home: "Home",
     predictions: "Predictions",
@@ -49,6 +50,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   ES: {
     leagues: "Ligas de Futbol y Predicciones IA",
+    leaguesNav: "Ligas",
     leaguesSubtitle: "OddsFlow ofrece predicciones impulsadas por IA para Premier League, Bundesliga, Serie A, La Liga, Ligue 1 y Champions League. Consulta clasificaciones, estadisticas y obtiene consejos de apuestas.",
     home: "Inicio",
     predictions: "Predicciones",
@@ -85,6 +87,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   PT: {
     leagues: "Ligas de Futebol e Previsoes IA",
+    leaguesNav: "Ligas",
     leaguesSubtitle: "OddsFlow oferece previsoes impulsionadas por IA para Premier League, Bundesliga, Serie A, La Liga, Ligue 1 e Champions League. Veja classificacoes, estatisticas e dicas de apostas.",
     home: "Inicio",
     predictions: "Previsoes",
@@ -121,6 +124,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   DE: {
     leagues: "Fussball-Ligen & KI-Vorhersagen",
+    leaguesNav: "Ligen",
     leaguesSubtitle: "OddsFlow bietet KI-gestutzte Vorhersagen fur Premier League, Bundesliga, Serie A, La Liga, Ligue 1 und Champions League. Tabellen, Statistiken und Wett-Tipps.",
     home: "Startseite",
     predictions: "Vorhersagen",
@@ -157,6 +161,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   FR: {
     leagues: "Ligues de Football & Predictions IA",
+    leaguesNav: "Ligues",
     leaguesSubtitle: "OddsFlow propose des predictions basees sur l'IA pour Premier League, Bundesliga, Serie A, La Liga, Ligue 1 et Champions League. Classements, stats et conseils paris.",
     home: "Accueil",
     predictions: "Predictions",
@@ -193,6 +198,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   JA: {
     leagues: "サッカーリーグ & AI予測",
+    leaguesNav: "リーグ",
     leaguesSubtitle: "OddsFlowはプレミアリーグ、ブンデスリーガ、セリエA、ラ・リーガ、リーグ・アン、チャンピオンズリーグのAI予測を提供。順位表、統計、ベッティングインサイト。",
     home: "ホーム",
     predictions: "予測",
@@ -229,6 +235,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   KO: {
     leagues: "축구 리그 & AI 예측",
+    leaguesNav: "리그",
     leaguesSubtitle: "OddsFlow는 프리미어리그, 분데스리가, 세리에A, 라리가, 리그1, 챔피언스리그에 대한 AI 예측을 제공합니다. 순위, 통계, 베팅 인사이트를 확인하세요.",
     home: "홈",
     predictions: "예측",
@@ -265,6 +272,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   '中文': {
     leagues: "足球联赛与AI预测",
+    leaguesNav: "联赛",
     leaguesSubtitle: "OddsFlow提供英超、德甲、意甲、西甲、法甲和欧冠的AI预测。查看积分榜、球队统计和投注建议。",
     home: "首页",
     predictions: "预测",
@@ -301,6 +309,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   '繁體': {
     leagues: "足球聯賽與AI預測",
+    leaguesNav: "聯賽",
     leaguesSubtitle: "OddsFlow提供英超、德甲、義甲、西甲、法甲和歐冠的AI預測。查看積分榜、球隊統計和投注建議。",
     home: "首頁",
     predictions: "預測",
@@ -337,6 +346,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   ID: {
     leagues: "Liga Sepak Bola & Prediksi AI",
+    leaguesNav: "Liga",
     leaguesSubtitle: "OddsFlow menyediakan prediksi bertenaga AI untuk Premier League, Bundesliga, Serie A, La Liga, Ligue 1, dan Champions League. Lihat klasemen, statistik, dan tips taruhan.",
     home: "Beranda",
     predictions: "Prediksi",
@@ -436,7 +446,7 @@ export default function LeaguesClient({
             <div className="hidden md:flex items-center gap-6">
               <Link href={localePath('/')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('home')}</Link>
               <Link href={localePath('/predictions')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('predictions')}</Link>
-              <Link href={localePath('/leagues')} className="text-emerald-400 text-sm font-medium">{t('leagues')}</Link>
+              <Link href={localePath('/leagues')} className="text-emerald-400 text-sm font-medium">{t('leaguesNav')}</Link>
               <Link href={localePath('/performance')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('performance')}</Link>
               <Link href={localePath('/community')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('community')}</Link>
               <Link href={localePath('/news')} className="text-gray-400 hover:text-white transition-colors text-sm font-medium">{t('news')}</Link>
@@ -552,7 +562,7 @@ export default function LeaguesClient({
               {[
                 { href: localePath('/'), label: t('home') },
                 { href: localePath('/predictions'), label: t('predictions') },
-                { href: localePath('/leagues'), label: t('leagues'), active: true },
+                { href: localePath('/leagues'), label: t('leaguesNav'), active: true },
                 { href: localePath('/performance'), label: t('performance') },
                 { href: localePath('/community'), label: t('community') },
                 { href: localePath('/news'), label: t('news') },
@@ -724,7 +734,7 @@ export default function LeaguesClient({
               <h4 className="font-semibold mb-5 text-white">{t('product')}</h4>
               <ul className="space-y-3 text-gray-400">
                 <li><Link href={localePath('/predictions')} className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
-                <li><Link href={localePath('/leagues')} className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
+                <li><Link href={localePath('/leagues')} className="hover:text-emerald-400 transition-colors">{t('leaguesNav')}</Link></li>
                 <li><Link href={localePath('/performance')} className="hover:text-emerald-400 transition-colors">{t('performance')}</Link></li>
                 <li><Link href={localePath('/solution')} className="hover:text-emerald-400 transition-colors">{t('solution')}</Link></li>
               </ul>
