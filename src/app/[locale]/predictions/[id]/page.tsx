@@ -439,8 +439,8 @@ export default function MatchDetailsPage() {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
-        // Not logged in - redirect to login
-        router.push(localePath('/login'));
+        // Not logged in - redirect to login (use replace to fix back button issue)
+        router.replace(localePath('/login'));
         return;
       }
       setUser(session.user);
@@ -450,7 +450,7 @@ export default function MatchDetailsPage() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       if (!session?.user) {
-        router.push(localePath('/login'));
+        router.replace(localePath('/login'));
         return;
       }
       setUser(session.user);

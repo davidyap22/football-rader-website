@@ -1982,10 +1982,15 @@ function MatchTicker() {
 
   useEffect(() => {
     async function fetchMatches() {
+      // Get current date in ISO format for filtering upcoming matches
+      const now = new Date().toISOString();
+
       const { data, error } = await supabase
         .from('prematches')
         .select('home_name, away_name, home_logo, away_logo')
         .eq('type', 'Scheduled')
+        .gte('start_date_msia', now)  // Only future matches
+        .order('start_date_msia', { ascending: true })  // Soonest first
         .limit(15);
 
       if (!error && data) {
@@ -2275,23 +2280,23 @@ function AIPredictionsSection() {
         if (matchesError) throw matchesError;
         setMatches(matchesData || []);
 
-        // Fetch 1x2 predictions for these matches
+        // Fetch 1x2 predictions for these matches (from predictions_match table)
         if (matchesData && matchesData.length > 0) {
           const fixtureIds = matchesData.map(m => m.fixture_id);
           const { data: predictionsData } = await supabase
-            .from('moneyline_1x2_predictions')
-            .select('fixture_id, moneyline_1x2_home, moneyline_1x2_draw, moneyline_1x2_away')
+            .from('predictions_match')
+            .select('fixture_id, prob_home, prob_draw, prob_away')
             .in('fixture_id', fixtureIds);
 
           if (predictionsData) {
             const predMap = new Map<number, { home: number; draw: number; away: number }>();
             predictionsData.forEach((p: any) => {
-              // Only store the first (or latest) prediction for each fixture
+              // Only store the first prediction for each fixture
               if (!predMap.has(p.fixture_id)) {
                 predMap.set(p.fixture_id, {
-                  home: Math.round((p.moneyline_1x2_home || 0) * 100),
-                  draw: Math.round((p.moneyline_1x2_draw || 0) * 100),
-                  away: Math.round((p.moneyline_1x2_away || 0) * 100),
+                  home: Math.round(p.prob_home || 0),
+                  draw: Math.round(p.prob_draw || 0),
+                  away: Math.round(p.prob_away || 0),
                 });
               }
             });
