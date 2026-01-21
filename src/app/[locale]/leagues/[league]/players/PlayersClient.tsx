@@ -1,27 +1,21 @@
-import { redirect } from 'next/navigation';
-
-// Redirect from old /player URL to new /players URL
-export default async function PlayerRedirectPage({
-  params
-}: {
-  params: Promise<{ locale: string; league: string }>
-}) {
-  const { locale, league } = await params;
-  const newPath = locale === 'en'
-    ? `/leagues/${league}/players`
-    : `/${locale}/leagues/${league}/players`;
-  redirect(newPath);
-}
-
-// Old code below for reference - now redirects to /players
-/*
 "use client";
 
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { getPlayerStatsByLeague, PlayerStats, supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { LeaguePlayerData } from "@/lib/team-data";
+
+// Props interface
+interface PlayersClientProps {
+  initialPlayers: LeaguePlayerData[];
+  topScorers: LeaguePlayerData[];
+  topAssists: LeaguePlayerData[];
+  highestRated: LeaguePlayerData[];
+  leagueName: string;
+  leagueSlug: string;
+}
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -34,6 +28,8 @@ const translations: Record<string, Record<string, string>> = {
     sortByRating: "Sort by Rating", sortByGoals: "Sort by Goals", sortByAssists: "Sort by Assists",
     sortByApps: "Sort by Apps", sortByName: "Sort by Name", noPlayersFound: "No players found",
     goals: "Goals", assists: "Assists", apps: "Apps", mins: "Mins",
+    topScorers: "Top Scorers", topAssistsTitle: "Top Assists", highestRated: "Highest Rated",
+    viewProfile: "View Profile",
   },
   'zh-CN': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "表现",
@@ -44,6 +40,8 @@ const translations: Record<string, Record<string, string>> = {
     sortByRating: "按评分排序", sortByGoals: "按进球排序", sortByAssists: "按助攻排序",
     sortByApps: "按出场排序", sortByName: "按名字排序", noPlayersFound: "未找到球员",
     goals: "进球", assists: "助攻", apps: "出场", mins: "分钟",
+    topScorers: "射手榜", topAssistsTitle: "助攻榜", highestRated: "评分最高",
+    viewProfile: "查看详情",
   },
   'zh-TW': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "表現",
@@ -54,6 +52,8 @@ const translations: Record<string, Record<string, string>> = {
     sortByRating: "按評分排序", sortByGoals: "按進球排序", sortByAssists: "按助攻排序",
     sortByApps: "按出場排序", sortByName: "按名字排序", noPlayersFound: "未找到球員",
     goals: "進球", assists: "助攻", apps: "出場", mins: "分鐘",
+    topScorers: "射手榜", topAssistsTitle: "助攻榜", highestRated: "評分最高",
+    viewProfile: "查看詳情",
   },
   id: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa",
@@ -64,6 +64,8 @@ const translations: Record<string, Record<string, string>> = {
     sortByRating: "Urutkan Rating", sortByGoals: "Urutkan Gol", sortByAssists: "Urutkan Assist",
     sortByApps: "Urutkan Penampilan", sortByName: "Urutkan Nama", noPlayersFound: "Pemain tidak ditemukan",
     goals: "Gol", assists: "Assist", apps: "Main", mins: "Menit",
+    topScorers: "Top Skor", topAssistsTitle: "Top Assist", highestRated: "Rating Tertinggi",
+    viewProfile: "Lihat Profil",
   },
   es: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento",
@@ -74,6 +76,8 @@ const translations: Record<string, Record<string, string>> = {
     sortByRating: "Ordenar por Rating", sortByGoals: "Ordenar por Goles", sortByAssists: "Ordenar por Asistencias",
     sortByApps: "Ordenar por Partidos", sortByName: "Ordenar por Nombre", noPlayersFound: "No se encontraron jugadores",
     goals: "Goles", assists: "Asist.", apps: "Part.", mins: "Min",
+    topScorers: "Goleadores", topAssistsTitle: "Asistencias", highestRated: "Mejor Valorados",
+    viewProfile: "Ver Perfil",
   },
   pt: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho",
@@ -84,6 +88,8 @@ const translations: Record<string, Record<string, string>> = {
     sortByRating: "Ordenar por Rating", sortByGoals: "Ordenar por Gols", sortByAssists: "Ordenar por Assistências",
     sortByApps: "Ordenar por Jogos", sortByName: "Ordenar por Nome", noPlayersFound: "Nenhum jogador encontrado",
     goals: "Gols", assists: "Assist.", apps: "Jogos", mins: "Min",
+    topScorers: "Artilheiros", topAssistsTitle: "Assistências", highestRated: "Mais Bem Avaliados",
+    viewProfile: "Ver Perfil",
   },
   ja: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "パフォーマンス",
@@ -94,6 +100,8 @@ const translations: Record<string, Record<string, string>> = {
     sortByRating: "評価順", sortByGoals: "ゴール順", sortByAssists: "アシスト順",
     sortByApps: "出場順", sortByName: "名前順", noPlayersFound: "選手が見つかりません",
     goals: "ゴール", assists: "アシスト", apps: "出場", mins: "分",
+    topScorers: "得点ランキング", topAssistsTitle: "アシストランキング", highestRated: "最高評価",
+    viewProfile: "プロフィール",
   },
   ko: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "성과",
@@ -104,6 +112,8 @@ const translations: Record<string, Record<string, string>> = {
     sortByRating: "평점순", sortByGoals: "골순", sortByAssists: "어시스트순",
     sortByApps: "출전순", sortByName: "이름순", noPlayersFound: "선수를 찾을 수 없습니다",
     goals: "골", assists: "어시스트", apps: "출전", mins: "분",
+    topScorers: "득점 순위", topAssistsTitle: "어시스트 순위", highestRated: "최고 평점",
+    viewProfile: "프로필 보기",
   },
   de: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "Leistung",
@@ -114,6 +124,8 @@ const translations: Record<string, Record<string, string>> = {
     sortByRating: "Nach Bewertung", sortByGoals: "Nach Toren", sortByAssists: "Nach Vorlagen",
     sortByApps: "Nach Einsätzen", sortByName: "Nach Name", noPlayersFound: "Keine Spieler gefunden",
     goals: "Tore", assists: "Vorlagen", apps: "Einsätze", mins: "Min",
+    topScorers: "Torjäger", topAssistsTitle: "Vorlagengeber", highestRated: "Beste Bewertung",
+    viewProfile: "Profil ansehen",
   },
   fr: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance",
@@ -124,6 +136,8 @@ const translations: Record<string, Record<string, string>> = {
     sortByRating: "Trier par Note", sortByGoals: "Trier par Buts", sortByAssists: "Trier par Passes",
     sortByApps: "Trier par Matchs", sortByName: "Trier par Nom", noPlayersFound: "Aucun joueur trouvé",
     goals: "Buts", assists: "Passes", apps: "Matchs", mins: "Min",
+    topScorers: "Meilleurs Buteurs", topAssistsTitle: "Meilleures Passes", highestRated: "Mieux Notés",
+    viewProfile: "Voir le Profil",
   },
 };
 
@@ -213,47 +227,84 @@ function PremiumDropdown({
   );
 }
 
-// League name mapping
-const leagueNameMap: Record<string, string> = {
-  "premier-league": "Premier League",
-  "la-liga": "La Liga",
-  "bundesliga": "Bundesliga",
-  "serie-a": "Serie A",
-  "ligue-1": "Ligue 1",
-  "eredivisie": "Eredivisie",
-  "primeira-liga": "Primeira Liga",
-  "super-lig": "Super Lig",
-};
-
 const locales = ['en', 'zh-CN', 'zh-TW', 'id', 'es', 'pt', 'ja', 'ko', 'de', 'fr'];
 const localeNames: Record<string, string> = {
   'en': 'EN', 'zh-CN': '中文', 'zh-TW': '繁體', 'id': 'ID', 'es': 'ES',
   'pt': 'PT', 'ja': 'JA', 'ko': 'KO', 'de': 'DE', 'fr': 'FR',
 };
 
-export default function AllPlayersPage() {
+// Top Player Card Component
+function TopPlayerCard({
+  player,
+  rank,
+  statValue,
+  statLabel,
+  statColor,
+  leagueSlug,
+  localePath,
+}: {
+  player: LeaguePlayerData;
+  rank: number;
+  statValue: number;
+  statLabel: string;
+  statColor: string;
+  leagueSlug: string;
+  localePath: (path: string) => string;
+}) {
+  return (
+    <Link
+      href={localePath(`/leagues/${leagueSlug}/player/${player.id}`)}
+      className="group flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-gray-900/80 to-gray-800/50 border border-white/10 hover:border-emerald-500/30 transition-all"
+    >
+      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-sm">
+        {rank}
+      </div>
+      {player.photo ? (
+        <img src={player.photo} alt={player.player_name || ""} className="w-10 h-10 rounded-full object-cover" />
+      ) : (
+        <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-400">
+          {player.player_name?.charAt(0) || "?"}
+        </div>
+      )}
+      <div className="flex-1 min-w-0">
+        <p className="text-white font-medium text-sm truncate group-hover:text-emerald-400 transition-colors">
+          {player.player_name}
+        </p>
+        <p className="text-gray-500 text-xs truncate">{player.team_name}</p>
+      </div>
+      <div className={`text-lg font-bold ${statColor}`}>
+        {statValue}
+      </div>
+    </Link>
+  );
+}
+
+export default function PlayersClient({
+  initialPlayers,
+  topScorers,
+  topAssists,
+  highestRated,
+  leagueName,
+  leagueSlug,
+}: PlayersClientProps) {
   const params = useParams();
   const locale = (params.locale as string) || 'en';
-  const leagueSlug = params.league as string;
-  const leagueName = leagueNameMap[leagueSlug] || leagueSlug;
 
   const t = (key: string): string => translations[locale]?.[key] || translations['en'][key] || key;
   const currentLang = { code: localeNames[locale] || 'EN' };
 
-  // Helper function for locale-aware paths
   const localePath = (path: string): string => {
     if (locale === 'en') return path;
     return path === '/' ? `/${locale}` : `/${locale}${path}`;
   };
 
   const getLocaleUrl = (targetLocale: string): string => {
-    const currentPath = `/leagues/${leagueSlug}/player`;
+    const currentPath = `/leagues/${leagueSlug}/players`;
     return targetLocale === 'en' ? currentPath : `/${targetLocale}${currentPath}`;
   };
 
   const [mounted, setMounted] = useState(false);
-  const [players, setPlayers] = useState<PlayerStats[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [players] = useState<LeaguePlayerData[]>(initialPlayers);
   const [searchTerm, setSearchTerm] = useState("");
   const [positionFilter, setPositionFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("rating");
@@ -276,19 +327,6 @@ export default function AllPlayersPage() {
 
     return () => subscription.unsubscribe();
   }, []);
-
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      setLoading(true);
-      const { data, error } = await getPlayerStatsByLeague(leagueName);
-      if (data && !error) {
-        setPlayers(data);
-      }
-      setLoading(false);
-    };
-
-    fetchPlayers();
-  }, [leagueName]);
 
   // Filter and sort players
   const filteredPlayers = players
@@ -321,19 +359,13 @@ export default function AllPlayersPage() {
   // Get unique positions for filter
   const positions = [...new Set(players.map((p) => p.position).filter(Boolean))];
 
-  if (!mounted || loading) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
-        <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#0a0a0f] to-[#1a1a2e]" />
-        </div>
-        <div className="relative z-10 flex flex-col items-center gap-4">
-          <div className="w-16 h-16 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
-          <p className="text-gray-400">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  // Calculate top 5 by rating for badge display
+  const top5PlayerIds = new Set(
+    [...players]
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+      .slice(0, 5)
+      .map((p) => p.id)
+  );
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
@@ -403,11 +435,6 @@ export default function AllPlayersPage() {
                         >
                           <FlagIcon code={loc} size={20} />
                           <span>{localeNames[loc]}</span>
-                          {locale === loc && (
-                            <svg className="w-4 h-4 ml-auto text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                          )}
                         </Link>
                       ))}
                     </div>
@@ -467,22 +494,9 @@ export default function AllPlayersPage() {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[45] md:hidden">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setMobileMenuOpen(false)}
-          />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
           <div className="absolute top-16 left-0 right-0 bg-gray-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
             <div className="px-4 py-4 space-y-1">
-              <Link
-                href={localePath('/worldcup')}
-                onClick={() => setMobileMenuOpen(false)}
-                className="relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 shadow-[0_0_15px_rgba(251,191,36,0.4)] overflow-hidden"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-shimmer" />
-                <img src="/homepage/FIFA-2026-World-Cup-Logo-removebg-preview.png" alt="FIFA World Cup 2026" className="h-8 w-auto object-contain relative z-10" />
-                <span className="text-black font-extrabold relative z-10">FIFA 2026</span>
-              </Link>
-
               {[
                 { href: localePath('/'), label: t('home') },
                 { href: localePath('/predictions'), label: t('predictions') },
@@ -506,25 +520,6 @@ export default function AllPlayersPage() {
                   {link.label}
                 </Link>
               ))}
-
-              {!user && (
-                <div className="pt-3 mt-3 border-t border-white/10 space-y-2">
-                  <Link
-                    href={localePath('/login')}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full text-center px-4 py-3 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all font-medium"
-                  >
-                    {t('login')}
-                  </Link>
-                  <Link
-                    href={localePath('/get-started')}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full text-center px-4 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
-                  >
-                    {t('getStarted')}
-                  </Link>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -552,6 +547,72 @@ export default function AllPlayersPage() {
             <p className="text-gray-400 text-sm sm:text-base">
               {players.length} {t('playersInLeague')}
             </p>
+          </div>
+
+          {/* Top Stats Section - SEO Content visible to crawlers */}
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
+            {/* Top Scorers */}
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/50 border border-white/10">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <span className="text-2xl">⚽</span> {t('topScorers')}
+              </h2>
+              <div className="space-y-2">
+                {topScorers.map((player, idx) => (
+                  <TopPlayerCard
+                    key={player.id}
+                    player={player}
+                    rank={idx + 1}
+                    statValue={player.goals_total || 0}
+                    statLabel={t('goals')}
+                    statColor="text-emerald-400"
+                    leagueSlug={leagueSlug}
+                    localePath={localePath}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Top Assists */}
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/50 border border-white/10">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <span className="text-2xl">🎯</span> {t('topAssistsTitle')}
+              </h2>
+              <div className="space-y-2">
+                {topAssists.map((player, idx) => (
+                  <TopPlayerCard
+                    key={player.id}
+                    player={player}
+                    rank={idx + 1}
+                    statValue={player.assists || 0}
+                    statLabel={t('assists')}
+                    statColor="text-cyan-400"
+                    leagueSlug={leagueSlug}
+                    localePath={localePath}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Highest Rated */}
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/50 border border-white/10">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <span className="text-2xl">⭐</span> {t('highestRated')}
+              </h2>
+              <div className="space-y-2">
+                {highestRated.map((player, idx) => (
+                  <TopPlayerCard
+                    key={player.id}
+                    player={player}
+                    rank={idx + 1}
+                    statValue={Number(player.rating?.toFixed(1)) || 0}
+                    statLabel="Rating"
+                    statColor="text-amber-400"
+                    leagueSlug={leagueSlug}
+                    localePath={localePath}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Filters */}
@@ -622,13 +683,6 @@ export default function AllPlayersPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
               {filteredPlayers.map((player) => {
-                // Calculate top 5 by rating (from all players, not filtered)
-                const top5PlayerIds = new Set(
-                  [...players]
-                    .sort((a, b) => (b.rating || 0) - (a.rating || 0))
-                    .slice(0, 5)
-                    .map((p) => p.id)
-                );
                 const isTop5 = top5PlayerIds.has(player.id);
                 const top5Rank = isTop5
                   ? [...players]
@@ -777,4 +831,3 @@ export default function AllPlayersPage() {
     </div>
   );
 }
-*/

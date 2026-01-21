@@ -174,3 +174,68 @@ export function slugToDisplayName(slug: string): string {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
+
+// League player stats type for SSR
+export interface LeaguePlayerData {
+  id: number;
+  player_name: string | null;
+  photo: string | null;
+  team_name: string | null;
+  position: string | null;
+  nationality: string | null;
+  age: number | null;
+  appearances: number | null;
+  minutes: number | null;
+  goals_total: number | null;
+  assists: number | null;
+  rating: number | null;
+}
+
+// Fetch all players for a league (server-side)
+async function fetchLeaguePlayers(leagueName: string): Promise<LeaguePlayerData[]> {
+  if (!supabase) return [];
+
+  try {
+    const { data, error } = await supabase
+      .from('player_stats')
+      .select('*')
+      .ilike('league_name', leagueName)
+      .order('rating', { ascending: false, nullsFirst: false });
+
+    if (error || !data) return [];
+    return data as LeaguePlayerData[];
+  } catch {
+    return [];
+  }
+}
+
+// Cached league players data fetcher (5 minute cache)
+export const getLeaguePlayersData = unstable_cache(
+  async (leagueName: string) => {
+    const players = await fetchLeaguePlayers(leagueName);
+
+    // Get top scorers
+    const topScorers = [...players]
+      .sort((a, b) => (b.goals_total || 0) - (a.goals_total || 0))
+      .slice(0, 5);
+
+    // Get top assists
+    const topAssists = [...players]
+      .sort((a, b) => (b.assists || 0) - (a.assists || 0))
+      .slice(0, 5);
+
+    // Get highest rated
+    const highestRated = [...players]
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+      .slice(0, 5);
+
+    return {
+      players,
+      topScorers,
+      topAssists,
+      highestRated,
+    };
+  },
+  ['league-players'],
+  { revalidate: 300 } // 5 minutes
+);
