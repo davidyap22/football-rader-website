@@ -768,6 +768,31 @@ export default function PerformancePage() {
   const [chartBetStyle, setChartBetStyle] = useState<string>('all');
   const [allBetRecords, setAllBetRecords] = useState<any[]>([]);
 
+  // Server-side pagination state
+  const [totalMatchCount, setTotalMatchCount] = useState(0);
+  const [matchesPage, setMatchesPage] = useState(0);
+  const MATCHES_PAGE_SIZE = 20;
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  // Progressive loading states
+  const [statsLoaded, setStatsLoaded] = useState(false);
+  const [chartLoaded, setChartLoaded] = useState(false);
+  const [matchesLoaded, setMatchesLoaded] = useState(false);
+
+  // RPC-based stats (for fast loading)
+  const [rpcStats, setRpcStats] = useState<{
+    total_profit: number;
+    total_invested: number;
+    total_bets: number;
+    total_matches: number;
+    win_rate: number;
+    roi: number;
+    profit_moneyline: number;
+    profit_handicap: number;
+    profit_ou: number;
+  } | null>(null);
+  const [rpcChartData, setRpcChartData] = useState<any[]>([]);
+
 
   // Top 5 European leagues (always show in filter)
   const TOP_LEAGUES = [
@@ -812,25 +837,38 @@ export default function PerformancePage() {
   };
 
   // Compute filtered stats for chart based on chartBetStyle
+  // Now uses RPC data when available for much faster performance
   const filteredChartStats = (() => {
+    // If RPC data is available, use it directly (much faster)
+    if (rpcStats && rpcChartData) {
+      // Convert RPC chart data to the expected format with index
+      const dailyData = rpcChartData.map((d: any, index: number) => ({
+        index: index,
+        date: d.date,
+        fullDateTime: d.date,
+        profit: d.profit || 0,
+        cumulative: d.cumulative || 0,
+        cumulativeMoneyline: d.cumulativeMoneyline || 0,
+        cumulativeHandicap: d.cumulativeHandicap || 0,
+        cumulativeOU: d.cumulativeOU || 0,
+      }));
+
+      return {
+        profitMoneyline: rpcStats.profit_moneyline || 0,
+        profitHandicap: rpcStats.profit_handicap || 0,
+        profitOU: rpcStats.profit_ou || 0,
+        totalProfit: rpcStats.total_profit || 0,
+        totalInvested: rpcStats.total_invested || 0,
+        roi: rpcStats.roi || 0,
+        dailyData,
+        totalBets: rpcStats.total_bets || 0,
+      };
+    }
+
+    // Fallback to client-side calculation if RPC data not available
     const filtered = chartBetStyle === 'all'
       ? allBetRecords
       : allBetRecords.filter(r => r.bet_style?.toLowerCase() === chartBetStyle.toLowerCase());
-
-    // Debug: Check what's being filtered
-    if (chartBetStyle !== 'all') {
-      console.log(`[Chart Debug] chartBetStyle: "${chartBetStyle}"`);
-      console.log(`[Chart Debug] filtered records count: ${filtered.length}`);
-      if (filtered.length > 0) {
-        console.log(`[Chart Debug] Sample record bet_style: "${filtered[0]?.bet_style}"`);
-        console.log(`[Chart Debug] Sample record bet_time: "${filtered[0]?.bet_time}"`);
-        const validDateRecords = filtered.filter(r => r.bet_time && !isNaN(new Date(r.bet_time).getTime()));
-        console.log(`[Chart Debug] Records with valid bet_time: ${validDateRecords.length}`);
-      }
-      // Check unique bet_styles in allBetRecords
-      const uniqueStyles = [...new Set(allBetRecords.map(r => r.bet_style))];
-      console.log(`[Chart Debug] Unique bet_styles in data:`, uniqueStyles);
-    }
 
     let profitMoneyline = 0;
     let profitHandicap = 0;
@@ -852,7 +890,7 @@ export default function PerformancePage() {
 
     const roi = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
 
-    // Calculate daily cumulative data - filter out invalid dates first, then sort
+    // Calculate daily cumulative data
     const sortedRecords = [...filtered]
       .filter(r => r.bet_time && !isNaN(new Date(r.bet_time).getTime()))
       .sort((a, b) => new Date(a.bet_time).getTime() - new Date(b.bet_time).getTime());
@@ -862,8 +900,6 @@ export default function PerformancePage() {
     let cumulativeHDP = 0;
     let cumulativeOU = 0;
 
-    // Create per-bet data points for smooth chart lines
-    // Use index as x-axis key to ensure unique positions, store date for display
     const dailyData = sortedRecords.map((r, index) => {
       const profit = r.profit || 0;
       const betType = getBetTypeFromRecord(r);
@@ -954,24 +990,195 @@ export default function PerformancePage() {
   }, []);
 
 
+  // Cache key for localStorage
+  const CACHE_KEY = 'oddsflow_performance_cache';
+  const CACHE_EXPIRY = 5 * 60 * 1000; // 5 minutes
+
+  // Load cached data immediately on mount
   useEffect(() => {
-    fetchPerformanceData();
+    loadCachedData();
+    fetchPerformanceDataFast(); // Fetch fresh data in background
   }, []);
 
-  const fetchPerformanceData = async () => {
-    setLoading(true);
+  // Refetch when bet style changes
+  useEffect(() => {
+    if (!loading) {
+      loadCachedData(); // Show cached data for this style immediately
+      fetchPerformanceDataFast();
+    }
+  }, [chartBetStyle]);
+
+  // Load cached data from localStorage
+  const loadCachedData = () => {
     try {
-      // Fetch finished matches from prematches table (increase limit from default 1000)
-      const { data: matchesData, error: matchesError } = await supabase
-        .from('prematches')
-        .select('fixture_id, league_name, league_logo, home_name, home_logo, away_name, away_logo, goals_home, goals_away, start_date_msia')
-        .eq('status_short', 'FT')
-        .order('start_date_msia', { ascending: false })
-        .limit(10000);
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { data, timestamp, betStyle } = JSON.parse(cached);
+        // Only use cache if it matches current bet style
+        if (betStyle === chartBetStyle && data) {
+          setOverallStats(data.overallStats);
+          setMatches(data.matches || []);
+          setDailyPerformance(data.dailyPerformance || []);
+          setAllBetRecords(data.allBetRecords || []);
+          setAvailableLeagues(data.availableLeagues || []);
+          setStatsLoaded(true);
+          setMatchesLoaded(true);
+          setChartLoaded(true);
+          setLoading(false);
+          setAnimationStarted(true);
+          console.log('Loaded from cache (age: ' + Math.round((Date.now() - timestamp) / 1000) + 's)');
+        }
+      }
+    } catch (e) {
+      console.log('No cache available');
+    }
+  };
 
-      if (matchesError) throw matchesError;
+  // Save data to cache
+  const saveToCache = (data: any) => {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        data,
+        timestamp: Date.now(),
+        betStyle: chartBetStyle,
+      }));
+    } catch (e) {
+      console.log('Failed to save cache');
+    }
+  };
 
-      // Fetch all profit_summary data using pagination (Supabase default limit is 1000)
+  // Fast data fetching (runs in background, updates cache)
+  const fetchPerformanceDataFast = async () => {
+    // Don't show loading if we have cached data
+    const hasCachedData = statsLoaded;
+    if (!hasCachedData) {
+      setLoading(true);
+      setStatsLoaded(false);
+      setChartLoaded(false);
+      setMatchesLoaded(false);
+    }
+
+    const betStyleParam = chartBetStyle === 'all' ? null : chartBetStyle;
+
+    // Try RPC first
+    const testResult = await supabase.rpc('get_performance_summary', { p_bet_style: betStyleParam });
+
+    if (!testResult.error) {
+      // RPC available - use fast path
+      await fetchWithRPC(betStyleParam, testResult);
+    } else {
+      // Fallback to progressive legacy loading
+      console.log('RPC not available, using progressive legacy loading...');
+      await fetchProgressiveLegacy();
+    }
+  };
+
+  // RPC-based fast loading
+  const fetchWithRPC = async (betStyleParam: string | null, summaryResult: any) => {
+    // Phase 1: Stats already loaded from test call
+    setRpcStats(summaryResult.data);
+    if (summaryResult.data) {
+      setOverallStats({
+        totalProfit: summaryResult.data.total_profit || 0,
+        winRate: summaryResult.data.win_rate || 0,
+        totalBets: summaryResult.data.total_bets || 0,
+        roi: summaryResult.data.roi || 0,
+        totalInvested: summaryResult.data.total_invested || 0,
+        profitMoneyline: summaryResult.data.profit_moneyline || 0,
+        profitHandicap: summaryResult.data.profit_handicap || 0,
+        profitOU: summaryResult.data.profit_ou || 0,
+      });
+    }
+    setStatsLoaded(true);
+    setLoading(false);
+    setTimeout(() => setAnimationStarted(true), 100);
+
+    // Phase 2 & 3: Load chart and matches in parallel (background)
+    const [chartResult, matchesResult] = await Promise.all([
+      supabase.rpc('get_performance_chart_data', { p_bet_style: betStyleParam }),
+      supabase.rpc('get_performance_matches', {
+        p_bet_style: betStyleParam,
+        p_page: 0,
+        p_page_size: MATCHES_PAGE_SIZE
+      })
+    ]);
+
+    // Set chart data
+    let dailyData: DailyPerformance[] = [];
+    if (!chartResult.error) {
+      setRpcChartData(chartResult.data || []);
+      dailyData = (chartResult.data || []).map((d: any) => ({
+        date: d.date,
+        profit: d.profit || 0,
+        cumulative: d.cumulative || 0,
+        cumulativeMoneyline: d.cumulativeMoneyline || 0,
+        cumulativeHandicap: d.cumulativeHandicap || 0,
+        cumulativeOU: d.cumulativeOU || 0,
+      }));
+      setDailyPerformance(dailyData);
+    }
+    setChartLoaded(true);
+
+    // Set matches
+    let rpcMatches: MatchSummary[] = [];
+    let availableLeaguesList: string[] = [];
+    if (!matchesResult.error) {
+      const matchesData = matchesResult.data;
+      setTotalMatchCount(matchesData?.total_count || 0);
+      setMatchesPage(0);
+
+      rpcMatches = (matchesData?.matches || []).map((m: any) => ({
+        fixture_id: String(m.fixture_id),
+        league_name: m.league_name || 'Unknown',
+        league_logo: m.league_logo || '',
+        home_name: m.home_name || 'Home Team',
+        home_logo: m.home_logo || '',
+        away_name: m.away_name || 'Away Team',
+        away_logo: m.away_logo || '',
+        home_score: m.home_score ?? 0,
+        away_score: m.away_score ?? 0,
+        total_profit: m.total_profit || 0,
+        total_invested: m.total_invested || 0,
+        roi_percentage: m.roi || 0,
+        total_bets: m.bet_count || 0,
+        profit_moneyline: m.profit_moneyline || 0,
+        profit_handicap: m.profit_handicap || 0,
+        profit_ou: m.profit_ou || 0,
+        match_date: m.match_date || m.latest_bet_time || '',
+      }));
+
+      setMatches(rpcMatches);
+      const topLeagueNames = TOP_LEAGUES.map(l => l.name);
+      const otherLeagues = [...new Set(rpcMatches.map(m => m.league_name))]
+        .filter(l => !topLeagueNames.includes(l));
+      availableLeaguesList = [...topLeagueNames, ...otherLeagues];
+      setAvailableLeagues(availableLeaguesList);
+    }
+    setMatchesLoaded(true);
+
+    // Save to cache
+    saveToCache({
+      overallStats: {
+        totalProfit: summaryResult.data.total_profit || 0,
+        winRate: summaryResult.data.win_rate || 0,
+        totalBets: summaryResult.data.total_bets || 0,
+        roi: summaryResult.data.roi || 0,
+        totalInvested: summaryResult.data.total_invested || 0,
+        profitMoneyline: summaryResult.data.profit_moneyline || 0,
+        profitHandicap: summaryResult.data.profit_handicap || 0,
+        profitOU: summaryResult.data.profit_ou || 0,
+      },
+      matches: rpcMatches,
+      dailyPerformance: dailyData,
+      allBetRecords: [],
+      availableLeagues: availableLeaguesList,
+    });
+  };
+
+  // Progressive legacy loading (without RPC) - loads ALL data with pagination
+  const fetchProgressiveLegacy = async () => {
+    try {
+      // Fetch ALL profit_summary data using pagination (Supabase default limit is 1000)
       let allProfitData: any[] = [];
       let page = 0;
       const pageSize = 1000;
@@ -980,7 +1187,7 @@ export default function PerformancePage() {
       while (hasMore) {
         const { data: pageData, error: pageError } = await supabase
           .from('profit_summary')
-          .select('fixture_id, total_profit, total_invested, roi_percentage, total_bets, profit_moneyline, profit_handicap, profit_ou, bet_time, bet_style, profit, selection, type, stake_money, clock, line, odds, home_score, away_score, status, league_name')
+          .select('fixture_id, league_name, profit, stake_money, type, selection, bet_time, home_score, away_score, bet_style')
           .order('bet_time', { ascending: true })
           .range(page * pageSize, (page + 1) * pageSize - 1);
 
@@ -990,227 +1197,267 @@ export default function PerformancePage() {
           allProfitData = [...allProfitData, ...pageData];
           page++;
           hasMore = pageData.length === pageSize;
+
+          // After first page, show initial stats to user (progressive loading)
+          if (page === 1) {
+            setLoading(false);
+            setTimeout(() => setAnimationStarted(true), 100);
+          }
         } else {
           hasMore = false;
         }
       }
 
-      const profitData = allProfitData;
+      // Store all bet records
+      setAllBetRecords(allProfitData);
 
-      // Store all individual bet records for filtering
-      setAllBetRecords(profitData || []);
-
-      // Create a map of profit data by fixture_id (aggregate individual bets per fixture)
-      const profitMap = new Map<string, {
-        total_profit: number;
-        total_invested: number;
-        total_bets: number;
-        profit_moneyline: number;
-        profit_handicap: number;
-        profit_ou: number;
-        bet_time: string;
-      }>();
-
-      // Helper function for bet type detection
-      const getBetTypeLocal = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
-        if (!selection) return 'ou';
-        const sel = selection.toLowerCase();
-        if (sel.includes('hdp') || sel.includes('handicap')) return 'handicap';
-        if (sel.includes('over') || sel.includes('under')) return 'ou';
-        if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
-        if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
-        return 'ou';
-      };
-
-      profitData?.forEach((p: any) => {
-        const key = String(p.fixture_id);
-        const profit = p.profit || 0;
-        const invested = p.stake_money || 0;
-        const betType = getBetTypeLocal(p.selection);
-
-        if (!profitMap.has(key)) {
-          profitMap.set(key, {
-            total_profit: 0,
-            total_invested: 0,
-            total_bets: 0,
-            profit_moneyline: 0,
-            profit_handicap: 0,
-            profit_ou: 0,
-            bet_time: p.bet_time,
-          });
-        }
-
-        const current = profitMap.get(key)!;
-        current.total_profit += profit;
-        current.total_invested += invested;
-        current.total_bets += 1;
-        if (betType === 'moneyline') current.profit_moneyline += profit;
-        else if (betType === 'handicap') current.profit_handicap += profit;
-        else current.profit_ou += profit;
-      });
-
-      // Create a map of prematches data by fixture_id for quick lookup
-      const prematchesMap = new Map<string, any>();
-      matchesData?.forEach((m: any) => {
-        prematchesMap.set(String(m.fixture_id), m);
-      });
-
-      // Build matches starting from profit_summary (guaranteed to have all our data)
-      // and enrich with prematches info if available
-      const combinedMatches: MatchSummary[] = [];
-
-      profitMap.forEach((profit, fixtureId) => {
-        const prematch = prematchesMap.get(fixtureId);
-
-        // Get first profit record for this fixture to get league_name, scores, bet_time
-        const firstProfitRecord = profitData?.find((p: any) => String(p.fixture_id) === fixtureId);
-
-        const roi = profit.total_invested > 0 ? (profit.total_profit / profit.total_invested) * 100 : 0;
-
-        combinedMatches.push({
-          fixture_id: fixtureId,
-          league_name: prematch?.league_name || firstProfitRecord?.league_name || 'Unknown',
-          league_logo: prematch?.league_logo || '',
-          home_name: prematch?.home_name || 'Home Team',
-          home_logo: prematch?.home_logo || '',
-          away_name: prematch?.away_name || 'Away Team',
-          away_logo: prematch?.away_logo || '',
-          home_score: prematch?.goals_home ?? firstProfitRecord?.home_score ?? 0,
-          away_score: prematch?.goals_away ?? firstProfitRecord?.away_score ?? 0,
-          total_profit: profit.total_profit,
-          total_invested: profit.total_invested,
-          roi_percentage: roi,
-          total_bets: profit.total_bets,
-          profit_moneyline: profit.profit_moneyline,
-          profit_handicap: profit.profit_handicap,
-          profit_ou: profit.profit_ou,
-          match_date: prematch?.start_date_msia || profit.bet_time,
-        });
-      });
-
-      // Sort by match_date descending (newest first)
-      combinedMatches.sort((a, b) =>
-        new Date(b.match_date).getTime() - new Date(a.match_date).getTime()
-      );
-
-      setMatches(combinedMatches);
-
-      // Get unique leagues - start with top 5 leagues, then add any others from data
-      const topLeagueNames = TOP_LEAGUES.map(l => l.name);
-      const otherLeagues = [...new Set(combinedMatches.map(m => m.league_name))]
-        .filter(l => !topLeagueNames.includes(l));
-      setAvailableLeagues([...topLeagueNames, ...otherLeagues]);
-
-      // Calculate overall stats from individual bet records (more accurate)
+      // Calculate stats from ALL data
       let totalProfit = 0;
-      let totalBets = profitData?.length || 0;
       let totalInvested = 0;
+      let wins = 0;
       let profitMoneyline = 0;
       let profitHandicap = 0;
       let profitOU = 0;
+      const fixtureSet = new Set<string>();
 
-      // Helper to derive bet type from selection
-      const deriveBetType = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
-        if (!selection) return 'ou';
-        const sel = selection.toLowerCase();
-        if (sel.includes('hdp') || sel.includes('handicap')) return 'handicap';
-        if (sel.includes('over') || sel.includes('under')) return 'ou';
-        if (/^(home|away)\s*[+-]?\d/.test(sel)) return 'handicap';
-        if (sel === 'home' || sel === 'draw' || sel === 'away') return 'moneyline';
-        return 'ou';
-      };
-
-      profitData?.forEach((p: any) => {
-        const profit = p.profit || 0;
-        const invested = p.stake_money || 0;
+      allProfitData.forEach((r: any) => {
+        const profit = r.profit || 0;
         totalProfit += profit;
-        totalInvested += invested;
+        totalInvested += r.stake_money || 0;
+        if (profit > 0) wins++;
+        fixtureSet.add(String(r.fixture_id));
 
-        const betType = deriveBetType(p.selection);
+        const betType = getBetTypeFromRecord(r);
         if (betType === 'moneyline') profitMoneyline += profit;
         else if (betType === 'handicap') profitHandicap += profit;
         else profitOU += profit;
       });
 
-      // Win rate still based on matches (fixtures)
-      const wins = combinedMatches.filter(m => m.total_profit > 0).length;
-      const winRate = combinedMatches.length > 0 ? (wins / combinedMatches.length) * 100 : 0;
+      const winRate = allProfitData.length > 0 ? (wins / allProfitData.length) * 100 : 0;
       const roi = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
 
       setOverallStats({
         totalProfit,
         winRate,
-        totalBets,
+        totalBets: allProfitData.length,
         roi,
         totalInvested,
         profitMoneyline,
         profitHandicap,
         profitOU,
       });
+      setStatsLoaded(true);
 
-      // Calculate cumulative performance for the full year (by month or by match)
-      const sortedMatches = [...combinedMatches].sort((a, b) =>
-        new Date(a.match_date).getTime() - new Date(b.match_date).getTime()
+      // Get unique fixture IDs for prematches lookup
+      const fixtureIds = [...fixtureSet];
+
+      // Fetch prematches info (batch by 100 to avoid query limits)
+      const prematchesMap = new Map<string, any>();
+      for (let i = 0; i < fixtureIds.length; i += 100) {
+        const batch = fixtureIds.slice(i, i + 100);
+        const { data: prematchesData } = await supabase
+          .from('prematches')
+          .select('fixture_id, league_logo, home_name, home_logo, away_name, away_logo, goals_home, goals_away, start_date_msia')
+          .in('fixture_id', batch);
+
+        prematchesData?.forEach((m: any) => {
+          prematchesMap.set(String(m.fixture_id), m);
+        });
+      }
+
+      // Aggregate by fixture
+      const profitMap = new Map<string, any>();
+      allProfitData.forEach((r: any) => {
+        const key = String(r.fixture_id);
+        const profit = r.profit || 0;
+        const betType = getBetTypeFromRecord(r);
+
+        if (!profitMap.has(key)) {
+          profitMap.set(key, {
+            fixture_id: key,
+            league_name: r.league_name || 'Unknown',
+            total_profit: 0,
+            total_invested: 0,
+            total_bets: 0,
+            profit_moneyline: 0,
+            profit_handicap: 0,
+            profit_ou: 0,
+            bet_time: r.bet_time,
+            home_score: r.home_score,
+            away_score: r.away_score,
+          });
+        }
+
+        const current = profitMap.get(key);
+        current.total_profit += profit;
+        current.total_invested += r.stake_money || 0;
+        current.total_bets += 1;
+        if (betType === 'moneyline') current.profit_moneyline += profit;
+        else if (betType === 'handicap') current.profit_handicap += profit;
+        else current.profit_ou += profit;
+      });
+
+      // Convert to MatchSummary array
+      const combinedMatches: MatchSummary[] = [];
+      profitMap.forEach((data, fixtureId) => {
+        const prematch = prematchesMap.get(fixtureId);
+        const matchRoi = data.total_invested > 0 ? (data.total_profit / data.total_invested) * 100 : 0;
+
+        combinedMatches.push({
+          fixture_id: fixtureId,
+          league_name: data.league_name,
+          league_logo: prematch?.league_logo || '',
+          home_name: prematch?.home_name || 'Home Team',
+          home_logo: prematch?.home_logo || '',
+          away_name: prematch?.away_name || 'Away Team',
+          away_logo: prematch?.away_logo || '',
+          home_score: prematch?.goals_home ?? data.home_score ?? 0,
+          away_score: prematch?.goals_away ?? data.away_score ?? 0,
+          total_profit: data.total_profit,
+          total_invested: data.total_invested,
+          roi_percentage: matchRoi,
+          total_bets: data.total_bets,
+          profit_moneyline: data.profit_moneyline,
+          profit_handicap: data.profit_handicap,
+          profit_ou: data.profit_ou,
+          match_date: prematch?.start_date_msia || data.bet_time,
+        });
+      });
+
+      combinedMatches.sort((a, b) => new Date(b.match_date).getTime() - new Date(a.match_date).getTime());
+      setMatches(combinedMatches);
+      setMatchesLoaded(true);
+
+      const topLeagueNames = TOP_LEAGUES.map(l => l.name);
+      const otherLeagues = [...new Set(combinedMatches.map(m => m.league_name))]
+        .filter(l => !topLeagueNames.includes(l));
+      setAvailableLeagues([...topLeagueNames, ...otherLeagues]);
+
+      // Calculate daily cumulative for chart
+      const sortedRecords = [...allProfitData].sort((a, b) =>
+        new Date(a.bet_time).getTime() - new Date(b.bet_time).getTime()
       );
 
       let cumulative = 0;
       let cumulativeML = 0;
       let cumulativeHDP = 0;
       let cumulativeOU = 0;
-      const dailyData: DailyPerformance[] = sortedMatches.map((match) => {
-        cumulative += match.total_profit;
-        cumulativeML += match.profit_moneyline;
-        cumulativeHDP += match.profit_handicap;
-        cumulativeOU += match.profit_ou;
-        return {
-          date: match.match_date.split('T')[0],
-          profit: match.total_profit,
-          cumulative: cumulative,
+      const dailyData: DailyPerformance[] = [];
+      const dailyMap = new Map<string, { profit: number; ml: number; hdp: number; ou: number }>();
+
+      sortedRecords.forEach((r) => {
+        const date = r.bet_time?.split('T')[0] || '';
+        const profit = r.profit || 0;
+        const betType = getBetTypeFromRecord(r);
+
+        if (!dailyMap.has(date)) {
+          dailyMap.set(date, { profit: 0, ml: 0, hdp: 0, ou: 0 });
+        }
+        const day = dailyMap.get(date)!;
+        day.profit += profit;
+        if (betType === 'moneyline') day.ml += profit;
+        else if (betType === 'handicap') day.hdp += profit;
+        else day.ou += profit;
+      });
+
+      [...dailyMap.entries()].sort((a, b) => a[0].localeCompare(b[0])).forEach(([date, day]) => {
+        cumulative += day.profit;
+        cumulativeML += day.ml;
+        cumulativeHDP += day.hdp;
+        cumulativeOU += day.ou;
+        dailyData.push({
+          date,
+          profit: day.profit,
+          cumulative,
           cumulativeMoneyline: cumulativeML,
           cumulativeHandicap: cumulativeHDP,
           cumulativeOU: cumulativeOU,
-        };
+        });
       });
 
       setDailyPerformance(dailyData);
+      setChartLoaded(true);
 
-      // Start animation after data is loaded
-      setTimeout(() => {
-        setAnimationStarted(true);
-      }, 100);
+      // Save to cache for instant loading next time
+      saveToCache({
+        overallStats: {
+          totalProfit,
+          winRate,
+          totalBets: allProfitData.length,
+          roi,
+          totalInvested,
+          profitMoneyline,
+          profitHandicap,
+          profitOU,
+        },
+        matches: combinedMatches,
+        dailyPerformance: dailyData,
+        allBetRecords: allProfitData,
+        availableLeagues: [...topLeagueNames, ...otherLeagues],
+      });
+      console.log('Data cached successfully');
 
     } catch (error) {
-      console.error('Error fetching performance data:', error);
-    } finally {
+      console.error('Error in progressive loading:', error);
       setLoading(false);
     }
   };
 
+  // Load more matches (pagination)
+  const loadMoreMatches = async () => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const nextPage = matchesPage + 1;
+      const betStyleParam = chartBetStyle === 'all' ? null : chartBetStyle;
+
+      const { data, error } = await supabase.rpc('get_performance_matches', {
+        p_bet_style: betStyleParam,
+        p_page: nextPage,
+        p_page_size: MATCHES_PAGE_SIZE
+      });
+
+      if (error) throw error;
+
+      const newMatches: MatchSummary[] = (data?.matches || []).map((m: any) => ({
+        fixture_id: String(m.fixture_id),
+        league_name: m.league_name || 'Unknown',
+        league_logo: m.league_logo || '',
+        home_name: m.home_name || 'Home Team',
+        home_logo: m.home_logo || '',
+        away_name: m.away_name || 'Away Team',
+        away_logo: m.away_logo || '',
+        home_score: m.home_score ?? 0,
+        away_score: m.away_score ?? 0,
+        total_profit: m.total_profit || 0,
+        total_invested: m.total_invested || 0,
+        roi_percentage: m.roi || 0,
+        total_bets: m.bet_count || 0,
+        profit_moneyline: m.profit_moneyline || 0,
+        profit_handicap: m.profit_handicap || 0,
+        profit_ou: m.profit_ou || 0,
+        match_date: m.match_date || m.latest_bet_time || '',
+      }));
+
+      setMatches(prev => [...prev, ...newMatches]);
+      setMatchesPage(nextPage);
+    } catch (error) {
+      console.error('Error loading more matches:', error);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
 
-  const filteredMatches = (() => {
-    let result = selectedLeague === 'all'
-      ? matches
-      : matches.filter(m => m.league_name === selectedLeague);
+  // Filter matches by league only (bet style is already filtered server-side)
+  const filteredMatches = selectedLeague === 'all'
+    ? matches
+    : matches.filter(m => m.league_name === selectedLeague);
 
-    // Also filter by bet style - only show matches that have at least one bet of the selected style
-    if (chartBetStyle !== 'all') {
-      result = result.filter(m => {
-        const profits = matchProfitsByStyle.get(String(m.fixture_id));
-        return profits && (profits.total_profit !== 0 || profits.total_invested > 0);
-      });
-    }
-
-    return result;
-  })();
-
-  // Pagination
-  const totalPages = Math.ceil(filteredMatches.length / ITEMS_PER_PAGE);
-  const paginatedMatches = filteredMatches.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  // With server-side pagination, paginatedMatches is the same as filteredMatches
+  // (pagination is handled by loadMoreMatches)
+  const paginatedMatches = filteredMatches;
 
   // Reset to page 1 when league or bet style filter changes
   useEffect(() => {
@@ -2290,74 +2537,43 @@ export default function PerformancePage() {
                   </div>
                 )}
 
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 p-4 border-t border-white/5">
-                    {/* Previous Button */}
+                {/* Load More / Pagination */}
+                <div className="flex flex-col items-center gap-3 p-4 border-t border-white/5">
+                  {/* Show count */}
+                  <span className="text-sm text-gray-500">
+                    Showing {matches.length} of {totalMatchCount > 0 ? totalMatchCount : matches.length} matches
+                  </span>
+
+                  {/* Load More Button - only show if there are more matches to load */}
+                  {matches.length < totalMatchCount && (
                     <button
-                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                      disabled={currentPage === 1}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                        currentPage === 1
+                      onClick={loadMoreMatches}
+                      disabled={loadingMore}
+                      className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                        loadingMore
                           ? 'bg-white/5 text-gray-600 cursor-not-allowed'
-                          : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white cursor-pointer'
+                          : 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/50 cursor-pointer'
                       }`}
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                      </svg>
+                      {loadingMore ? (
+                        <span className="flex items-center gap-2">
+                          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Loading...
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                          Load More ({totalMatchCount - matches.length} remaining)
+                        </span>
+                      )}
                     </button>
-
-                    {/* Page Numbers */}
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1)
-                        .filter(page => {
-                          // Show first, last, current, and pages around current
-                          if (page === 1 || page === totalPages) return true;
-                          if (Math.abs(page - currentPage) <= 1) return true;
-                          return false;
-                        })
-                        .map((page, index, arr) => (
-                          <div key={page} className="flex items-center">
-                            {/* Show ellipsis if there's a gap */}
-                            {index > 0 && arr[index - 1] < page - 1 && (
-                              <span className="px-2 text-gray-600">...</span>
-                            )}
-                            <button
-                              onClick={() => setCurrentPage(page)}
-                              className={`min-w-[36px] px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
-                                currentPage === page
-                                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50'
-                                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
-                              }`}
-                            >
-                              {page}
-                            </button>
-                          </div>
-                        ))}
-                    </div>
-
-                    {/* Next Button */}
-                    <button
-                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                      disabled={currentPage === totalPages}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                        currentPage === totalPages
-                          ? 'bg-white/5 text-gray-600 cursor-not-allowed'
-                          : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white cursor-pointer'
-                      }`}
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
-
-                    {/* Page Info */}
-                    <span className="ml-4 text-sm text-gray-500">
-                      {(currentPage - 1) * ITEMS_PER_PAGE + 1}-{Math.min(currentPage * ITEMS_PER_PAGE, filteredMatches.length)} of {filteredMatches.length}
-                    </span>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </>
           )}
