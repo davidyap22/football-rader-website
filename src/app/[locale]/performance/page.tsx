@@ -15,16 +15,16 @@ export function generateStaticParams() {
 const currentYear = new Date().getFullYear();
 
 const titles: Record<string, string> = {
-  en: `AI Football Prediction Performance & Track Record (${currentYear}) | OddsFlow`,
-  es: `Rendimiento de Predicciones de Fútbol IA y Historial (${currentYear}) | OddsFlow`,
-  pt: `Desempenho de Previsões de Futebol IA e Histórico (${currentYear}) | OddsFlow`,
-  de: `KI-Fußballvorhersage Leistung & Erfolgsbilanz (${currentYear}) | OddsFlow`,
-  fr: `Performance des Prédictions Football IA & Historique (${currentYear}) | OddsFlow`,
-  ja: `AIサッカー予測の実績とトラックレコード (${currentYear}) | OddsFlow`,
-  ko: `AI 축구 예측 성과 및 실적 (${currentYear}) | OddsFlow`,
-  zh: `AI足球预测表现与业绩记录 (${currentYear}) | OddsFlow`,
-  tw: `AI足球預測表現與業績記錄 (${currentYear}) | OddsFlow`,
-  id: `Performa Prediksi Sepak Bola AI & Rekam Jejak (${currentYear}) | OddsFlow`,
+  en: `AI Football Prediction Performance & Track Record (${currentYear})`,
+  es: `Rendimiento de Predicciones de Futbol IA y Historial (${currentYear})`,
+  pt: `Desempenho de Previsoes de Futebol IA e Historico (${currentYear})`,
+  de: `KI-Fussballvorhersage Leistung & Erfolgsbilanz (${currentYear})`,
+  fr: `Performance des Predictions Football IA & Historique (${currentYear})`,
+  ja: `AIサッカー予測の実績とトラックレコード (${currentYear})`,
+  ko: `AI 축구 예측 성과 및 실적 (${currentYear})`,
+  zh: `AI足球预测表现与业绩记录 (${currentYear})`,
+  tw: `AI足球預測表現與業績記錄 (${currentYear})`,
+  id: `Performa Prediksi Sepak Bola AI & Rekam Jejak (${currentYear})`,
 };
 
 // Dynamic descriptions will be generated in generateMetadata with actual stats

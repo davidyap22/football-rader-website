@@ -58,6 +58,7 @@ export interface InitialPerformanceData {
 
 // Fetch performance summary with server-side caching
 // Revalidates every 5 minutes (300 seconds)
+// Note: RPC functions may not be available - client will use fallback
 export const getPerformanceStats = unstable_cache(
   async (betStyle: string | null = null): Promise<PerformanceStats | null> => {
     if (!supabaseServer) return null;
@@ -67,14 +68,14 @@ export const getPerformanceStats = unstable_cache(
         p_bet_style: betStyle
       });
 
+      // RPC function may not exist - fail silently, client will use fallback
       if (error) {
-        console.error('Error fetching performance stats:', error);
         return null;
       }
 
       return data as PerformanceStats;
     } catch (e) {
-      console.error('Exception fetching performance stats:', e);
+      // Fail silently - client will use fallback
       return null;
     }
   },
@@ -86,6 +87,7 @@ export const getPerformanceStats = unstable_cache(
 );
 
 // Fetch chart data with server-side caching
+// Note: RPC functions may not be available - client will use fallback
 export const getChartData = unstable_cache(
   async (betStyle: string | null = null): Promise<ChartDataPoint[]> => {
     if (!supabaseServer) return [];
@@ -95,8 +97,8 @@ export const getChartData = unstable_cache(
         p_bet_style: betStyle
       });
 
+      // RPC function may not exist - fail silently, client will use fallback
       if (error) {
-        console.error('Error fetching chart data:', error);
         return [];
       }
 
@@ -109,7 +111,7 @@ export const getChartData = unstable_cache(
         cumulativeOU: d.cumulativeOU || 0,
       }));
     } catch (e) {
-      console.error('Exception fetching chart data:', e);
+      // Fail silently - client will use fallback
       return [];
     }
   },
@@ -121,6 +123,7 @@ export const getChartData = unstable_cache(
 );
 
 // Fetch initial matches with server-side caching
+// Note: RPC functions may not be available - client will use fallback
 export const getInitialMatches = unstable_cache(
   async (betStyle: string | null = null, pageSize: number = 20): Promise<{ matches: MatchData[], totalCount: number }> => {
     if (!supabaseServer) return { matches: [], totalCount: 0 };
@@ -132,8 +135,8 @@ export const getInitialMatches = unstable_cache(
         p_page_size: pageSize
       });
 
+      // RPC function may not exist - fail silently, client will use fallback
       if (error) {
-        console.error('Error fetching matches:', error);
         return { matches: [], totalCount: 0 };
       }
 
@@ -162,7 +165,7 @@ export const getInitialMatches = unstable_cache(
         totalCount: data?.total_count || 0
       };
     } catch (e) {
-      console.error('Exception fetching matches:', e);
+      // Fail silently - client will use fallback
       return { matches: [], totalCount: 0 };
     }
   },
