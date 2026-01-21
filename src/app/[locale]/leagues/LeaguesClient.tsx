@@ -12,8 +12,8 @@ import { LeagueStatsSummary, LEAGUES_CONFIG } from '@/lib/leagues-data';
 // Translations
 const translations: Record<string, Record<string, string>> = {
   EN: {
-    leagues: "Leagues",
-    leaguesSubtitle: "Explore predictions across all major football leagues worldwide",
+    leagues: "Football Leagues & AI Predictions",
+    leaguesSubtitle: "OddsFlow provides AI-powered predictions for Premier League, Bundesliga, Serie A, La Liga, Ligue 1, and Champions League. Browse league standings, team statistics, and get data-driven betting insights.",
     home: "Home",
     predictions: "Predictions",
     performance: "AI Performance",
@@ -48,8 +48,8 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
   },
   ES: {
-    leagues: "Ligas",
-    leaguesSubtitle: "Explora predicciones de todas las principales ligas de futbol del mundo",
+    leagues: "Ligas de Futbol y Predicciones IA",
+    leaguesSubtitle: "OddsFlow ofrece predicciones impulsadas por IA para Premier League, Bundesliga, Serie A, La Liga, Ligue 1 y Champions League. Consulta clasificaciones, estadisticas y obtiene consejos de apuestas.",
     home: "Inicio",
     predictions: "Predicciones",
     performance: "Rendimiento IA",
@@ -84,8 +84,8 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "Aviso: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento.",
   },
   PT: {
-    leagues: "Ligas",
-    leaguesSubtitle: "Explore previsoes das principais ligas de futebol do mundo",
+    leagues: "Ligas de Futebol e Previsoes IA",
+    leaguesSubtitle: "OddsFlow oferece previsoes impulsionadas por IA para Premier League, Bundesliga, Serie A, La Liga, Ligue 1 e Champions League. Veja classificacoes, estatisticas e dicas de apostas.",
     home: "Inicio",
     predictions: "Previsoes",
     performance: "Desempenho IA",
@@ -120,8 +120,8 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "Aviso: OddsFlow fornece previsoes baseadas em IA apenas para fins informativos e de entretenimento.",
   },
   DE: {
-    leagues: "Ligen",
-    leaguesSubtitle: "Erkunden Sie Vorhersagen fur alle grossen Fussballligen weltweit",
+    leagues: "Fussball-Ligen & KI-Vorhersagen",
+    leaguesSubtitle: "OddsFlow bietet KI-gestutzte Vorhersagen fur Premier League, Bundesliga, Serie A, La Liga, Ligue 1 und Champions League. Tabellen, Statistiken und Wett-Tipps.",
     home: "Startseite",
     predictions: "Vorhersagen",
     performance: "KI-Leistung",
@@ -156,8 +156,8 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestutzte Vorhersagen nur zu Informations- und Unterhaltungszwecken.",
   },
   FR: {
-    leagues: "Ligues",
-    leaguesSubtitle: "Explorez les predictions de toutes les grandes ligues de football",
+    leagues: "Ligues de Football & Predictions IA",
+    leaguesSubtitle: "OddsFlow propose des predictions basees sur l'IA pour Premier League, Bundesliga, Serie A, La Liga, Ligue 1 et Champions League. Classements, stats et conseils paris.",
     home: "Accueil",
     predictions: "Predictions",
     performance: "Performance IA",
@@ -192,8 +192,8 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "Avertissement : OddsFlow fournit des predictions basees sur l'IA a des fins d'information et de divertissement uniquement.",
   },
   JA: {
-    leagues: "リーグ",
-    leaguesSubtitle: "世界の主要サッカーリーグの予測を探索",
+    leagues: "サッカーリーグ & AI予測",
+    leaguesSubtitle: "OddsFlowはプレミアリーグ、ブンデスリーガ、セリエA、ラ・リーガ、リーグ・アン、チャンピオンズリーグのAI予測を提供。順位表、統計、ベッティングインサイト。",
     home: "ホーム",
     predictions: "予測",
     performance: "AIパフォーマンス",
@@ -228,8 +228,8 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "免責事項：OddsFlowはAI駆動の予測を情報および娯楽目的のみで提供しています。",
   },
   KO: {
-    leagues: "리그",
-    leaguesSubtitle: "전 세계 주요 축구 리그의 예측을 탐색하세요",
+    leagues: "축구 리그 & AI 예측",
+    leaguesSubtitle: "OddsFlow는 프리미어리그, 분데스리가, 세리에A, 라리가, 리그1, 챔피언스리그에 대한 AI 예측을 제공합니다. 순위, 통계, 베팅 인사이트를 확인하세요.",
     home: "홈",
     predictions: "예측",
     performance: "AI 성능",
@@ -264,8 +264,8 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "면책조항: OddsFlow는 정보 및 엔터테인먼트 목적으로만 AI 기반 예측을 제공합니다.",
   },
   '中文': {
-    leagues: "联赛",
-    leaguesSubtitle: "探索全球主要足球联赛的预测",
+    leagues: "足球联赛与AI预测",
+    leaguesSubtitle: "OddsFlow提供英超、德甲、意甲、西甲、法甲和欧冠的AI预测。查看积分榜、球队统计和投注建议。",
     home: "首页",
     predictions: "预测",
     performance: "AI表现",
@@ -300,8 +300,8 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。",
   },
   '繁體': {
-    leagues: "聯賽",
-    leaguesSubtitle: "探索全球主要足球聯賽的預測",
+    leagues: "足球聯賽與AI預測",
+    leaguesSubtitle: "OddsFlow提供英超、德甲、義甲、西甲、法甲和歐冠的AI預測。查看積分榜、球隊統計和投注建議。",
     home: "首頁",
     predictions: "預測",
     performance: "AI表現",
@@ -336,8 +336,8 @@ const translations: Record<string, Record<string, string>> = {
     disclaimer: "免責聲明：OddsFlow 提供的 AI 預測僅供參考和娛樂目的。",
   },
   ID: {
-    leagues: "Liga",
-    leaguesSubtitle: "Jelajahi prediksi dari semua liga sepak bola utama di dunia",
+    leagues: "Liga Sepak Bola & Prediksi AI",
+    leaguesSubtitle: "OddsFlow menyediakan prediksi bertenaga AI untuk Premier League, Bundesliga, Serie A, La Liga, Ligue 1, dan Champions League. Lihat klasemen, statistik, dan tips taruhan.",
     home: "Beranda",
     predictions: "Prediksi",
     performance: "Performa AI",
