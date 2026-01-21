@@ -1627,7 +1627,7 @@ export default function LeagueDetailPage() {
                           </td>
                           <td className="py-4 px-4 text-center">
                             <Link
-                              href={localePath(`/leagues/${leagueSlug}/${team.team_name?.toLowerCase().replace(/\s+/g, '-')}`)}
+                              href={localePath(`/leagues/${leagueSlug}/${team.team_name?.toLowerCase().replace(/\./g, '').replace(/\s+/g, '-')}`)}
                               onClick={(e) => e.stopPropagation()}
                               className="px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/30 transition-colors border border-cyan-500/30"
                             >
@@ -2037,7 +2037,7 @@ export default function LeagueDetailPage() {
                         {renderForm(team.form)}
                       </div>
                       <Link
-                        href={localePath(`/leagues/${leagueSlug}/${team.team_name?.toLowerCase().replace(/\s+/g, '-')}`)}
+                        href={localePath(`/leagues/${leagueSlug}/${team.team_name?.toLowerCase().replace(/\./g, '').replace(/\s+/g, '-')}`)}
                         onClick={(e) => e.stopPropagation()}
                         className="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/30 transition-colors border border-cyan-500/30"
                       >

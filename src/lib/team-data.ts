@@ -49,11 +49,38 @@ export interface PlayerStatsData {
 }
 
 // Convert slug to team name (e.g., "manchester-city" -> "Manchester City")
+// Handles special cases like "fc" -> "FC", periods, and umlauts
 function slugToTeamName(slug: string): string {
-  return slug
+  // Decode URL-encoded characters first
+  const decoded = decodeURIComponent(slug);
+
+  let result = decoded
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word, index, arr) => {
+      // Handle common abbreviations that should be uppercase
+      const upperWords = ['fc', 'sc', 'sv', 'vfb', 'vfl', 'fsv', 'tsg', 'rb', 'bsc', 'sg', 'st'];
+      if (upperWords.includes(word.toLowerCase())) {
+        return word.toUpperCase();
+      }
+      // Capitalize first letter
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
     .join(' ');
+
+  // Handle patterns like "1 FC" -> "1. FC" (number followed by FC/SC etc.)
+  result = result.replace(/^(\d+)\s+(FC|SC|SV|FSV)/i, '$1. $2');
+
+  return result;
+}
+
+// Create search pattern for flexible team name matching
+function createSearchPattern(slug: string): string {
+  const decoded = decodeURIComponent(slug);
+  // Replace hyphens with wildcards for flexible matching
+  // This helps match "Bayern München" with "Bayern Munich" etc.
+  const words = decoded.split('-').filter(w => w.length > 0);
+  // Create a pattern that matches all words in order
+  return words.map(w => `%${w}%`).join('');
 }
 
 // Get team stats by name and league
@@ -63,12 +90,27 @@ async function fetchTeamStats(teamSlug: string, leagueName: string): Promise<Tea
   try {
     const normalizedName = slugToTeamName(teamSlug);
 
-    const { data, error } = await supabase
+    // First try exact match (case-insensitive)
+    let { data, error } = await supabase
       .from('team_statistics')
       .select('*')
       .eq('league_name', leagueName)
       .ilike('team_name', normalizedName)
       .single();
+
+    // If no exact match, try flexible pattern matching
+    if (error || !data) {
+      const searchPattern = createSearchPattern(teamSlug);
+      const result = await supabase
+        .from('team_statistics')
+        .select('*')
+        .eq('league_name', leagueName)
+        .ilike('team_name', searchPattern)
+        .single();
+
+      data = result.data;
+      error = result.error;
+    }
 
     if (error || !data) return null;
     return data as TeamStatisticsData;
