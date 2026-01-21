@@ -339,23 +339,48 @@ const translations: Record<string, Record<string, string>> = {
   },
 };
 
-function PredictionsContent() {
+// Props interface for PredictionsContent
+interface PredictionsContentProps {
+  initialMatches?: Prematch[];
+  initialPredictions?: Record<number, MatchPrediction>;
+  initialDate?: string;
+}
+
+function PredictionsContent({
+  initialMatches = [],
+  initialPredictions = {},
+  initialDate,
+}: PredictionsContentProps = {}) {
   const searchParams = useSearchParams();
   const params = useParams();
   const router = useRouter();
   const locale = (params.locale as string) || 'en';
   const selectedLang = localeToTranslationCode[locale as keyof typeof localeToTranslationCode] || 'EN';
 
-  const [selectedDate, setSelectedDate] = useState(getInitialDate);
-  const [matches, setMatches] = useState<Prematch[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isDateInitialized, setIsDateInitialized] = useState(false);
+  // Parse initial date if provided, otherwise use today
+  const getInitialDateFromProps = () => {
+    if (initialDate) {
+      const date = new Date(initialDate + 'T00:00:00Z');
+      if (!isNaN(date.getTime())) {
+        return date;
+      }
+    }
+    return getInitialDate();
+  };
+
+  const [selectedDate, setSelectedDate] = useState(getInitialDateFromProps);
+  // Use server-provided initial data for SEO - matches will be in initial HTML
+  const [matches, setMatches] = useState<Prematch[]>(initialMatches);
+  // Start with loading=false if we have initial data (SSR)
+  const [loading, setLoading] = useState(initialMatches.length === 0);
+  const [isDateInitialized, setIsDateInitialized] = useState(initialMatches.length > 0);
   const [dates] = useState(getDateRange);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [predictions, setPredictions] = useState<Record<number, MatchPrediction>>({});
+  // Use server-provided predictions for SEO
+  const [predictions, setPredictions] = useState<Record<number, MatchPrediction>>(initialPredictions);
   const today = getUTCToday();
 
   // Handle date selection - updates state, sessionStorage, and URL
@@ -1330,11 +1355,26 @@ export function PredictionsLoading() {
   );
 }
 
+// Props interface for server-side data
+interface PredictionsClientProps {
+  initialMatches?: Prematch[];
+  initialPredictions?: Record<number, MatchPrediction>;
+  initialDate?: string;
+}
+
 // Main client component - wrapped with Suspense to fix useSearchParams issue
-export default function PredictionsClient() {
+export default function PredictionsClient({
+  initialMatches,
+  initialPredictions,
+  initialDate,
+}: PredictionsClientProps = {}) {
   return (
     <Suspense fallback={<PredictionsLoading />}>
-      <PredictionsContent />
+      <PredictionsContent
+        initialMatches={initialMatches}
+        initialPredictions={initialPredictions}
+        initialDate={initialDate}
+      />
     </Suspense>
   );
 }

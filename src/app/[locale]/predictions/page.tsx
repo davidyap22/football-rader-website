@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
-import PredictionsClient from './PredictionsClient';
+import { Suspense } from 'react';
+import PredictionsClient, { PredictionsLoading } from './PredictionsClient';
+import { getInitialPredictionsData } from '@/lib/predictions-data';
 
 // Helper to check if a date is in the past (before today)
 function isDateInPast(dateStr: string): boolean {
@@ -50,6 +52,23 @@ export async function generateMetadata({
   };
 }
 
-export default function PredictionsPage() {
-  return <PredictionsClient />;
+export default async function PredictionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ date?: string }>;
+}) {
+  const { date } = await searchParams;
+
+  // Fetch initial data on the server for SEO
+  const initialData = await getInitialPredictionsData(date);
+
+  return (
+    <Suspense fallback={<PredictionsLoading />}>
+      <PredictionsClient
+        initialMatches={initialData.matches}
+        initialPredictions={initialData.predictions}
+        initialDate={initialData.date}
+      />
+    </Suspense>
+  );
 }
