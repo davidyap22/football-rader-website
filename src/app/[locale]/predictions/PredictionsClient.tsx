@@ -542,8 +542,11 @@ function PredictionsContent({
     // Only fetch after date is initialized from sessionStorage/URL
     if (!isDateInitialized) return;
 
-    async function fetchMatches() {
-      setLoading(true);
+    async function fetchMatches(isBackgroundRefresh = false) {
+      // Only show loading spinner on initial fetch, not background refresh
+      if (!isBackgroundRefresh) {
+        setLoading(true);
+      }
       try {
         const dateStr = formatDateForQuery(selectedDate);
         const nextDate = new Date(selectedDate);
@@ -570,13 +573,26 @@ function PredictionsContent({
         }
       } catch (error) {
         console.error('Error fetching matches:', error);
-        setMatches([]);
+        if (!isBackgroundRefresh) {
+          setMatches([]);
+        }
       } finally {
-        setLoading(false);
+        if (!isBackgroundRefresh) {
+          setLoading(false);
+        }
       }
     }
 
+    // Initial fetch
     fetchMatches();
+
+    // Auto-refresh every 30 seconds for live match updates
+    // This ensures live status and match minutes are updated automatically
+    const refreshInterval = setInterval(() => {
+      fetchMatches(true); // Background refresh (no loading spinner)
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(refreshInterval);
   }, [selectedDate, isDateInitialized]);
 
   const formatTime = (dateStr: string) => {
