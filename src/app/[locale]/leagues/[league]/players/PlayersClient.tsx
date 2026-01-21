@@ -22,7 +22,7 @@ interface PlayersClientProps {
 // Translations - use translation codes (EN, ES, 中文, etc.)
 const translations: Record<string, Record<string, string>> = {
   EN: {
-    home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "Performance",
+    home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance",
     community: "Community", news: "News", solution: "Solution", pricing: "Pricing",
     login: "Login", getStarted: "Get Started", backToLeague: "Back to League",
     allPlayers: "All Players", playersInLeague: "players in the league",
@@ -34,7 +34,7 @@ const translations: Record<string, Record<string, string>> = {
     viewProfile: "View Profile",
   },
   '中文': {
-    home: "首页", predictions: "预测", leagues: "联赛", performance: "表现",
+    home: "首页", predictions: "预测", leagues: "联赛", performance: "AI 表现",
     community: "社区", news: "新闻", solution: "解决方案", pricing: "定价",
     login: "登录", getStarted: "立即开始", backToLeague: "返回联赛",
     allPlayers: "所有球员", playersInLeague: "名球员",
@@ -46,7 +46,7 @@ const translations: Record<string, Record<string, string>> = {
     viewProfile: "查看详情",
   },
   '繁體': {
-    home: "首頁", predictions: "預測", leagues: "聯賽", performance: "表現",
+    home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI 表現",
     community: "社區", news: "新聞", solution: "解決方案", pricing: "定價",
     login: "登入", getStarted: "立即開始", backToLeague: "返回聯賽",
     allPlayers: "所有球員", playersInLeague: "名球員",
@@ -58,7 +58,7 @@ const translations: Record<string, Record<string, string>> = {
     viewProfile: "查看詳情",
   },
   ID: {
-    home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa",
+    home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "AI Performa",
     community: "Komunitas", news: "Berita", solution: "Solusi", pricing: "Harga",
     login: "Masuk", getStarted: "Mulai", backToLeague: "Kembali ke Liga",
     allPlayers: "Semua Pemain", playersInLeague: "pemain di liga",
@@ -70,7 +70,7 @@ const translations: Record<string, Record<string, string>> = {
     viewProfile: "Lihat Profil",
   },
   ES: {
-    home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento",
+    home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "AI Rendimiento",
     community: "Comunidad", news: "Noticias", solution: "Solución", pricing: "Precios",
     login: "Iniciar", getStarted: "Empezar", backToLeague: "Volver a Liga",
     allPlayers: "Todos los Jugadores", playersInLeague: "jugadores en la liga",
@@ -82,7 +82,7 @@ const translations: Record<string, Record<string, string>> = {
     viewProfile: "Ver Perfil",
   },
   PT: {
-    home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho",
+    home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "AI Desempenho",
     community: "Comunidade", news: "Notícias", solution: "Solução", pricing: "Preços",
     login: "Entrar", getStarted: "Começar", backToLeague: "Voltar à Liga",
     allPlayers: "Todos os Jogadores", playersInLeague: "jogadores na liga",
@@ -94,7 +94,7 @@ const translations: Record<string, Record<string, string>> = {
     viewProfile: "Ver Perfil",
   },
   JA: {
-    home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "パフォーマンス",
+    home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AI パフォーマンス",
     community: "コミュニティ", news: "ニュース", solution: "ソリューション", pricing: "料金",
     login: "ログイン", getStarted: "始める", backToLeague: "リーグに戻る",
     allPlayers: "全選手", playersInLeague: "人の選手",
@@ -106,7 +106,7 @@ const translations: Record<string, Record<string, string>> = {
     viewProfile: "プロフィール",
   },
   KO: {
-    home: "홈", predictions: "예측", leagues: "리그", performance: "성과",
+    home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성과",
     community: "커뮤니티", news: "뉴스", solution: "솔루션", pricing: "가격",
     login: "로그인", getStarted: "시작하기", backToLeague: "리그로 돌아가기",
     allPlayers: "모든 선수", playersInLeague: "명의 선수",
@@ -118,7 +118,7 @@ const translations: Record<string, Record<string, string>> = {
     viewProfile: "프로필 보기",
   },
   DE: {
-    home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "Leistung",
+    home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "AI Leistung",
     community: "Community", news: "Nachrichten", solution: "Lösung", pricing: "Preise",
     login: "Anmelden", getStarted: "Loslegen", backToLeague: "Zurück zur Liga",
     allPlayers: "Alle Spieler", playersInLeague: "Spieler in der Liga",
@@ -130,7 +130,7 @@ const translations: Record<string, Record<string, string>> = {
     viewProfile: "Profil ansehen",
   },
   FR: {
-    home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance",
+    home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "AI Performance",
     community: "Communauté", news: "Actualités", solution: "Solution", pricing: "Tarifs",
     login: "Connexion", getStarted: "Commencer", backToLeague: "Retour à la Ligue",
     allPlayers: "Tous les Joueurs", playersInLeague: "joueurs dans la ligue",
