@@ -72,6 +72,7 @@ function getInitialDate() {
 }
 
 import FlagIcon from "@/components/FlagIcon";
+import { generateMatchSlug } from '@/lib/slug-utils';
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -930,9 +931,14 @@ function PredictionsContent() {
 
                 {/* Matches */}
                 <div className="divide-y divide-white/5">
-                  {leagueMatches.map((match, index) => (
+                  {leagueMatches.map((match, index) => {
+                    // Generate SEO-friendly URL slug
+                    const matchSlug = `${generateMatchSlug(match.home_name, match.away_name)}-${match.fixture_id}`;
+                    const matchDate = formatDateForQuery(selectedDate);
+
+                    return (
                     <Link
-                      href={localePath(`/predictions/${match.id}?date=${formatDateForQuery(selectedDate)}`)}
+                      href={localePath(`/predictions/${matchDate}/${matchSlug}`)}
                       key={match.id}
                       onClick={(e) => handleMatchClick(e, match.id)}
                       className={`block transition-all duration-300 group cursor-pointer relative overflow-hidden ${
@@ -1155,7 +1161,8 @@ function PredictionsContent() {
                         </div>
                       </div>
                     </Link>
-                  ))}
+                  );
+                  })}
                 </div>
               </div>
             ))}
