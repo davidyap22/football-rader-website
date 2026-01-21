@@ -962,7 +962,7 @@ export default function PlayersClient({
       {/* Footer */}
       <footer className="relative z-10 py-8 px-4 border-t border-white/5">
         <div className="max-w-7xl mx-auto text-center text-gray-500 text-sm">
-          <p>© 2024 OddsFlow. All rights reserved.</p>
+          <p>© 2026 OddsFlow. All rights reserved.</p>
         </div>
       </footer>
     </div>
