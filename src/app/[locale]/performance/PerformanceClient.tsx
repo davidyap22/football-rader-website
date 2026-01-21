@@ -1251,7 +1251,7 @@ export default function PerformanceClient({
       while (hasMore) {
         const { data: pageData, error: pageError } = await supabase
           .from('profit_summary')
-          .select('fixture_id, league_name, profit, stake_money, type, selection, bet_time, home_score, away_score, bet_style')
+          .select('fixture_id, league_name, profit, stake_money, type, selection, bet_time, home_score, away_score, bet_style, clock, line, odds, status')
           .order('bet_time', { ascending: true })
           .range(page * pageSize, (page + 1) * pageSize - 1);
 
