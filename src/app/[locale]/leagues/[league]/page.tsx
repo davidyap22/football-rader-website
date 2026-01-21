@@ -448,6 +448,595 @@ const LEAGUES_CONFIG: Record<string, { name: string; country: string; logo: stri
   'champions-league': { name: 'Champions League', country: 'UEFA', logo: 'https://media.api-sports.io/football/leagues/2.png', dbName: 'UEFA Champions League' },
 };
 
+// SEO Content type
+interface SEOContent {
+  title: string;
+  description: string;
+  features: string[];
+  whatWeOffer: string;
+  faqTitle: string;
+  viewAllPredictions: string;
+  faq: { q: string; a: string }[];
+}
+
+// Multi-language SEO Content for each league
+const LEAGUES_SEO_CONTENT: Record<string, Record<string, SEOContent>> = {
+  'premier-league': {
+    EN: {
+      title: 'Premier League AI Predictions & Betting Analysis',
+      description: 'The Premier League is the most-watched football league in the world, featuring elite clubs like Manchester City, Arsenal, Liverpool, and Chelsea. Our AI analyzes comprehensive match data including head-to-head records, form, injuries, and historical patterns to deliver accurate Premier League predictions.',
+      whatWeOffer: 'What We Offer',
+      faqTitle: 'Frequently Asked Questions',
+      viewAllPredictions: 'View All Premier League Predictions',
+      features: ['Real-time standings updated after each matchday', 'Team form analysis across home and away fixtures', 'Detailed squad statistics including goals scored and clean sheets', 'AI-powered predictions for all EPL matches'],
+      faq: [{ q: 'How accurate are your Premier League predictions?', a: 'Our AI model achieves consistent accuracy by analyzing historical data, team form, and real-time statistics. Check our Performance page for verified track record.' }, { q: 'When are Premier League predictions available?', a: 'Predictions are generated as soon as odds are released, typically 2-3 days before each match.' }],
+    },
+    ES: {
+      title: 'Predicciones IA de la Premier League y Analisis de Apuestas',
+      description: 'La Premier League es la liga de futbol mas vista del mundo, con clubes de elite como Manchester City, Arsenal, Liverpool y Chelsea. Nuestra IA analiza datos completos de partidos para ofrecer predicciones precisas de la Premier League.',
+      whatWeOffer: 'Lo Que Ofrecemos',
+      faqTitle: 'Preguntas Frecuentes',
+      viewAllPredictions: 'Ver Todas las Predicciones de Premier League',
+      features: ['Clasificacion en tiempo real actualizada cada jornada', 'Analisis de forma de equipos en casa y fuera', 'Estadisticas detalladas del equipo', 'Predicciones IA para todos los partidos de la EPL'],
+      faq: [{ q: 'Que tan precisas son sus predicciones de la Premier League?', a: 'Nuestro modelo de IA logra una precision consistente analizando datos historicos y estadisticas en tiempo real.' }, { q: 'Cuando estan disponibles las predicciones?', a: 'Las predicciones se generan tan pronto como se publican las cuotas, normalmente 2-3 dias antes de cada partido.' }],
+    },
+    PT: {
+      title: 'Previsoes IA da Premier League e Analise de Apostas',
+      description: 'A Premier League e a liga de futebol mais assistida do mundo, com clubes de elite como Manchester City, Arsenal, Liverpool e Chelsea. Nossa IA analisa dados abrangentes de partidas para fornecer previsoes precisas da Premier League.',
+      whatWeOffer: 'O Que Oferecemos',
+      faqTitle: 'Perguntas Frequentes',
+      viewAllPredictions: 'Ver Todas as Previsoes da Premier League',
+      features: ['Classificacao em tempo real atualizada a cada rodada', 'Analise de desempenho em casa e fora', 'Estatisticas detalhadas da equipe', 'Previsoes de IA para todos os jogos da EPL'],
+      faq: [{ q: 'Quao precisas sao suas previsoes da Premier League?', a: 'Nosso modelo de IA alcanca precisao consistente analisando dados historicos e estatisticas em tempo real.' }, { q: 'Quando as previsoes estao disponiveis?', a: 'As previsoes sao geradas assim que as odds sao lancadas, normalmente 2-3 dias antes de cada partida.' }],
+    },
+    DE: {
+      title: 'Premier League KI-Vorhersagen & Wettanalyse',
+      description: 'Die Premier League ist die meistgesehene Fussballliga der Welt mit Eliteklubs wie Manchester City, Arsenal, Liverpool und Chelsea. Unsere KI analysiert umfassende Spieldaten, um genaue Premier League Vorhersagen zu liefern.',
+      whatWeOffer: 'Was Wir Bieten',
+      faqTitle: 'Haufig Gestellte Fragen',
+      viewAllPredictions: 'Alle Premier League Vorhersagen Anzeigen',
+      features: ['Echtzeit-Tabelle nach jedem Spieltag aktualisiert', 'Formanalyse fur Heim- und Auswartsspiele', 'Detaillierte Teamstatistiken', 'KI-Vorhersagen fur alle EPL-Spiele'],
+      faq: [{ q: 'Wie genau sind Ihre Premier League Vorhersagen?', a: 'Unser KI-Modell erreicht konsistente Genauigkeit durch Analyse historischer Daten und Echtzeitstatistiken.' }, { q: 'Wann sind Vorhersagen verfugbar?', a: 'Vorhersagen werden generiert, sobald Quoten veroffentlicht werden, normalerweise 2-3 Tage vor jedem Spiel.' }],
+    },
+    FR: {
+      title: 'Predictions IA Premier League & Analyse des Paris',
+      description: 'La Premier League est la ligue de football la plus regardee au monde, avec des clubs d\'elite comme Manchester City, Arsenal, Liverpool et Chelsea. Notre IA analyse des donnees completes pour fournir des predictions precises de la Premier League.',
+      whatWeOffer: 'Ce Que Nous Offrons',
+      faqTitle: 'Questions Frequentes',
+      viewAllPredictions: 'Voir Toutes les Predictions Premier League',
+      features: ['Classement en temps reel mis a jour apres chaque journee', 'Analyse de forme a domicile et a l\'exterieur', 'Statistiques detaillees des equipes', 'Predictions IA pour tous les matchs EPL'],
+      faq: [{ q: 'Quelle est la precision de vos predictions Premier League?', a: 'Notre modele IA atteint une precision constante en analysant les donnees historiques et les statistiques en temps reel.' }, { q: 'Quand les predictions sont-elles disponibles?', a: 'Les predictions sont generees des que les cotes sont publiees, generalement 2-3 jours avant chaque match.' }],
+    },
+    JA: {
+      title: 'プレミアリーグ AI予測＆ベッティング分析',
+      description: 'プレミアリーグは世界で最も視聴されているサッカーリーグで、マンチェスター・シティ、アーセナル、リバプール、チェルシーなどのエリートクラブが所属しています。当社のAIは包括的な試合データを分析し、正確なプレミアリーグ予測を提供します。',
+      whatWeOffer: '提供内容',
+      faqTitle: 'よくある質問',
+      viewAllPredictions: 'すべてのプレミアリーグ予測を見る',
+      features: ['各節後にリアルタイム更新される順位表', 'ホーム＆アウェイのフォーム分析', '詳細なチーム統計', '全EPL試合のAI予測'],
+      faq: [{ q: 'プレミアリーグ予測の精度は?', a: '当社のAIモデルは履歴データとリアルタイム統計を分析し、一貫した精度を達成しています。' }, { q: '予測はいつ利用可能ですか?', a: 'オッズが公開され次第、通常は各試合の2-3日前に予測が生成されます。' }],
+    },
+    KO: {
+      title: '프리미어리그 AI 예측 및 베팅 분석',
+      description: '프리미어리그는 맨체스터 시티, 아스날, 리버풀, 첼시 같은 엘리트 클럽이 참가하는 세계에서 가장 많이 시청되는 축구 리그입니다. 당사의 AI는 포괄적인 경기 데이터를 분석하여 정확한 프리미어리그 예측을 제공합니다.',
+      whatWeOffer: '제공 서비스',
+      faqTitle: '자주 묻는 질문',
+      viewAllPredictions: '모든 프리미어리그 예측 보기',
+      features: ['매 라운드 후 업데이트되는 실시간 순위표', '홈 & 원정 폼 분석', '상세한 팀 통계', '모든 EPL 경기 AI 예측'],
+      faq: [{ q: '프리미어리그 예측은 얼마나 정확한가요?', a: '당사의 AI 모델은 과거 데이터와 실시간 통계를 분석하여 일관된 정확도를 달성합니다.' }, { q: '예측은 언제 제공되나요?', a: '예측은 배당률이 공개되는 즉시, 보통 각 경기 2-3일 전에 생성됩니다.' }],
+    },
+    ZH: {
+      title: '英超AI预测与投注分析',
+      description: '英超是全球收视率最高的足球联赛,拥有曼城、阿森纳、利物浦和切尔西等精英俱乐部。我们的AI分析全面的比赛数据,提供准确的英超预测。',
+      whatWeOffer: '我们提供',
+      faqTitle: '常见问题',
+      viewAllPredictions: '查看所有英超预测',
+      features: ['每轮比赛后实时更新的积分榜', '主客场表现分析', '详细的球队统计数据', '所有英超比赛的AI预测'],
+      faq: [{ q: '您的英超预测准确度如何?', a: '我们的AI模型通过分析历史数据和实时统计数据,实现稳定的准确率。' }, { q: '预测何时可用?', a: '预测会在赔率发布后立即生成,通常在每场比赛前2-3天。' }],
+    },
+    TW: {
+      title: '英超AI預測與投注分析',
+      description: '英超是全球收視率最高的足球聯賽,擁有曼城、阿森納、利物浦和切爾西等精英俱樂部。我們的AI分析全面的比賽數據,提供準確的英超預測。',
+      whatWeOffer: '我們提供',
+      faqTitle: '常見問題',
+      viewAllPredictions: '查看所有英超預測',
+      features: ['每輪比賽後實時更新的積分榜', '主客場表現分析', '詳細的球隊統計數據', '所有英超比賽的AI預測'],
+      faq: [{ q: '您的英超預測準確度如何?', a: '我們的AI模型通過分析歷史數據和實時統計數據,實現穩定的準確率。' }, { q: '預測何時可用?', a: '預測會在賠率發布後立即生成,通常在每場比賽前2-3天。' }],
+    },
+    ID: {
+      title: 'Prediksi AI Premier League & Analisis Taruhan',
+      description: 'Premier League adalah liga sepak bola yang paling banyak ditonton di dunia, menampilkan klub elit seperti Manchester City, Arsenal, Liverpool, dan Chelsea. AI kami menganalisis data pertandingan yang komprehensif untuk memberikan prediksi Premier League yang akurat.',
+      whatWeOffer: 'Yang Kami Tawarkan',
+      faqTitle: 'Pertanyaan yang Sering Diajukan',
+      viewAllPredictions: 'Lihat Semua Prediksi Premier League',
+      features: ['Klasemen real-time diperbarui setiap pekan', 'Analisis performa kandang dan tandang', 'Statistik tim yang detail', 'Prediksi AI untuk semua pertandingan EPL'],
+      faq: [{ q: 'Seberapa akurat prediksi Premier League Anda?', a: 'Model AI kami mencapai akurasi yang konsisten dengan menganalisis data historis dan statistik real-time.' }, { q: 'Kapan prediksi tersedia?', a: 'Prediksi dibuat segera setelah odds dirilis, biasanya 2-3 hari sebelum setiap pertandingan.' }],
+    },
+  },
+  'bundesliga': {
+    EN: {
+      title: 'Bundesliga AI Predictions & Betting Tips',
+      description: 'The Bundesliga is Germany\'s top football division, known for its passionate fan culture and attacking football. Teams like Bayern Munich, Borussia Dortmund, and RB Leipzig compete for the Meisterschale trophy. Our AI prediction system analyzes Bundesliga-specific factors to deliver accurate betting insights.',
+      whatWeOffer: 'What We Offer',
+      faqTitle: 'Frequently Asked Questions',
+      viewAllPredictions: 'View All Bundesliga Predictions',
+      features: ['Live Bundesliga table with all statistics', 'Team performance analysis including goals per match', 'Historical data from all German top-flight matches', 'AI predictions for Moneyline, Handicap, and Over/Under markets'],
+      faq: [{ q: 'What makes Bundesliga predictions different?', a: 'Bundesliga has the highest average goals per game in Europe. Our AI accounts for this attacking nature when generating Over/Under predictions.' }, { q: 'Do you cover Bundesliga 2 predictions?', a: 'Currently we focus on Bundesliga 1, with plans to expand coverage.' }],
+    },
+    ES: {
+      title: 'Predicciones IA de la Bundesliga y Consejos de Apuestas',
+      description: 'La Bundesliga es la maxima division del futbol aleman, conocida por su apasionada cultura de aficionados y futbol ofensivo. Equipos como Bayern Munich, Borussia Dortmund y RB Leipzig compiten por el trofeo Meisterschale.',
+      whatWeOffer: 'Lo Que Ofrecemos',
+      faqTitle: 'Preguntas Frecuentes',
+      viewAllPredictions: 'Ver Todas las Predicciones de Bundesliga',
+      features: ['Tabla en vivo de la Bundesliga con todas las estadisticas', 'Analisis de rendimiento del equipo', 'Datos historicos de partidos alemanes', 'Predicciones IA para mercados de Moneyline, Handicap y Over/Under'],
+      faq: [{ q: 'Que hace diferentes las predicciones de la Bundesliga?', a: 'La Bundesliga tiene el promedio de goles por partido mas alto de Europa. Nuestra IA considera esta naturaleza ofensiva.' }, { q: 'Cubren predicciones de Bundesliga 2?', a: 'Actualmente nos enfocamos en la Bundesliga 1, con planes de expansion.' }],
+    },
+    PT: {
+      title: 'Previsoes IA da Bundesliga e Dicas de Apostas',
+      description: 'A Bundesliga e a principal divisao do futebol alemao, conhecida por sua cultura apaixonada de torcedores e futebol ofensivo. Times como Bayern de Munique, Borussia Dortmund e RB Leipzig competem pelo trofeu Meisterschale.',
+      whatWeOffer: 'O Que Oferecemos',
+      faqTitle: 'Perguntas Frequentes',
+      viewAllPredictions: 'Ver Todas as Previsoes da Bundesliga',
+      features: ['Tabela ao vivo da Bundesliga com todas as estatisticas', 'Analise de desempenho da equipe', 'Dados historicos de jogos alemaes', 'Previsoes IA para mercados de Moneyline, Handicap e Over/Under'],
+      faq: [{ q: 'O que torna as previsoes da Bundesliga diferentes?', a: 'A Bundesliga tem a maior media de gols por jogo na Europa. Nossa IA considera essa natureza ofensiva.' }, { q: 'Voces cobrem previsoes da Bundesliga 2?', a: 'Atualmente focamos na Bundesliga 1, com planos de expansao.' }],
+    },
+    DE: {
+      title: 'Bundesliga KI-Vorhersagen & Wetttipps',
+      description: 'Die Bundesliga ist Deutschlands oberste Fussballliga, bekannt fur ihre leidenschaftliche Fankultur und offensiven Fussball. Teams wie Bayern Munchen, Borussia Dortmund und RB Leipzig kampfen um die Meisterschale.',
+      whatWeOffer: 'Was Wir Bieten',
+      faqTitle: 'Haufig Gestellte Fragen',
+      viewAllPredictions: 'Alle Bundesliga Vorhersagen Anzeigen',
+      features: ['Live Bundesliga-Tabelle mit allen Statistiken', 'Teamleistungsanalyse inklusive Tore pro Spiel', 'Historische Daten aller deutschen Erstligaspiele', 'KI-Vorhersagen fur Moneyline, Handicap und Over/Under Markte'],
+      faq: [{ q: 'Was macht Bundesliga-Vorhersagen besonders?', a: 'Die Bundesliga hat den hochsten Tordurchschnitt pro Spiel in Europa. Unsere KI berucksichtigt diese offensive Natur.' }, { q: 'Decken Sie Bundesliga 2 Vorhersagen ab?', a: 'Derzeit konzentrieren wir uns auf die Bundesliga 1, mit Erweiterungsplanen.' }],
+    },
+    FR: {
+      title: 'Predictions IA Bundesliga & Conseils de Paris',
+      description: 'La Bundesliga est la premiere division allemande, connue pour sa culture de supporters passionnee et son football offensif. Des equipes comme le Bayern Munich, Borussia Dortmund et RB Leipzig se disputent le Meisterschale.',
+      whatWeOffer: 'Ce Que Nous Offrons',
+      faqTitle: 'Questions Frequentes',
+      viewAllPredictions: 'Voir Toutes les Predictions Bundesliga',
+      features: ['Classement Bundesliga en direct avec toutes les statistiques', 'Analyse des performances des equipes', 'Donnees historiques des matchs allemands', 'Predictions IA pour les marches Moneyline, Handicap et Over/Under'],
+      faq: [{ q: 'Qu\'est-ce qui rend les predictions Bundesliga differentes?', a: 'La Bundesliga a la moyenne de buts par match la plus elevee d\'Europe. Notre IA prend en compte cette nature offensive.' }, { q: 'Couvrez-vous les predictions de Bundesliga 2?', a: 'Actuellement, nous nous concentrons sur la Bundesliga 1, avec des plans d\'expansion.' }],
+    },
+    JA: {
+      title: 'ブンデスリーガ AI予測＆ベッティングヒント',
+      description: 'ブンデスリーガはドイツのトップフットボールリーグで、熱狂的なファン文化と攻撃的なサッカーで知られています。バイエルン・ミュンヘン、ボルシア・ドルトムント、RBライプツィヒなどがマイスターシャーレを争います。',
+      whatWeOffer: '提供内容',
+      faqTitle: 'よくある質問',
+      viewAllPredictions: 'すべてのブンデスリーガ予測を見る',
+      features: ['全統計を含むライブブンデスリーガ順位表', '試合ごとのゴール数を含むチームパフォーマンス分析', 'ドイツトップリーグ全試合の履歴データ', 'マネーライン、ハンディキャップ、オーバー/アンダー市場のAI予測'],
+      faq: [{ q: 'ブンデスリーガ予測の特徴は?', a: 'ブンデスリーガはヨーロッパで最も平均ゴール数が高いリーグです。当社のAIはオーバー/アンダー予測でこの攻撃的な性質を考慮します。' }, { q: 'ブンデスリーガ2の予測はありますか?', a: '現在はブンデスリーガ1に注力しており、拡張を計画中です。' }],
+    },
+    KO: {
+      title: '분데스리가 AI 예측 및 베팅 팁',
+      description: '분데스리가는 열정적인 팬 문화와 공격적인 축구로 유명한 독일 최고의 축구 리그입니다. 바이에른 뮌헨, 보루시아 도르트문트, RB 라이프치히 등이 마이스터샬레를 놓고 경쟁합니다.',
+      whatWeOffer: '제공 서비스',
+      faqTitle: '자주 묻는 질문',
+      viewAllPredictions: '모든 분데스리가 예측 보기',
+      features: ['모든 통계가 포함된 실시간 분데스리가 순위표', '경기당 골 수를 포함한 팀 성과 분석', '독일 1부 리그 전 경기 과거 데이터', '머니라인, 핸디캡, 오버/언더 시장 AI 예측'],
+      faq: [{ q: '분데스리가 예측의 특징은?', a: '분데스리가는 유럽에서 경기당 평균 골이 가장 높습니다. 당사의 AI는 오버/언더 예측 시 이러한 공격적 특성을 고려합니다.' }, { q: '분데스리가 2 예측도 제공하나요?', a: '현재 분데스리가 1에 집중하고 있으며 확장 계획이 있습니다.' }],
+    },
+    ZH: {
+      title: '德甲AI预测与投注技巧',
+      description: '德甲是德国顶级足球联赛,以其热情的球迷文化和攻势足球闻名。拜仁慕尼黑、多特蒙德和RB莱比锡等球队争夺德甲冠军奖盘。',
+      whatWeOffer: '我们提供',
+      faqTitle: '常见问题',
+      viewAllPredictions: '查看所有德甲预测',
+      features: ['包含所有统计数据的实时德甲积分榜', '包括场均进球的球队表现分析', '德国顶级联赛所有比赛的历史数据', '独赢、让球和大小球市场的AI预测'],
+      faq: [{ q: '德甲预测有何不同?', a: '德甲是欧洲场均进球最高的联赛。我们的AI在生成大小球预测时会考虑这种攻势特性。' }, { q: '您覆盖德乙预测吗?', a: '目前我们专注于德甲,计划扩展覆盖范围。' }],
+    },
+    TW: {
+      title: '德甲AI預測與投注技巧',
+      description: '德甲是德國頂級足球聯賽,以其熱情的球迷文化和攻勢足球聞名。拜仁慕尼黑、多特蒙德和RB萊比錫等球隊爭奪德甲冠軍獎盤。',
+      whatWeOffer: '我們提供',
+      faqTitle: '常見問題',
+      viewAllPredictions: '查看所有德甲預測',
+      features: ['包含所有統計數據的實時德甲積分榜', '包括場均進球的球隊表現分析', '德國頂級聯賽所有比賽的歷史數據', '獨贏、讓球和大小球市場的AI預測'],
+      faq: [{ q: '德甲預測有何不同?', a: '德甲是歐洲場均進球最高的聯賽。我們的AI在生成大小球預測時會考慮這種攻勢特性。' }, { q: '您覆蓋德乙預測嗎?', a: '目前我們專注於德甲,計劃擴展覆蓋範圍。' }],
+    },
+    ID: {
+      title: 'Prediksi AI Bundesliga & Tips Taruhan',
+      description: 'Bundesliga adalah divisi utama sepak bola Jerman, dikenal dengan budaya suporter yang penuh gairah dan sepak bola menyerang. Tim seperti Bayern Munich, Borussia Dortmund, dan RB Leipzig bersaing untuk trofi Meisterschale.',
+      whatWeOffer: 'Yang Kami Tawarkan',
+      faqTitle: 'Pertanyaan yang Sering Diajukan',
+      viewAllPredictions: 'Lihat Semua Prediksi Bundesliga',
+      features: ['Klasemen Bundesliga langsung dengan semua statistik', 'Analisis performa tim termasuk gol per pertandingan', 'Data historis semua pertandingan kasta tertinggi Jerman', 'Prediksi AI untuk pasar Moneyline, Handicap, dan Over/Under'],
+      faq: [{ q: 'Apa yang membuat prediksi Bundesliga berbeda?', a: 'Bundesliga memiliki rata-rata gol per pertandingan tertinggi di Eropa. AI kami memperhitungkan sifat menyerang ini.' }, { q: 'Apakah Anda meliput prediksi Bundesliga 2?', a: 'Saat ini kami fokus pada Bundesliga 1, dengan rencana untuk memperluas cakupan.' }],
+    },
+  },
+  'serie-a': {
+    EN: {
+      title: 'Serie A AI Predictions & Italian Football Analysis',
+      description: 'Serie A is Italy\'s premier football competition featuring legendary clubs like Inter Milan, AC Milan, Juventus, and Napoli. Known for its tactical sophistication and defensive excellence, Serie A requires specialized analysis.',
+      whatWeOffer: 'What We Offer',
+      faqTitle: 'Frequently Asked Questions',
+      viewAllPredictions: 'View All Serie A Predictions',
+      features: ['Complete Serie A standings and statistics', 'Tactical analysis factored into predictions', 'Clean sheet and defensive statistics for all teams', 'AI-powered betting tips for all Serie A fixtures'],
+      faq: [{ q: 'How does your AI handle Serie A\'s tactical nature?', a: 'Our model weighs defensive statistics and tactical patterns more heavily for Serie A, reflecting the league\'s traditional emphasis on organized defense.' }, { q: 'Are Coppa Italia matches included?', a: 'We focus on Serie A league matches for optimal prediction accuracy.' }],
+    },
+    ES: {
+      title: 'Predicciones IA de la Serie A y Analisis del Futbol Italiano',
+      description: 'La Serie A es la principal competicion de futbol de Italia con clubes legendarios como Inter de Milan, AC Milan, Juventus y Napoli. Conocida por su sofisticacion tactica y excelencia defensiva.',
+      whatWeOffer: 'Lo Que Ofrecemos',
+      faqTitle: 'Preguntas Frecuentes',
+      viewAllPredictions: 'Ver Todas las Predicciones de Serie A',
+      features: ['Clasificacion completa de la Serie A', 'Analisis tactico en las predicciones', 'Estadisticas defensivas de todos los equipos', 'Consejos de apuestas IA para todos los partidos'],
+      faq: [{ q: 'Como maneja su IA la naturaleza tactica de la Serie A?', a: 'Nuestro modelo da mas peso a las estadisticas defensivas y patrones tacticos, reflejando el enfasis tradicional de la liga en la defensa organizada.' }, { q: 'Se incluyen partidos de la Coppa Italia?', a: 'Nos enfocamos en partidos de liga de la Serie A para una precision optima.' }],
+    },
+    PT: {
+      title: 'Previsoes IA da Serie A e Analise do Futebol Italiano',
+      description: 'A Serie A e a principal competicao de futebol da Italia, com clubes lendarios como Inter de Milao, AC Milan, Juventus e Napoli. Conhecida por sua sofisticacao tatica e excelencia defensiva.',
+      whatWeOffer: 'O Que Oferecemos',
+      faqTitle: 'Perguntas Frequentes',
+      viewAllPredictions: 'Ver Todas as Previsoes da Serie A',
+      features: ['Classificacao completa da Serie A', 'Analise tatica nas previsoes', 'Estatisticas defensivas de todas as equipes', 'Dicas de apostas IA para todos os jogos'],
+      faq: [{ q: 'Como sua IA lida com a natureza tatica da Serie A?', a: 'Nosso modelo da mais peso as estatisticas defensivas e padroes taticos, refletindo a enfase tradicional da liga na defesa organizada.' }, { q: 'Jogos da Coppa Italia estao incluidos?', a: 'Focamos em jogos da liga Serie A para precisao otima.' }],
+    },
+    DE: {
+      title: 'Serie A KI-Vorhersagen & Italienische Fussballanalyse',
+      description: 'Die Serie A ist Italiens hochste Fussballliga mit legendaren Klubs wie Inter Mailand, AC Mailand, Juventus und Napoli. Bekannt fur ihre taktische Raffinesse und defensive Exzellenz.',
+      whatWeOffer: 'Was Wir Bieten',
+      faqTitle: 'Haufig Gestellte Fragen',
+      viewAllPredictions: 'Alle Serie A Vorhersagen Anzeigen',
+      features: ['Vollstandige Serie A Tabelle und Statistiken', 'Taktische Analyse in Vorhersagen', 'Defensive Statistiken aller Teams', 'KI-Wetttipps fur alle Serie A Spiele'],
+      faq: [{ q: 'Wie geht Ihre KI mit der taktischen Natur der Serie A um?', a: 'Unser Modell gewichtet defensive Statistiken und taktische Muster starker, was die traditionelle Betonung der Liga auf organisierte Verteidigung widerspiegelt.' }, { q: 'Sind Coppa Italia Spiele enthalten?', a: 'Wir konzentrieren uns auf Serie A Ligaspiele fur optimale Vorhersagegenauigkeit.' }],
+    },
+    FR: {
+      title: 'Predictions IA Serie A & Analyse du Football Italien',
+      description: 'La Serie A est la principale competition de football italienne avec des clubs legendaires comme l\'Inter Milan, l\'AC Milan, la Juventus et Naples. Connue pour sa sophistication tactique et son excellence defensive.',
+      whatWeOffer: 'Ce Que Nous Offrons',
+      faqTitle: 'Questions Frequentes',
+      viewAllPredictions: 'Voir Toutes les Predictions Serie A',
+      features: ['Classement complet de la Serie A', 'Analyse tactique dans les predictions', 'Statistiques defensives de toutes les equipes', 'Conseils de paris IA pour tous les matchs'],
+      faq: [{ q: 'Comment votre IA gere-t-elle la nature tactique de la Serie A?', a: 'Notre modele accorde plus de poids aux statistiques defensives et aux schemas tactiques, refletant l\'accent traditionnel de la ligue sur la defense organisee.' }, { q: 'Les matchs de Coppa Italia sont-ils inclus?', a: 'Nous nous concentrons sur les matchs de Serie A pour une precision optimale.' }],
+    },
+    JA: {
+      title: 'セリエA AI予測＆イタリアサッカー分析',
+      description: 'セリエAはインテル・ミラノ、ACミラン、ユベントス、ナポリなどの伝説的クラブを擁するイタリアのプレミアフットボール大会です。戦術的な洗練さと守備の優秀さで知られています。',
+      whatWeOffer: '提供内容',
+      faqTitle: 'よくある質問',
+      viewAllPredictions: 'すべてのセリエA予測を見る',
+      features: ['完全なセリエA順位表と統計', '予測に組み込まれた戦術分析', '全チームのクリーンシートと守備統計', '全セリエA試合のAIベッティングヒント'],
+      faq: [{ q: 'AIはセリエAの戦術的性質をどう扱いますか?', a: '当社のモデルはセリエAの守備統計と戦術パターンをより重視し、組織的な守備への伝統的な重点を反映しています。' }, { q: 'コッパ・イタリアの試合は含まれますか?', a: '最適な予測精度のためにセリエAのリーグ戦に注力しています。' }],
+    },
+    KO: {
+      title: '세리에A AI 예측 및 이탈리아 축구 분석',
+      description: '세리에A는 인테르 밀란, AC 밀란, 유벤투스, 나폴리 등 전설적인 클럽이 참가하는 이탈리아 최고의 축구 대회입니다. 전술적 정교함과 수비 우수성으로 유명합니다.',
+      whatWeOffer: '제공 서비스',
+      faqTitle: '자주 묻는 질문',
+      viewAllPredictions: '모든 세리에A 예측 보기',
+      features: ['완전한 세리에A 순위표 및 통계', '예측에 반영된 전술 분석', '모든 팀의 클린시트 및 수비 통계', '모든 세리에A 경기 AI 베팅 팁'],
+      faq: [{ q: 'AI가 세리에A의 전술적 특성을 어떻게 처리하나요?', a: '당사 모델은 세리에A의 조직적 수비 강조 전통을 반영하여 수비 통계와 전술 패턴에 더 큰 가중치를 둡니다.' }, { q: '코파 이탈리아 경기도 포함되나요?', a: '최적의 예측 정확도를 위해 세리에A 리그 경기에 집중합니다.' }],
+    },
+    ZH: {
+      title: '意甲AI预测与意大利足球分析',
+      description: '意甲是意大利顶级足球赛事,拥有国际米兰、AC米兰、尤文图斯和那不勒斯等传奇俱乐部。以其战术精妙和防守卓越而闻名。',
+      whatWeOffer: '我们提供',
+      faqTitle: '常见问题',
+      viewAllPredictions: '查看所有意甲预测',
+      features: ['完整的意甲积分榜和统计数据', '预测中纳入战术分析', '所有球队的零封和防守统计', '所有意甲比赛的AI投注技巧'],
+      faq: [{ q: 'AI如何处理意甲的战术特性?', a: '我们的模型更加重视防守统计和战术模式,反映了联赛对组织防守的传统重视。' }, { q: '包括意大利杯比赛吗?', a: '我们专注于意甲联赛比赛以获得最佳预测准确性。' }],
+    },
+    TW: {
+      title: '意甲AI預測與意大利足球分析',
+      description: '意甲是意大利頂級足球賽事,擁有國際米蘭、AC米蘭、尤文圖斯和那不勒斯等傳奇俱樂部。以其戰術精妙和防守卓越而聞名。',
+      whatWeOffer: '我們提供',
+      faqTitle: '常見問題',
+      viewAllPredictions: '查看所有意甲預測',
+      features: ['完整的意甲積分榜和統計數據', '預測中納入戰術分析', '所有球隊的零封和防守統計', '所有意甲比賽的AI投注技巧'],
+      faq: [{ q: 'AI如何處理意甲的戰術特性?', a: '我們的模型更加重視防守統計和戰術模式,反映了聯賽對組織防守的傳統重視。' }, { q: '包括意大利杯比賽嗎?', a: '我們專注於意甲聯賽比賽以獲得最佳預測準確性。' }],
+    },
+    ID: {
+      title: 'Prediksi AI Serie A & Analisis Sepak Bola Italia',
+      description: 'Serie A adalah kompetisi sepak bola utama Italia yang menampilkan klub-klub legendaris seperti Inter Milan, AC Milan, Juventus, dan Napoli. Dikenal dengan kecanggihan taktis dan keunggulan defensifnya.',
+      whatWeOffer: 'Yang Kami Tawarkan',
+      faqTitle: 'Pertanyaan yang Sering Diajukan',
+      viewAllPredictions: 'Lihat Semua Prediksi Serie A',
+      features: ['Klasemen Serie A lengkap dan statistik', 'Analisis taktis dalam prediksi', 'Statistik clean sheet dan pertahanan semua tim', 'Tips taruhan AI untuk semua pertandingan Serie A'],
+      faq: [{ q: 'Bagaimana AI Anda menangani sifat taktis Serie A?', a: 'Model kami memberikan bobot lebih pada statistik pertahanan dan pola taktis, mencerminkan penekanan tradisional liga pada pertahanan terorganisir.' }, { q: 'Apakah pertandingan Coppa Italia termasuk?', a: 'Kami fokus pada pertandingan liga Serie A untuk akurasi prediksi optimal.' }],
+    },
+  },
+  'la-liga': {
+    EN: {
+      title: 'La Liga AI Predictions & Spanish Football Betting',
+      description: 'La Liga showcases Spanish football excellence with giants Real Madrid and Barcelona, plus strong challengers like Atletico Madrid and Real Sociedad. The league is renowned for technical football and has produced the most Ballon d\'Or winners.',
+      whatWeOffer: 'What We Offer',
+      faqTitle: 'Frequently Asked Questions',
+      viewAllPredictions: 'View All La Liga Predictions',
+      features: ['Real-time La Liga table and standings', 'Team statistics including goals and form', 'Analysis of El Clasico and major derbies', 'AI predictions for all Spanish top-flight matches'],
+      faq: [{ q: 'How do you predict El Clasico matches?', a: 'Our AI uses extended historical data and specific rivalry patterns for matches between Real Madrid and Barcelona.' }, { q: 'Do predictions account for European competition fatigue?', a: 'Yes, our model factors in squad rotation and fixture congestion for teams in Champions League or Europa League.' }],
+    },
+    ES: {
+      title: 'Predicciones IA de La Liga y Apuestas de Futbol Espanol',
+      description: 'La Liga muestra la excelencia del futbol espanol con gigantes como Real Madrid y Barcelona, mas fuertes rivales como Atletico de Madrid y Real Sociedad. La liga es reconocida por su futbol tecnico.',
+      whatWeOffer: 'Lo Que Ofrecemos',
+      faqTitle: 'Preguntas Frecuentes',
+      viewAllPredictions: 'Ver Todas las Predicciones de La Liga',
+      features: ['Clasificacion de La Liga en tiempo real', 'Estadisticas de equipos incluyendo goles y forma', 'Analisis del Clasico y derbis importantes', 'Predicciones IA para todos los partidos de primera division'],
+      faq: [{ q: 'Como predicen los partidos del Clasico?', a: 'Nuestra IA usa datos historicos extensos y patrones de rivalidad especificos para partidos entre Real Madrid y Barcelona.' }, { q: 'Las predicciones consideran la fatiga de competiciones europeas?', a: 'Si, nuestro modelo considera la rotacion de plantilla y congestion de partidos.' }],
+    },
+    PT: {
+      title: 'Previsoes IA da La Liga e Apostas no Futebol Espanhol',
+      description: 'A La Liga mostra a excelencia do futebol espanhol com gigantes como Real Madrid e Barcelona, alem de fortes desafiantes como Atletico de Madrid e Real Sociedad. A liga e conhecida pelo futebol tecnico.',
+      whatWeOffer: 'O Que Oferecemos',
+      faqTitle: 'Perguntas Frequentes',
+      viewAllPredictions: 'Ver Todas as Previsoes da La Liga',
+      features: ['Classificacao da La Liga em tempo real', 'Estatisticas de equipes incluindo gols e forma', 'Analise do El Clasico e grandes derbis', 'Previsoes IA para todos os jogos da primeira divisao espanhola'],
+      faq: [{ q: 'Como voces preveem os jogos do Clasico?', a: 'Nossa IA usa dados historicos extensos e padroes de rivalidade especificos para jogos entre Real Madrid e Barcelona.' }, { q: 'As previsoes consideram a fadiga de competicoes europeias?', a: 'Sim, nosso modelo considera a rotacao de elenco e congestionamento de jogos.' }],
+    },
+    DE: {
+      title: 'La Liga KI-Vorhersagen & Spanischer Fussball Wetten',
+      description: 'La Liga zeigt spanische Fussballexzellenz mit Giganten wie Real Madrid und Barcelona sowie starken Herausforderern wie Atletico Madrid und Real Sociedad. Die Liga ist fur technischen Fussball bekannt.',
+      whatWeOffer: 'Was Wir Bieten',
+      faqTitle: 'Haufig Gestellte Fragen',
+      viewAllPredictions: 'Alle La Liga Vorhersagen Anzeigen',
+      features: ['Echtzeit La Liga Tabelle und Platzierungen', 'Teamstatistiken inklusive Tore und Form', 'Analyse von El Clasico und grossen Derbys', 'KI-Vorhersagen fur alle spanischen Erstligaspiele'],
+      faq: [{ q: 'Wie sagen Sie El Clasico Spiele voraus?', a: 'Unsere KI verwendet erweiterte historische Daten und spezifische Rivalitasmuster fur Spiele zwischen Real Madrid und Barcelona.' }, { q: 'Berucksichtigen Vorhersagen europaische Wettbewerbs-Ermudung?', a: 'Ja, unser Modell berucksichtigt Kaderrotation und Spieluberlastung.' }],
+    },
+    FR: {
+      title: 'Predictions IA La Liga & Paris Football Espagnol',
+      description: 'La Liga met en valeur l\'excellence du football espagnol avec des geants comme le Real Madrid et Barcelone, ainsi que des challengers comme l\'Atletico Madrid et la Real Sociedad. La ligue est reputee pour son football technique.',
+      whatWeOffer: 'Ce Que Nous Offrons',
+      faqTitle: 'Questions Frequentes',
+      viewAllPredictions: 'Voir Toutes les Predictions La Liga',
+      features: ['Classement La Liga en temps reel', 'Statistiques d\'equipes incluant buts et forme', 'Analyse du Clasico et des grands derbys', 'Predictions IA pour tous les matchs de premiere division'],
+      faq: [{ q: 'Comment predisez-vous les matchs du Clasico?', a: 'Notre IA utilise des donnees historiques etendues et des schemas de rivalite specifiques pour les matchs entre Real Madrid et Barcelone.' }, { q: 'Les predictions tiennent-elles compte de la fatigue europeenne?', a: 'Oui, notre modele prend en compte la rotation de l\'effectif et l\'encombrement du calendrier.' }],
+    },
+    JA: {
+      title: 'ラ・リーガ AI予測＆スペインサッカーベッティング',
+      description: 'ラ・リーガはレアル・マドリードとバルセロナの巨人、そしてアトレティコ・マドリードやレアル・ソシエダなどの強力なチャレンジャーでスペインサッカーの卓越性を示しています。技術的なサッカーで知られています。',
+      whatWeOffer: '提供内容',
+      faqTitle: 'よくある質問',
+      viewAllPredictions: 'すべてのラ・リーガ予測を見る',
+      features: ['リアルタイムのラ・リーガ順位表', 'ゴール数とフォームを含むチーム統計', 'エル・クラシコと主要ダービーの分析', '全スペイントップリーグ試合のAI予測'],
+      faq: [{ q: 'エル・クラシコの試合をどう予測しますか?', a: '当社のAIはレアル・マドリードとバルセロナの試合に拡張された履歴データと特定のライバル関係パターンを使用します。' }, { q: '欧州大会の疲労は考慮されますか?', a: 'はい、モデルはスカッドローテーションと試合の過密スケジュールを考慮します。' }],
+    },
+    KO: {
+      title: '라리가 AI 예측 및 스페인 축구 베팅',
+      description: '라리가는 레알 마드리드와 바르셀로나 그리고 아틀레티코 마드리드, 레알 소시에다드 등 강력한 도전자들과 함께 스페인 축구의 우수성을 보여줍니다. 기술적인 축구로 유명합니다.',
+      whatWeOffer: '제공 서비스',
+      faqTitle: '자주 묻는 질문',
+      viewAllPredictions: '모든 라리가 예측 보기',
+      features: ['실시간 라리가 순위표', '골 수와 폼을 포함한 팀 통계', '엘 클라시코와 주요 더비 분석', '모든 스페인 1부 리그 경기 AI 예측'],
+      faq: [{ q: '엘 클라시코 경기를 어떻게 예측하나요?', a: '당사의 AI는 레알 마드리드와 바르셀로나 경기에 확장된 과거 데이터와 특정 라이벌 패턴을 사용합니다.' }, { q: '유럽 대회 피로도를 고려하나요?', a: '네, 모델은 스쿼드 로테이션과 일정 과밀을 고려합니다.' }],
+    },
+    ZH: {
+      title: '西甲AI预测与西班牙足球投注',
+      description: '西甲展示了皇家马德里和巴塞罗那巨头以及马德里竞技、皇家社会等强劲挑战者的西班牙足球卓越。该联赛以技术足球著称。',
+      whatWeOffer: '我们提供',
+      faqTitle: '常见问题',
+      viewAllPredictions: '查看所有西甲预测',
+      features: ['实时西甲积分榜', '包括进球和状态的球队统计', '国家德比和重要德比分析', '所有西甲比赛的AI预测'],
+      faq: [{ q: '如何预测国家德比?', a: '我们的AI使用扩展的历史数据和皇马与巴萨比赛的特定rivalry模式。' }, { q: '预测考虑欧洲赛事疲劳吗?', a: '是的,我们的模型考虑了球队轮换和赛程拥挤。' }],
+    },
+    TW: {
+      title: '西甲AI預測與西班牙足球投注',
+      description: '西甲展示了皇家馬德里和巴塞羅那巨頭以及馬德里競技、皇家社會等強勁挑戰者的西班牙足球卓越。該聯賽以技術足球著稱。',
+      whatWeOffer: '我們提供',
+      faqTitle: '常見問題',
+      viewAllPredictions: '查看所有西甲預測',
+      features: ['實時西甲積分榜', '包括進球和狀態的球隊統計', '國家德比和重要德比分析', '所有西甲比賽的AI預測'],
+      faq: [{ q: '如何預測國家德比?', a: '我們的AI使用擴展的歷史數據和皇馬與巴薩比賽的特定rivalry模式。' }, { q: '預測考慮歐洲賽事疲勞嗎?', a: '是的,我們的模型考慮了球隊輪換和賽程擁擠。' }],
+    },
+    ID: {
+      title: 'Prediksi AI La Liga & Taruhan Sepak Bola Spanyol',
+      description: 'La Liga menampilkan keunggulan sepak bola Spanyol dengan raksasa Real Madrid dan Barcelona, serta penantang kuat seperti Atletico Madrid dan Real Sociedad. Liga ini terkenal dengan sepak bola teknis.',
+      whatWeOffer: 'Yang Kami Tawarkan',
+      faqTitle: 'Pertanyaan yang Sering Diajukan',
+      viewAllPredictions: 'Lihat Semua Prediksi La Liga',
+      features: ['Klasemen La Liga real-time', 'Statistik tim termasuk gol dan performa', 'Analisis El Clasico dan derbi besar', 'Prediksi AI untuk semua pertandingan divisi utama Spanyol'],
+      faq: [{ q: 'Bagaimana Anda memprediksi pertandingan El Clasico?', a: 'AI kami menggunakan data historis yang diperluas dan pola persaingan khusus untuk pertandingan antara Real Madrid dan Barcelona.' }, { q: 'Apakah prediksi memperhitungkan kelelahan kompetisi Eropa?', a: 'Ya, model kami memperhitungkan rotasi skuad dan kepadatan jadwal.' }],
+    },
+  },
+  'ligue-1': {
+    EN: {
+      title: 'Ligue 1 AI Predictions & French Football Betting Tips',
+      description: 'Ligue 1 is France\'s elite football division featuring Paris Saint-Germain and rising clubs like Monaco, Lille, and Nice. Known for developing world-class talent and fast-paced football, Ligue 1 offers exciting betting opportunities.',
+      whatWeOffer: 'What We Offer',
+      faqTitle: 'Frequently Asked Questions',
+      viewAllPredictions: 'View All Ligue 1 Predictions',
+      features: ['Live Ligue 1 standings and team stats', 'Young talent impact analysis', 'Home and away form breakdowns', 'AI-powered predictions for French top-flight'],
+      faq: [{ q: 'Is PSG always favored in your predictions?', a: 'While PSG\'s dominance is reflected in odds, our AI objectively assesses each match based on form, injuries, and head-to-head records.' }, { q: 'Do you cover Ligue 2?', a: 'Currently we focus on Ligue 1, the top French division.' }],
+    },
+    ES: {
+      title: 'Predicciones IA de la Ligue 1 y Consejos de Apuestas',
+      description: 'La Ligue 1 es la elite del futbol frances con Paris Saint-Germain y clubes emergentes como Monaco, Lille y Nice. Conocida por desarrollar talento de clase mundial y futbol rapido.',
+      whatWeOffer: 'Lo Que Ofrecemos',
+      faqTitle: 'Preguntas Frecuentes',
+      viewAllPredictions: 'Ver Todas las Predicciones de Ligue 1',
+      features: ['Clasificacion en vivo de la Ligue 1', 'Analisis del impacto de jovenes talentos', 'Desglose de forma en casa y fuera', 'Predicciones IA para la primera division francesa'],
+      faq: [{ q: 'El PSG siempre es favorito en sus predicciones?', a: 'Aunque el dominio del PSG se refleja en las cuotas, nuestra IA evalua objetivamente cada partido.' }, { q: 'Cubren la Ligue 2?', a: 'Actualmente nos enfocamos en la Ligue 1, la primera division francesa.' }],
+    },
+    PT: {
+      title: 'Previsoes IA da Ligue 1 e Dicas de Apostas',
+      description: 'A Ligue 1 e a divisao de elite do futebol frances com Paris Saint-Germain e clubes emergentes como Monaco, Lille e Nice. Conhecida por desenvolver talentos de classe mundial e futebol rapido.',
+      whatWeOffer: 'O Que Oferecemos',
+      faqTitle: 'Perguntas Frequentes',
+      viewAllPredictions: 'Ver Todas as Previsoes da Ligue 1',
+      features: ['Classificacao ao vivo da Ligue 1', 'Analise do impacto de jovens talentos', 'Analise de desempenho em casa e fora', 'Previsoes IA para a primeira divisao francesa'],
+      faq: [{ q: 'O PSG e sempre favorito nas suas previsoes?', a: 'Embora o dominio do PSG seja refletido nas odds, nossa IA avalia objetivamente cada partida.' }, { q: 'Voces cobrem a Ligue 2?', a: 'Atualmente focamos na Ligue 1, a primeira divisao francesa.' }],
+    },
+    DE: {
+      title: 'Ligue 1 KI-Vorhersagen & Franzosischer Fussball Tipps',
+      description: 'Die Ligue 1 ist Frankreichs Elite-Fussballliga mit Paris Saint-Germain und aufstrebenden Klubs wie Monaco, Lille und Nice. Bekannt fur die Entwicklung von Weltklasse-Talenten und schnellem Fussball.',
+      whatWeOffer: 'Was Wir Bieten',
+      faqTitle: 'Haufig Gestellte Fragen',
+      viewAllPredictions: 'Alle Ligue 1 Vorhersagen Anzeigen',
+      features: ['Live Ligue 1 Tabelle und Teamstatistiken', 'Analyse des Einflusses junger Talente', 'Heim- und Auswartsform-Aufschlusselung', 'KI-Vorhersagen fur die franzosische Erstliga'],
+      faq: [{ q: 'Ist PSG immer Favorit in Ihren Vorhersagen?', a: 'Wahrend PSGs Dominanz in den Quoten reflektiert wird, bewertet unsere KI jedes Spiel objektiv.' }, { q: 'Decken Sie Ligue 2 ab?', a: 'Derzeit konzentrieren wir uns auf Ligue 1, die franzosische Erstliga.' }],
+    },
+    FR: {
+      title: 'Predictions IA Ligue 1 & Conseils Paris Football Francais',
+      description: 'La Ligue 1 est l\'elite du football francais avec le Paris Saint-Germain et des clubs montants comme Monaco, Lille et Nice. Connue pour developper des talents de classe mondiale et un football rapide.',
+      whatWeOffer: 'Ce Que Nous Offrons',
+      faqTitle: 'Questions Frequentes',
+      viewAllPredictions: 'Voir Toutes les Predictions Ligue 1',
+      features: ['Classement Ligue 1 en direct et statistiques', 'Analyse de l\'impact des jeunes talents', 'Analyse de forme a domicile et a l\'exterieur', 'Predictions IA pour l\'elite du football francais'],
+      faq: [{ q: 'Le PSG est-il toujours favori dans vos predictions?', a: 'Bien que la domination du PSG soit refletee dans les cotes, notre IA evalue objectivement chaque match.' }, { q: 'Couvrez-vous la Ligue 2?', a: 'Actuellement, nous nous concentrons sur la Ligue 1, l\'elite du football francais.' }],
+    },
+    JA: {
+      title: 'リーグ・アン AI予測＆フランスサッカーベッティングヒント',
+      description: 'リーグ・アンはパリ・サンジェルマンとモナコ、リール、ニースなどの新興クラブを擁するフランスのエリートサッカーリーグです。ワールドクラスの才能育成と速いペースのサッカーで知られています。',
+      whatWeOffer: '提供内容',
+      faqTitle: 'よくある質問',
+      viewAllPredictions: 'すべてのリーグ・アン予測を見る',
+      features: ['ライブリーグ・アン順位表とチーム統計', '若手才能のインパクト分析', 'ホーム＆アウェイフォーム分析', 'フランストップリーグのAI予測'],
+      faq: [{ q: 'PSGは常に予測で有利ですか?', a: 'PSGの優位性はオッズに反映されていますが、当社のAIは各試合を客観的に評価します。' }, { q: 'リーグ・ドゥはカバーしていますか?', a: '現在はフランストップリーグのリーグ・アンに注力しています。' }],
+    },
+    KO: {
+      title: '리그1 AI 예측 및 프랑스 축구 베팅 팁',
+      description: '리그1은 파리 생제르맹과 모나코, 릴, 니스 등 떠오르는 클럽이 참가하는 프랑스 엘리트 축구 리그입니다. 월드클래스 인재 육성과 빠른 템포의 축구로 유명합니다.',
+      whatWeOffer: '제공 서비스',
+      faqTitle: '자주 묻는 질문',
+      viewAllPredictions: '모든 리그1 예측 보기',
+      features: ['실시간 리그1 순위표 및 팀 통계', '젊은 재능 영향 분석', '홈 & 원정 폼 분석', '프랑스 최상위 리그 AI 예측'],
+      faq: [{ q: 'PSG가 항상 예측에서 유리한가요?', a: 'PSG의 우위가 배당률에 반영되지만, 당사의 AI는 각 경기를 객관적으로 평가합니다.' }, { q: '리그2도 제공하나요?', a: '현재 프랑스 최상위 리그인 리그1에 집중하고 있습니다.' }],
+    },
+    ZH: {
+      title: '法甲AI预测与法国足球投注技巧',
+      description: '法甲是法国精英足球联赛,拥有巴黎圣日耳曼和摩纳哥、里尔、尼斯等新兴俱乐部。以培养世界级人才和快节奏足球闻名。',
+      whatWeOffer: '我们提供',
+      faqTitle: '常见问题',
+      viewAllPredictions: '查看所有法甲预测',
+      features: ['实时法甲积分榜和球队统计', '年轻人才影响分析', '主客场表现分析', '法国顶级联赛AI预测'],
+      faq: [{ q: 'PSG在预测中总是被看好吗?', a: '虽然PSG的统治地位反映在赔率中,但我们的AI客观评估每场比赛。' }, { q: '您覆盖法乙吗?', a: '目前我们专注于法国顶级联赛法甲。' }],
+    },
+    TW: {
+      title: '法甲AI預測與法國足球投注技巧',
+      description: '法甲是法國精英足球聯賽,擁有巴黎聖日耳曼和摩納哥、里爾、尼斯等新興俱樂部。以培養世界級人才和快節奏足球聞名。',
+      whatWeOffer: '我們提供',
+      faqTitle: '常見問題',
+      viewAllPredictions: '查看所有法甲預測',
+      features: ['實時法甲積分榜和球隊統計', '年輕人才影響分析', '主客場表現分析', '法國頂級聯賽AI預測'],
+      faq: [{ q: 'PSG在預測中總是被看好嗎?', a: '雖然PSG的統治地位反映在賠率中,但我們的AI客觀評估每場比賽。' }, { q: '您覆蓋法乙嗎?', a: '目前我們專注於法國頂級聯賽法甲。' }],
+    },
+    ID: {
+      title: 'Prediksi AI Ligue 1 & Tips Taruhan Sepak Bola Prancis',
+      description: 'Ligue 1 adalah divisi elit sepak bola Prancis yang menampilkan Paris Saint-Germain dan klub-klub berkembang seperti Monaco, Lille, dan Nice. Dikenal mengembangkan talenta kelas dunia dan sepak bola cepat.',
+      whatWeOffer: 'Yang Kami Tawarkan',
+      faqTitle: 'Pertanyaan yang Sering Diajukan',
+      viewAllPredictions: 'Lihat Semua Prediksi Ligue 1',
+      features: ['Klasemen Ligue 1 langsung dan statistik tim', 'Analisis dampak talenta muda', 'Analisis performa kandang dan tandang', 'Prediksi AI untuk kasta tertinggi Prancis'],
+      faq: [{ q: 'Apakah PSG selalu difavoritkan dalam prediksi Anda?', a: 'Meskipun dominasi PSG tercermin dalam odds, AI kami menilai setiap pertandingan secara objektif.' }, { q: 'Apakah Anda meliput Ligue 2?', a: 'Saat ini kami fokus pada Ligue 1, divisi utama Prancis.' }],
+    },
+  },
+  'champions-league': {
+    EN: {
+      title: 'Champions League AI Predictions & UCL Betting Analysis',
+      description: 'The UEFA Champions League is Europe\'s premier club competition, featuring the continent\'s elite teams competing for the coveted trophy. From group stage to the final, our AI analyzes cross-league matchups and European pedigree.',
+      whatWeOffer: 'What We Offer',
+      faqTitle: 'Frequently Asked Questions',
+      viewAllPredictions: 'View All Champions League Predictions',
+      features: ['Champions League group and knockout standings', 'Cross-league team comparison analysis', 'Historical European performance data', 'AI predictions for all UCL matches'],
+      faq: [{ q: 'How do you compare teams from different leagues?', a: 'Our AI uses coefficient-weighted statistics and historical European performance to fairly compare teams from different domestic leagues.' }, { q: 'Are Europa League matches covered?', a: 'We focus on Champions League for the most accurate predictions, with Europa League coverage planned.' }],
+    },
+    ES: {
+      title: 'Predicciones IA de la Champions League y Analisis de Apuestas UCL',
+      description: 'La UEFA Champions League es la principal competicion de clubes de Europa, con los equipos de elite del continente compitiendo por el codiciado trofeo. Desde la fase de grupos hasta la final.',
+      whatWeOffer: 'Lo Que Ofrecemos',
+      faqTitle: 'Preguntas Frecuentes',
+      viewAllPredictions: 'Ver Todas las Predicciones de Champions League',
+      features: ['Clasificacion de grupos y eliminatorias', 'Analisis comparativo entre ligas', 'Datos historicos de rendimiento europeo', 'Predicciones IA para todos los partidos UCL'],
+      faq: [{ q: 'Como comparan equipos de diferentes ligas?', a: 'Nuestra IA usa estadisticas ponderadas por coeficiente y rendimiento historico europeo.' }, { q: 'Cubren partidos de Europa League?', a: 'Nos enfocamos en Champions League, con planes de cubrir Europa League.' }],
+    },
+    PT: {
+      title: 'Previsoes IA da Champions League e Analise de Apostas UCL',
+      description: 'A UEFA Champions League e a principal competicao de clubes da Europa, com as equipes de elite do continente competindo pelo cobicado trofeu. Da fase de grupos ate a final.',
+      whatWeOffer: 'O Que Oferecemos',
+      faqTitle: 'Perguntas Frequentes',
+      viewAllPredictions: 'Ver Todas as Previsoes da Champions League',
+      features: ['Classificacao de grupos e mata-mata', 'Analise comparativa entre ligas', 'Dados historicos de desempenho europeu', 'Previsoes IA para todos os jogos da UCL'],
+      faq: [{ q: 'Como voces comparam equipes de diferentes ligas?', a: 'Nossa IA usa estatisticas ponderadas por coeficiente e desempenho historico europeu.' }, { q: 'Jogos da Europa League sao cobertos?', a: 'Focamos na Champions League, com planos de cobrir Europa League.' }],
+    },
+    DE: {
+      title: 'Champions League KI-Vorhersagen & UCL Wettanalyse',
+      description: 'Die UEFA Champions League ist Europas prestigetrachtigster Klubwettbewerb, in dem die Elite-Teams des Kontinents um die begehrte Trophae kampfen. Von der Gruppenphase bis zum Finale.',
+      whatWeOffer: 'Was Wir Bieten',
+      faqTitle: 'Haufig Gestellte Fragen',
+      viewAllPredictions: 'Alle Champions League Vorhersagen Anzeigen',
+      features: ['Gruppen- und K.O.-Runden-Tabellen', 'Ligaubergreifende Teamvergleichsanalyse', 'Historische europaische Leistungsdaten', 'KI-Vorhersagen fur alle UCL-Spiele'],
+      faq: [{ q: 'Wie vergleichen Sie Teams aus verschiedenen Ligen?', a: 'Unsere KI verwendet koeffizientengewichtete Statistiken und historische europaische Leistung.' }, { q: 'Werden Europa League Spiele abgedeckt?', a: 'Wir konzentrieren uns auf die Champions League, mit Planen fur Europa League.' }],
+    },
+    FR: {
+      title: 'Predictions IA Ligue des Champions & Analyse Paris UCL',
+      description: 'La Ligue des Champions de l\'UEFA est la principale competition de clubs europeenne, reunissant les meilleures equipes du continent pour le trophee convoite. De la phase de groupes a la finale.',
+      whatWeOffer: 'Ce Que Nous Offrons',
+      faqTitle: 'Questions Frequentes',
+      viewAllPredictions: 'Voir Toutes les Predictions Ligue des Champions',
+      features: ['Classements des groupes et phases eliminatoires', 'Analyse comparative inter-ligues', 'Donnees historiques de performance europeenne', 'Predictions IA pour tous les matchs UCL'],
+      faq: [{ q: 'Comment comparez-vous les equipes de differentes ligues?', a: 'Notre IA utilise des statistiques ponderees par coefficient et les performances historiques europeennes.' }, { q: 'Les matchs d\'Europa League sont-ils couverts?', a: 'Nous nous concentrons sur la Ligue des Champions, avec des plans pour l\'Europa League.' }],
+    },
+    JA: {
+      title: 'チャンピオンズリーグ AI予測＆UCLベッティング分析',
+      description: 'UEFAチャンピオンズリーグはヨーロッパ最高峰のクラブ大会で、大陸のエリートチームが名誉あるトロフィーを争います。グループステージから決勝まで。',
+      whatWeOffer: '提供内容',
+      faqTitle: 'よくある質問',
+      viewAllPredictions: 'すべてのチャンピオンズリーグ予測を見る',
+      features: ['チャンピオンズリーグのグループ＆ノックアウト順位表', 'リーグ間のチーム比較分析', '歴史的な欧州パフォーマンスデータ', '全UCL試合のAI予測'],
+      faq: [{ q: '異なるリーグのチームをどう比較しますか?', a: '当社のAIは係数加重統計と歴史的な欧州パフォーマンスを使用してチームを公平に比較します。' }, { q: 'ヨーロッパリーグの試合はカバーしていますか?', a: 'チャンピオンズリーグに注力しており、ヨーロッパリーグのカバーを計画中です。' }],
+    },
+    KO: {
+      title: '챔피언스리그 AI 예측 및 UCL 베팅 분석',
+      description: 'UEFA 챔피언스리그는 유럽 최고의 클럽 대회로, 대륙의 엘리트 팀들이 명예로운 트로피를 놓고 경쟁합니다. 조별 리그부터 결승까지.',
+      whatWeOffer: '제공 서비스',
+      faqTitle: '자주 묻는 질문',
+      viewAllPredictions: '모든 챔피언스리그 예측 보기',
+      features: ['챔피언스리그 조별 및 토너먼트 순위', '리그 간 팀 비교 분석', '과거 유럽 대회 성적 데이터', '모든 UCL 경기 AI 예측'],
+      faq: [{ q: '다른 리그의 팀을 어떻게 비교하나요?', a: '당사의 AI는 계수 가중 통계와 과거 유럽 대회 성적을 사용하여 팀을 공정하게 비교합니다.' }, { q: '유로파리그 경기도 제공하나요?', a: '챔피언스리그에 집중하고 있으며, 유로파리그 확장을 계획 중입니다.' }],
+    },
+    ZH: {
+      title: '欧冠AI预测与UCL投注分析',
+      description: 'UEFA欧洲冠军联赛是欧洲最高水平的俱乐部赛事,大陆精英球队争夺这一令人垂涎的奖杯。从小组赛到决赛。',
+      whatWeOffer: '我们提供',
+      faqTitle: '常见问题',
+      viewAllPredictions: '查看所有欧冠预测',
+      features: ['欧冠小组赛和淘汰赛排名', '跨联赛球队比较分析', '历史欧战表现数据', '所有UCL比赛的AI预测'],
+      faq: [{ q: '如何比较不同联赛的球队?', a: '我们的AI使用系数加权统计和历史欧战表现来公平比较不同国内联赛的球队。' }, { q: '覆盖欧联杯比赛吗?', a: '我们专注于欧冠以获得最准确的预测,计划扩展到欧联杯。' }],
+    },
+    TW: {
+      title: '歐冠AI預測與UCL投注分析',
+      description: 'UEFA歐洲冠軍聯賽是歐洲最高水平的俱樂部賽事,大陸精英球隊爭奪這一令人垂涎的獎杯。從小組賽到決賽。',
+      whatWeOffer: '我們提供',
+      faqTitle: '常見問題',
+      viewAllPredictions: '查看所有歐冠預測',
+      features: ['歐冠小組賽和淘汰賽排名', '跨聯賽球隊比較分析', '歷史歐戰表現數據', '所有UCL比賽的AI預測'],
+      faq: [{ q: '如何比較不同聯賽的球隊?', a: '我們的AI使用係數加權統計和歷史歐戰表現來公平比較不同國內聯賽的球隊。' }, { q: '覆蓋歐聯杯比賽嗎?', a: '我們專注於歐冠以獲得最準確的預測,計劃擴展到歐聯杯。' }],
+    },
+    ID: {
+      title: 'Prediksi AI Liga Champions & Analisis Taruhan UCL',
+      description: 'Liga Champions UEFA adalah kompetisi klub utama Eropa, menampilkan tim-tim elit benua yang bersaing memperebutkan trofi yang didambakan. Dari fase grup hingga final.',
+      whatWeOffer: 'Yang Kami Tawarkan',
+      faqTitle: 'Pertanyaan yang Sering Diajukan',
+      viewAllPredictions: 'Lihat Semua Prediksi Liga Champions',
+      features: ['Klasemen grup dan knockout Liga Champions', 'Analisis perbandingan tim antar liga', 'Data performa Eropa historis', 'Prediksi AI untuk semua pertandingan UCL'],
+      faq: [{ q: 'Bagaimana Anda membandingkan tim dari liga berbeda?', a: 'AI kami menggunakan statistik tertimbang koefisien dan performa historis Eropa untuk membandingkan tim secara adil.' }, { q: 'Apakah pertandingan Liga Europa termasuk?', a: 'Kami fokus pada Liga Champions, dengan rencana untuk Liga Europa.' }],
+    },
+  },
+};
+
+// Map translation codes to SEO content keys
+const translationCodeToSEOKey: Record<string, string> = {
+  'EN': 'EN',
+  'ES': 'ES',
+  'PT': 'PT',
+  'DE': 'DE',
+  'FR': 'FR',
+  'JA': 'JA',
+  'KO': 'KO',
+  '中文': 'ZH',
+  '繁體': 'TW',
+  'ID': 'ID',
+};
+
+// Helper to get SEO content for current language
+const getSEOContent = (leagueSlug: string, lang: string): SEOContent | null => {
+  const leagueContent = LEAGUES_SEO_CONTENT[leagueSlug];
+  if (!leagueContent) return null;
+  const seoKey = translationCodeToSEOKey[lang] || 'EN';
+  return leagueContent[seoKey] || leagueContent['EN'] || null;
+};
+
 export default function LeagueDetailPage() {
   const params = useParams();
   const urlLocale = (params.locale as string) || 'en';
@@ -937,7 +1526,11 @@ export default function LeagueDetailPage() {
               <div className="p-4 rounded-xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-white/5">
                 <p className="text-gray-400 text-sm mb-1">{t('avgGoals')}</p>
                 <p className="text-2xl font-bold text-cyan-400">
-                  {(teamStats.reduce((sum, t) => sum + (t.goals_for_average || 0), 0) / teamStats.length).toFixed(2)}
+                  {(() => {
+                    const totalGoals = teamStats.reduce((sum, t) => sum + (t.goals_for_total || 0), 0);
+                    const totalMatches = teamStats.reduce((sum, t) => sum + (t.total_played || 0), 0) / 2; // Each match counted twice
+                    return totalMatches > 0 ? (totalGoals / totalMatches).toFixed(2) : '0.00';
+                  })()}
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-white/5">
@@ -1137,7 +1730,11 @@ export default function LeagueDetailPage() {
 
                                     <div className="p-4 rounded-xl bg-gray-900/50 border border-white/10">
                                       <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">{t('goalsAvg')}</p>
-                                      <p className="text-2xl font-bold text-purple-400">{team.goals_for_average?.toFixed(2) || '0.00'}</p>
+                                      <p className="text-2xl font-bold text-purple-400">
+                                        {team.total_played && team.total_played > 0
+                                          ? ((team.goals_for_total || 0) / team.total_played).toFixed(2)
+                                          : '0.00'}
+                                      </p>
                                     </div>
 
                                     <div className="p-4 rounded-xl bg-gray-900/50 border border-white/10">
@@ -1539,6 +2136,68 @@ export default function LeagueDetailPage() {
           </div>
         </div>
       </main>
+
+      {/* SEO Content Section */}
+      {leagueConfig && (() => {
+        const seoContent = getSEOContent(leagueSlug, selectedLang);
+        if (!seoContent) return null;
+        return (
+          <section className="relative z-10 py-16 px-4 bg-gradient-to-b from-[#0a0a0f] to-black">
+            <div className="max-w-5xl mx-auto">
+              {/* Main SEO Content */}
+              <div className="mb-12">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
+                  {seoContent.title}
+                </h2>
+                <p className="text-gray-300 leading-relaxed text-base md:text-lg">
+                  {seoContent.description}
+                </p>
+              </div>
+
+              {/* Features List */}
+              <div className="mb-12">
+                <h3 className="text-xl font-semibold text-white mb-4">{seoContent.whatWeOffer}</h3>
+                <ul className="grid md:grid-cols-2 gap-4">
+                  {seoContent.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-300">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* FAQ Section */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-white mb-6">{seoContent.faqTitle}</h3>
+                <div className="space-y-4">
+                  {seoContent.faq.map((item, idx) => (
+                    <div key={idx} className="p-5 rounded-xl bg-gray-900/50 border border-white/5">
+                      <h4 className="font-medium text-white mb-2">{item.q}</h4>
+                      <p className="text-gray-400 text-sm leading-relaxed">{item.a}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="text-center pt-4">
+                <Link
+                  href={localePath('/predictions')}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-medium hover:opacity-90 transition-opacity"
+                >
+                  {seoContent.viewAllPredictions}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* Footer */}
       <footer className="relative z-10 py-16 px-4 bg-black border-t border-white/5">
