@@ -49,9 +49,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       "football betting tips",
       "soccer predictions",
     ],
-    alternates: {
-      canonical: locale === 'en' ? `${baseUrl}/predictions` : `${baseUrl}/${locale}/predictions`,
-    },
+    // Note: alternates.canonical and robots are handled dynamically in page.tsx
+    // based on the date parameter (noindex for past dates)
     openGraph: {
       title: titles[locale] || titles.en,
       description: descriptions[locale] || descriptions.en,
