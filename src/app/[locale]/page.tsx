@@ -104,7 +104,7 @@ const translations: Record<string, Record<string, string>> = {
     dateLeague: "Date / League",
     fixture: "Fixture",
     prediction: "Prediction",
-    confidence: "Confidence",
+    confidence: "1x2 Prediction",
     loading: "Loading matches...",
     noMatches: "No scheduled matches found",
     // Why Choose Section
@@ -2258,20 +2258,46 @@ function LeaguesSection() {
 function AIPredictionsSection() {
   const { t, localePath } = useLanguage();
   const [matches, setMatches] = useState<Prematch[]>([]);
+  const [predictions, setPredictions] = useState<Map<number, { home: number; draw: number; away: number }>>(new Map());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchMatches() {
       try {
-        const { data, error } = await supabase
+        // Fetch matches
+        const { data: matchesData, error: matchesError } = await supabase
           .from('prematches')
           .select('*')
           .eq('type', 'Scheduled')
           .order('start_date_msia', { ascending: true })
           .limit(8);
 
-        if (error) throw error;
-        setMatches(data || []);
+        if (matchesError) throw matchesError;
+        setMatches(matchesData || []);
+
+        // Fetch 1x2 predictions for these matches
+        if (matchesData && matchesData.length > 0) {
+          const fixtureIds = matchesData.map(m => m.fixture_id);
+          const { data: predictionsData } = await supabase
+            .from('moneyline_1x2_predictions')
+            .select('fixture_id, moneyline_1x2_home, moneyline_1x2_draw, moneyline_1x2_away')
+            .in('fixture_id', fixtureIds);
+
+          if (predictionsData) {
+            const predMap = new Map<number, { home: number; draw: number; away: number }>();
+            predictionsData.forEach((p: any) => {
+              // Only store the first (or latest) prediction for each fixture
+              if (!predMap.has(p.fixture_id)) {
+                predMap.set(p.fixture_id, {
+                  home: Math.round((p.moneyline_1x2_home || 0) * 100),
+                  draw: Math.round((p.moneyline_1x2_draw || 0) * 100),
+                  away: Math.round((p.moneyline_1x2_away || 0) * 100),
+                });
+              }
+            });
+            setPredictions(predMap);
+          }
+        }
       } catch (error) {
         console.error('Error fetching matches:', error);
       } finally {
@@ -2304,9 +2330,18 @@ function AIPredictionsSection() {
     return `${day}${suffix} ${month}`;
   };
 
-  const getConfidence = (index: number) => {
-    const confidences = [94, 91, 89, 87, 85, 83];
-    return confidences[index % confidences.length];
+  // Get 1x2 probabilities for a match
+  const getProbabilities = (fixtureId: number) => {
+    const pred = predictions.get(fixtureId);
+    if (pred) return pred;
+    // Default fallback if no prediction found
+    return { home: 33, draw: 34, away: 33 };
+  };
+
+  // Format date for URL (YYYY-MM-DD)
+  const formatDateForUrl = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toISOString().split('T')[0];
   };
 
   return (
@@ -2371,11 +2406,13 @@ function AIPredictionsSection() {
               {/* Table Body */}
               <div>
                 {matches.map((match, index) => {
-                  const confidence = getConfidence(index);
+                  const probs = getProbabilities(match.fixture_id);
+                  const matchUrl = localePath(`/predictions/${match.id}?date=${formatDateForUrl(match.start_date_msia)}`);
                   return (
-                    <div
+                    <Link
                       key={match.id}
-                      className="group relative border-b border-gray-800/30 hover:bg-emerald-500/5 transition-all duration-300 overflow-hidden"
+                      href={matchUrl}
+                      className="group relative border-b border-gray-800/30 hover:bg-emerald-500/5 transition-all duration-300 overflow-hidden block cursor-pointer"
                     >
                       {/* Shimmer effect */}
                       <div
@@ -2442,16 +2479,16 @@ function AIPredictionsSection() {
                           </div>
                         </div>
 
-                        {/* Confidence Row */}
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full"
-                              style={{ width: `${confidence}%` }}
-                            />
-                          </div>
-                          <span className={`text-sm font-bold flex-shrink-0 ${confidence >= 90 ? 'text-emerald-400' : 'text-cyan-400'}`}>
-                            {confidence}%
+                        {/* 1x2 Probabilities Row */}
+                        <div className="flex items-center justify-end gap-1.5">
+                          <span className="px-2 py-1 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                            {probs.home}%
+                          </span>
+                          <span className="px-2 py-1 rounded text-xs font-semibold bg-gray-700/50 text-gray-300 border border-gray-600/30">
+                            {probs.draw}%
+                          </span>
+                          <span className="px-2 py-1 rounded text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+                            {probs.away}%
                           </span>
                         </div>
                       </div>
@@ -2518,22 +2555,22 @@ function AIPredictionsSection() {
                           </div>
                         </div>
 
-                        {/* Confidence */}
+                        {/* 1x2 Probabilities */}
                         <div className="col-span-3 relative">
-                          <div className="flex flex-col items-end gap-1">
-                            <span className={`text-sm font-bold transition-all duration-300 ${confidence >= 90 ? 'text-emerald-400 group-hover:text-emerald-300' : 'text-cyan-400 group-hover:text-cyan-300'}`}>
-                              {confidence}%
+                          <div className="flex items-center justify-end gap-1.5">
+                            <span className="px-2.5 py-1 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 group-hover:bg-emerald-500/30 transition-colors">
+                              {probs.home}%
                             </span>
-                            <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full group-hover:shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-shadow duration-300"
-                                style={{ width: `${confidence}%` }}
-                              />
-                            </div>
+                            <span className="px-2.5 py-1 rounded text-xs font-semibold bg-gray-700/50 text-gray-300 border border-gray-600/30 group-hover:bg-gray-600/50 transition-colors">
+                              {probs.draw}%
+                            </span>
+                            <span className="px-2.5 py-1 rounded text-xs font-semibold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 group-hover:bg-cyan-500/30 transition-colors">
+                              {probs.away}%
+                            </span>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>
