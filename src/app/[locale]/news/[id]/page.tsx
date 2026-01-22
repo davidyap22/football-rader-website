@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase, FootballNews, Prematch, ExclusiveReportData } from '@/lib/supabase';
+import { addTeamLinks } from '@/lib/auto-link-teams';
 import ExclusiveReportTemplate from '@/components/ExclusiveReportTemplate';
 import { User } from '@supabase/supabase-js';
 import FlagIcon from "@/components/FlagIcon";
@@ -651,7 +652,7 @@ export default function ArticlePage() {
                       prose-li:text-gray-300 prose-li:mb-2
                       prose-blockquote:border-l-emerald-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-400
                       prose-img:rounded-xl prose-img:my-8"
-                    dangerouslySetInnerHTML={{ __html: article.content || '' }}
+                    dangerouslySetInnerHTML={{ __html: addTeamLinks(article.content || '', locale) }}
                   />
                 </>
               )}
