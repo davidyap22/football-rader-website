@@ -12,7 +12,7 @@ const translations: Record<string, Record<string, string>> = {
   EN: {
     home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance",
     community: "Community", news: "News", pricing: "Pricing", login: "Log In", getStarted: "Get Started", solution: "Solution",
-    pageTitle: "Responsible Use & Risk Awareness",
+    pageTitle: "OddsFlow Responsible Gaming Policy",
     pageSubtitle: "At OddsFlow, we believe in informed decision-making and sustainable analytics practices.",
     ageWarning: "18+ Only",
     // Section 1: Our Position: Data, Not Bets
@@ -63,7 +63,7 @@ const translations: Record<string, Record<string, string>> = {
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA",
     community: "Comunidad", news: "Noticias", pricing: "Precios", login: "Iniciar Sesion", getStarted: "Comenzar", solution: "Solucion",
-    pageTitle: "Uso Responsable y Conciencia del Riesgo",
+    pageTitle: "Politica de Juego Responsable de OddsFlow",
     pageSubtitle: "En OddsFlow, creemos en la toma de decisiones informadas y practicas de analitica sostenibles.",
     ageWarning: "Solo mayores de 18",
     section1Title: "Nuestra Posicion: Datos, No Apuestas",
@@ -107,7 +107,7 @@ const translations: Record<string, Record<string, string>> = {
   PT: {
     home: "Inicio", predictions: "Previsoes", leagues: "Ligas", performance: "Desempenho IA",
     community: "Comunidade", news: "Noticias", pricing: "Precos", login: "Entrar", getStarted: "Comecar", solution: "Solucao",
-    pageTitle: "Uso Responsavel e Consciencia de Risco",
+    pageTitle: "Politica de Jogo Responsavel do OddsFlow",
     pageSubtitle: "Na OddsFlow, acreditamos na tomada de decisoes informadas e praticas de analitica sustentaveis.",
     ageWarning: "Apenas maiores de 18",
     section1Title: "Nossa Posicao: Dados, Nao Apostas",
@@ -151,7 +151,7 @@ const translations: Record<string, Record<string, string>> = {
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung",
     community: "Community", news: "Nachrichten", pricing: "Preise", login: "Anmelden", getStarted: "Loslegen", solution: "Losung",
-    pageTitle: "Verantwortungsvolle Nutzung & Risikobewusstsein",
+    pageTitle: "OddsFlow Richtlinie fur Verantwortungsvolles Spielen",
     pageSubtitle: "Bei OddsFlow glauben wir an informierte Entscheidungsfindung und nachhaltige Analysepraktiken.",
     ageWarning: "Nur ab 18",
     section1Title: "Unsere Position: Daten, Keine Wetten",
@@ -195,7 +195,7 @@ const translations: Record<string, Record<string, string>> = {
   FR: {
     home: "Accueil", predictions: "Predictions", leagues: "Ligues", performance: "Performance IA",
     community: "Communaute", news: "Actualites", pricing: "Tarifs", login: "Connexion", getStarted: "Commencer", solution: "Solution",
-    pageTitle: "Utilisation Responsable & Conscience du Risque",
+    pageTitle: "Politique de Jeu Responsable OddsFlow",
     pageSubtitle: "Chez OddsFlow, nous croyons en la prise de decisions eclairees et en des pratiques d'analyse durables.",
     ageWarning: "18+ uniquement",
     section1Title: "Notre Position: Donnees, Pas de Paris",
@@ -239,7 +239,7 @@ const translations: Record<string, Record<string, string>> = {
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AIパフォーマンス",
     community: "コミュニティ", news: "ニュース", pricing: "料金", login: "ログイン", getStarted: "始める", solution: "ソリューション",
-    pageTitle: "責任ある利用とリスク意識",
+    pageTitle: "OddsFlow 責任あるゲーミングポリシー",
     pageSubtitle: "OddsFlowでは、情報に基づいた意思決定と持続可能な分析実践を信じています。",
     ageWarning: "18歳以上限定",
     section1Title: "私たちの立場：データであり、賭けではない",
@@ -283,7 +283,7 @@ const translations: Record<string, Record<string, string>> = {
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성과",
     community: "커뮤니티", news: "뉴스", pricing: "가격", login: "로그인", getStarted: "시작하기", solution: "솔루션",
-    pageTitle: "책임감 있는 사용 및 위험 인식",
+    pageTitle: "OddsFlow 책임감 있는 게임 정책",
     pageSubtitle: "OddsFlow에서는 정보에 기반한 의사결정과 지속 가능한 분석 관행을 믿습니다.",
     ageWarning: "18세 이상만",
     section1Title: "우리의 입장: 데이터, 베팅 아님",
@@ -327,7 +327,7 @@ const translations: Record<string, Record<string, string>> = {
   "中文": {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现",
     community: "社区", news: "新闻", pricing: "价格", login: "登录", getStarted: "开始使用", solution: "解决方案",
-    pageTitle: "负责任使用与风险意识",
+    pageTitle: "OddsFlow 负责任博彩政策",
     pageSubtitle: "在OddsFlow，我们相信知情决策和可持续的分析实践。",
     ageWarning: "仅限18岁以上",
     section1Title: "我们的立场：数据，而非博彩",
@@ -371,7 +371,7 @@ const translations: Record<string, Record<string, string>> = {
   "繁體": {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現",
     community: "社區", news: "新聞", pricing: "價格", login: "登入", getStarted: "開始使用", solution: "解決方案",
-    pageTitle: "負責任使用與風險意識",
+    pageTitle: "OddsFlow 負責任博彩政策",
     pageSubtitle: "在OddsFlow，我們相信知情決策和可持續的分析實踐。",
     ageWarning: "僅限18歲以上",
     section1Title: "我們的立場：數據，而非博彩",
@@ -415,7 +415,7 @@ const translations: Record<string, Record<string, string>> = {
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI",
     community: "Komunitas", news: "Berita", pricing: "Harga", login: "Masuk", getStarted: "Mulai", solution: "Solusi",
-    pageTitle: "Penggunaan Bertanggung Jawab & Kesadaran Risiko",
+    pageTitle: "Kebijakan Perjudian Bertanggung Jawab OddsFlow",
     pageSubtitle: "Di OddsFlow, kami percaya pada pengambilan keputusan yang terinformasi dan praktik analitik yang berkelanjutan.",
     ageWarning: "Hanya 18+",
     section1Title: "Posisi Kami: Data, Bukan Taruhan",
@@ -494,15 +494,68 @@ export default function ResponsibleGamingPage() {
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
+  // WebPage Schema for SEO
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "OddsFlow Responsible Gaming Policy",
+    "description": "OddsFlow Responsible Gaming Policy. Learn about safe gambling practices, recognize warning signs of problem gambling, and find help resources.",
+    "url": `https://www.oddsflow.ai${locale === 'en' ? '' : `/${locale}`}/responsible-gaming`,
+    "inLanguage": locale,
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "OddsFlow",
+      "url": "https://www.oddsflow.ai"
+    },
+    "about": {
+      "@type": "Thing",
+      "name": "Responsible Gaming",
+      "description": "Guidelines and resources for responsible gambling practices"
+    },
+    "mentions": [
+      {
+        "@type": "Organization",
+        "name": "BeGambleAware",
+        "url": "https://www.begambleaware.org"
+      },
+      {
+        "@type": "Organization",
+        "name": "GamCare",
+        "url": "https://www.gamcare.org.uk"
+      },
+      {
+        "@type": "Organization",
+        "name": "Gambling Therapy",
+        "url": "https://www.gamblingtherapy.org"
+      }
+    ],
+    "publisher": {
+      "@type": "Organization",
+      "name": "OddsFlow",
+      "url": "https://www.oddsflow.ai",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.oddsflow.ai/homepage/OddsFlow Logo2.png"
+      }
+    }
+  };
+
   const helpResources = [
-    { name: 'National Council on Problem Gambling (US)', phone: '1-800-522-4700', url: 'https://www.ncpgambling.org' },
-    { name: 'GamCare (UK)', phone: '0808 8020 133', url: 'https://www.gamcare.org.uk' },
-    { name: 'Gamblers Anonymous', phone: 'Find local meetings', url: 'https://www.gamblersanonymous.org' },
     { name: 'BeGambleAware (UK)', phone: '0808 8020 133', url: 'https://www.begambleaware.org' },
+    { name: 'GamCare (UK)', phone: '0808 8020 133', url: 'https://www.gamcare.org.uk' },
+    { name: 'Gambling Therapy (International)', phone: 'Live Chat Available', url: 'https://www.gamblingtherapy.org' },
+    { name: 'National Council on Problem Gambling (US)', phone: '1-800-522-4700', url: 'https://www.ncpgambling.org' },
+    { name: 'Gamblers Anonymous', phone: 'Find local meetings', url: 'https://www.gamblersanonymous.org' },
   ];
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* WebPage Schema for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
+
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
