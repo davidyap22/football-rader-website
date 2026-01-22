@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
@@ -12,7 +12,7 @@ const translations: Record<string, Record<string, string>> = {
   EN: {
     home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance",
     community: "Community", news: "News", pricing: "Pricing", login: "Log In", getStarted: "Get Started", solution: "Solution",
-    aboutTitle: "About OddsFlow",
+    aboutTitle: "About OddsFlow: The AI Engine Decoding Football Market Intent",
     aboutSubtitle: "Most people watch the game. A few watch the market.",
     aboutIntro: "OddsFlow exists for the latter. We noticed a massive gap between \"public stats\" (possession, shots on target) and \"market reality\" (money flow, line movements, and smart money). We built this platform to bridge that gap. We don't deal in hype, intuition, or \"guaranteed wins.\" We deal in data, logic, and market transparency.",
     ourStory: "Our Story",
@@ -36,6 +36,12 @@ const translations: Record<string, Record<string, string>> = {
     audience3Text: "You want to understand football as a market system, not just a sport.",
     realityNote: "A Note on Reality",
     realityText: "OddsFlow is a data analytics platform. We are not a bookmaker, and we are not a \"tipping service.\" We give you the map; you have to drive the car. Please use our data responsibly, do your own research, and remember that in football, nothing is ever 100% certain.",
+    meetTheTeam: "Meet The Team",
+    teamIntro: "The minds behind OddsFlow's data-driven approach",
+    davidTitle: "Head of Data Science",
+    davidBio: "With a specialized background in AI and Machine Learning, David applies Wall Street algorithms to the sports betting market. Previously an analyst in Forex and Equity markets, he built the core OddsFlow engine to strip away human emotion and focus strictly on statistical significance.",
+    danielTitle: "Co-Founder & Senior Actuary",
+    danielBio: "Daniel brings the precision of an Actuary and the structural thinking of an Engineer to sports analytics. A seasoned entrepreneur, he focuses on long-term risk assessment and probability modeling, treating sports betting as a disciplined investment class rather than a gamble.",
     footer: "© 2026 OddsFlow. All rights reserved.",
     footerDesc: "AI-powered football odds analysis for smarter predictions. Make data-driven decisions with real-time insights.",
     product: "Product", liveOdds: "AI Performance", popularLeagues: "Popular Leagues",
@@ -48,7 +54,7 @@ const translations: Record<string, Record<string, string>> = {
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Análisis",
     community: "Comunidad", news: "Noticias", pricing: "Precios", login: "Iniciar Sesión", getStarted: "Comenzar", solution: "Solución",
-    aboutTitle: "Sobre OddsFlow",
+    aboutTitle: "Sobre OddsFlow: El Motor de IA que Decodifica la Intención del Mercado",
     aboutSubtitle: "La mayoría ve el partido. Unos pocos observan el mercado.",
     aboutIntro: "OddsFlow existe para estos últimos. Notamos una brecha enorme entre las \"estadísticas públicas\" (posesión, tiros a puerta) y la \"realidad del mercado\" (flujo de dinero, movimientos de líneas y dinero inteligente). Construimos esta plataforma para cerrar esa brecha. No tratamos con exageraciones, intuición o \"ganancias garantizadas\". Tratamos con datos, lógica y transparencia del mercado.",
     ourStory: "Nuestra Historia",
@@ -72,6 +78,12 @@ const translations: Record<string, Record<string, string>> = {
     audience3Text: "Quieres entender el fútbol como un sistema de mercado, no solo como un deporte.",
     realityNote: "Una Nota sobre la Realidad",
     realityText: "OddsFlow es una plataforma de análisis de datos. No somos una casa de apuestas y no somos un \"servicio de tips\". Te damos el mapa; tú tienes que conducir el coche. Por favor usa nuestros datos responsablemente, haz tu propia investigación y recuerda que en el fútbol, nada es 100% seguro.",
+    meetTheTeam: "Conoce al Equipo",
+    teamIntro: "Las mentes detrás del enfoque basado en datos de OddsFlow",
+    davidTitle: "Jefe de Ciencia de Datos",
+    davidBio: "Con experiencia especializada en IA y Machine Learning, David aplica algoritmos de Wall Street al mercado de apuestas deportivas. Anteriormente analista en mercados de Forex y Renta Variable, construyó el motor central de OddsFlow para eliminar la emoción humana y enfocarse estrictamente en la significancia estadística.",
+    danielTitle: "Cofundador y Actuario Senior",
+    danielBio: "Daniel aporta la precisión de un Actuario y el pensamiento estructural de un Ingeniero al análisis deportivo. Un emprendedor experimentado, se enfoca en la evaluación de riesgos a largo plazo y modelado de probabilidades, tratando las apuestas deportivas como una clase de inversión disciplinada en lugar de un juego de azar.",
     footer: "© 2026 OddsFlow. Todos los derechos reservados.",
     footerDesc: "Análisis de cuotas de fútbol impulsado por IA para predicciones más inteligentes. Tome decisiones basadas en datos con información en tiempo real.",
     product: "Producto", liveOdds: "Rendimiento IA", popularLeagues: "Ligas Populares",
@@ -84,7 +96,7 @@ const translations: Record<string, Record<string, string>> = {
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Análise",
     community: "Comunidade", news: "Notícias", pricing: "Preços", login: "Entrar", getStarted: "Começar", solution: "Solução",
-    aboutTitle: "Sobre OddsFlow",
+    aboutTitle: "Sobre OddsFlow: O Motor de IA que Decodifica a Intenção do Mercado",
     aboutSubtitle: "A maioria assiste ao jogo. Poucos observam o mercado.",
     aboutIntro: "OddsFlow existe para os últimos. Notamos uma lacuna enorme entre \"estatísticas públicas\" (posse de bola, chutes ao gol) e \"realidade do mercado\" (fluxo de dinheiro, movimentos de linha e dinheiro inteligente). Construímos esta plataforma para preencher essa lacuna. Não lidamos com exageros, intuição ou \"vitórias garantidas\". Lidamos com dados, lógica e transparência de mercado.",
     ourStory: "Nossa História",
@@ -108,6 +120,9 @@ const translations: Record<string, Record<string, string>> = {
     audience3Text: "Você quer entender o futebol como um sistema de mercado, não apenas como um esporte.",
     realityNote: "Uma Nota sobre a Realidade",
     realityText: "OddsFlow é uma plataforma de análise de dados. Não somos uma casa de apostas e não somos um \"serviço de dicas\". Damos o mapa; você tem que dirigir o carro. Por favor, use nossos dados com responsabilidade e lembre-se que no futebol, nada é 100% certo.",
+    meetTheTeam: "Conheça a Equipe", teamIntro: "As mentes por trás da abordagem baseada em dados da OddsFlow",
+    davidTitle: "Chefe de Ciência de Dados", davidBio: "Com experiência especializada em IA e Machine Learning, David aplica algoritmos de Wall Street ao mercado de apostas esportivas. Anteriormente analista em mercados de Forex e Ações, ele construiu o motor central do OddsFlow para eliminar a emoção humana e focar estritamente na significância estatística.",
+    danielTitle: "Cofundador e Atuário Sênior", danielBio: "Daniel traz a precisão de um Atuário e o pensamento estrutural de um Engenheiro para análises esportivas. Um empreendedor experiente, ele foca na avaliação de riscos de longo prazo e modelagem de probabilidades, tratando apostas esportivas como uma classe de investimento disciplinada em vez de um jogo de azar.",
     footer: "© 2026 OddsFlow. Todos os direitos reservados.",
     footerDesc: "Análise de odds de futebol com IA para previsões mais inteligentes. Tome decisões baseadas em dados com insights em tempo real.",
     product: "Produto", liveOdds: "Desempenho IA", popularLeagues: "Ligas Populares",
@@ -120,7 +135,7 @@ const translations: Record<string, Record<string, string>> = {
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "Analyse",
     community: "Community", news: "Nachrichten", pricing: "Preise", login: "Anmelden", getStarted: "Loslegen", solution: "Lösung",
-    aboutTitle: "Über OddsFlow",
+    aboutTitle: "Über OddsFlow: Die KI-Engine zur Entschlüsselung der Marktabsicht",
     aboutSubtitle: "Die meisten schauen das Spiel. Wenige beobachten den Markt.",
     aboutIntro: "OddsFlow existiert für Letztere. Wir haben eine massive Lücke zwischen \"öffentlichen Statistiken\" (Ballbesitz, Schüsse aufs Tor) und \"Marktrealität\" (Geldfluss, Linienbewegungen und kluges Geld) bemerkt. Wir haben diese Plattform gebaut, um diese Lücke zu schließen. Wir handeln nicht mit Hype, Intuition oder \"garantierten Gewinnen\". Wir handeln mit Daten, Logik und Markttransparenz.",
     ourStory: "Unsere Geschichte",
@@ -144,6 +159,9 @@ const translations: Record<string, Record<string, string>> = {
     audience3Text: "Sie wollen Fußball als Marktsystem verstehen, nicht nur als Sport.",
     realityNote: "Ein Hinweis zur Realität",
     realityText: "OddsFlow ist eine Datenanalyseplattform. Wir sind kein Buchmacher und kein \"Tipp-Service\". Wir geben Ihnen die Karte; Sie müssen das Auto fahren. Bitte nutzen Sie unsere Daten verantwortungsvoll und denken Sie daran, dass im Fußball nichts 100% sicher ist.",
+    meetTheTeam: "Das Team", teamIntro: "Die Köpfe hinter dem datengesteuerten Ansatz von OddsFlow",
+    davidTitle: "Leiter Data Science", davidBio: "Mit spezialisiertem Hintergrund in KI und Machine Learning wendet David Wall-Street-Algorithmen auf den Sportwettenmarkt an. Als ehemaliger Analyst in Forex- und Aktienmärkten entwickelte er die Kern-Engine von OddsFlow, um menschliche Emotionen auszuschalten und sich strikt auf statistische Signifikanz zu konzentrieren.",
+    danielTitle: "Mitgründer & Senior Aktuar", danielBio: "Daniel bringt die Präzision eines Aktuars und das strukturelle Denken eines Ingenieurs in die Sportanalyse ein. Als erfahrener Unternehmer konzentriert er sich auf langfristige Risikobewertung und Wahrscheinlichkeitsmodellierung und behandelt Sportwetten als disziplinierte Anlageklasse statt als Glücksspiel.",
     footer: "© 2026 OddsFlow. Alle Rechte vorbehalten.",
     footerDesc: "KI-gestützte Fußballquoten-Analyse für klügere Vorhersagen. Treffen Sie datengestützte Entscheidungen mit Echtzeit-Einblicken.",
     product: "Produkt", liveOdds: "KI-Leistung", popularLeagues: "Beliebte Ligen",
@@ -156,7 +174,7 @@ const translations: Record<string, Record<string, string>> = {
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Analyse",
     community: "Communauté", news: "Actualités", pricing: "Tarifs", login: "Connexion", getStarted: "Commencer", solution: "Solution",
-    aboutTitle: "À Propos d'OddsFlow",
+    aboutTitle: "À Propos d'OddsFlow: Le Moteur IA Décodant l'Intention du Marché",
     aboutSubtitle: "La plupart regardent le match. Quelques-uns observent le marché.",
     aboutIntro: "OddsFlow existe pour ces derniers. Nous avons remarqué un écart massif entre les \"statistiques publiques\" (possession, tirs cadrés) et la \"réalité du marché\" (flux d'argent, mouvements de lignes et argent intelligent). Nous avons construit cette plateforme pour combler cet écart. Nous ne traitons pas avec le battage médiatique, l'intuition ou les \"gains garantis\". Nous traitons avec les données, la logique et la transparence du marché.",
     ourStory: "Notre Histoire",
@@ -180,6 +198,9 @@ const translations: Record<string, Record<string, string>> = {
     audience3Text: "Vous voulez comprendre le football comme un système de marché, pas seulement comme un sport.",
     realityNote: "Une Note sur la Réalité",
     realityText: "OddsFlow est une plateforme d'analyse de données. Nous ne sommes pas un bookmaker et nous ne sommes pas un \"service de pronostics\". Nous vous donnons la carte; vous devez conduire la voiture. Veuillez utiliser nos données de manière responsable et n'oubliez pas que dans le football, rien n'est jamais certain à 100%.",
+    meetTheTeam: "L'Équipe", teamIntro: "Les esprits derrière l'approche data-driven d'OddsFlow",
+    davidTitle: "Directeur Data Science", davidBio: "Avec une expertise en IA et Machine Learning, David applique les algorithmes de Wall Street au marché des paris sportifs. Ancien analyste sur les marchés Forex et Actions, il a construit le moteur central d'OddsFlow pour éliminer l'émotion humaine et se concentrer strictement sur la signification statistique.",
+    danielTitle: "Co-fondateur & Actuaire Senior", danielBio: "Daniel apporte la précision d'un Actuaire et la pensée structurelle d'un Ingénieur à l'analyse sportive. Entrepreneur chevronné, il se concentre sur l'évaluation des risques à long terme et la modélisation des probabilités, traitant les paris sportifs comme une classe d'investissement disciplinée plutôt qu'un jeu de hasard.",
     footer: "© 2026 OddsFlow. Tous droits réservés.",
     footerDesc: "Analyse de cotes de football propulsée par l'IA pour des prédictions plus intelligentes. Prenez des décisions basées sur les données avec des informations en temps réel.",
     product: "Produit", liveOdds: "Performance IA", popularLeagues: "Ligues Populaires",
@@ -192,7 +213,7 @@ const translations: Record<string, Record<string, string>> = {
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "分析",
     community: "コミュニティ", news: "ニュース", pricing: "料金", login: "ログイン", getStarted: "始める", solution: "ソリューション",
-    aboutTitle: "OddsFlowについて",
+    aboutTitle: "OddsFlowについて：市場意図を解読するAIエンジン",
     aboutSubtitle: "ほとんどの人は試合を見る。少数の人はマーケットを見る。",
     aboutIntro: "OddsFlowは後者のために存在します。私たちは「公開統計」（ポゼッション、枠内シュート）と「市場の現実」（資金の流れ、ライン変動、スマートマネー）の間に大きなギャップがあることに気づきました。このプラットフォームはそのギャップを埋めるために構築しました。私たちは誇大宣伝、直感、「保証された勝利」を扱いません。データ、論理、市場の透明性を扱います。",
     ourStory: "私たちのストーリー",
@@ -216,6 +237,9 @@ const translations: Record<string, Record<string, string>> = {
     audience3Text: "サッカーをスポーツとしてだけでなく、市場システムとして理解したい方。",
     realityNote: "現実についての注意",
     realityText: "OddsFlowはデータ分析プラットフォームです。私たちはブックメーカーでもなく、「チップサービス」でもありません。地図を渡しますが、運転はあなたがしなければなりません。責任を持ってデータを使用し、サッカーでは何も100%確実ではないことを忘れないでください。",
+    meetTheTeam: "チームのご紹介", teamIntro: "OddsFlowのデータドリブンアプローチを支える頭脳",
+    davidTitle: "データサイエンス責任者", davidBio: "AIと機械学習の専門的なバックグラウンドを持つDavidは、ウォール街のアルゴリズムをスポーツベッティング市場に応用しています。以前はFXと株式市場のアナリストとして活躍し、人間の感情を排除し統計的有意性に厳密に焦点を当てるOddsFlowのコアエンジンを構築しました。",
+    danielTitle: "共同創設者＆シニアアクチュアリー", danielBio: "Danielはアクチュアリーの精密さとエンジニアの構造的思考をスポーツ分析に活かしています。経験豊富な起業家として、長期的なリスク評価と確率モデリングに注力し、スポーツベッティングをギャンブルではなく規律ある投資クラスとして捉えています。",
     footer: "© 2026 OddsFlow. 全著作権所有。",
     footerDesc: "よりスマートな予測のためのAI駆動サッカーオッズ分析。リアルタイムの洞察でデータ駆動の意思決定を。",
     product: "製品", liveOdds: "AI分析", popularLeagues: "人気リーグ",
@@ -228,7 +252,7 @@ const translations: Record<string, Record<string, string>> = {
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "분석",
     community: "커뮤니티", news: "뉴스", pricing: "가격", login: "로그인", getStarted: "시작하기", solution: "솔루션",
-    aboutTitle: "OddsFlow 소개",
+    aboutTitle: "OddsFlow 소개: 시장 의도를 해독하는 AI 엔진",
     aboutSubtitle: "대부분의 사람들은 경기를 본다. 소수는 시장을 본다.",
     aboutIntro: "OddsFlow는 후자를 위해 존재합니다. 우리는 \"공개 통계\" (점유율, 유효 슈팅)와 \"시장 현실\" (자금 흐름, 라인 변동, 스마트 머니) 사이에 큰 격차가 있음을 발견했습니다. 이 플랫폼은 그 격차를 해소하기 위해 구축되었습니다. 우리는 과대광고, 직감 또는 \"보장된 승리\"를 다루지 않습니다. 데이터, 논리, 시장 투명성을 다룹니다.",
     ourStory: "우리의 이야기",
@@ -252,6 +276,9 @@ const translations: Record<string, Record<string, string>> = {
     audience3Text: "축구를 단순한 스포츠가 아닌 시장 시스템으로 이해하고 싶은 분.",
     realityNote: "현실에 대한 참고",
     realityText: "OddsFlow는 데이터 분석 플랫폼입니다. 우리는 북메이커도 아니고 \"팁 서비스\"도 아닙니다. 지도를 드립니다; 운전은 당신이 해야 합니다. 데이터를 책임감 있게 사용하시고, 축구에서는 아무것도 100% 확실하지 않다는 것을 기억하세요.",
+    meetTheTeam: "팀 소개", teamIntro: "OddsFlow의 데이터 기반 접근 방식을 이끄는 두뇌들",
+    davidTitle: "데이터 사이언스 책임자", davidBio: "AI와 머신러닝에 전문화된 배경을 가진 David는 월스트리트 알고리즘을 스포츠 베팅 시장에 적용합니다. 이전에 외환 및 주식 시장 애널리스트로 활동했으며, 인간의 감정을 배제하고 통계적 유의성에만 집중하는 OddsFlow 핵심 엔진을 구축했습니다.",
+    danielTitle: "공동 창업자 & 시니어 계리사", danielBio: "Daniel은 계리사의 정밀함과 엔지니어의 구조적 사고를 스포츠 분석에 적용합니다. 노련한 기업가로서 장기적인 위험 평가와 확률 모델링에 집중하며, 스포츠 베팅을 도박이 아닌 규율 있는 투자 자산 클래스로 다룹니다.",
     footer: "© 2026 OddsFlow. 모든 권리 보유.",
     footerDesc: "더 스마트한 예측을 위한 AI 기반 축구 배당률 분석. 실시간 인사이트로 데이터 기반 결정을 내리세요.",
     product: "제품", liveOdds: "AI 분석", popularLeagues: "인기 리그",
@@ -264,7 +291,7 @@ const translations: Record<string, Record<string, string>> = {
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "分析",
     community: "社区", news: "新闻", pricing: "价格", login: "登录", getStarted: "开始", solution: "解决方案",
-    aboutTitle: "关于 OddsFlow",
+    aboutTitle: "关于 OddsFlow：解读足球市场意图的AI引擎",
     aboutSubtitle: "大多数人看比赛。少数人看市场。",
     aboutIntro: "OddsFlow为后者而存在。我们注意到\"公开统计数据\"（控球率、射正次数）与\"市场现实\"（资金流向、盘口变动、聪明钱）之间存在巨大差距。我们构建这个平台来弥合这一差距。我们不做炒作、直觉或\"保证赢\"的生意。我们处理的是数据、逻辑和市场透明度。",
     ourStory: "我们的故事",
@@ -288,6 +315,9 @@ const translations: Record<string, Record<string, string>> = {
     audience3Text: "你想将足球理解为一个市场系统，而不仅仅是一项运动。",
     realityNote: "关于现实的说明",
     realityText: "OddsFlow 是一个数据分析平台。我们不是博彩公司，也不是\"贴士服务\"。我们给你地图；你必须自己驾驶。请负责任地使用我们的数据，进行自己的研究，并记住在足球中，没有什么是100%确定的。",
+    meetTheTeam: "团队介绍", teamIntro: "OddsFlow数据驱动方法背后的智囊团",
+    davidTitle: "数据科学主管", davidBio: "David拥有AI和机器学习的专业背景，将华尔街算法应用于体育博彩市场。此前曾担任外汇和股票市场分析师，他构建了OddsFlow的核心引擎，旨在排除人为情绪干扰，严格聚焦于统计显著性。",
+    danielTitle: "联合创始人 & 高级精算师", danielBio: "Daniel将精算师的精确性和工程师的结构化思维带入体育分析领域。作为一位经验丰富的企业家，他专注于长期风险评估和概率建模，将体育博彩视为一种有纪律的投资类别，而非单纯的赌博。",
     footer: "© 2026 OddsFlow. 版权所有。",
     footerDesc: "AI 驱动的足球赔率分析，助您做出更明智的预测。通过实时洞察做出数据驱动的决策。",
     product: "产品", liveOdds: "AI分析", popularLeagues: "热门联赛",
@@ -300,7 +330,7 @@ const translations: Record<string, Record<string, string>> = {
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "分析",
     community: "社區", news: "新聞", pricing: "價格", login: "登入", getStarted: "開始", solution: "解決方案",
-    aboutTitle: "關於 OddsFlow",
+    aboutTitle: "關於 OddsFlow：解讀足球市場意圖的AI引擎",
     aboutSubtitle: "大多數人看比賽。少數人看市場。",
     aboutIntro: "OddsFlow為後者而存在。我們注意到\"公開統計數據\"（控球率、射正次數）與\"市場現實\"（資金流向、盤口變動、聰明錢）之間存在巨大差距。我們構建這個平台來彌合這一差距。我們不做炒作、直覺或\"保證贏\"的生意。我們處理的是數據、邏輯和市場透明度。",
     ourStory: "我們的故事",
@@ -324,6 +354,9 @@ const translations: Record<string, Record<string, string>> = {
     audience3Text: "你想將足球理解為一個市場系統，而不僅僅是一項運動。",
     realityNote: "關於現實的說明",
     realityText: "OddsFlow 是一個數據分析平台。我們不是博彩公司，也不是\"貼士服務\"。我們給你地圖；你必須自己駕駛。請負責任地使用我們的數據，進行自己的研究，並記住在足球中，沒有什麼是100%確定的。",
+    meetTheTeam: "團隊介紹", teamIntro: "OddsFlow數據驅動方法背後的智囊團",
+    davidTitle: "數據科學主管", davidBio: "David擁有AI和機器學習的專業背景，將華爾街演算法應用於體育博彩市場。此前曾擔任外匯和股票市場分析師，他構建了OddsFlow的核心引擎，旨在排除人為情緒干擾，嚴格聚焦於統計顯著性。",
+    danielTitle: "聯合創始人 & 高級精算師", danielBio: "Daniel將精算師的精確性和工程師的結構化思維帶入體育分析領域。作為一位經驗豐富的企業家，他專注於長期風險評估和概率建模，將體育博彩視為一種有紀律的投資類別，而非單純的賭博。",
     footer: "© 2026 OddsFlow. 版權所有。",
     footerDesc: "AI 驅動的足球賠率分析，助您做出更明智的預測。通過即時洞察做出數據驅動的決策。",
     product: "產品", liveOdds: "AI分析", popularLeagues: "熱門聯賽",
@@ -336,7 +369,7 @@ const translations: Record<string, Record<string, string>> = {
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI",
     community: "Komunitas", news: "Berita", pricing: "Harga", login: "Masuk", getStarted: "Mulai", solution: "Solusi",
-    aboutTitle: "Tentang OddsFlow",
+    aboutTitle: "Tentang OddsFlow: Mesin AI yang Mendekode Niat Pasar Sepak Bola",
     aboutSubtitle: "Kebanyakan orang menonton pertandingan. Sedikit yang mengamati pasar.",
     aboutIntro: "OddsFlow ada untuk yang terakhir. Kami melihat kesenjangan besar antara \"statistik publik\" (penguasaan bola, tembakan tepat sasaran) dan \"realitas pasar\" (aliran uang, pergerakan garis, dan uang pintar). Kami membangun platform ini untuk menjembatani kesenjangan itu. Kami tidak berurusan dengan hype, intuisi, atau \"kemenangan terjamin\". Kami berurusan dengan data, logika, dan transparansi pasar.",
     ourStory: "Cerita Kami",
@@ -360,6 +393,9 @@ const translations: Record<string, Record<string, string>> = {
     audience3Text: "Anda ingin memahami sepak bola sebagai sistem pasar, bukan hanya olahraga.",
     realityNote: "Catatan tentang Realitas",
     realityText: "OddsFlow adalah platform analitik data. Kami bukan bandar taruhan, dan kami bukan \"layanan tip\". Kami memberikan peta; Anda harus mengemudi. Mohon gunakan data kami secara bertanggung jawab, lakukan riset Anda sendiri, dan ingat bahwa dalam sepak bola, tidak ada yang 100% pasti.",
+    meetTheTeam: "Tim Kami", teamIntro: "Otak di balik pendekatan berbasis data OddsFlow",
+    davidTitle: "Kepala Data Science", davidBio: "Dengan latar belakang khusus di AI dan Machine Learning, David menerapkan algoritma Wall Street ke pasar taruhan olahraga. Sebelumnya seorang analis di pasar Forex dan Ekuitas, ia membangun mesin inti OddsFlow untuk menghilangkan emosi manusia dan fokus secara ketat pada signifikansi statistik.",
+    danielTitle: "Co-Founder & Aktuaris Senior", danielBio: "Daniel membawa presisi seorang Aktuaris dan pemikiran struktural seorang Insinyur ke analitik olahraga. Seorang pengusaha berpengalaman, ia fokus pada penilaian risiko jangka panjang dan pemodelan probabilitas, memperlakukan taruhan olahraga sebagai kelas investasi yang disiplin daripada perjudian.",
     footer: "© 2026 OddsFlow. Hak cipta dilindungi.",
     footerDesc: "Analisis odds sepak bola bertenaga AI untuk prediksi yang lebih cerdas. Buat keputusan berbasis data dengan wawasan real-time.",
     product: "Produk", liveOdds: "Performa AI", popularLeagues: "Liga Populer",
@@ -407,8 +443,136 @@ export default function AboutPage() {
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
+  // Internal linking terms mapping (term -> link path)
+  const internalLinkTerms: Record<string, { terms: string[], path: string }> = {
+    predictions: {
+      terms: ['Asian Handicaps', 'Handicaps Asiáticos', 'Handicaps Asiáticos', 'Asiatische Handicaps', 'handicaps asiatiques', 'アジアンハンディキャップ', '아시아 핸디캡', '亚洲盘口', '亞洲盤口', 'Asian Handicaps', 'AI predictions', 'predicciones de IA', 'previsões de IA', 'KI-Vorhersagen', 'prédictions IA', 'AI予測', 'AI 예측', 'AI预测', 'AI預測', 'prediksi AI'],
+      path: '/predictions'
+    },
+    performance: {
+      terms: ['Market Intent', 'intención del mercado', 'intenção do mercado', 'Marktabsicht', 'intention du marché', '市場の意図', '시장 의도', '市场意图', '市場意圖', 'niat pasar'],
+      path: '/performance'
+    }
+  };
+
+  // Function to add internal links to text
+  const addInternalLinks = (text: string): React.ReactNode => {
+    let result: React.ReactNode[] = [text];
+
+    Object.entries(internalLinkTerms).forEach(([, config]) => {
+      const newResult: React.ReactNode[] = [];
+      result.forEach((part, partIndex) => {
+        if (typeof part !== 'string') {
+          newResult.push(part);
+          return;
+        }
+
+        let remainingText = part;
+        let lastIndex = 0;
+        const segments: React.ReactNode[] = [];
+
+        config.terms.forEach((term) => {
+          const index = remainingText.toLowerCase().indexOf(term.toLowerCase());
+          if (index !== -1) {
+            const actualTerm = remainingText.substring(index, index + term.length);
+            if (index > 0) {
+              segments.push(remainingText.substring(0, index));
+            }
+            segments.push(
+              <Link
+                key={`${partIndex}-${term}-${index}`}
+                href={localePath(config.path)}
+                className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition-colors"
+              >
+                {actualTerm}
+              </Link>
+            );
+            remainingText = remainingText.substring(index + term.length);
+            lastIndex = index + term.length;
+          }
+        });
+
+        if (remainingText) {
+          segments.push(remainingText);
+        }
+
+        if (segments.length > 0) {
+          newResult.push(...segments);
+        } else {
+          newResult.push(part);
+        }
+      });
+      result = newResult;
+    });
+
+    return result;
+  };
+
+  // Organization Schema with Team Members
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "OddsFlow",
+    "url": "https://www.oddsflow.ai",
+    "logo": "https://www.oddsflow.ai/homepage/OddsFlow Logo2.png",
+    "description": "AI-powered football odds analysis platform for smarter predictions",
+    "foundingDate": "2024",
+    "sameAs": [
+      "https://www.facebook.com/oddsflow",
+      "https://www.instagram.com/oddsflow",
+      "https://t.me/oddsflow"
+    ],
+    "employee": [
+      {
+        "@type": "Person",
+        "name": "David",
+        "jobTitle": "Head of Data Science",
+        "image": "https://www.oddsflow.ai/about/David.png",
+        "description": "Specialized background in AI and Machine Learning. Applies Wall Street algorithms to the sports betting market."
+      },
+      {
+        "@type": "Person",
+        "name": "Daniel",
+        "jobTitle": "Co-Founder & Senior Actuary",
+        "image": "https://www.oddsflow.ai/about/Daniel.png",
+        "description": "Expert in risk assessment and probability modeling. Brings the precision of an Actuary to sports analytics."
+      }
+    ]
+  };
+
+  // Video Schema for OddsFlow Trailer
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": "OddsFlow Trailer - AI Football Odds Analysis Platform",
+    "description": "Discover how OddsFlow uses AI and machine learning to decode football market intent, analyze Asian Handicaps, and provide data-driven betting predictions.",
+    "thumbnailUrl": "https://www.oddsflow.ai/about/about-us.png",
+    "uploadDate": "2024-01-01",
+    "contentUrl": "https://www.oddsflow.ai/about/Oddsflow video.mp4",
+    "embedUrl": "https://www.oddsflow.ai/about/Oddsflow video.mp4",
+    "duration": "PT2M30S",
+    "publisher": {
+      "@type": "Organization",
+      "name": "OddsFlow",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.oddsflow.ai/homepage/OddsFlow Logo2.png"
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-white relative">
+      {/* Organization Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      {/* Video Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema) }}
+      />
       {/* Background Image */}
       <div
         className="fixed inset-0 z-0 opacity-20"
@@ -603,7 +767,7 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8 md:p-12 backdrop-blur-sm">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-emerald-400">{t('ourStory')}</h2>
-            <p className="text-gray-300 text-lg leading-relaxed">{t('storyText')}</p>
+            <p className="text-gray-300 text-lg leading-relaxed">{addInternalLinks(t('storyText'))}</p>
           </div>
         </div>
       </section>
@@ -615,15 +779,15 @@ export default function AboutPage() {
           <p className="text-gray-400 text-lg text-center mb-12">{t('whatWeDoIntro')}</p>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { title: t('feature1Title'), text: t('feature1Text'), icon: '🔍' },
-              { title: t('feature2Title'), text: t('feature2Text'), icon: '🎯' },
-              { title: t('feature3Title'), text: t('feature3Text'), icon: '📊' },
+              { title: t('feature1Title'), text: t('feature1Text'), icon: '🔍', link: '/performance' },
+              { title: t('feature2Title'), text: t('feature2Text'), icon: '🎯', link: '/predictions' },
+              { title: t('feature3Title'), text: t('feature3Text'), icon: '📊', link: '/predictions' },
             ].map((feature, i) => (
-              <div key={i} className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 p-6 hover:border-emerald-500/30 transition-all backdrop-blur-sm">
+              <Link key={i} href={localePath(feature.link)} className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 p-6 hover:border-emerald-500/30 transition-all backdrop-blur-sm group">
                 <div className="text-3xl mb-4">{feature.icon}</div>
-                <h3 className="text-lg font-semibold mb-3 text-cyan-400">{feature.title}</h3>
+                <h3 className="text-lg font-semibold mb-3 text-cyan-400 group-hover:text-emerald-400 transition-colors">{feature.title}</h3>
                 <p className="text-gray-400">{feature.text}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -655,6 +819,44 @@ export default function AboutPage() {
                 <p className="text-gray-400">{audience.text}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Meet The Team Section */}
+      <section className="py-20 px-4 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">{t('meetTheTeam')}</h2>
+          <p className="text-gray-400 text-lg text-center mb-16">{t('teamIntro')}</p>
+          <div className="space-y-12">
+            {/* David - Image Left, Text Right */}
+            <div className="group bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 overflow-hidden hover:border-emerald-500/40 transition-all duration-300 backdrop-blur-sm">
+              <div className="flex flex-col md:flex-row">
+                <div className="md:w-3/5 aspect-video relative overflow-hidden">
+                  <img src="/about/David.png" alt="David" className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="md:w-2/5 p-8 md:p-10 flex flex-col justify-center">
+                  <div className="w-16 h-0.5 bg-emerald-500 mb-6" />
+                  <h3 className="text-3xl md:text-4xl font-bold mb-3 text-white">David</h3>
+                  <p className="text-emerald-400 font-semibold text-xl mb-6">{t('davidTitle')}</p>
+                  <p className="text-gray-300 text-base md:text-lg leading-relaxed">{t('davidBio')}</p>
+                </div>
+              </div>
+            </div>
+            {/* Daniel - Text Left, Image Right */}
+            <div className="group bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 overflow-hidden hover:border-cyan-500/40 transition-all duration-300 backdrop-blur-sm">
+              <div className="flex flex-col md:flex-row-reverse">
+                <div className="md:w-3/5 aspect-video relative overflow-hidden">
+                  <img src="/about/Daniel.png" alt="Daniel" className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="md:w-2/5 p-8 md:p-10 flex flex-col justify-center">
+                  <div className="w-16 h-0.5 bg-cyan-500 mb-6" />
+                  <h3 className="text-3xl md:text-4xl font-bold mb-3 text-white">Daniel</h3>
+                  <p className="text-cyan-400 font-semibold text-xl mb-6">{t('danielTitle')}</p>
+                  <p className="text-gray-300 text-base md:text-lg leading-relaxed">{t('danielBio')}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
