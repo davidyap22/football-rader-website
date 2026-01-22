@@ -12,8 +12,8 @@ const translations: Record<string, Record<string, string>> = {
   EN: {
     home: "Home", predictions: "Predictions", leagues: "Leagues", performance: "AI Performance",
     community: "Community", news: "News", pricing: "Pricing", login: "Log In", getStarted: "Get Started",
-    title: "Terms of Service",
-    lastUpdated: "Last Updated: January 2025",
+    title: "OddsFlow Terms of Service",
+    lastUpdated: "Last Updated: January 2026",
     section1Title: "1. Acceptance of Terms",
     section1Text: "Welcome to OddsFlow. By accessing our platform, you agree to these Terms of Service. OddsFlow provides AI-driven football analytics, historical data processing, and market trend visualization tools (the \"Service\"). If you do not agree to these terms, please discontinue the use of our Service immediately.",
     section2Title: "2. Nature of Service",
@@ -58,8 +58,8 @@ const translations: Record<string, Record<string, string>> = {
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Análisis",
     community: "Comunidad", news: "Noticias", pricing: "Precios", login: "Iniciar Sesión", getStarted: "Comenzar",
-    title: "Términos de Servicio",
-    lastUpdated: "Última actualización: Enero 2025",
+    title: "Términos de Servicio de OddsFlow",
+    lastUpdated: "Última actualización: Enero 2026",
     section1Title: "1. Aceptación de Términos",
     section1Text: "Bienvenido a OddsFlow. Al acceder a nuestra plataforma, acepta estos Términos de Servicio. OddsFlow proporciona análisis de fútbol impulsado por IA, procesamiento de datos históricos y herramientas de visualización de tendencias del mercado (el \"Servicio\"). Si no está de acuerdo con estos términos, deje de usar nuestro Servicio inmediatamente.",
     section2Title: "2. Naturaleza del Servicio",
@@ -92,8 +92,8 @@ const translations: Record<string, Record<string, string>> = {
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Análise",
     community: "Comunidade", news: "Notícias", pricing: "Preços", login: "Entrar", getStarted: "Começar",
-    title: "Termos de Serviço",
-    lastUpdated: "Última atualização: Janeiro 2025",
+    title: "Termos de Serviço do OddsFlow",
+    lastUpdated: "Última atualização: Janeiro 2026",
     section1Title: "1. Aceitação dos Termos",
     section1Text: "Bem-vindo ao OddsFlow. Ao acessar nossa plataforma, você concorda com estes Termos de Serviço. OddsFlow fornece análises de futebol baseadas em IA, processamento de dados históricos e ferramentas de visualização de tendências de mercado (o \"Serviço\"). Se você não concordar com estes termos, por favor interrompa o uso do nosso Serviço imediatamente.",
     section2Title: "2. Natureza do Serviço",
@@ -126,8 +126,8 @@ const translations: Record<string, Record<string, string>> = {
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "Analyse",
     community: "Community", news: "Nachrichten", pricing: "Preise", login: "Anmelden", getStarted: "Loslegen",
-    title: "Nutzungsbedingungen",
-    lastUpdated: "Letzte Aktualisierung: Januar 2025",
+    title: "OddsFlow Nutzungsbedingungen",
+    lastUpdated: "Letzte Aktualisierung: Januar 2026",
     section1Title: "1. Annahme der Bedingungen",
     section1Text: "Willkommen bei OddsFlow. Durch den Zugriff auf unsere Plattform stimmen Sie diesen Nutzungsbedingungen zu. OddsFlow bietet KI-gesteuerte Fußballanalysen, historische Datenverarbeitung und Markttrend-Visualisierungstools (der \"Service\"). Wenn Sie diesen Bedingungen nicht zustimmen, stellen Sie die Nutzung unseres Services bitte sofort ein.",
     section2Title: "2. Art des Services",
@@ -160,8 +160,8 @@ const translations: Record<string, Record<string, string>> = {
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Analyse",
     community: "Communauté", news: "Actualités", pricing: "Tarifs", login: "Connexion", getStarted: "Commencer",
-    title: "Conditions d'Utilisation",
-    lastUpdated: "Dernière mise à jour: Janvier 2025",
+    title: "Conditions d'Utilisation OddsFlow",
+    lastUpdated: "Dernière mise à jour: Janvier 2026",
     section1Title: "1. Acceptation des Conditions",
     section1Text: "Bienvenue sur OddsFlow. En accédant à notre plateforme, vous acceptez ces Conditions d'Utilisation. OddsFlow fournit des analyses de football basées sur l'IA, le traitement de données historiques et des outils de visualisation des tendances du marché (le \"Service\"). Si vous n'acceptez pas ces conditions, veuillez cesser immédiatement d'utiliser notre Service.",
     section2Title: "2. Nature du Service",
@@ -194,8 +194,8 @@ const translations: Record<string, Record<string, string>> = {
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "分析",
     community: "コミュニティ", news: "ニュース", pricing: "料金", login: "ログイン", getStarted: "始める",
-    title: "利用規約",
-    lastUpdated: "最終更新：2025年1月",
+    title: "OddsFlow 利用規約",
+    lastUpdated: "最終更新：2026年1月",
     section1Title: "1. 規約への同意",
     section1Text: "OddsFlowへようこそ。当プラットフォームにアクセスすることにより、これらの利用規約に同意したものとみなされます。OddsFlowは、AI駆動のサッカー分析、履歴データ処理、市場トレンド可視化ツール（「サービス」）を提供します。これらの規約に同意しない場合は、直ちにサービスの使用を中止してください。",
     section2Title: "2. サービスの性質",
@@ -228,8 +228,8 @@ const translations: Record<string, Record<string, string>> = {
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "분석",
     community: "커뮤니티", news: "뉴스", pricing: "가격", login: "로그인", getStarted: "시작하기",
-    title: "이용약관",
-    lastUpdated: "최종 업데이트: 2025년 1월",
+    title: "OddsFlow 이용약관",
+    lastUpdated: "최종 업데이트: 2026년 1월",
     section1Title: "1. 약관 동의",
     section1Text: "OddsFlow에 오신 것을 환영합니다. 당사 플랫폼에 접속함으로써 귀하는 이 이용약관에 동의합니다. OddsFlow는 AI 기반 축구 분석, 과거 데이터 처리 및 시장 트렌드 시각화 도구(\"서비스\")를 제공합니다. 이 약관에 동의하지 않는 경우 서비스 사용을 즉시 중단해 주세요.",
     section2Title: "2. 서비스 성격",
@@ -262,8 +262,8 @@ const translations: Record<string, Record<string, string>> = {
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "分析",
     community: "社区", news: "新闻", pricing: "价格", login: "登录", getStarted: "开始",
-    title: "服务条款",
-    lastUpdated: "最后更新：2025年1月",
+    title: "OddsFlow 服务条款",
+    lastUpdated: "最后更新：2026年1月",
     section1Title: "1. 条款接受",
     section1Text: "欢迎使用 OddsFlow。访问我们的平台即表示您同意这些服务条款。OddsFlow 提供 AI 驱动的足球分析、历史数据处理和市场趋势可视化工具（「服务」）。如果您不同意这些条款，请立即停止使用我们的服务。",
     section2Title: "2. 服务性质",
@@ -296,8 +296,8 @@ const translations: Record<string, Record<string, string>> = {
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "分析",
     community: "社區", news: "新聞", pricing: "價格", login: "登入", getStarted: "開始",
-    title: "服務條款",
-    lastUpdated: "最後更新：2025年1月",
+    title: "OddsFlow 服務條款",
+    lastUpdated: "最後更新：2026年1月",
     section1Title: "1. 條款接受",
     section1Text: "歡迎使用 OddsFlow。存取我們的平台即表示您同意這些服務條款。OddsFlow 提供 AI 驅動的足球分析、歷史數據處理和市場趨勢視覺化工具（「服務」）。如果您不同意這些條款，請立即停止使用我們的服務。",
     section2Title: "2. 服務性質",
@@ -330,8 +330,8 @@ const translations: Record<string, Record<string, string>> = {
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI",
     community: "Komunitas", news: "Berita", pricing: "Harga", login: "Masuk", getStarted: "Mulai",
-    title: "Syarat Layanan",
-    lastUpdated: "Terakhir Diperbarui: Januari 2025",
+    title: "Syarat Layanan OddsFlow",
+    lastUpdated: "Terakhir Diperbarui: Januari 2026",
     section1Title: "1. Penerimaan Syarat",
     section1Text: "Selamat datang di OddsFlow. Dengan mengakses platform kami, Anda menyetujui Syarat Layanan ini. OddsFlow menyediakan analisis sepak bola berbasis AI, pemrosesan data historis, dan alat visualisasi tren pasar (\"Layanan\"). Jika Anda tidak menyetujui syarat ini, harap segera hentikan penggunaan Layanan kami.",
     section2Title: "2. Sifat Layanan",
@@ -390,6 +390,36 @@ export default function TermsOfServicePage() {
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
+  // WebPage Schema for SEO
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "OddsFlow Terms of Service",
+    "description": "OddsFlow Terms of Service and User Agreement. Read our terms and conditions for using our AI-powered football analytics and odds prediction platform.",
+    "url": `https://www.oddsflow.ai${locale === 'en' ? '' : `/${locale}`}/terms-of-service`,
+    "inLanguage": locale,
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "OddsFlow",
+      "url": "https://www.oddsflow.ai"
+    },
+    "about": {
+      "@type": "Thing",
+      "name": "Terms of Service",
+      "description": "Legal agreement between OddsFlow and users of the AI football analytics platform"
+    },
+    "dateModified": "2026-01-01",
+    "publisher": {
+      "@type": "Organization",
+      "name": "OddsFlow",
+      "url": "https://www.oddsflow.ai",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.oddsflow.ai/homepage/OddsFlow Logo2.png"
+      }
+    }
+  };
+
   const localePath = (path: string): string => {
     if (locale === 'en') return path;
     return path === '/' ? `/${locale}` : `/${locale}${path}`;
@@ -402,6 +432,12 @@ export default function TermsOfServicePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* WebPage Schema for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
+
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
