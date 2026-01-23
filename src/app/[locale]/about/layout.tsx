@@ -29,9 +29,20 @@ const SEO_METADATA: Record<string, { title: string; description: string; keyword
     ],
   },
   pt: {
-    title: "Sobre Nós - Plataforma de Previsões de Futebol com IA | OddsFlow",
-    description: "Conheça a OddsFlow, a plataforma líder de previsões de futebol com IA. Nossa missão é fornecer insights de apostas transparentes e baseados em dados.",
-    keywords: ["sobre OddsFlow", "previsões de futebol IA", "apostas esportivas", "análise de futebol"],
+    title: "Sobre OddsFlow - Plataforma de Palpites de Futebol com IA e Apostas Esportivas | OddsFlow",
+    description: "Conheça a OddsFlow, a plataforma líder de palpites de futebol com Inteligência Artificial. Usamos algoritmos de Wall Street para analisar odds, handicaps asiáticos e movimentos de mercado. Apostas esportivas com dados, não intuição.",
+    keywords: [
+      "sobre OddsFlow",
+      "palpites de futebol",
+      "palpites de futebol com IA",
+      "apostas esportivas",
+      "previsões de futebol",
+      "análise de odds",
+      "handicaps asiáticos",
+      "cotações de futebol",
+      "inteligência artificial futebol",
+      "dicas de apostas",
+    ],
   },
   de: {
     title: "Über Uns - KI-Fußballvorhersagen & Sportwetten-Analyse | OddsFlow",
