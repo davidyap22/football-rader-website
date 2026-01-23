@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   const titles: Record<string, string> = {
     en: "OddsFlow - Most Accurate AI Football Predictor | European Football AI Tips",
-    es: "OddsFlow - Predictor de Fútbol IA Más Preciso | Consejos IA Fútbol Europeo",
+    es: "OddsFlow - Pronósticos de Fútbol IA | La Liga, Premier League y Más",
     pt: "OddsFlow - Previsões de Futebol IA Mais Precisas | Dicas IA Futebol Europeu",
     de: "OddsFlow - Genauester KI-Fußball-Vorhersager | Europäische Fußball-KI-Tipps",
     fr: "OddsFlow - Prédicteur de Football IA le Plus Précis | Conseils IA Football Européen",
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   const descriptions: Record<string, string> = {
     en: "Most accurate AI football predictor for Premier League, Bundesliga, Serie A, La Liga & Ligue 1. Get 1x2 predictions, handicap betting tips, over/under analysis.",
-    es: "Predictor de fútbol IA más preciso para Premier League, Bundesliga, Serie A, La Liga y Ligue 1. Obtén predicciones 1x2, consejos de hándicap, análisis over/under.",
+    es: "Domina las apuestas de fútbol con OddsFlow. Nuestra IA analiza millones de datos en tiempo real para ofrecerte pronósticos precisos, análisis de cuotas y value bets para La Liga, Premier League y más.",
     pt: "Previsões de futebol IA mais precisas para Premier League, Bundesliga, Serie A, La Liga e Ligue 1. Obtenha previsões 1x2, dicas de handicap, análise over/under.",
     de: "Genauester KI-Fußball-Vorhersager für Premier League, Bundesliga, Serie A, La Liga & Ligue 1. Erhalten Sie 1x2-Vorhersagen, Handicap-Tipps, Over/Under-Analyse.",
     fr: "Prédicteur de football IA le plus précis pour Premier League, Bundesliga, Serie A, La Liga & Ligue 1. Obtenez des prédictions 1x2, conseils handicap, analyse over/under.",
