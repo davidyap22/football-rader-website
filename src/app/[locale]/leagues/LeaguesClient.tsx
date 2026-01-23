@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 import { User } from '@supabase/supabase-js';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
-import { LeagueStatsSummary, LEAGUES_CONFIG } from '@/lib/leagues-data';
+import { LeagueStatsSummary, LEAGUES_CONFIG, getLocalizedLeagueName } from '@/lib/leagues-data';
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -47,6 +47,15 @@ const translations: Record<string, Record<string, string>> = {
     globalChat: "Global Chat",
     userPredictions: "User Predictions",
     disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
+    leading: "Leading",
+    teams: "Teams",
+    goals: "Goals",
+    avgMatch: "Avg/Match",
+    cleanSheets: "Clean Sheets",
+    viewStandings: "View Standings",
+    teamStats: "Team Stats",
+    formations: "Formations",
+    season: "Season",
   },
   ES: {
     leagues: "Ligas de Futbol y Predicciones IA",
@@ -75,15 +84,24 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "Juego Responsable",
     allRightsReserved: "Todos los derechos reservados.",
     gamblingWarning: "El juego implica riesgo. Por favor juega responsablemente.",
-    seoTitle: "Consejos de IA para Futbol Europeo",
-    seoP1: "OddsFlow ofrece el predictor de futbol con IA mas preciso para todas las principales ligas europeas.",
-    seoP2: "Ya sea que busques predicciones 1x2 de la Premier League o predicciones de apuestas con IA de la Bundesliga.",
-    seoP3: "Nuestra mejor IA para apuestas handicap analiza predicciones de empate handicap y estadisticas de mas de 2.5 goles.",
+    seoTitle: "Pronósticos IA para las 5 Grandes Ligas de Fútbol",
+    seoP1: "OddsFlow es la plataforma de pronósticos de fútbol con IA más precisa para La Liga, Premier League, Bundesliga, Serie A, Ligue 1 y Champions League. Nuestro modelo de big data analiza estadísticas, forma de equipos y lesiones para ofrecer predicciones fiables.",
+    seoP2: "¿Buscas pronósticos 1x2 de La Liga, análisis de hándicap asiático de la Premier League o predicciones de más/menos goles de la Serie A? OddsFlow proporciona consejos de apuestas basados en datos. Sigue los movimientos de cuotas en tiempo real.",
+    seoP3: "Nuestro modelo de IA destaca en análisis de hándicap asiático, cuotas europeas y predicciones over/under. Consulta nuestro historial de predicciones verificado en la página de Rendimiento. Toma decisiones de apuesta inteligentes con análisis de IA transparente.",
     popularLeagues: "Ligas Populares",
     communityFooter: "Comunidad",
     globalChat: "Chat Global",
     userPredictions: "Predicciones de Usuarios",
     disclaimer: "Aviso: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento.",
+    leading: "Líder",
+    teams: "Equipos",
+    goals: "Goles",
+    avgMatch: "Prom/Partido",
+    cleanSheets: "Porterías Invictas",
+    viewStandings: "Ver Clasificación",
+    teamStats: "Estadísticas",
+    formations: "Formaciones",
+    season: "Temporada",
   },
   PT: {
     leagues: "Ligas de Futebol e Previsoes IA",
@@ -112,15 +130,24 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "Jogo Responsavel",
     allRightsReserved: "Todos os direitos reservados.",
     gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
-    seoTitle: "Dicas de IA para Futebol Europeu",
-    seoP1: "OddsFlow oferece o preditor de futebol com IA mais preciso para todas as principais ligas europeias.",
-    seoP2: "Seja voce procurando previsoes 1x2 da Premier League ou previsoes de apostas com IA da Bundesliga.",
-    seoP3: "Nossa melhor IA para apostas handicap analisa previsoes de empate handicap e estatisticas de mais de 2.5 gols.",
+    seoTitle: "Palpites de Futebol IA para as 5 Grandes Ligas Europeias",
+    seoP1: "OddsFlow é a plataforma de palpites de futebol com IA mais precisa para Premier League, La Liga, Bundesliga, Serie A, Ligue 1 e Champions League. Nosso modelo de big data analisa estatísticas, forma das equipes e lesões para oferecer previsões confiáveis.",
+    seoP2: "Procurando palpites 1x2 da Premier League, análise de handicap asiático da La Liga ou previsões de mais/menos gols da Serie A? OddsFlow fornece dicas de apostas baseadas em dados. Acompanhe os movimentos de odds em tempo real.",
+    seoP3: "Nosso modelo de IA se destaca em análise de handicap asiático, odds europeias e previsões over/under. Confira nosso histórico de previsões verificado na página de Desempenho. Tome decisões de aposta inteligentes com análise de IA transparente.",
     popularLeagues: "Ligas Populares",
     communityFooter: "Comunidade",
     globalChat: "Chat Global",
     userPredictions: "Previsoes de Usuarios",
     disclaimer: "Aviso: OddsFlow fornece previsoes baseadas em IA apenas para fins informativos e de entretenimento.",
+    leading: "Líder",
+    teams: "Equipas",
+    goals: "Gols",
+    avgMatch: "Média/Jogo",
+    cleanSheets: "Sem Sofrer Gol",
+    viewStandings: "Ver Classificação",
+    teamStats: "Estatísticas",
+    formations: "Formações",
+    season: "Temporada",
   },
   DE: {
     leagues: "Fussball-Ligen & KI-Vorhersagen",
@@ -149,15 +176,24 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "Verantwortungsvolles Spielen",
     allRightsReserved: "Alle Rechte vorbehalten.",
     gamblingWarning: "Glucksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
-    seoTitle: "KI-Tipps fur Europaischen Fussball",
-    seoP1: "OddsFlow bietet den genauesten KI-Fussballprediktor fur alle grossen europaischen Ligen.",
-    seoP2: "Ob Sie nach Premier League 1x2-Vorhersagen oder Bundesliga KI-Wettvorhersagen suchen.",
-    seoP3: "Unsere beste KI fur Handicap-Wetten analysiert Handicap-Unentschieden-Vorhersagen.",
+    seoTitle: "KI-Vorhersagen für die Top 5 Fußball-Ligen",
+    seoP1: "OddsFlow ist die präziseste KI-Fußball-Vorhersage-Plattform für Bundesliga, Premier League, La Liga, Serie A, Ligue 1 und Champions League. Unser Big-Data-Modell analysiert Statistiken, Teamform und Verletzungen für zuverlässige Prognosen.",
+    seoP2: "Suchen Sie 1x2-Vorhersagen für die Bundesliga, Asian Handicap-Analysen der Premier League oder Über/Unter-Prognosen der Serie A? OddsFlow liefert datenbasierte Wett-Tipps. Verfolgen Sie Quotenbewegungen in Echtzeit.",
+    seoP3: "Unser KI-Modell glänzt bei Asian Handicap-Analysen, europäischen Quoten und Über/Unter-Vorhersagen. Überprüfen Sie unsere transparente Vorhersage-Bilanz auf der Performance-Seite. Treffen Sie kluge Wettentscheidungen mit transparenter KI-Analyse.",
     popularLeagues: "Beliebte Ligen",
     communityFooter: "Community",
     globalChat: "Globaler Chat",
     userPredictions: "Benutzer-Vorhersagen",
     disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestutzte Vorhersagen nur zu Informations- und Unterhaltungszwecken.",
+    leading: "Führend",
+    teams: "Teams",
+    goals: "Tore",
+    avgMatch: "Ø/Spiel",
+    cleanSheets: "Zu-Null-Spiele",
+    viewStandings: "Tabelle ansehen",
+    teamStats: "Team-Stats",
+    formations: "Formationen",
+    season: "Saison",
   },
   FR: {
     leagues: "Ligues de Football & Predictions IA",
@@ -186,15 +222,24 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "Jeu Responsable",
     allRightsReserved: "Tous droits reserves.",
     gamblingWarning: "Le jeu comporte des risques. Veuillez jouer de maniere responsable.",
-    seoTitle: "Conseils IA pour le Football Europeen",
-    seoP1: "OddsFlow offre le predicteur de football IA le plus precis pour toutes les grandes ligues europeennes.",
-    seoP2: "Que vous cherchiez des predictions 1x2 de Premier League ou des predictions de paris IA de Bundesliga.",
-    seoP3: "Notre meilleure IA pour les paris handicap analyse les predictions de match nul handicap.",
+    seoTitle: "Pronostics Foot IA pour les 5 Grands Championnats",
+    seoP1: "OddsFlow est la plateforme de pronostics foot IA la plus précise pour la Ligue 1, Premier League, Liga, Bundesliga, Serie A et Champions League. Notre modèle big data analyse statistiques, forme des équipes et blessures pour des pronostics fiables.",
+    seoP2: "Vous cherchez des pronostics 1x2 pour la Ligue 1, des analyses de handicap asiatique de Premier League ou des prédictions plus/moins de buts pour la Serie A ? OddsFlow fournit des conseils paris sportifs basés sur les données. Suivez les mouvements de cotes en temps réel.",
+    seoP3: "Notre modèle IA excelle dans l'analyse du handicap asiatique, des cotes européennes et des prédictions over/under. Consultez notre historique de pronostics vérifié sur la page Performance. Prenez des décisions de paris intelligentes avec une analyse IA transparente.",
     popularLeagues: "Ligues Populaires",
     communityFooter: "Communaute",
     globalChat: "Chat Global",
     userPredictions: "Predictions Utilisateurs",
     disclaimer: "Avertissement : OddsFlow fournit des predictions basees sur l'IA a des fins d'information et de divertissement uniquement.",
+    leading: "Leader",
+    teams: "Équipes",
+    goals: "Buts",
+    avgMatch: "Moy/Match",
+    cleanSheets: "Clean Sheets",
+    viewStandings: "Voir Classement",
+    teamStats: "Stats Équipe",
+    formations: "Formations",
+    season: "Saison",
   },
   JA: {
     leagues: "サッカーリーグ & AI予測",
@@ -223,15 +268,24 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "責任あるギャンブル",
     allRightsReserved: "全著作権所有。",
     gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
-    seoTitle: "欧州サッカーAI予測",
-    seoP1: "OddsFlowは、すべての主要欧州リーグで最も正確なAIサッカー予測を提供します。",
-    seoP2: "プレミアリーグの1x2予測、ブンデスリーガのAIベッティング予測をお探しの場合でも。",
-    seoP3: "ハンディキャップベッティングに最適な当社のAIは、ハンディキャップドロー予測を分析します。",
+    seoTitle: "欧州5大リーグAI予想とブックメーカー分析",
+    seoP1: "OddsFlowは欧州5大リーグ（プレミアリーグ、ブンデスリーガ、セリエA、ラ・リーガ、リーグ・アン）とチャンピオンズリーグに対応したAIサッカー予想サイトです。ビッグデータ分析で勝敗予想、オッズ分析を提供。",
+    seoP2: "プレミアリーグの勝敗予想、ブンデスリーガのハンディキャップ分析、セリエAのオーバーアンダー予想など、データに基づいたブックメーカー投資判断をサポートします。リアルタイムのオッズ変動を追跡。",
+    seoP3: "当サイトのAIモデルはアジアンハンディキャップ、欧州オッズ、オーバーアンダー予想で高い精度を誇ります。AI予想の的中実績はパフォーマンスページで透明に公開。データ分析で堅実なブックメーカー投資を。",
     popularLeagues: "人気リーグ",
     communityFooter: "コミュニティ",
     globalChat: "グローバルチャット",
     userPredictions: "ユーザー予測",
     disclaimer: "免責事項：OddsFlowはAI駆動の予測を情報および娯楽目的のみで提供しています。",
+    leading: "首位",
+    teams: "チーム",
+    goals: "得点",
+    avgMatch: "平均/試合",
+    cleanSheets: "クリーンシート",
+    viewStandings: "順位表",
+    teamStats: "チーム統計",
+    formations: "フォーメーション",
+    season: "シーズン",
   },
   KO: {
     leagues: "축구 리그 & AI 예측",
@@ -260,15 +314,24 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "책임감 있는 게임",
     allRightsReserved: "모든 권리 보유.",
     gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
-    seoTitle: "유럽 축구 AI 예측",
-    seoP1: "OddsFlow는 모든 주요 유럽 리그에서 가장 정확한 AI 축구 예측을 제공합니다.",
-    seoP2: "프리미어리그 1x2 예측, 분데스리가 AI 베팅 예측을 찾고 계시든.",
-    seoP3: "핸디캡 베팅을 위한 최고의 AI는 핸디캡 무승부 예측을 분석합니다.",
+    seoTitle: "유럽 5대 리그 AI 분석 & 프로토 예측",
+    seoP1: "OddsFlow는 유럽 5대 리그(프리미어리그, 분데스리가, 세리에A, 라리가, 리그1)와 챔피언스리그를 분석하는 빅데이터 AI 축구 예측 사이트입니다. 프로토, 스포츠토토 분석에 최적화된 승무패 예측을 제공합니다.",
+    seoP2: "프리미어리그 승무패 예측, 분데스리가 핸디캡 분석, 세리에A 언오버 예측 등 데이터 기반의 프로토 분석을 제공합니다. 실시간 배당률 변동을 추적하여 최적의 배팅 타이밍을 파악하세요.",
+    seoP3: "OddsFlow AI 모델은 아시안 핸디캡, 유럽 배당률, 언오버 예측에서 높은 적중률을 자랑합니다. AI 예측 적중 기록은 퍼포먼스 페이지에서 투명하게 공개됩니다. 빅데이터 분석으로 스마트한 스포츠토토 투자를 시작하세요.",
     popularLeagues: "인기 리그",
     communityFooter: "커뮤니티",
     globalChat: "글로벌 채팅",
     userPredictions: "사용자 예측",
     disclaimer: "면책조항: OddsFlow는 정보 및 엔터테인먼트 목적으로만 AI 기반 예측을 제공합니다.",
+    leading: "선두",
+    teams: "팀",
+    goals: "골",
+    avgMatch: "평균/경기",
+    cleanSheets: "클린시트",
+    viewStandings: "순위 보기",
+    teamStats: "팀 통계",
+    formations: "포메이션",
+    season: "시즌",
   },
   '中文': {
     leagues: "足球联赛与AI预测",
@@ -297,15 +360,24 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "负责任博彩",
     allRightsReserved: "版权所有。",
     gamblingWarning: "博彩有风险，请理性投注。",
-    seoTitle: "欧洲足球AI预测",
-    seoP1: "OddsFlow为所有主要欧洲联赛提供最精准的AI足球预测。",
-    seoP2: "无论您是在寻找英超1x2预测还是德甲AI投注预测。",
-    seoP3: "我们最优秀的让球投注AI分析让球平局预测。",
+    seoTitle: "五大联赛AI预测与盘口分析",
+    seoP1: "OddsFlow是专业的五大联赛AI预测平台，覆盖英超、德甲、意甲、西甲、法甲和欧冠。我们的大数据AI模型分析历史战绩、球队状态、伤病情况，为您提供最精准的足球预测。",
+    seoP2: "无论您是寻找英超胜平负预测、德甲让球盘分析，还是意甲大小球推荐，OddsFlow都能提供数据驱动的投注建议。实时追踪赔率走势，把握最佳投注时机。",
+    seoP3: "我们的AI模型在亚盘分析、欧赔解读、大小球预测方面表现出色。查看我们的AI表现页面，验证透明的历史战绩。用数据战胜庄家，从五大联赛开始您的智能投注之旅。",
     popularLeagues: "热门联赛",
     communityFooter: "社区",
     globalChat: "全球聊天",
     userPredictions: "用户预测",
     disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。",
+    leading: "领先",
+    teams: "球队",
+    goals: "进球",
+    avgMatch: "场均",
+    cleanSheets: "零封",
+    viewStandings: "查看积分榜",
+    teamStats: "球队数据",
+    formations: "阵型",
+    season: "赛季",
   },
   '繁體': {
     leagues: "足球聯賽與AI預測",
@@ -334,15 +406,24 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "負責任博彩",
     allRightsReserved: "版權所有。",
     gamblingWarning: "博彩有風險，請理性投注。",
-    seoTitle: "歐洲足球AI預測",
-    seoP1: "OddsFlow為所有主要歐洲聯賽提供最精準的AI足球預測。",
-    seoP2: "無論您是在尋找英超1x2預測還是德甲AI投注預測。",
-    seoP3: "我們最優秀的讓球投注AI分析讓球平局預測。",
+    seoTitle: "五大聯賽AI預測與運彩分析",
+    seoP1: "OddsFlow是專業的五大聯賽AI預測平台，提供英超、德甲、義甲、西甲、法甲和歐冠的運彩分析。大數據AI模型分析歷史戰績、球隊狀態、傷兵情況，為您提供最精準的足球預測。",
+    seoP2: "無論您是尋找英超勝和負預測、德甲讓分盤分析，還是義甲大小分推薦，OddsFlow都能提供數據驅動的投注建議。即時追蹤賠率走勢，掌握最佳投注時機。",
+    seoP3: "我們的AI模型在讓分盤分析、歐賠解讀、大小分預測方面表現出色。查看AI表現頁面，驗證透明的歷史戰績。用數據提升運彩勝率，從五大聯賽開始您的智能投注之旅。",
     popularLeagues: "熱門聯賽",
     communityFooter: "社區",
     globalChat: "全球聊天",
     userPredictions: "用戶預測",
     disclaimer: "免責聲明：OddsFlow 提供的 AI 預測僅供參考和娛樂目的。",
+    leading: "領先",
+    teams: "球隊",
+    goals: "進球",
+    avgMatch: "場均",
+    cleanSheets: "零封",
+    viewStandings: "查看積分榜",
+    teamStats: "球隊數據",
+    formations: "陣型",
+    season: "賽季",
   },
   ID: {
     leagues: "Liga Sepak Bola & Prediksi AI",
@@ -371,15 +452,24 @@ const translations: Record<string, Record<string, string>> = {
     responsibleGaming: "Perjudian Bertanggung Jawab",
     allRightsReserved: "Hak cipta dilindungi.",
     gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
-    seoTitle: "Tips AI Sepak Bola Eropa",
-    seoP1: "OddsFlow menyediakan prediktor sepak bola AI paling akurat untuk semua liga utama Eropa.",
-    seoP2: "Apakah Anda mencari prediksi 1x2 Premier League atau prediksi taruhan AI Bundesliga.",
-    seoP3: "AI terbaik kami untuk taruhan handicap menganalisis prediksi seri handicap.",
+    seoTitle: "Prediksi Bola AI & Analisis Mix Parlay Liga Eropa",
+    seoP1: "OddsFlow adalah platform prediksi bola AI terpercaya untuk Liga Inggris, Bundesliga, Serie A, La Liga, Ligue 1, dan Liga Champions. Analisis big data untuk prediksi akurat, cocok untuk mix parlay dan taruhan handicap.",
+    seoP2: "Cari prediksi 1x2 Liga Inggris, analisis handicap Bundesliga, atau prediksi over/under Serie A? OddsFlow menyediakan tips taruhan berbasis data. Pantau pergerakan odds real-time untuk menemukan pola gacor terbaik.",
+    seoP3: "Model AI kami unggul dalam analisis Asian Handicap, odds Eropa, dan prediksi over/under. Lihat rekam jejak prediksi kami yang transparan di halaman Performa. Tingkatkan peluang menang mix parlay Anda dengan analisis AI yang akurat.",
     popularLeagues: "Liga Populer",
     communityFooter: "Komunitas",
     globalChat: "Obrolan Global",
     userPredictions: "Prediksi Pengguna",
     disclaimer: "Penafian: OddsFlow menyediakan prediksi bertenaga AI hanya untuk tujuan informasi dan hiburan.",
+    leading: "Memimpin",
+    teams: "Tim",
+    goals: "Gol",
+    avgMatch: "Rata-rata/Laga",
+    cleanSheets: "Clean Sheet",
+    viewStandings: "Lihat Klasemen",
+    teamStats: "Statistik Tim",
+    formations: "Formasi",
+    season: "Musim",
   },
 };
 
@@ -621,11 +711,11 @@ export default function LeaguesClient({
               >
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-2">
-                    <img src={league.logo} alt={league.name} className="w-12 h-12 object-contain" />
+                    <img src={league.logo} alt={getLocalizedLeagueName(league.slug, locale).name} className="w-12 h-12 object-contain" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">{league.name}</h3>
-                    <p className="text-sm text-emerald-400">{league.country}</p>
+                    <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">{getLocalizedLeagueName(league.slug, locale).name}</h3>
+                    <p className="text-sm text-emerald-400">{getLocalizedLeagueName(league.slug, locale).country}</p>
                   </div>
                 </div>
                 {/* Statistics Summary */}
@@ -647,7 +737,7 @@ export default function LeaguesClient({
                           />
                         )}
                         <span className="text-xs text-emerald-400 font-medium">
-                          Leading: {leagueStats[league.dbName].topTeam}
+                          {t('leading')}: {leagueStats[league.dbName].topTeam}
                         </span>
                       </div>
                     )}
@@ -657,31 +747,31 @@ export default function LeaguesClient({
                         <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
-                        <span className="text-gray-300">{leagueStats[league.dbName].teams} Teams</span>
+                        <span className="text-gray-300">{leagueStats[league.dbName].teams} {t('teams')}</span>
                       </div>
                       <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5">
                         <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
-                        <span className="text-gray-300">{leagueStats[league.dbName].totalGoals} Goals</span>
+                        <span className="text-gray-300">{leagueStats[league.dbName].totalGoals} {t('goals')}</span>
                       </div>
                       <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5">
                         <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
-                        <span className="text-gray-300">{leagueStats[league.dbName].avgGoalsPerMatch.toFixed(1)} Avg/Match</span>
+                        <span className="text-gray-300">{leagueStats[league.dbName].avgGoalsPerMatch.toFixed(1)} {t('avgMatch')}</span>
                       </div>
                       <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5">
                         <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span className="text-gray-300">{leagueStats[league.dbName].cleanSheets} Clean Sheets</span>
+                        <span className="text-gray-300">{leagueStats[league.dbName].cleanSheets} {t('cleanSheets')}</span>
                       </div>
                     </div>
                     {/* Season Badge */}
                     {leagueStats[league.dbName].season && (
                       <div className="mt-2 text-center">
-                        <span className="text-xs text-gray-500">Season {leagueStats[league.dbName].season}/{(leagueStats[league.dbName].season! + 1).toString().slice(-2)}</span>
+                        <span className="text-xs text-gray-500">{t('season')} {leagueStats[league.dbName].season}/{(leagueStats[league.dbName].season! + 1).toString().slice(-2)}</span>
                       </div>
                     )}
                   </div>
@@ -689,9 +779,9 @@ export default function LeaguesClient({
                   <p className="text-gray-500 text-sm mb-3 italic">No statistics available</p>
                 )}
                 <div className="flex flex-wrap gap-2">
-                  <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">View Standings</span>
-                  <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-400">Team Stats</span>
-                  <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-400">Formations</span>
+                  <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">{t('viewStandings')}</span>
+                  <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-400">{t('teamStats')}</span>
+                  <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-400">{t('formations')}</span>
                 </div>
               </Link>
             ))}
@@ -743,12 +833,12 @@ export default function LeaguesClient({
             <div>
               <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
               <ul className="space-y-3 text-gray-400">
-                <li><Link href={localePath('/leagues/premier-league')} className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
-                <li><Link href={localePath('/leagues/la-liga')} className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
-                <li><Link href={localePath('/leagues/serie-a')} className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
-                <li><Link href={localePath('/leagues/bundesliga')} className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
-                <li><Link href={localePath('/leagues/ligue-1')} className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
-                <li><Link href={localePath('/leagues/champions-league')} className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
+                <li><Link href={localePath('/leagues/premier-league')} className="hover:text-emerald-400 transition-colors">{getLocalizedLeagueName('premier-league', locale).name}</Link></li>
+                <li><Link href={localePath('/leagues/la-liga')} className="hover:text-emerald-400 transition-colors">{getLocalizedLeagueName('la-liga', locale).name}</Link></li>
+                <li><Link href={localePath('/leagues/serie-a')} className="hover:text-emerald-400 transition-colors">{getLocalizedLeagueName('serie-a', locale).name}</Link></li>
+                <li><Link href={localePath('/leagues/bundesliga')} className="hover:text-emerald-400 transition-colors">{getLocalizedLeagueName('bundesliga', locale).name}</Link></li>
+                <li><Link href={localePath('/leagues/ligue-1')} className="hover:text-emerald-400 transition-colors">{getLocalizedLeagueName('ligue-1', locale).name}</Link></li>
+                <li><Link href={localePath('/leagues/champions-league')} className="hover:text-emerald-400 transition-colors">{getLocalizedLeagueName('champions-league', locale).name}</Link></li>
               </ul>
             </div>
 

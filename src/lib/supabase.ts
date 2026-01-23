@@ -259,10 +259,25 @@ export interface League {
   count: number;
 }
 
+// Type for localized team names JSON structure
+export interface TeamNameLanguage {
+  de?: string;
+  es?: string;
+  fr?: string;
+  id?: string;
+  ja?: string;
+  ko?: string;
+  pt?: string;
+  zh_cn?: string;
+  zh_tw?: string;
+  en?: string;
+}
+
 export interface TeamStatistics {
   id: number;
   team_id: number | null;
   team_name: string | null;
+  team_name_language: TeamNameLanguage | null;
   logo: string;
   team_country: string;
   team_founded: number | null;
@@ -288,6 +303,35 @@ export interface TeamStatistics {
   venue_name: string;
   venue_image: string | null;
   created_at: string | null;
+}
+
+// Helper function to get localized team name
+export const getLocalizedTeamName = (team: TeamStatistics, locale: string): string => {
+  if (!team.team_name_language) {
+    return team.team_name || '';
+  }
+
+  // Map locale codes to team_name_language keys
+  const localeMap: Record<string, keyof TeamNameLanguage> = {
+    'en': 'en',
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const langKey = localeMap[locale];
+  if (langKey && team.team_name_language[langKey]) {
+    return team.team_name_language[langKey] as string;
+  }
+
+  // Fallback to English or original team_name
+  return team.team_name_language.en || team.team_name || '';
 }
 
 // Get team statistics by league name

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { supabase, TeamStatistics, PlayerStats, getTeamStatsByName, getPlayerStatsByTeam } from '@/lib/supabase';
+import { supabase, TeamStatistics, PlayerStats, getTeamStatsByName, getPlayerStatsByTeam, getLocalizedTeamName } from '@/lib/supabase';
 import { playerNameToSlug } from '@/lib/team-data';
 import { User } from '@supabase/supabase-js';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
@@ -824,6 +824,89 @@ const LEAGUES_CONFIG: Record<string, { name: string; country: string; logo: stri
   'champions-league': { name: 'Champions League', country: 'UEFA', logo: 'https://media.api-sports.io/football/leagues/2.png', dbName: 'UEFA Champions League' },
 };
 
+// Localized league names
+const LEAGUE_NAMES_LOCALIZED: Record<string, Record<string, { name: string; country: string }>> = {
+  'premier-league': {
+    en: { name: 'Premier League', country: 'England' },
+    es: { name: 'Premier League', country: 'Inglaterra' },
+    pt: { name: 'Premier League', country: 'Inglaterra' },
+    de: { name: 'Premier League', country: 'England' },
+    fr: { name: 'Premier League', country: 'Angleterre' },
+    ja: { name: 'プレミアリーグ', country: 'イングランド' },
+    ko: { name: '프리미어리그', country: '잉글랜드' },
+    zh: { name: '英超', country: '英格兰' },
+    tw: { name: '英超', country: '英格蘭' },
+    id: { name: 'Liga Inggris', country: 'Inggris' },
+  },
+  'bundesliga': {
+    en: { name: 'Bundesliga', country: 'Germany' },
+    es: { name: 'Bundesliga', country: 'Alemania' },
+    pt: { name: 'Bundesliga', country: 'Alemanha' },
+    de: { name: 'Bundesliga', country: 'Deutschland' },
+    fr: { name: 'Bundesliga', country: 'Allemagne' },
+    ja: { name: 'ブンデスリーガ', country: 'ドイツ' },
+    ko: { name: '분데스리가', country: '독일' },
+    zh: { name: '德甲', country: '德国' },
+    tw: { name: '德甲', country: '德國' },
+    id: { name: 'Bundesliga', country: 'Jerman' },
+  },
+  'serie-a': {
+    en: { name: 'Serie A', country: 'Italy' },
+    es: { name: 'Serie A', country: 'Italia' },
+    pt: { name: 'Serie A', country: 'Itália' },
+    de: { name: 'Serie A', country: 'Italien' },
+    fr: { name: 'Serie A', country: 'Italie' },
+    ja: { name: 'セリエA', country: 'イタリア' },
+    ko: { name: '세리에 A', country: '이탈리아' },
+    zh: { name: '意甲', country: '意大利' },
+    tw: { name: '義甲', country: '義大利' },
+    id: { name: 'Serie A', country: 'Italia' },
+  },
+  'la-liga': {
+    en: { name: 'La Liga', country: 'Spain' },
+    es: { name: 'La Liga', country: 'España' },
+    pt: { name: 'La Liga', country: 'Espanha' },
+    de: { name: 'La Liga', country: 'Spanien' },
+    fr: { name: 'La Liga', country: 'Espagne' },
+    ja: { name: 'ラ・リーガ', country: 'スペイン' },
+    ko: { name: '라리가', country: '스페인' },
+    zh: { name: '西甲', country: '西班牙' },
+    tw: { name: '西甲', country: '西班牙' },
+    id: { name: 'La Liga', country: 'Spanyol' },
+  },
+  'ligue-1': {
+    en: { name: 'Ligue 1', country: 'France' },
+    es: { name: 'Ligue 1', country: 'Francia' },
+    pt: { name: 'Ligue 1', country: 'França' },
+    de: { name: 'Ligue 1', country: 'Frankreich' },
+    fr: { name: 'Ligue 1', country: 'France' },
+    ja: { name: 'リーグ・アン', country: 'フランス' },
+    ko: { name: '리그 1', country: '프랑스' },
+    zh: { name: '法甲', country: '法国' },
+    tw: { name: '法甲', country: '法國' },
+    id: { name: 'Ligue 1', country: 'Prancis' },
+  },
+  'champions-league': {
+    en: { name: 'Champions League', country: 'UEFA' },
+    es: { name: 'Liga de Campeones', country: 'UEFA' },
+    pt: { name: 'Liga dos Campeões', country: 'UEFA' },
+    de: { name: 'Champions League', country: 'UEFA' },
+    fr: { name: 'Ligue des Champions', country: 'UEFA' },
+    ja: { name: 'チャンピオンズリーグ', country: 'UEFA' },
+    ko: { name: '챔피언스리그', country: 'UEFA' },
+    zh: { name: '欧冠', country: 'UEFA' },
+    tw: { name: '歐冠', country: 'UEFA' },
+    id: { name: 'Liga Champions', country: 'UEFA' },
+  },
+};
+
+// Helper to get localized league name
+const getLocalizedLeagueName = (leagueSlug: string, locale: string): { name: string; country: string } => {
+  const localized = LEAGUE_NAMES_LOCALIZED[leagueSlug]?.[locale];
+  if (localized) return localized;
+  return LEAGUE_NAMES_LOCALIZED[leagueSlug]?.en || { name: LEAGUES_CONFIG[leagueSlug]?.name || leagueSlug, country: LEAGUES_CONFIG[leagueSlug]?.country || '' };
+};
+
 // Formation positions mapping
 const FORMATION_POSITIONS: Record<string, number[][]> = {
   '4-3-3': [[1], [2, 3, 4, 5], [6, 7, 8], [9, 10, 11]],
@@ -1226,12 +1309,12 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
               <li className="text-gray-600">/</li>
               <li>
                 <Link href={localePath(`/leagues/${leagueSlug}`)} className="text-gray-400 hover:text-emerald-400 transition-colors">
-                  {leagueConfig.name}
+                  {getLocalizedLeagueName(leagueSlug, locale).name}
                 </Link>
               </li>
               <li className="text-gray-600">/</li>
               <li className="text-emerald-400 font-medium">
-                {team?.team_name || teamSlug}
+                {team ? getLocalizedTeamName(team, locale) : teamSlug}
               </li>
             </ol>
           </nav>
@@ -1266,10 +1349,10 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
                       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/30 to-cyan-500/30 rounded-3xl blur-2xl group-hover:blur-3xl transition-all opacity-60" />
                       <div className="relative w-36 h-36 md:w-44 md:h-44 rounded-3xl bg-white/10 backdrop-blur-sm p-4 border border-white/20 shadow-2xl">
                         {team.logo ? (
-                          <img src={team.logo} alt={team.team_name || ''} className="w-full h-full object-contain drop-shadow-2xl" />
+                          <img src={team.logo} alt={getLocalizedTeamName(team, locale)} className="w-full h-full object-contain drop-shadow-2xl" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-gray-400 text-5xl font-bold">
-                            {team.team_name?.charAt(0) || '?'}
+                            {getLocalizedTeamName(team, locale).charAt(0) || '?'}
                           </div>
                         )}
                       </div>
@@ -1278,7 +1361,7 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
                     {/* Team Info */}
                     <div className="flex-1 text-center lg:text-left">
                       <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
-                        {team.team_name}
+                        {getLocalizedTeamName(team, locale)}
                       </h1>
 
                       <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-6">
@@ -1292,7 +1375,7 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
                           </span>
                         )}
                         <span className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 text-emerald-400 text-sm font-medium">
-                          {leagueConfig.name}
+                          {getLocalizedLeagueName(leagueSlug, locale).name}
                         </span>
                       </div>
 
@@ -1753,7 +1836,7 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl font-bold mb-4 text-white">
               {t('aboutSeason')
-                .replace('{team}', team.team_name || '')
+                .replace('{team}', getLocalizedTeamName(team, locale))
                 .replace('{year}', String(new Date().getFullYear()))}
             </h2>
             <p className="text-gray-400 leading-relaxed">
@@ -1768,9 +1851,9 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
                     : t('developingForm');
 
                 return t('aboutSeasonText')
-                  .replace(/{team}/g, team.team_name || '')
+                  .replace(/{team}/g, getLocalizedTeamName(team, locale))
                   .replace('{year}', String(new Date().getFullYear()))
-                  .replace('{league}', leagueConfig.name)
+                  .replace('{league}', getLocalizedLeagueName(leagueSlug, locale).name)
                   .replace('{winRate}', winRate)
                   .replace('{goalsFor}', String(team.goals_for_total || 0))
                   .replace('{played}', String(team.total_played || 0))
@@ -1807,13 +1890,13 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
               {
                 "@type": "ListItem",
                 "position": 3,
-                "name": leagueConfig.name,
+                "name": getLocalizedLeagueName(leagueSlug, locale).name,
                 "item": `https://www.oddsflow.ai/leagues/${leagueSlug}`
               },
               {
                 "@type": "ListItem",
                 "position": 4,
-                "name": team?.team_name || teamSlug,
+                "name": team ? getLocalizedTeamName(team, locale) : teamSlug,
                 "item": `https://www.oddsflow.ai/leagues/${leagueSlug}/${teamSlug}`
               }
             ]
