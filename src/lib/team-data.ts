@@ -325,9 +325,30 @@ async function fetchLeaguePlayers(leagueName: string): Promise<LeaguePlayerData[
   if (!supabase) return [];
 
   try {
+    // Select only the columns we need to avoid cache size issues (>2MB limit)
     const { data, error } = await supabase
       .from('player_stats')
-      .select('*')
+      .select(`
+        id,
+        player_name,
+        firstname,
+        lastname,
+        first_name_language,
+        last_name_language,
+        nationality_language,
+        team_name_language,
+        photo,
+        team_name,
+        team_logo,
+        position,
+        nationality,
+        age,
+        appearances,
+        minutes,
+        goals_total,
+        assists,
+        rating
+      `)
       .ilike('league_name', leagueName)
       .order('rating', { ascending: false, nullsFirst: false });
 
