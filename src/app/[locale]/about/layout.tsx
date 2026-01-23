@@ -143,9 +143,22 @@ const SEO_METADATA: Record<string, { title: string; description: string; keyword
     ],
   },
   id: {
-    title: "Tentang Kami - Platform Prediksi Sepak Bola AI & Analisis Taruhan | OddsFlow",
-    description: "Pelajari tentang OddsFlow, platform prediksi sepak bola AI terkemuka dengan wawasan taruhan berbasis data.",
-    keywords: ["tentang OddsFlow", "prediksi sepak bola AI", "taruhan olahraga", "analisis sepak bola"],
+    title: "Tentang Kami - Platform Prediksi Bola & Analisa Odds AI | OddsFlow",
+    description: "Pelajari tentang OddsFlow, platform prediksi bola AI terkemuka. Kami menggunakan algoritma Wall Street untuk menganalisa pasaran bola, Asian Handicaps, dan pergerakan odds. Bukan bocoran, tapi data nyata untuk keputusan taruhan yang lebih cerdas.",
+    keywords: [
+      "tentang OddsFlow",
+      "prediksi bola",
+      "prediksi bola AI",
+      "analisa odds",
+      "pasaran bola",
+      "Asian Handicaps",
+      "Mix Parlay",
+      "taruhan olahraga",
+      "analisis sepak bola",
+      "kei",
+      "over under",
+      "handicap Asia",
+    ],
   },
 };
 
