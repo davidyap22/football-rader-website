@@ -43,6 +43,11 @@ const translations: Record<string, Record<string, string>> = {
     footballTipsToday: "Football Tips Today",
     // Team Page Content
     backTo: "Back to",
+    aboutSeason: "About {team}'s {year} Season",
+    aboutSeasonText: "{team} enters the {year} {league} season with strong determination. With a {winRate}% win rate and {goalsFor} goals scored in {played} matches, the team shows {form}. {topScorer} leads the attack{topScorerGoals}, while the defense has recorded {cleanSheets} clean sheets. OddsFlow's AI analyzes {team}'s performance to provide data-driven betting insights.",
+    strongForm: "impressive form",
+    mixedForm: "mixed form",
+    developingForm: "developing form",
     leagueNotFound: "League not found",
     teamNotFound: "Team not found",
     loadingTeamData: "Loading team data...",
@@ -118,6 +123,11 @@ const translations: Record<string, Record<string, string>> = {
     aiBettingPerformance: "Rendimiento de Apuestas IA",
     footballTipsToday: "Tips de Futbol Hoy",
     backTo: "Volver a",
+    aboutSeason: "Sobre la Temporada {year} de {team}",
+    aboutSeasonText: "{team} entra en la temporada {year} de {league} con fuerte determinacion. Con un {winRate}% de victorias y {goalsFor} goles en {played} partidos, el equipo muestra {form}. {topScorer} lidera el ataque{topScorerGoals}, mientras que la defensa ha logrado {cleanSheets} porterias a cero. La IA de OddsFlow analiza el rendimiento de {team} para ofrecer informacion de apuestas basada en datos.",
+    strongForm: "forma impresionante",
+    mixedForm: "forma mixta",
+    developingForm: "forma en desarrollo",
     leagueNotFound: "Liga no encontrada",
     teamNotFound: "Equipo no encontrado",
     loadingTeamData: "Cargando datos del equipo...",
@@ -193,6 +203,11 @@ const translations: Record<string, Record<string, string>> = {
     aiBettingPerformance: "Desempenho de Apostas IA",
     footballTipsToday: "Dicas de Futebol Hoje",
     backTo: "Voltar para",
+    aboutSeason: "Sobre a Temporada {year} do {team}",
+    aboutSeasonText: "{team} entra na temporada {year} da {league} com forte determinação. Com {winRate}% de vitórias e {goalsFor} gols em {played} jogos, a equipe mostra {form}. {topScorer} lidera o ataque{topScorerGoals}, enquanto a defesa registrou {cleanSheets} jogos sem sofrer gols. A IA do OddsFlow analisa o desempenho do {team} para fornecer insights de apostas baseados em dados.",
+    strongForm: "forma impressionante",
+    mixedForm: "forma mista",
+    developingForm: "forma em desenvolvimento",
     leagueNotFound: "Liga não encontrada",
     teamNotFound: "Equipe não encontrada",
     loadingTeamData: "Carregando dados da equipe...",
@@ -268,6 +283,11 @@ const translations: Record<string, Record<string, string>> = {
     aiBettingPerformance: "KI-Wettleistung",
     footballTipsToday: "Fussballtipps Heute",
     backTo: "Zurück zu",
+    aboutSeason: "Über {team}s Saison {year}",
+    aboutSeasonText: "{team} geht mit starker Entschlossenheit in die {league}-Saison {year}. Mit einer Siegquote von {winRate}% und {goalsFor} Toren in {played} Spielen zeigt das Team {form}. {topScorer} führt den Angriff{topScorerGoals}, während die Abwehr {cleanSheets} Spiele ohne Gegentor verzeichnete. OddsFlows KI analysiert die Leistung von {team} für datengesteuerte Wett-Einblicke.",
+    strongForm: "beeindruckende Form",
+    mixedForm: "gemischte Form",
+    developingForm: "sich entwickelnde Form",
     leagueNotFound: "Liga nicht gefunden",
     teamNotFound: "Team nicht gefunden",
     loadingTeamData: "Lade Teamdaten...",
@@ -343,6 +363,11 @@ const translations: Record<string, Record<string, string>> = {
     aiBettingPerformance: "Performance Paris IA",
     footballTipsToday: "Pronostics Foot Aujourd'hui",
     backTo: "Retour à",
+    aboutSeason: "À propos de la Saison {year} de {team}",
+    aboutSeasonText: "{team} entre dans la saison {year} de {league} avec une forte détermination. Avec un taux de victoire de {winRate}% et {goalsFor} buts en {played} matchs, l'équipe montre {form}. {topScorer} mène l'attaque{topScorerGoals}, tandis que la défense a enregistré {cleanSheets} clean sheets. L'IA d'OddsFlow analyse les performances de {team} pour fournir des informations de paris basées sur les données.",
+    strongForm: "une forme impressionnante",
+    mixedForm: "une forme mitigée",
+    developingForm: "une forme en développement",
     leagueNotFound: "Ligue non trouvée",
     teamNotFound: "Équipe non trouvée",
     loadingTeamData: "Chargement des données...",
@@ -418,6 +443,11 @@ const translations: Record<string, Record<string, string>> = {
     aiBettingPerformance: "AIベッティング実績",
     footballTipsToday: "今日のサッカー予想",
     backTo: "戻る",
+    aboutSeason: "{team}の{year}シーズンについて",
+    aboutSeasonText: "{team}は{year}年{league}シーズンに強い決意で臨みます。{played}試合で{goalsFor}得点、勝率{winRate}%という成績で、チームは{form}を示しています。{topScorer}が攻撃を牽引し{topScorerGoals}、守備は{cleanSheets}回のクリーンシートを記録しました。OddsFlowのAIが{team}のパフォーマンスを分析し、データに基づいた賭けの洞察を提供します。",
+    strongForm: "素晴らしいフォーム",
+    mixedForm: "混合したフォーム",
+    developingForm: "発展中のフォーム",
     leagueNotFound: "リーグが見つかりません",
     teamNotFound: "チームが見つかりません",
     loadingTeamData: "チームデータを読み込み中...",
@@ -493,6 +523,11 @@ const translations: Record<string, Record<string, string>> = {
     aiBettingPerformance: "AI 베팅 성과",
     footballTipsToday: "오늘의 축구 팁",
     backTo: "돌아가기",
+    aboutSeason: "{team}의 {year} 시즌에 대하여",
+    aboutSeasonText: "{team}은(는) 강한 결의로 {year} {league} 시즌에 임합니다. {played}경기에서 {goalsFor}골을 기록하며 {winRate}%의 승률을 보이는 팀은 {form}를 보여줍니다. {topScorer}가 공격을 이끌고{topScorerGoals}, 수비는 {cleanSheets}회의 클린시트를 기록했습니다. OddsFlow의 AI가 {team}의 성과를 분석하여 데이터 기반 베팅 인사이트를 제공합니다.",
+    strongForm: "인상적인 폼",
+    mixedForm: "혼합된 폼",
+    developingForm: "발전하는 폼",
     leagueNotFound: "리그를 찾을 수 없습니다",
     teamNotFound: "팀을 찾을 수 없습니다",
     loadingTeamData: "팀 데이터 로딩 중...",
@@ -568,6 +603,11 @@ const translations: Record<string, Record<string, string>> = {
     aiBettingPerformance: "AI 投注表现",
     footballTipsToday: "今日足球贴士",
     backTo: "返回",
+    aboutSeason: "关于{team}的{year}赛季",
+    aboutSeasonText: "{team}以坚定决心进入{year}年{league}赛季。在{played}场比赛中打入{goalsFor}球，胜率达{winRate}%，球队展现出{form}。{topScorer}领衔进攻{topScorerGoals}，防守端录得{cleanSheets}场零封。OddsFlow的AI分析{team}的表现，提供数据驱动的投注洞察。",
+    strongForm: "令人印象深刻的状态",
+    mixedForm: "起伏不定的状态",
+    developingForm: "逐渐提升的状态",
     leagueNotFound: "未找到联赛",
     teamNotFound: "未找到球队",
     loadingTeamData: "加载球队数据中...",
@@ -643,6 +683,11 @@ const translations: Record<string, Record<string, string>> = {
     aiBettingPerformance: "AI 投注表現",
     footballTipsToday: "今日足球貼士",
     backTo: "返回",
+    aboutSeason: "關於{team}的{year}賽季",
+    aboutSeasonText: "{team}以堅定決心進入{year}年{league}賽季。在{played}場比賽中打入{goalsFor}球，勝率達{winRate}%，球隊展現出{form}。{topScorer}領銜進攻{topScorerGoals}，防守端錄得{cleanSheets}場零封。OddsFlow的AI分析{team}的表現，提供數據驅動的投注洞察。",
+    strongForm: "令人印象深刻的狀態",
+    mixedForm: "起伏不定的狀態",
+    developingForm: "逐漸提升的狀態",
     leagueNotFound: "未找到聯賽",
     teamNotFound: "未找到球隊",
     loadingTeamData: "載入球隊資料中...",
@@ -718,6 +763,11 @@ const translations: Record<string, Record<string, string>> = {
     aiBettingPerformance: "Performa Taruhan AI",
     footballTipsToday: "Tips Sepak Bola Hari Ini",
     backTo: "Kembali ke",
+    aboutSeason: "Tentang Musim {year} {team}",
+    aboutSeasonText: "{team} memasuki musim {year} {league} dengan tekad kuat. Dengan tingkat kemenangan {winRate}% dan {goalsFor} gol dalam {played} pertandingan, tim menunjukkan {form}. {topScorer} memimpin serangan{topScorerGoals}, sementara pertahanan mencatat {cleanSheets} clean sheet. AI OddsFlow menganalisis performa {team} untuk memberikan wawasan taruhan berbasis data.",
+    strongForm: "performa mengesankan",
+    mixedForm: "performa campuran",
+    developingForm: "performa berkembang",
     leagueNotFound: "Liga tidak ditemukan",
     teamNotFound: "Tim tidak ditemukan",
     loadingTeamData: "Memuat data tim...",
@@ -939,6 +989,10 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
   const points = ((team?.total_wins || 0) * 3) + (team?.total_draws || 0);
   const winRate = team?.total_played ? ((team.total_wins || 0) / team.total_played * 100).toFixed(1) : '0';
 
+  // Calculate goals per match (fix for 0.00 bug when goals_for_average is not in DB)
+  const goalsPerMatch = team?.goals_for_average || (team?.total_played && team?.goals_for_total ? (team.goals_for_total / team.total_played) : 0);
+  const concededPerMatch = team?.goals_against_average || (team?.total_played && team?.goals_against_total ? (team.goals_against_total / team.total_played) : 0);
+
   // Show loading screen only if we don't have initial data and not mounted yet
   // If we have initialTeam, render content for SSR even if not mounted
   if (!mounted && !initialTeam) {
@@ -1155,13 +1209,32 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
       {/* Main Content */}
       <main className="relative z-10 pt-24 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
-          {/* Back Button */}
-          <Link href={localePath(`/leagues/${leagueSlug}`)} className="inline-flex items-center gap-2 text-emerald-400 hover:text-white transition-colors mb-6 group">
-            <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            {t('backTo')} {leagueConfig.name}
-          </Link>
+          {/* Breadcrumb Navigation */}
+          <nav aria-label="Breadcrumb" className="mb-6">
+            <ol className="flex items-center gap-2 text-sm flex-wrap">
+              <li>
+                <Link href={localePath('/')} className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  {t('home')}
+                </Link>
+              </li>
+              <li className="text-gray-600">/</li>
+              <li>
+                <Link href={localePath('/leagues')} className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  {t('leagues')}
+                </Link>
+              </li>
+              <li className="text-gray-600">/</li>
+              <li>
+                <Link href={localePath(`/leagues/${leagueSlug}`)} className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  {leagueConfig.name}
+                </Link>
+              </li>
+              <li className="text-gray-600">/</li>
+              <li className="text-emerald-400 font-medium">
+                {team?.team_name || teamSlug}
+              </li>
+            </ol>
+          </nav>
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
@@ -1347,8 +1420,8 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
                       <div className="space-y-4">
                         {[
                           { label: t('goalDifference'), value: goalDiff > 0 ? `+${goalDiff}` : goalDiff, color: goalDiff > 0 ? 'text-emerald-400' : goalDiff < 0 ? 'text-red-400' : 'text-gray-400' },
-                          { label: t('goalsPerMatch'), value: team.goals_for_average?.toFixed(2) || '0.00', color: 'text-cyan-400' },
-                          { label: t('concededPerMatch'), value: team.goals_against_average?.toFixed(2) || '0.00', color: 'text-orange-400' },
+                          { label: t('goalsPerMatch'), value: goalsPerMatch.toFixed(2), color: 'text-cyan-400' },
+                          { label: t('concededPerMatch'), value: concededPerMatch.toFixed(2), color: 'text-orange-400' },
                           { label: t('cleanSheets'), value: team.clean_sheets || 0, color: 'text-emerald-400' },
                           { label: t('failedToScore'), value: team.failed_to_score || 0, color: 'text-red-400' },
                         ].map((stat, idx) => (
@@ -1673,6 +1746,80 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
           )}
         </div>
       </main>
+
+      {/* About Section for SEO */}
+      {team && (
+        <section className="relative z-10 py-12 px-4 border-t border-white/5">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold mb-4 text-white">
+              {t('aboutSeason')
+                .replace('{team}', team.team_name || '')
+                .replace('{year}', String(new Date().getFullYear()))}
+            </h2>
+            <p className="text-gray-400 leading-relaxed">
+              {(() => {
+                const topScorer = players.length > 0
+                  ? players.reduce((max, p) => (p.goals || 0) > (max.goals || 0) ? p : max, players[0])
+                  : null;
+                const formText = parseFloat(winRate) >= 50
+                  ? t('strongForm')
+                  : parseFloat(winRate) >= 30
+                    ? t('mixedForm')
+                    : t('developingForm');
+
+                return t('aboutSeasonText')
+                  .replace(/{team}/g, team.team_name || '')
+                  .replace('{year}', String(new Date().getFullYear()))
+                  .replace('{league}', leagueConfig.name)
+                  .replace('{winRate}', winRate)
+                  .replace('{goalsFor}', String(team.goals_for_total || 0))
+                  .replace('{played}', String(team.total_played || 0))
+                  .replace('{form}', formText)
+                  .replace('{topScorer}', topScorer?.player_name || 'The team')
+                  .replace('{topScorerGoals}', topScorer && topScorer.goals ? ` with ${topScorer.goals} goals` : '')
+                  .replace('{cleanSheets}', String(team.clean_sheets || 0));
+              })()}
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* Breadcrumb Schema for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.oddsflow.ai"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Leagues",
+                "item": "https://www.oddsflow.ai/leagues"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": leagueConfig.name,
+                "item": `https://www.oddsflow.ai/leagues/${leagueSlug}`
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": team?.team_name || teamSlug,
+                "item": `https://www.oddsflow.ai/leagues/${leagueSlug}/${teamSlug}`
+              }
+            ]
+          })
+        }}
+      />
 
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-white/5">

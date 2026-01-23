@@ -18,18 +18,18 @@ function slugToDisplayName(slug: string): string {
     .join(' ');
 }
 
-// Multi-language title templates
+// Multi-language title templates (SEO optimized with betting keywords)
 const TITLE_TEMPLATES: Record<string, (teamName: string, leagueName: string, year: number) => string> = {
-  en: (team, league, year) => `${team} Stats & AI Predictions ${year} | ${league} | OddsFlow`,
-  es: (team, league, year) => `${team} Estadisticas y Predicciones IA ${year} | ${league} | OddsFlow`,
-  pt: (team, league, year) => `${team} Estatisticas e Previsoes IA ${year} | ${league} | OddsFlow`,
-  de: (team, league, year) => `${team} Statistiken & KI-Vorhersagen ${year} | ${league} | OddsFlow`,
-  fr: (team, league, year) => `${team} Stats & Predictions IA ${year} | ${league} | OddsFlow`,
-  ja: (team, league, year) => `${team} 統計 & AI予測 ${year} | ${league} | OddsFlow`,
-  ko: (team, league, year) => `${team} 통계 & AI 예측 ${year} | ${league} | OddsFlow`,
-  zh: (team, league, year) => `${team} 统计数据与AI预测 ${year} | ${league} | OddsFlow`,
-  tw: (team, league, year) => `${team} 統計數據與AI預測 ${year} | ${league} | OddsFlow`,
-  id: (team, league, year) => `${team} Statistik & Prediksi AI ${year} | ${league} | OddsFlow`,
+  en: (team, league, year) => `${team} Betting Stats, Form & AI Predictions ${year} - ${league} | OddsFlow`,
+  es: (team, league, year) => `${team} Estadisticas de Apuestas, Forma y Predicciones IA ${year} - ${league} | OddsFlow`,
+  pt: (team, league, year) => `${team} Estatisticas de Apostas, Forma e Previsoes IA ${year} - ${league} | OddsFlow`,
+  de: (team, league, year) => `${team} Wett-Statistiken, Form & KI-Vorhersagen ${year} - ${league} | OddsFlow`,
+  fr: (team, league, year) => `${team} Stats de Paris, Forme & Predictions IA ${year} - ${league} | OddsFlow`,
+  ja: (team, league, year) => `${team} ベッティング統計・フォーム・AI予測 ${year} - ${league} | OddsFlow`,
+  ko: (team, league, year) => `${team} 베팅 통계, 폼 & AI 예측 ${year} - ${league} | OddsFlow`,
+  zh: (team, league, year) => `${team} 投注统计、状态与AI预测 ${year} - ${league} | OddsFlow`,
+  tw: (team, league, year) => `${team} 投注統計、狀態與AI預測 ${year} - ${league} | OddsFlow`,
+  id: (team, league, year) => `${team} Statistik Taruhan, Form & Prediksi AI ${year} - ${league} | OddsFlow`,
 };
 
 // Multi-language description templates
