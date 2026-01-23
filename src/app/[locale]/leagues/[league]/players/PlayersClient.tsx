@@ -167,6 +167,35 @@ const translations: Record<string, Record<string, string>> = {
   },
 };
 
+// Localized league names mapping
+const LEAGUE_NAMES_LOCALIZED: Record<string, Record<string, string>> = {
+  'premier-league': {
+    en: 'Premier League', es: 'Premier League', pt: 'Premier League', de: 'Premier League',
+    fr: 'Premier League', ja: 'プレミアリーグ', ko: '프리미어리그', zh: '英超', tw: '英超', id: 'Liga Inggris',
+  },
+  'la-liga': {
+    en: 'La Liga', es: 'La Liga', pt: 'La Liga', de: 'La Liga',
+    fr: 'La Liga', ja: 'ラ・リーガ', ko: '라리가', zh: '西甲', tw: '西甲', id: 'La Liga',
+  },
+  'bundesliga': {
+    en: 'Bundesliga', es: 'Bundesliga', pt: 'Bundesliga', de: 'Bundesliga',
+    fr: 'Bundesliga', ja: 'ブンデスリーガ', ko: '분데스리가', zh: '德甲', tw: '德甲', id: 'Bundesliga',
+  },
+  'serie-a': {
+    en: 'Serie A', es: 'Serie A', pt: 'Serie A', de: 'Serie A',
+    fr: 'Serie A', ja: 'セリエA', ko: '세리에 A', zh: '意甲', tw: '義甲', id: 'Serie A',
+  },
+  'ligue-1': {
+    en: 'Ligue 1', es: 'Ligue 1', pt: 'Ligue 1', de: 'Ligue 1',
+    fr: 'Ligue 1', ja: 'リーグ・アン', ko: '리그 1', zh: '法甲', tw: '法甲', id: 'Ligue 1',
+  },
+};
+
+// Helper function to get localized league name
+const getLocalizedLeagueName = (leagueSlug: string, locale: string, fallback: string): string => {
+  return LEAGUE_NAMES_LOCALIZED[leagueSlug]?.[locale] || fallback;
+};
+
 // Helper function to get localized position abbreviation
 const getLocalizedPosition = (position: string | null, translationCode: string): string => {
   if (!position) return "-";
@@ -760,7 +789,7 @@ export default function PlayersClient({
           <div className="mb-6 sm:mb-8">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
               <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                {leagueName}
+                {getLocalizedLeagueName(leagueSlug, locale, leagueName)}
               </span>{" "}
               {t('allPlayers')}
             </h1>
