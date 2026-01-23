@@ -1759,7 +1759,7 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
             <p className="text-gray-400 leading-relaxed">
               {(() => {
                 const topScorer = players.length > 0
-                  ? players.reduce((max, p) => (p.goals || 0) > (max.goals || 0) ? p : max, players[0])
+                  ? players.reduce((max, p) => (p.goals_total || 0) > (max.goals_total || 0) ? p : max, players[0])
                   : null;
                 const formText = parseFloat(winRate) >= 50
                   ? t('strongForm')
@@ -1776,7 +1776,7 @@ export default function TeamProfilePage({ initialTeam, initialPlayers }: TeamCli
                   .replace('{played}', String(team.total_played || 0))
                   .replace('{form}', formText)
                   .replace('{topScorer}', topScorer?.player_name || 'The team')
-                  .replace('{topScorerGoals}', topScorer && topScorer.goals ? ` with ${topScorer.goals} goals` : '')
+                  .replace('{topScorerGoals}', topScorer && topScorer.goals_total ? ` with ${topScorer.goals_total} goals` : '')
                   .replace('{cleanSheets}', String(team.clean_sheets || 0));
               })()}
             </p>
