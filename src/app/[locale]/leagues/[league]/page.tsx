@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { supabase, TeamStatistics, getTeamStatisticsByLeague, PlayerStats, getPlayerStatsByTeam, Coach, getCoachesByTeamIds, getLocalizedTeamName } from '@/lib/supabase';
+import { supabase, TeamStatistics, getTeamStatisticsByLeague, PlayerStats, getPlayerStatsByTeam, Coach, getCoachesByTeamIds, getLocalizedTeamName, getLocalizedPlayerName, getLocalizedNationality } from '@/lib/supabase';
 import { playerNameToSlug } from '@/lib/team-data';
 import { User } from '@supabase/supabase-js';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
@@ -1864,15 +1864,15 @@ export default function LeagueDetailPage() {
                                                 <td className="py-2.5 px-3">
                                                   <div className="flex items-center gap-2">
                                                     {player.photo ? (
-                                                      <img src={player.photo} alt={player.player_name || ''} className="w-8 h-8 rounded-full object-cover bg-gray-700" />
+                                                      <img src={player.photo} alt={getLocalizedPlayerName(player, locale)} className="w-8 h-8 rounded-full object-cover bg-gray-700" />
                                                     ) : (
                                                       <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-xs">
-                                                        {player.player_name?.charAt(0) || '?'}
+                                                        {getLocalizedPlayerName(player, locale).charAt(0) || '?'}
                                                       </div>
                                                     )}
                                                     <div>
                                                       <div className="flex items-center gap-1.5">
-                                                        <span className="text-white text-sm font-medium">{player.player_name}</span>
+                                                        <span className="text-white text-sm font-medium">{getLocalizedPlayerName(player, locale)}</span>
                                                         {player.captain && (
                                                           <span className="px-1 py-0.5 text-[9px] font-bold bg-amber-500 text-black rounded">C</span>
                                                         )}
@@ -1880,7 +1880,7 @@ export default function LeagueDetailPage() {
                                                           <span className="px-1 py-0.5 text-[9px] font-bold bg-red-500 text-white rounded">INJ</span>
                                                         )}
                                                       </div>
-                                                      <span className="text-gray-500 text-[10px]">{player.nationality}</span>
+                                                      <span className="text-gray-500 text-[10px]">{getLocalizedNationality(player, locale)}</span>
                                                     </div>
                                                   </div>
                                                 </td>
@@ -1941,15 +1941,15 @@ export default function LeagueDetailPage() {
                                             <div className="flex items-center justify-between mb-2">
                                               <div className="flex items-center gap-2">
                                                 {player.photo ? (
-                                                  <img src={player.photo} alt={player.player_name || ''} className="w-10 h-10 rounded-full object-cover bg-gray-700" />
+                                                  <img src={player.photo} alt={getLocalizedPlayerName(player, locale)} className="w-10 h-10 rounded-full object-cover bg-gray-700" />
                                                 ) : (
                                                   <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm">
-                                                    {player.player_name?.charAt(0) || '?'}
+                                                    {getLocalizedPlayerName(player, locale).charAt(0) || '?'}
                                                   </div>
                                                 )}
                                                 <div>
                                                   <div className="flex items-center gap-1.5">
-                                                    <span className="text-white text-sm font-medium">{player.player_name}</span>
+                                                    <span className="text-white text-sm font-medium">{getLocalizedPlayerName(player, locale)}</span>
                                                     {player.captain && (
                                                       <span className="px-1 py-0.5 text-[9px] font-bold bg-amber-500 text-black rounded">C</span>
                                                     )}
@@ -1958,7 +1958,7 @@ export default function LeagueDetailPage() {
                                                     )}
                                                   </div>
                                                   <div className="flex items-center gap-2">
-                                                    <span className="text-gray-500 text-[10px]">{player.nationality}</span>
+                                                    <span className="text-gray-500 text-[10px]">{getLocalizedNationality(player, locale)}</span>
                                                     <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
                                                       player.position === 'Goalkeeper' ? 'bg-yellow-500/20 text-yellow-400' :
                                                       player.position === 'Defender' ? 'bg-blue-500/20 text-blue-400' :
@@ -2179,10 +2179,10 @@ export default function LeagueDetailPage() {
                                         <img src={player.photo} alt="" className="w-6 h-6 rounded-full object-cover" />
                                       ) : (
                                         <div className="w-6 h-6 rounded-full bg-gray-700 text-[10px] flex items-center justify-center text-gray-400">
-                                          {player.player_name?.charAt(0)}
+                                          {getLocalizedPlayerName(player, locale).charAt(0)}
                                         </div>
                                       )}
-                                      <span className="text-white text-xs">{player.player_name}</span>
+                                      <span className="text-white text-xs">{getLocalizedPlayerName(player, locale)}</span>
                                     </div>
                                     <div className="flex items-center gap-2 text-xs">
                                       <span className="text-emerald-400 font-medium">{player.goals_total || 0}G</span>
