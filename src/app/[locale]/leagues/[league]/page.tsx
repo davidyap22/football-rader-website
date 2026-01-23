@@ -52,6 +52,7 @@ const translations: Record<string, Record<string, string>> = {
     userPredictions: "User Predictions",
     todayMatches: "Today Matches",
     disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
+    posGK: "GK", posDEF: "DEF", posMID: "MID", posATT: "ATT",
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA",
@@ -94,6 +95,7 @@ const translations: Record<string, Record<string, string>> = {
     userPredictions: "Predicciones de Usuarios",
     todayMatches: "Partidos de Hoy",
     disclaimer: "Aviso: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento. No se garantizan ganancias. Por favor, apueste de manera responsable.",
+    posGK: "POR", posDEF: "DEF", posMID: "MED", posATT: "DEL",
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho IA",
@@ -136,6 +138,7 @@ const translations: Record<string, Record<string, string>> = {
     userPredictions: "Previsões de Usuários",
     todayMatches: "Jogos de Hoje",
     disclaimer: "Aviso: OddsFlow fornece previsões baseadas em IA apenas para fins informativos e de entretenimento. Não há garantia de lucros. Por favor, aposte com responsabilidade.",
+    posGK: "GOL", posDEF: "ZAG", posMID: "MEI", posATT: "ATA",
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung",
@@ -178,6 +181,7 @@ const translations: Record<string, Record<string, string>> = {
     userPredictions: "Benutzer-Vorhersagen",
     todayMatches: "Heutige Spiele",
     disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestützte Vorhersagen nur zu Informations- und Unterhaltungszwecken. Es werden keine Gewinne garantiert. Bitte wetten Sie verantwortungsvoll.",
+    posGK: "TW", posDEF: "ABW", posMID: "MIT", posATT: "STU",
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance IA",
@@ -220,6 +224,7 @@ const translations: Record<string, Record<string, string>> = {
     userPredictions: "Prédictions Utilisateurs",
     todayMatches: "Matchs du Jour",
     disclaimer: "Avertissement : OddsFlow fournit des prédictions basées sur l'IA à des fins d'information et de divertissement uniquement. Aucun profit n'est garanti. Veuillez parier de manière responsable.",
+    posGK: "GAR", posDEF: "DEF", posMID: "MIL", posATT: "ATT",
   },
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AIパフォーマンス",
@@ -262,6 +267,7 @@ const translations: Record<string, Record<string, string>> = {
     userPredictions: "ユーザー予測",
     todayMatches: "今日の試合",
     disclaimer: "免責事項：OddsFlowはAI駆動の予測を情報および娯楽目的のみで提供しています。利益を保証するものではありません。責任を持ってお楽しみください。",
+    posGK: "GK", posDEF: "DF", posMID: "MF", posATT: "FW",
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성능",
@@ -304,6 +310,7 @@ const translations: Record<string, Record<string, string>> = {
     userPredictions: "사용자 예측",
     todayMatches: "오늘의 경기",
     disclaimer: "면책조항: OddsFlow는 정보 및 엔터테인먼트 목적으로만 AI 기반 예측을 제공합니다. 수익을 보장하지 않습니다. 책임감 있게 베팅하세요.",
+    posGK: "GK", posDEF: "수비", posMID: "미드", posATT: "공격",
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现",
@@ -346,6 +353,7 @@ const translations: Record<string, Record<string, string>> = {
     userPredictions: "用户预测",
     todayMatches: "今日比赛",
     disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。我们不保证预测的准确性，也不对任何财务损失负责。博彩有风险，请理性投注。",
+    posGK: "门将", posDEF: "后卫", posMID: "中场", posATT: "前锋",
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現",
@@ -388,6 +396,7 @@ const translations: Record<string, Record<string, string>> = {
     userPredictions: "用戶預測",
     todayMatches: "今日比賽",
     disclaimer: "免責聲明：OddsFlow 提供的 AI 預測僅供參考和娛樂目的。我們不保證預測的準確性，也不對任何財務損失負責。博彩有風險，請理性投注。",
+    posGK: "門將", posDEF: "後衛", posMID: "中場", posATT: "前鋒",
   },
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI",
@@ -430,7 +439,24 @@ const translations: Record<string, Record<string, string>> = {
     userPredictions: "Prediksi Pengguna",
     todayMatches: "Pertandingan Hari Ini",
     disclaimer: "Penafian: OddsFlow menyediakan prediksi bertenaga AI hanya untuk tujuan informasi dan hiburan. Kami tidak menjamin keakuratan prediksi dan tidak bertanggung jawab atas kerugian finansial. Harap bertaruh dengan bijak.",
+    posGK: "GK", posDEF: "BEK", posMID: "GEL", posATT: "DEP",
   },
+};
+
+// Helper function to get localized position abbreviation
+const getLocalizedPosition = (position: string | null, translationCode: string): string => {
+  if (!position) return "-";
+
+  const t = translations[translationCode] || translations['EN'];
+  const posLower = position.toLowerCase();
+
+  if (posLower === 'goalkeeper') return t.posGK || 'GK';
+  if (posLower === 'defender') return t.posDEF || 'DEF';
+  if (posLower === 'midfielder') return t.posMID || 'MID';
+  if (posLower === 'attacker') return t.posATT || 'ATT';
+
+  // Fallback to first 3 characters uppercase
+  return position.substring(0, 3).toUpperCase();
 };
 
 // Extended team type with calculated fields
@@ -1891,7 +1917,7 @@ export default function LeagueDetailPage() {
                                                     player.position === 'Midfielder' ? 'bg-green-500/20 text-green-400' :
                                                     'bg-red-500/20 text-red-400'
                                                   }`}>
-                                                    {player.position?.substring(0, 3).toUpperCase() || '-'}
+                                                    {getLocalizedPosition(player.position, selectedLang)}
                                                   </span>
                                                 </td>
                                                 <td className="text-center py-2.5 px-2 text-gray-300 text-sm">{player.age || '-'}</td>
@@ -1965,7 +1991,7 @@ export default function LeagueDetailPage() {
                                                       player.position === 'Midfielder' ? 'bg-green-500/20 text-green-400' :
                                                       'bg-red-500/20 text-red-400'
                                                     }`}>
-                                                      {player.position?.substring(0, 3).toUpperCase() || '-'}
+                                                      {getLocalizedPosition(player.position, selectedLang)}
                                                     </span>
                                                   </div>
                                                 </div>
