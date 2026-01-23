@@ -833,7 +833,7 @@ export default function AboutPage() {
             <div className="group bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 overflow-hidden hover:border-emerald-500/40 transition-all duration-300 backdrop-blur-sm">
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-3/5 aspect-video relative overflow-hidden">
-                  <img src="/about/David.png" alt="David" className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+                  <img src="/about/David.png" alt="David - Head of Data Science at OddsFlow" className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="md:w-2/5 p-8 md:p-10 flex flex-col justify-center">
                   <div className="w-16 h-0.5 bg-emerald-500 mb-6" />
@@ -847,7 +847,7 @@ export default function AboutPage() {
             <div className="group bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 overflow-hidden hover:border-cyan-500/40 transition-all duration-300 backdrop-blur-sm">
               <div className="flex flex-col md:flex-row-reverse">
                 <div className="md:w-3/5 aspect-video relative overflow-hidden">
-                  <img src="/about/Daniel.png" alt="Daniel" className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+                  <img src="/about/Daniel.png" alt="Daniel - Senior Actuary at OddsFlow" className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="md:w-2/5 p-8 md:p-10 flex flex-col justify-center">
                   <div className="w-16 h-0.5 bg-cyan-500 mb-6" />
