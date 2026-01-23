@@ -2853,11 +2853,13 @@ function AnimatedCounter({ end, suffix, start, duration = 2000, isVisible }: { e
   }, [end, startValue, duration, isVisible]);
 
   // Format number with K suffix for large numbers
+  // Use startValue as minimum to prevent "0K+" display during hydration
   const formatNumber = (num: number) => {
+    const displayNum = num > 0 ? num : startValue;
     if (suffix === 'K+') {
-      return `${Math.floor(num / 1000)}K+`;
+      return `${Math.floor(displayNum / 1000)}K+`;
     }
-    return `${num}${suffix}`;
+    return `${displayNum}${suffix}`;
   };
 
   return <span>{formatNumber(count)}</span>;
