@@ -78,9 +78,20 @@ const SEO_METADATA: Record<string, { title: string; description: string; keyword
     ],
   },
   ja: {
-    title: "会社概要 - AIサッカー予測・スポーツベッティング分析 | OddsFlow",
-    description: "OddsFlowについて。AIと機械学習を活用したサッカー予測プラットフォーム。データドリブンなベッティングインサイトを提供。",
-    keywords: ["OddsFlowについて", "AIサッカー予測", "スポーツベッティング", "サッカー分析"],
+    title: "OddsFlowについて - AIサッカー予測・スポーツベッティング分析プラットフォーム | OddsFlow",
+    description: "OddsFlowについて。ウォール街のアルゴリズムを活用したAIサッカー予測プラットフォーム。オッズ分析、アジアンハンディキャップ、市場動向をデータドリブンで分析。スポーツベッティングを直感ではなくデータで。",
+    keywords: [
+      "OddsFlowについて",
+      "AIサッカー予測",
+      "サッカー予測",
+      "スポーツベッティング",
+      "サッカー分析",
+      "オッズ分析",
+      "アジアンハンディキャップ",
+      "ブックメーカー分析",
+      "AI予測",
+      "Jリーグ予測",
+    ],
   },
   ko: {
     title: "회사 소개 - AI 축구 예측 & 스포츠 베팅 분석 | OddsFlow",
