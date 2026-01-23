@@ -94,9 +94,20 @@ const SEO_METADATA: Record<string, { title: string; description: string; keyword
     ],
   },
   ko: {
-    title: "회사 소개 - AI 축구 예측 & 스포츠 베팅 분석 | OddsFlow",
-    description: "OddsFlow 소개. AI와 머신러닝을 활용한 축구 예측 플랫폼으로 데이터 기반 베팅 인사이트를 제공합니다.",
-    keywords: ["OddsFlow 소개", "AI 축구 예측", "스포츠 베팅", "축구 분석"],
+    title: "OddsFlow 소개 - AI 축구 승무패 예측 & 해외축구 분석 플랫폼 | OddsFlow",
+    description: "OddsFlow 소개. 월스트리트 알고리즘을 활용한 AI 축구 예측 플랫폼. 해외축구 분석, 배당률 분석, 아시안 핸디캡 데이터를 제공합니다. 직감이 아닌 데이터 기반 스포츠 베팅.",
+    keywords: [
+      "OddsFlow 소개",
+      "AI 축구 예측",
+      "축구 승무패 예측",
+      "해외축구 분석",
+      "스포츠 베팅",
+      "축구 분석",
+      "배당률 분석",
+      "아시안 핸디캡",
+      "프리미어리그 분석",
+      "축구 데이터 분석",
+    ],
   },
   zh: {
     title: "关于我们 - AI足球预测与体育博彩分析平台 | OddsFlow",
