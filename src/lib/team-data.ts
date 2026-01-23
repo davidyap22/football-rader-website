@@ -175,10 +175,43 @@ export function slugToDisplayName(slug: string): string {
     .join(' ');
 }
 
+// Player name language type (for localization)
+export interface PlayerNameLanguage {
+  de?: string;
+  es?: string;
+  fr?: string;
+  id?: string;
+  ja?: string;
+  ko?: string;
+  pt?: string;
+  zh_cn?: string;
+  zh_tw?: string;
+}
+
+// Team name language type (for localization)
+export interface TeamNameLanguage {
+  en?: string;
+  de?: string;
+  es?: string;
+  fr?: string;
+  id?: string;
+  ja?: string;
+  ko?: string;
+  pt?: string;
+  zh_cn?: string;
+  zh_tw?: string;
+}
+
 // League player stats type for SSR
 export interface LeaguePlayerData {
   id: number;
   player_name: string | null;
+  firstname: string | null;
+  lastname: string | null;
+  first_name_language: PlayerNameLanguage | null;
+  last_name_language: PlayerNameLanguage | null;
+  nationality_language: PlayerNameLanguage | null;
+  team_name_language: TeamNameLanguage | null;
   photo: string | null;
   team_name: string | null;
   team_logo: string | null;
@@ -190,6 +223,101 @@ export interface LeaguePlayerData {
   goals_total: number | null;
   assists: number | null;
   rating: number | null;
+}
+
+// Helper function to get localized player full name
+export const getLocalizedPlayerName = (player: LeaguePlayerData, locale: string): string => {
+  // For English, use full name (firstname + lastname)
+  if (locale === 'en') {
+    const firstName = player.firstname || '';
+    const lastName = player.lastname || '';
+    return `${firstName} ${lastName}`.trim() || player.player_name || '';
+  }
+
+  // Map locale codes to language keys
+  const localeMap: Record<string, keyof PlayerNameLanguage> = {
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const langKey = localeMap[locale];
+
+  if (langKey) {
+    const localizedFirst = player.first_name_language?.[langKey];
+    const localizedLast = player.last_name_language?.[langKey];
+
+    if (localizedFirst || localizedLast) {
+      // For CJK languages, typically last name comes first
+      if (['ja', 'ko', 'zh_cn', 'zh_tw'].includes(langKey)) {
+        return `${localizedLast || ''}${localizedFirst || ''}`.trim();
+      }
+      return `${localizedFirst || ''} ${localizedLast || ''}`.trim();
+    }
+  }
+
+  // Fallback to full English name
+  const firstName = player.firstname || '';
+  const lastName = player.lastname || '';
+  return `${firstName} ${lastName}`.trim() || player.player_name || '';
+};
+
+// Helper function to get localized player nationality
+export const getLocalizedNationality = (player: LeaguePlayerData, locale: string): string => {
+  if (locale === 'en' || !player.nationality_language) {
+    return player.nationality || '';
+  }
+
+  const localeMap: Record<string, keyof PlayerNameLanguage> = {
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const langKey = localeMap[locale];
+  if (langKey && player.nationality_language[langKey]) {
+    return player.nationality_language[langKey] as string;
+  }
+
+  return player.nationality || '';
+};
+
+// Helper function to get localized player team name
+export const getLocalizedPlayerTeamName = (player: LeaguePlayerData, locale: string): string => {
+  if (locale === 'en' || !player.team_name_language) {
+    return player.team_name || '';
+  }
+
+  const localeMap: Record<string, keyof TeamNameLanguage> = {
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const langKey = localeMap[locale];
+  if (langKey && player.team_name_language[langKey]) {
+    return player.team_name_language[langKey] as string;
+  }
+
+  return player.team_name || '';
 }
 
 // Fetch all players for a league (server-side)

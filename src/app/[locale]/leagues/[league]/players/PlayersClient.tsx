@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
-import { LeaguePlayerData, playerNameToSlug } from "@/lib/team-data";
+import { LeaguePlayerData, playerNameToSlug, getLocalizedPlayerName, getLocalizedNationality, getLocalizedPlayerTeamName } from "@/lib/team-data";
 import { locales, localeNames, localeToTranslationCode, type Locale } from "@/i18n/config";
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 
@@ -37,6 +37,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Top Scorers", topAssistsTitle: "Top Assists", highestRated: "Highest Rated",
     viewProfile: "View Profile",
     prevPage: "Previous", nextPage: "Next", pageOf: "Page {current} of {total}",
+    posGK: "GK", posDEF: "DEF", posMID: "MID", posATT: "ATT",
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI 表现",
@@ -50,6 +51,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "射手榜", topAssistsTitle: "助攻榜", highestRated: "评分最高",
     viewProfile: "查看详情",
     prevPage: "上一页", nextPage: "下一页", pageOf: "第 {current} 页，共 {total} 页",
+    posGK: "门将", posDEF: "后卫", posMID: "中场", posATT: "前锋",
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI 表現",
@@ -63,6 +65,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "射手榜", topAssistsTitle: "助攻榜", highestRated: "評分最高",
     viewProfile: "查看詳情",
     prevPage: "上一頁", nextPage: "下一頁", pageOf: "第 {current} 頁，共 {total} 頁",
+    posGK: "門將", posDEF: "後衛", posMID: "中場", posATT: "前鋒",
   },
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "AI Performa",
@@ -76,6 +79,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Top Skor", topAssistsTitle: "Top Assist", highestRated: "Rating Tertinggi",
     viewProfile: "Lihat Profil",
     prevPage: "Sebelumnya", nextPage: "Berikutnya", pageOf: "Halaman {current} dari {total}",
+    posGK: "GK", posDEF: "BEK", posMID: "GEL", posATT: "DEP",
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "AI Rendimiento",
@@ -89,6 +93,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Goleadores", topAssistsTitle: "Asistencias", highestRated: "Mejor Valorados",
     viewProfile: "Ver Perfil",
     prevPage: "Anterior", nextPage: "Siguiente", pageOf: "Página {current} de {total}",
+    posGK: "POR", posDEF: "DEF", posMID: "MED", posATT: "DEL",
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "AI Desempenho",
@@ -102,6 +107,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Artilheiros", topAssistsTitle: "Assistências", highestRated: "Mais Bem Avaliados",
     viewProfile: "Ver Perfil",
     prevPage: "Anterior", nextPage: "Próximo", pageOf: "Página {current} de {total}",
+    posGK: "GOL", posDEF: "ZAG", posMID: "MEI", posATT: "ATA",
   },
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AI パフォーマンス",
@@ -115,6 +121,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "得点ランキング", topAssistsTitle: "アシストランキング", highestRated: "最高評価",
     viewProfile: "プロフィール",
     prevPage: "前へ", nextPage: "次へ", pageOf: "{total}ページ中{current}ページ",
+    posGK: "GK", posDEF: "DF", posMID: "MF", posATT: "FW",
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성과",
@@ -128,6 +135,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "득점 순위", topAssistsTitle: "어시스트 순위", highestRated: "최고 평점",
     viewProfile: "프로필 보기",
     prevPage: "이전", nextPage: "다음", pageOf: "{total}페이지 중 {current}페이지",
+    posGK: "GK", posDEF: "수비", posMID: "미드", posATT: "공격",
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "AI Leistung",
@@ -141,6 +149,7 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Torjäger", topAssistsTitle: "Vorlagengeber", highestRated: "Beste Bewertung",
     viewProfile: "Profil ansehen",
     prevPage: "Zurück", nextPage: "Weiter", pageOf: "Seite {current} von {total}",
+    posGK: "TW", posDEF: "ABW", posMID: "MIT", posATT: "STU",
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "AI Performance",
@@ -154,7 +163,24 @@ const translations: Record<string, Record<string, string>> = {
     topScorers: "Meilleurs Buteurs", topAssistsTitle: "Meilleures Passes", highestRated: "Mieux Notés",
     viewProfile: "Voir le Profil",
     prevPage: "Précédent", nextPage: "Suivant", pageOf: "Page {current} sur {total}",
+    posGK: "GAR", posDEF: "DEF", posMID: "MIL", posATT: "ATT",
   },
+};
+
+// Helper function to get localized position abbreviation
+const getLocalizedPosition = (position: string | null, translationCode: string): string => {
+  if (!position) return "-";
+
+  const t = translations[translationCode] || translations['EN'];
+  const posLower = position.toLowerCase();
+
+  if (posLower === 'goalkeeper') return t.posGK || 'GK';
+  if (posLower === 'defender') return t.posDEF || 'DEF';
+  if (posLower === 'midfielder') return t.posMID || 'MID';
+  if (posLower === 'attacker') return t.posATT || 'ATT';
+
+  // Fallback to first 3 characters uppercase
+  return position.substring(0, 3).toUpperCase();
 };
 
 // Custom Premium Dropdown Component
@@ -251,6 +277,7 @@ function PodiumPlayer({
   statColor,
   leagueSlug,
   localePath,
+  locale,
   isCenter = false,
 }: {
   player: LeaguePlayerData;
@@ -259,6 +286,7 @@ function PodiumPlayer({
   statColor: string;
   leagueSlug: string;
   localePath: (path: string) => string;
+  locale: string;
   isCenter?: boolean;
 }) {
   const crownColors: Record<number, string> = {
@@ -306,7 +334,7 @@ function PodiumPlayer({
 
       {/* Name */}
       <p className={`${isCenter ? 'text-sm' : 'text-xs'} font-semibold text-white group-hover:text-emerald-400 transition-colors truncate max-w-[80px] text-center`}>
-        {player.player_name?.split(' ').pop()}
+        {getLocalizedPlayerName(player, locale).split(' ').pop()}
       </p>
 
       {/* Team */}
@@ -314,7 +342,7 @@ function PodiumPlayer({
         {player.team_logo && (
           <img src={player.team_logo} alt="" className="w-3 h-3 object-contain" />
         )}
-        <p className="text-gray-500 text-[10px] truncate max-w-[60px]">{player.team_name}</p>
+        <p className="text-gray-500 text-[10px] truncate max-w-[60px]">{getLocalizedPlayerTeamName(player, locale)}</p>
       </div>
 
       {/* Stat */}
@@ -333,6 +361,7 @@ function SmallRankRow({
   statColor,
   leagueSlug,
   localePath,
+  locale,
 }: {
   player: LeaguePlayerData;
   rank: number;
@@ -340,6 +369,7 @@ function SmallRankRow({
   statColor: string;
   leagueSlug: string;
   localePath: (path: string) => string;
+  locale: string;
 }) {
   return (
     <Link
@@ -358,11 +388,11 @@ function SmallRankRow({
       )}
       <div className="flex-1 min-w-0">
         <p className="text-white text-xs font-medium truncate group-hover:text-emerald-400 transition-colors">
-          {player.player_name}
+          {getLocalizedPlayerName(player, locale)}
         </p>
         <div className="flex items-center gap-1">
           {player.team_logo && <img src={player.team_logo} alt="" className="w-3 h-3 object-contain" />}
-          <p className="text-gray-500 text-[10px] truncate">{player.team_name}</p>
+          <p className="text-gray-500 text-[10px] truncate">{getLocalizedPlayerTeamName(player, locale)}</p>
         </div>
       </div>
       <span className={`text-sm font-bold ${statColor}`}>{statValue}</span>
@@ -379,6 +409,7 @@ function PodiumSection({
   statColor,
   leagueSlug,
   localePath,
+  locale,
 }: {
   title: string;
   icon: React.ReactNode;
@@ -387,6 +418,7 @@ function PodiumSection({
   statColor: string;
   leagueSlug: string;
   localePath: (path: string) => string;
+  locale: string;
 }) {
   const top3 = players.slice(0, 3);
   const rest = players.slice(3, 5);
@@ -409,6 +441,7 @@ function PodiumSection({
             statColor={statColor}
             leagueSlug={leagueSlug}
             localePath={localePath}
+            locale={locale}
           />
         )}
         {top3[0] && (
@@ -419,6 +452,7 @@ function PodiumSection({
             statColor={statColor}
             leagueSlug={leagueSlug}
             localePath={localePath}
+            locale={locale}
             isCenter
           />
         )}
@@ -430,6 +464,7 @@ function PodiumSection({
             statColor={statColor}
             leagueSlug={leagueSlug}
             localePath={localePath}
+            locale={locale}
           />
         )}
       </div>
@@ -446,6 +481,7 @@ function PodiumSection({
               statColor={statColor}
               leagueSlug={leagueSlug}
               localePath={localePath}
+              locale={locale}
             />
           ))}
         </div>
@@ -744,6 +780,7 @@ export default function PlayersClient({
               statColor="text-emerald-400"
               leagueSlug={leagueSlug}
               localePath={localePath}
+              locale={locale}
             />
 
             {/* Top Assists */}
@@ -755,6 +792,7 @@ export default function PlayersClient({
               statColor="text-cyan-400"
               leagueSlug={leagueSlug}
               localePath={localePath}
+              locale={locale}
             />
 
             {/* Highest Rated */}
@@ -766,6 +804,7 @@ export default function PlayersClient({
               statColor="text-amber-400"
               leagueSlug={leagueSlug}
               localePath={localePath}
+              locale={locale}
             />
           </div>
 
@@ -910,7 +949,7 @@ export default function PlayersClient({
                             ? "text-amber-100 group-hover:text-amber-300"
                             : "text-white group-hover:text-emerald-400"
                         }`}>
-                          {player.player_name}
+                          {getLocalizedPlayerName(player, locale)}
                         </h3>
                         <p className="text-gray-400 text-xs sm:text-sm truncate flex items-center gap-1.5">
                           {player.team_logo ? (
@@ -920,7 +959,7 @@ export default function PlayersClient({
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
                           )}
-                          {player.team_name}
+                          {getLocalizedPlayerTeamName(player, locale)}
                         </p>
                         <div className="flex items-center gap-2 mt-1">
                           <span
@@ -934,11 +973,11 @@ export default function PlayersClient({
                                 : "bg-red-500/20 text-red-400"
                             }`}
                           >
-                            {player.position?.substring(0, 3).toUpperCase() || "-"}
+                            {getLocalizedPosition(player.position, translationCode)}
                           </span>
                           {player.nationality && (
                             <span className="text-gray-500 text-xs truncate">
-                              {player.nationality}
+                              {getLocalizedNationality(player, locale)}
                             </span>
                           )}
                         </div>
