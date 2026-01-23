@@ -110,9 +110,20 @@ const SEO_METADATA: Record<string, { title: string; description: string; keyword
     ],
   },
   zh: {
-    title: "关于我们 - AI足球预测与体育博彩分析平台 | OddsFlow",
-    description: "了解OddsFlow，领先的AI足球预测平台。我们的使命是利用先进的机器学习技术提供透明、数据驱动的投注分析。",
-    keywords: ["关于OddsFlow", "AI足球预测", "体育博彩分析", "足球分析"],
+    title: "关于我们 - AI足球预测与大数据赔率分析平台 | OddsFlow",
+    description: "了解OddsFlow，领先的AI足球预测平台。我们运用华尔街算法解读亚盘变动、赔率走势和聪明钱流向。大数据驱动的足球分析，而非直觉。",
+    keywords: [
+      "关于OddsFlow",
+      "AI足球预测",
+      "足球预测",
+      "大数据赔率分析",
+      "亚盘分析",
+      "亚洲盘口",
+      "体育博彩分析",
+      "足球数据分析",
+      "赔率分析",
+      "聪明钱",
+    ],
   },
   tw: {
     title: "關於我們 - AI足球預測與體育博彩分析平台 | OddsFlow",
