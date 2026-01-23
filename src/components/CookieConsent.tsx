@@ -140,6 +140,21 @@ const cookieTranslations: Record<string, Record<string, string>> = {
     marketingDesc: 'Utilises pour diffuser des publicites personnalisees',
     savePreferences: 'Enregistrer les preferences',
   },
+  ID: {
+    title: 'Kami menggunakan cookie',
+    description: 'Kami menggunakan cookie untuk meningkatkan pengalaman browsing Anda, menganalisis traffic situs, dan mempersonalisasi konten. Dengan mengklik "Terima Semua", Anda menyetujui penggunaan cookie kami.',
+    acceptAll: 'Terima Semua',
+    rejectAll: 'Tolak Semua',
+    customize: 'Kustomisasi',
+    privacyPolicy: 'Kebijakan Privasi',
+    necessary: 'Diperlukan',
+    necessaryDesc: 'Diperlukan agar website berfungsi dengan baik',
+    analytics: 'Analitik',
+    analyticsDesc: 'Membantu kami memahami bagaimana pengunjung berinteraksi dengan website',
+    marketing: 'Pemasaran',
+    marketingDesc: 'Digunakan untuk menampilkan iklan yang dipersonalisasi',
+    savePreferences: 'Simpan Preferensi',
+  },
 };
 
 interface CookieConsentProps {
