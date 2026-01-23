@@ -17,7 +17,11 @@ interface PlayersClientProps {
   highestRated: LeaguePlayerData[];
   leagueName: string;
   leagueSlug: string;
+  currentPage: number;
 }
+
+// Pagination constants
+const PLAYERS_PER_PAGE = 24;
 
 // Translations - use translation codes (EN, ES, 中文, etc.)
 const translations: Record<string, Record<string, string>> = {
@@ -32,6 +36,7 @@ const translations: Record<string, Record<string, string>> = {
     goals: "Goals", assists: "Assists", apps: "Apps", mins: "Mins",
     topScorers: "Top Scorers", topAssistsTitle: "Top Assists", highestRated: "Highest Rated",
     viewProfile: "View Profile",
+    prevPage: "Previous", nextPage: "Next", pageOf: "Page {current} of {total}",
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI 表现",
@@ -44,6 +49,7 @@ const translations: Record<string, Record<string, string>> = {
     goals: "进球", assists: "助攻", apps: "出场", mins: "分钟",
     topScorers: "射手榜", topAssistsTitle: "助攻榜", highestRated: "评分最高",
     viewProfile: "查看详情",
+    prevPage: "上一页", nextPage: "下一页", pageOf: "第 {current} 页，共 {total} 页",
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI 表現",
@@ -56,6 +62,7 @@ const translations: Record<string, Record<string, string>> = {
     goals: "進球", assists: "助攻", apps: "出場", mins: "分鐘",
     topScorers: "射手榜", topAssistsTitle: "助攻榜", highestRated: "評分最高",
     viewProfile: "查看詳情",
+    prevPage: "上一頁", nextPage: "下一頁", pageOf: "第 {current} 頁，共 {total} 頁",
   },
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "AI Performa",
@@ -68,6 +75,7 @@ const translations: Record<string, Record<string, string>> = {
     goals: "Gol", assists: "Assist", apps: "Main", mins: "Menit",
     topScorers: "Top Skor", topAssistsTitle: "Top Assist", highestRated: "Rating Tertinggi",
     viewProfile: "Lihat Profil",
+    prevPage: "Sebelumnya", nextPage: "Berikutnya", pageOf: "Halaman {current} dari {total}",
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "AI Rendimiento",
@@ -80,6 +88,7 @@ const translations: Record<string, Record<string, string>> = {
     goals: "Goles", assists: "Asist.", apps: "Part.", mins: "Min",
     topScorers: "Goleadores", topAssistsTitle: "Asistencias", highestRated: "Mejor Valorados",
     viewProfile: "Ver Perfil",
+    prevPage: "Anterior", nextPage: "Siguiente", pageOf: "Página {current} de {total}",
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "AI Desempenho",
@@ -92,6 +101,7 @@ const translations: Record<string, Record<string, string>> = {
     goals: "Gols", assists: "Assist.", apps: "Jogos", mins: "Min",
     topScorers: "Artilheiros", topAssistsTitle: "Assistências", highestRated: "Mais Bem Avaliados",
     viewProfile: "Ver Perfil",
+    prevPage: "Anterior", nextPage: "Próximo", pageOf: "Página {current} de {total}",
   },
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AI パフォーマンス",
@@ -104,6 +114,7 @@ const translations: Record<string, Record<string, string>> = {
     goals: "ゴール", assists: "アシスト", apps: "出場", mins: "分",
     topScorers: "得点ランキング", topAssistsTitle: "アシストランキング", highestRated: "最高評価",
     viewProfile: "プロフィール",
+    prevPage: "前へ", nextPage: "次へ", pageOf: "{total}ページ中{current}ページ",
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성과",
@@ -116,6 +127,7 @@ const translations: Record<string, Record<string, string>> = {
     goals: "골", assists: "어시스트", apps: "출전", mins: "분",
     topScorers: "득점 순위", topAssistsTitle: "어시스트 순위", highestRated: "최고 평점",
     viewProfile: "프로필 보기",
+    prevPage: "이전", nextPage: "다음", pageOf: "{total}페이지 중 {current}페이지",
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "AI Leistung",
@@ -128,6 +140,7 @@ const translations: Record<string, Record<string, string>> = {
     goals: "Tore", assists: "Vorlagen", apps: "Einsätze", mins: "Min",
     topScorers: "Torjäger", topAssistsTitle: "Vorlagengeber", highestRated: "Beste Bewertung",
     viewProfile: "Profil ansehen",
+    prevPage: "Zurück", nextPage: "Weiter", pageOf: "Seite {current} von {total}",
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "AI Performance",
@@ -140,6 +153,7 @@ const translations: Record<string, Record<string, string>> = {
     goals: "Buts", assists: "Passes", apps: "Matchs", mins: "Min",
     topScorers: "Meilleurs Buteurs", topAssistsTitle: "Meilleures Passes", highestRated: "Mieux Notés",
     viewProfile: "Voir le Profil",
+    prevPage: "Précédent", nextPage: "Suivant", pageOf: "Page {current} sur {total}",
   },
 };
 
@@ -447,6 +461,7 @@ export default function PlayersClient({
   highestRated,
   leagueName,
   leagueSlug,
+  currentPage,
 }: PlayersClientProps) {
   const params = useParams();
   const locale = (params.locale as Locale) || 'en';
@@ -521,6 +536,12 @@ export default function PlayersClient({
 
   // Get unique positions for filter
   const positions = [...new Set(players.map((p) => p.position).filter(Boolean))];
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredPlayers.length / PLAYERS_PER_PAGE);
+  const startIndex = (currentPage - 1) * PLAYERS_PER_PAGE;
+  const endIndex = startIndex + PLAYERS_PER_PAGE;
+  const paginatedPlayers = filteredPlayers.slice(startIndex, endIndex);
 
   // Calculate top 5 by rating for badge display
   const top5PlayerIds = new Set(
@@ -809,13 +830,13 @@ export default function PlayersClient({
           </div>
 
           {/* Players Grid */}
-          {filteredPlayers.length === 0 ? (
+          {paginatedPlayers.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-400 text-lg">{t('noPlayersFound')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-              {filteredPlayers.map((player) => {
+              {paginatedPlayers.map((player) => {
                 const isTop5 = top5PlayerIds.has(player.id);
                 const top5Rank = isTop5
                   ? [...players]
@@ -955,6 +976,89 @@ export default function PlayersClient({
                 );
               })}
             </div>
+          )}
+
+          {/* SEO-friendly Pagination */}
+          {totalPages > 1 && (
+            <nav className="flex items-center justify-center gap-2 mt-8" aria-label="Pagination">
+              {/* Previous Page */}
+              {currentPage > 1 ? (
+                <Link
+                  href={localePath(`/leagues/${leagueSlug}/players${currentPage === 2 ? '' : `?page=${currentPage - 1}`}`)}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gray-900/90 to-gray-800/90 border border-white/10 hover:border-emerald-500/40 text-white font-medium text-sm transition-all duration-300"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  {t('prevPage')}
+                </Link>
+              ) : (
+                <span className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-900/50 border border-white/5 text-gray-600 font-medium text-sm cursor-not-allowed">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  {t('prevPage')}
+                </span>
+              )}
+
+              {/* Page Numbers */}
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(page => {
+                    // Show first, last, current, and pages near current
+                    if (page === 1 || page === totalPages) return true;
+                    if (Math.abs(page - currentPage) <= 1) return true;
+                    return false;
+                  })
+                  .map((page, idx, arr) => (
+                    <div key={page} className="flex items-center">
+                      {/* Show ellipsis if there's a gap */}
+                      {idx > 0 && arr[idx - 1] !== page - 1 && (
+                        <span className="px-2 text-gray-500">...</span>
+                      )}
+                      {page === currentPage ? (
+                        <span className="w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-bold text-sm">
+                          {page}
+                        </span>
+                      ) : (
+                        <Link
+                          href={localePath(`/leagues/${leagueSlug}/players${page === 1 ? '' : `?page=${page}`}`)}
+                          className="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-900/50 border border-white/10 hover:border-emerald-500/40 text-gray-300 hover:text-white font-medium text-sm transition-all"
+                        >
+                          {page}
+                        </Link>
+                      )}
+                    </div>
+                  ))}
+              </div>
+
+              {/* Next Page */}
+              {currentPage < totalPages ? (
+                <Link
+                  href={localePath(`/leagues/${leagueSlug}/players?page=${currentPage + 1}`)}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-gray-900/90 to-gray-800/90 border border-white/10 hover:border-emerald-500/40 text-white font-medium text-sm transition-all duration-300"
+                >
+                  {t('nextPage')}
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              ) : (
+                <span className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-900/50 border border-white/5 text-gray-600 font-medium text-sm cursor-not-allowed">
+                  {t('nextPage')}
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              )}
+            </nav>
+          )}
+
+          {/* Page info text */}
+          {totalPages > 1 && (
+            <p className="text-center text-gray-500 text-sm mt-4">
+              {t('pageOf').replace('{current}', currentPage.toString()).replace('{total}', totalPages.toString())}
+            </p>
           )}
         </div>
       </main>

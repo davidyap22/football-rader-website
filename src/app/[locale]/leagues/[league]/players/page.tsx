@@ -6,10 +6,15 @@ interface PageProps {
     locale: string;
     league: string;
   }>;
+  searchParams: Promise<{
+    page?: string;
+  }>;
 }
 
-export default async function PlayersPage({ params }: PageProps) {
+export default async function PlayersPage({ params, searchParams }: PageProps) {
   const { locale, league } = await params;
+  const { page } = await searchParams;
+  const currentPage = parseInt(page || '1', 10);
   const leagueConfig = LEAGUES_CONFIG[league];
 
   let players: LeaguePlayerData[] = [];
@@ -35,6 +40,7 @@ export default async function PlayersPage({ params }: PageProps) {
       highestRated={highestRated}
       leagueName={leagueName}
       leagueSlug={league}
+      currentPage={currentPage}
     />
   );
 }
