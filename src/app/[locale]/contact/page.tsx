@@ -18,6 +18,8 @@ const translations: Record<string, Record<string, string>> = {
     generalEmail: "support@oddsflow.com",
     businessInquiries: "Business Inquiries",
     businessEmail: "business@oddsflow.com",
+    officeLocation: "Office Location",
+    officeAddress: "Kuala Lumpur, Malaysia",
     sendMessage: "Send us a Message",
     name: "Name",
     email: "Email",
@@ -62,6 +64,8 @@ const translations: Record<string, Record<string, string>> = {
     generalEmail: "support@oddsflow.com",
     businessInquiries: "Consultas Comerciales",
     businessEmail: "business@oddsflow.com",
+    officeLocation: "Ubicación de la Oficina",
+    officeAddress: "Kuala Lumpur, Malasia",
     sendMessage: "Envíanos un Mensaje",
     name: "Nombre", email: "Correo", subject: "Asunto", message: "Mensaje", send: "Enviar",
     sending: "Enviando...",
@@ -102,6 +106,8 @@ const translations: Record<string, Record<string, string>> = {
     generalEmail: "support@oddsflow.com",
     businessInquiries: "Consultas Comerciais",
     businessEmail: "business@oddsflow.com",
+    officeLocation: "Localização do Escritório",
+    officeAddress: "Kuala Lumpur, Malásia",
     sendMessage: "Envie-nos uma Mensagem",
     name: "Nome", email: "E-mail", subject: "Assunto", message: "Mensagem", send: "Enviar",
     sending: "Enviando...",
@@ -142,6 +148,8 @@ const translations: Record<string, Record<string, string>> = {
     generalEmail: "support@oddsflow.com",
     businessInquiries: "Geschäftliche Anfragen",
     businessEmail: "business@oddsflow.com",
+    officeLocation: "Bürostandort",
+    officeAddress: "Kuala Lumpur, Malaysia",
     sendMessage: "Nachricht Senden",
     name: "Name", email: "E-Mail", subject: "Betreff", message: "Nachricht", send: "Senden",
     sending: "Wird gesendet...",
@@ -182,6 +190,8 @@ const translations: Record<string, Record<string, string>> = {
     generalEmail: "support@oddsflow.com",
     businessInquiries: "Demandes Commerciales",
     businessEmail: "business@oddsflow.com",
+    officeLocation: "Emplacement du Bureau",
+    officeAddress: "Kuala Lumpur, Malaisie",
     sendMessage: "Envoyez-nous un Message",
     name: "Nom", email: "E-mail", subject: "Objet", message: "Message", send: "Envoyer",
     sending: "Envoi en cours...",
@@ -222,6 +232,8 @@ const translations: Record<string, Record<string, string>> = {
     generalEmail: "support@oddsflow.com",
     businessInquiries: "ビジネスに関するお問い合わせ",
     businessEmail: "business@oddsflow.com",
+    officeLocation: "オフィス所在地",
+    officeAddress: "クアラルンプール、マレーシア",
     sendMessage: "メッセージを送る",
     name: "お名前", email: "メール", subject: "件名", message: "メッセージ", send: "送信",
     sending: "送信中...",
@@ -262,6 +274,8 @@ const translations: Record<string, Record<string, string>> = {
     generalEmail: "support@oddsflow.com",
     businessInquiries: "비즈니스 문의",
     businessEmail: "business@oddsflow.com",
+    officeLocation: "사무실 위치",
+    officeAddress: "쿠알라룸푸르, 말레이시아",
     sendMessage: "메시지 보내기",
     name: "이름", email: "이메일", subject: "제목", message: "메시지", send: "보내기",
     sending: "전송 중...",
@@ -302,6 +316,8 @@ const translations: Record<string, Record<string, string>> = {
     generalEmail: "support@oddsflow.com",
     businessInquiries: "商务合作",
     businessEmail: "business@oddsflow.com",
+    officeLocation: "办公地点",
+    officeAddress: "马来西亚吉隆坡",
     sendMessage: "发送消息",
     name: "姓名", email: "邮箱", subject: "主题", message: "消息", send: "发送",
     sending: "发送中...",
@@ -342,6 +358,8 @@ const translations: Record<string, Record<string, string>> = {
     generalEmail: "support@oddsflow.com",
     businessInquiries: "商務合作",
     businessEmail: "business@oddsflow.com",
+    officeLocation: "辦公地點",
+    officeAddress: "馬來西亞吉隆坡",
     sendMessage: "發送訊息",
     name: "姓名", email: "郵箱", subject: "主題", message: "訊息", send: "發送",
     sending: "發送中...",
@@ -382,6 +400,8 @@ const translations: Record<string, Record<string, string>> = {
     generalEmail: "support@oddsflow.com",
     businessInquiries: "Pertanyaan Bisnis",
     businessEmail: "business@oddsflow.com",
+    officeLocation: "Lokasi Kantor",
+    officeAddress: "Kuala Lumpur, Malaysia",
     sendMessage: "Kirim Pesan",
     name: "Nama", email: "Email", subject: "Subjek", message: "Pesan", send: "Kirim",
     sending: "Mengirim...",
@@ -729,7 +749,7 @@ export default function ContactPage() {
       {/* Contact Info */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
             <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8">
               <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -748,6 +768,17 @@ export default function ContactPage() {
               </div>
               <h3 className="text-xl font-semibold mb-2">{t('businessInquiries')}</h3>
               <a href="mailto:business@oddsflow.com" className="text-cyan-400 hover:underline">{t('businessEmail')}</a>
+            </div>
+
+            <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl border border-white/10 p-8">
+              <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">{t('officeLocation')}</h3>
+              <p className="text-purple-400">{t('officeAddress')}</p>
             </div>
           </div>
 
