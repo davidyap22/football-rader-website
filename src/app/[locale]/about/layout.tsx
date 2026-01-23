@@ -62,9 +62,20 @@ const SEO_METADATA: Record<string, { title: string; description: string; keyword
     ],
   },
   fr: {
-    title: "À Propos - Plateforme de Prédictions Football IA | OddsFlow",
-    description: "Découvrez OddsFlow, la plateforme leader de prédictions football avec IA et analyses de paris sportifs basées sur les données.",
-    keywords: ["à propos OddsFlow", "prédictions football IA", "paris sportifs", "analyse football"],
+    title: "À Propos d'OddsFlow - Pronostics Foot & Paris Sportifs avec IA | OddsFlow",
+    description: "Découvrez OddsFlow, la plateforme leader de pronostics foot propulsée par l'Intelligence Artificielle. Nous utilisons des algorithmes de Wall Street pour analyser les cotes, les handicaps asiatiques et les mouvements de marché. Paris sportifs basés sur les données, pas sur l'intuition.",
+    keywords: [
+      "à propos OddsFlow",
+      "pronostics foot",
+      "pronostics football",
+      "paris sportifs",
+      "cotes football",
+      "analyse de cotes",
+      "handicaps asiatiques",
+      "IA paris sportifs",
+      "prédictions football",
+      "value bet",
+    ],
   },
   ja: {
     title: "会社概要 - AIサッカー予測・スポーツベッティング分析 | OddsFlow",
