@@ -65,10 +65,10 @@ const translations: Record<string, Record<string, string>> = {
     footerDesc: "Análisis de cuotas de fútbol impulsado por IA para predicciones más inteligentes. Toma decisiones basadas en datos con información en tiempo real.",
   },
   PT: {
-    home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Análise",
+    home: "Início", predictions: "Palpites", leagues: "Ligas", performance: "Análise",
     community: "Comunidade", news: "Notícias", pricing: "Preços", login: "Entrar", getStarted: "Começar",
-    blogTitle: "Blog",
-    blogSubtitle: "Insights, tutoriais e atualizações da equipe OddsFlow",
+    blogTitle: "Blog de Palpites",
+    blogSubtitle: "Palpites de futebol, guias de apostas e análises com IA da equipe OddsFlow",
     all: "Todos",
     tutorials: "Tutoriais",
     insights: "Insights",
