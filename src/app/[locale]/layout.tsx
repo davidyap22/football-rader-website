@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     ja: "OddsFlow - AIサッカー勝敗予想サイト | ブックメーカー投資 & オッズ分析",
     ko: "OddsFlow - AI 축구 분석 & 프로토 예측 | 빅데이터 기반 스포츠토토 분석",
     zh: "OddsFlow - 大数据AI足球盘口分析 | 实时赔率走势 & 预测",
-    tw: "OddsFlow - 最準確的AI足球預測 | 歐洲足球AI分析",
+    tw: "OddsFlow - AI 運彩分析與足球預測 | 讓分盤大數據分析",
     id: "OddsFlow - Prediksi Sepak Bola AI Paling Akurat | Tips AI Sepak Bola Eropa",
   };
 
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     ja: "ブックメーカー投資に最適なAIサッカー予想サイト。プレミアリーグ、ブンデスリーガ、Jリーグなど100以上のリーグをカバー。勝敗予想、オッズ分析、データに基づく投資判断をサポート。",
     ko: "빅데이터 기반 AI 축구 분석 사이트. 프로토, 스포츠토토 분석에 최적화. 프리미어리그, K리그, 라리가 등 100개 이상 리그의 승무패 예측, 핸디캡, 언오버 분석 제공.",
     zh: "大数据+AI驱动的足球盘口分析平台。实时追踪英超、西甲、德甲等100+联赛的盘口变化，提供亚盘分析、大小球预测、赔率走势。用数据战胜庄家。",
-    tw: "最準確的AI足球預測，涵蓋英超、德甲、意甲、西甲和法甲。獲取1x2預測、亞盤分析、大小球預測。",
+    tw: "台灣運彩分析首選！大數據 AI 預測英超、西甲、德甲等100+聯賽。提供讓分盤、大小分、勝和負預測，助您提升運彩勝率。",
     id: "Prediksi sepak bola AI paling akurat untuk Liga Premier, Bundesliga, Serie A, La Liga & Ligue 1. Dapatkan prediksi 1x2, tips handicap, analisis over/under.",
   };
 
