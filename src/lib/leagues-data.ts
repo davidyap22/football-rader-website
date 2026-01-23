@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { unstable_cache } from 'next/cache';
-import { TeamStatistics } from './supabase';
+import { TeamStatistics, TeamNameLanguage } from './supabase';
 
 // Server-side Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -111,8 +111,36 @@ export interface LeagueStatsSummary {
   cleanSheets: number;
   topTeam: string | null;
   topTeamLogo: string | null;
+  topTeamNameLanguage: TeamNameLanguage | null;
   season: number | null;
 }
+
+// Helper to get localized top team name
+export const getLocalizedTopTeamName = (stats: LeagueStatsSummary, locale: string): string => {
+  if (!stats.topTeamNameLanguage) {
+    return stats.topTeam || '';
+  }
+
+  const localeMap: Record<string, keyof TeamNameLanguage> = {
+    'en': 'en',
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const langKey = localeMap[locale];
+  if (langKey && stats.topTeamNameLanguage[langKey]) {
+    return stats.topTeamNameLanguage[langKey] as string;
+  }
+
+  return stats.topTeamNameLanguage.en || stats.topTeam || '';
+};
 
 // Fetch league statistics with server-side caching
 export const getLeagueStats = unstable_cache(
@@ -151,6 +179,7 @@ export const getLeagueStats = unstable_cache(
             cleanSheets: data.reduce((sum: number, t: TeamStatistics) => sum + (t.clean_sheets || 0), 0),
             topTeam: topTeam?.team_name || null,
             topTeamLogo: topTeam?.logo || null,
+            topTeamNameLanguage: topTeam?.team_name_language || null,
             season: data[0]?.season || null,
           };
         }

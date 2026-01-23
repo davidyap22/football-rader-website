@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 import { User } from '@supabase/supabase-js';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
-import { LeagueStatsSummary, LEAGUES_CONFIG, getLocalizedLeagueName } from '@/lib/leagues-data';
+import { LeagueStatsSummary, LEAGUES_CONFIG, getLocalizedLeagueName, getLocalizedTopTeamName } from '@/lib/leagues-data';
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -732,12 +732,12 @@ export default function LeaguesClient({
                         {leagueStats[league.dbName].topTeamLogo && (
                           <img
                             src={leagueStats[league.dbName].topTeamLogo!}
-                            alt={leagueStats[league.dbName].topTeam!}
+                            alt={getLocalizedTopTeamName(leagueStats[league.dbName], locale)}
                             className="w-6 h-6 object-contain"
                           />
                         )}
                         <span className="text-xs text-emerald-400 font-medium">
-                          {t('leading')}: {leagueStats[league.dbName].topTeam}
+                          {t('leading')}: {getLocalizedTopTeamName(leagueStats[league.dbName], locale)}
                         </span>
                       </div>
                     )}
