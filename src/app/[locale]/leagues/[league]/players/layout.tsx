@@ -25,6 +25,14 @@ const LEAGUE_NAMES_LOCALIZED: Record<string, Record<string, string>> = {
     en: 'Ligue 1', es: 'Ligue 1', pt: 'Ligue 1', de: 'Ligue 1',
     fr: 'Ligue 1', ja: 'リーグ・アン', ko: '리그 1', zh: '法甲', tw: '法甲', id: 'Ligue 1',
   },
+  'champions-league': {
+    en: 'Champions League', es: 'Liga de Campeones', pt: 'Liga dos Campeões', de: 'Champions League',
+    fr: 'Ligue des Champions', ja: 'チャンピオンズリーグ', ko: '챔피언스리그', zh: '欧冠', tw: '歐冠', id: 'Liga Champions',
+  },
+  'europa-league': {
+    en: 'Europa League', es: 'Liga Europa', pt: 'Liga Europa', de: 'Europa League',
+    fr: 'Ligue Europa', ja: 'ヨーロッパリーグ', ko: '유로파리그', zh: '欧联', tw: '歐聯', id: 'Liga Europa',
+  },
 };
 
 const getLocalizedLeagueName = (leagueSlug: string, locale: string): string => {
