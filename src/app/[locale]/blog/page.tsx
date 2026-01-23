@@ -40,6 +40,7 @@ const translations: Record<string, Record<string, string>> = {
     allRightsReserved: "All rights reserved.",
     gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
     disclaimer: "Disclaimer: OddsFlow provides AI-powered predictions for informational and entertainment purposes only. We do not guarantee the accuracy of predictions and are not responsible for any financial losses. Gambling involves risk. Please gamble responsibly. If you or someone you know has a gambling problem, please seek help. Users must be 18+ years old.",
+    footerDesc: "AI-powered football odds analysis for smarter predictions. Make data-driven decisions with real-time insights.",
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Análisis",
@@ -61,6 +62,7 @@ const translations: Record<string, Record<string, string>> = {
     allRightsReserved: "Todos los derechos reservados.",
     gamblingWarning: "El juego implica riesgo. Por favor juegue responsablemente.",
     disclaimer: "Aviso: OddsFlow proporciona predicciones impulsadas por IA solo con fines informativos y de entretenimiento. No garantizamos la precisión de las predicciones y no somos responsables de ninguna pérdida financiera. El juego implica riesgo. Por favor juegue responsablemente. Si usted o alguien que conoce tiene un problema de juego, busque ayuda. Los usuarios deben tener más de 18 años.",
+    footerDesc: "Análisis de cuotas de fútbol impulsado por IA para predicciones más inteligentes. Toma decisiones basadas en datos con información en tiempo real.",
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Análise",
@@ -82,6 +84,7 @@ const translations: Record<string, Record<string, string>> = {
     allRightsReserved: "Todos os direitos reservados.",
     gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
     disclaimer: "Aviso: OddsFlow fornece previsões baseadas em IA apenas para fins informativos e de entretenimento. Não garantimos a precisão das previsões e não somos responsáveis por quaisquer perdas financeiras. Apostas envolvem risco. Por favor aposte com responsabilidade. Se você ou alguém que conhece tem um problema com jogos, procure ajuda. Usuários devem ter mais de 18 anos.",
+    footerDesc: "Análise de odds de futebol com IA para palpites mais inteligentes. Tome decisões baseadas em dados com insights em tempo real.",
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "Analyse",
@@ -103,6 +106,7 @@ const translations: Record<string, Record<string, string>> = {
     allRightsReserved: "Alle Rechte vorbehalten.",
     gamblingWarning: "Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
     disclaimer: "Haftungsausschluss: OddsFlow bietet KI-gestützte Vorhersagen nur zu Informations- und Unterhaltungszwecken. Wir garantieren nicht die Genauigkeit der Vorhersagen und sind nicht verantwortlich für finanzielle Verluste. Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll. Wenn Sie oder jemand, den Sie kennen, ein Glücksspielproblem hat, suchen Sie bitte Hilfe. Benutzer müssen über 18 Jahre alt sein.",
+    footerDesc: "KI-gestützte Analyse von Fußball-Quoten für intelligentere Vorhersagen. Treffen Sie datenbasierte Entscheidungen mit Echtzeit-Einblicken.",
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Analyse",
@@ -124,6 +128,7 @@ const translations: Record<string, Record<string, string>> = {
     allRightsReserved: "Tous droits réservés.",
     gamblingWarning: "Le jeu comporte des risques. Veuillez jouer de manière responsable.",
     disclaimer: "Avertissement : OddsFlow fournit des prédictions basées sur l'IA à des fins d'information et de divertissement uniquement. Nous ne garantissons pas l'exactitude des prédictions et ne sommes pas responsables des pertes financières. Le jeu comporte des risques. Veuillez jouer de manière responsable. Si vous ou quelqu'un que vous connaissez a un problème de jeu, veuillez demander de l'aide. Les utilisateurs doivent avoir plus de 18 ans.",
+    footerDesc: "Analyse des cotes de football par IA pour des pronostics plus intelligents. Prenez des décisions basées sur les données avec des informations en temps réel.",
   },
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "分析",
@@ -145,6 +150,7 @@ const translations: Record<string, Record<string, string>> = {
     allRightsReserved: "全著作権所有。",
     gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
     disclaimer: "免責事項：OddsFlowはAI駆動の予測を情報および娯楽目的のみで提供しています。予測の正確性を保証するものではなく、いかなる財務損失についても責任を負いません。ギャンブルにはリスクが伴います。責任を持ってお楽しみください。あなたまたはあなたの知人がギャンブル問題を抱えている場合は、助けを求めてください。ユーザーは18歳以上である必要があります。",
+    footerDesc: "AI搭載のサッカーオッズ分析でよりスマートな予測を。リアルタイムの洞察でデータに基づいた意思決定を。",
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "분석",
@@ -166,6 +172,7 @@ const translations: Record<string, Record<string, string>> = {
     allRightsReserved: "모든 권리 보유.",
     gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
     disclaimer: "면책조항: OddsFlow는 정보 및 엔터테인먼트 목적으로만 AI 기반 예측을 제공합니다. 예측의 정확성을 보장하지 않으며 재정적 손실에 대해 책임지지 않습니다. 도박에는 위험이 따릅니다. 책임감 있게 베팅하세요. 본인 또는 아는 사람이 도박 문제가 있다면 도움을 구하세요. 사용자는 18세 이상이어야 합니다.",
+    footerDesc: "AI 기반 축구 배당률 분석으로 더 스마트한 예측을. 실시간 인사이트로 데이터 기반 결정을 내리세요.",
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "分析",
@@ -187,6 +194,7 @@ const translations: Record<string, Record<string, string>> = {
     allRightsReserved: "版权所有。",
     gamblingWarning: "博彩有风险，请理性投注。",
     disclaimer: "免责声明：OddsFlow 提供的 AI 预测仅供参考和娱乐目的。我们不保证预测的准确性，也不对任何财务损失负责。博彩有风险，请理性投注。如果您或您认识的人有赌博问题，请寻求帮助。用户必须年满 18 岁。",
+    footerDesc: "AI驱动的足球赔率分析，助您做出更明智的预测。实时数据洞察，助力数据驱动决策。",
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "分析",
@@ -208,6 +216,7 @@ const translations: Record<string, Record<string, string>> = {
     allRightsReserved: "版權所有。",
     gamblingWarning: "博彩有風險，請理性投注。",
     disclaimer: "免責聲明：OddsFlow 提供的 AI 預測僅供參考和娛樂目的。我們不保證預測的準確性，也不對任何財務損失負責。博彩有風險，請理性投注。如果您或您認識的人有賭博問題，請尋求幫助。用戶必須年滿 18 歲。",
+    footerDesc: "AI驅動的足球賠率分析，助您做出更明智的預測。即時數據洞察，助力數據驅動決策。",
   },
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI",
@@ -229,6 +238,7 @@ const translations: Record<string, Record<string, string>> = {
     allRightsReserved: "Hak cipta dilindungi.",
     gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
     disclaimer: "Penafian: OddsFlow menyediakan prediksi bertenaga AI hanya untuk tujuan informasi dan hiburan. Kami tidak menjamin keakuratan prediksi dan tidak bertanggung jawab atas kerugian finansial. Perjudian melibatkan risiko. Harap bertaruh dengan bijak. Jika Anda atau seseorang yang Anda kenal memiliki masalah perjudian, silakan cari bantuan. Pengguna harus berusia 18+ tahun.",
+    footerDesc: "Analisis odds sepak bola bertenaga AI untuk prediksi yang lebih cerdas. Buat keputusan berbasis data dengan wawasan real-time.",
   },
 };
 
@@ -1482,7 +1492,7 @@ export default function BlogPage() {
                 <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
                 <span className="text-xl font-bold">OddsFlow</span>
               </Link>
-              <p className="text-gray-400 mb-6 leading-relaxed">AI-powered football odds analysis for smarter predictions. Make data-driven decisions with real-time insights.</p>
+              <p className="text-gray-400 mb-6 leading-relaxed">{t('footerDesc')}</p>
               <div className="flex items-center gap-4">
                 <Link href="#" className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-emerald-500/30 transition-all">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
