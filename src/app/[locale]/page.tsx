@@ -2272,7 +2272,7 @@ function LeaguesSection() {
 
 // ============ AI Predictions Section ============
 function AIPredictionsSection() {
-  const { t, localePath } = useLanguage();
+  const { t, localePath, locale } = useLanguage();
   const [matches, setMatches] = useState<Prematch[]>([]);
   const [predictions, setPredictions] = useState<Map<number, { home: number; draw: number; away: number }>>(new Map());
   const [loading, setLoading] = useState(true);
@@ -2334,15 +2334,37 @@ function AIPredictionsSection() {
   const formatMatchDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const day = date.getDate();
-    const month = date.toLocaleDateString('en-US', { month: 'short' });
+    const localeMap: Record<string, string> = {
+      en: 'en-US', es: 'es-ES', pt: 'pt-BR', de: 'de-DE', fr: 'fr-FR',
+      ja: 'ja-JP', ko: 'ko-KR', zh: 'zh-CN', tw: 'zh-TW', id: 'id-ID'
+    };
+    const dateLocale = localeMap[locale] || 'en-US';
+    const month = date.toLocaleDateString(dateLocale, { month: 'short' });
     return `${day} ${month}`;
   };
 
   const getTodayDate = () => {
     const date = new Date();
     const day = date.getDate();
+
+    // Locale-specific date formatting
+    const localeMap: Record<string, string> = {
+      en: 'en-US', es: 'es-ES', pt: 'pt-BR', de: 'de-DE', fr: 'fr-FR',
+      ja: 'ja-JP', ko: 'ko-KR', zh: 'zh-CN', tw: 'zh-TW', id: 'id-ID'
+    };
+    const dateLocale = localeMap[locale] || 'en-US';
+    const month = date.toLocaleDateString(dateLocale, { month: 'long' });
+
+    // German uses "21. Januar", others use "21st January" style
+    if (locale === 'de') {
+      return `${day}. ${month}`;
+    }
+    // For Asian languages, use native format
+    if (['ja', 'ko', 'zh', 'tw'].includes(locale)) {
+      return date.toLocaleDateString(dateLocale, { month: 'long', day: 'numeric' });
+    }
+    // English-style ordinal suffixes for en, es, pt, fr, id
     const suffix = day === 1 || day === 21 || day === 31 ? 'st' : day === 2 || day === 22 ? 'nd' : day === 3 || day === 23 ? 'rd' : 'th';
-    const month = date.toLocaleDateString('en-US', { month: 'long' });
     return `${day}${suffix} ${month}`;
   };
 
