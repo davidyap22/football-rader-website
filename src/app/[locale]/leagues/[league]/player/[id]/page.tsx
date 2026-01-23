@@ -1,6 +1,13 @@
 import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
-import { getPlayerData, extractPlayerIdFromSlug, playerNameToSlug, LEAGUES_CONFIG } from '@/lib/team-data';
+import {
+  getPlayerData,
+  extractPlayerIdFromSlug,
+  playerNameToSlug,
+  LEAGUES_CONFIG,
+  getLocalizedPlayerDetailName,
+  getLocalizedPlayerDetailTeamName
+} from '@/lib/team-data';
 import PlayerDetailClient from './PlayerDetailClient';
 
 interface PageProps {
@@ -12,6 +19,44 @@ interface PageProps {
 }
 
 const currentYear = new Date().getFullYear();
+
+// Localized league names for SEO
+const LEAGUE_NAMES_LOCALIZED: Record<string, Record<string, string>> = {
+  'premier-league': {
+    en: 'Premier League', es: 'Premier League', pt: 'Premier League', de: 'Premier League',
+    fr: 'Premier League', ja: 'プレミアリーグ', ko: '프리미어리그', zh: '英超', tw: '英超', id: 'Liga Inggris',
+  },
+  'la-liga': {
+    en: 'La Liga', es: 'La Liga', pt: 'La Liga', de: 'La Liga',
+    fr: 'La Liga', ja: 'ラ・リーガ', ko: '라리가', zh: '西甲', tw: '西甲', id: 'La Liga',
+  },
+  'bundesliga': {
+    en: 'Bundesliga', es: 'Bundesliga', pt: 'Bundesliga', de: 'Bundesliga',
+    fr: 'Bundesliga', ja: 'ブンデスリーガ', ko: '분데스리가', zh: '德甲', tw: '德甲', id: 'Bundesliga',
+  },
+  'serie-a': {
+    en: 'Serie A', es: 'Serie A', pt: 'Serie A', de: 'Serie A',
+    fr: 'Serie A', ja: 'セリエA', ko: '세리에 A', zh: '意甲', tw: '義甲', id: 'Serie A',
+  },
+  'ligue-1': {
+    en: 'Ligue 1', es: 'Ligue 1', pt: 'Ligue 1', de: 'Ligue 1',
+    fr: 'Ligue 1', ja: 'リーグ・アン', ko: '리그 1', zh: '法甲', tw: '法甲', id: 'Ligue 1',
+  },
+  'champions-league': {
+    en: 'Champions League', es: 'Liga de Campeones', pt: 'Liga dos Campeões', de: 'Champions League',
+    fr: 'Ligue des Champions', ja: 'チャンピオンズリーグ', ko: '챔피언스리그', zh: '欧冠', tw: '歐冠', id: 'Liga Champions',
+  },
+  'europa-league': {
+    en: 'Europa League', es: 'Liga Europa', pt: 'Liga Europa', de: 'Europa League',
+    fr: 'Ligue Europa', ja: 'ヨーロッパリーグ', ko: '유로파리그', zh: '欧联', tw: '歐聯', id: 'Liga Europa',
+  },
+};
+
+const getLocalizedLeagueName = (leagueSlug: string, locale: string): string => {
+  return LEAGUE_NAMES_LOCALIZED[leagueSlug]?.[locale] ||
+    LEAGUES_CONFIG[leagueSlug]?.name ||
+    leagueSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+};
 
 // Multi-language title templates
 const titleTemplates: Record<string, (name: string, league: string, year: number) => string> = {
@@ -65,10 +110,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: 'Player Not Found | OddsFlow' };
   }
 
-  const leagueConfig = LEAGUES_CONFIG[league];
-  const leagueName = leagueConfig?.name || league;
-  const playerName = player.player_name || 'Unknown Player';
-  const teamName = player.team_name || '';
+  // Get localized names for SEO
+  const leagueName = getLocalizedLeagueName(league, locale);
+  const playerName = getLocalizedPlayerDetailName(player, locale) || player.player_name || 'Unknown Player';
+  const teamName = getLocalizedPlayerDetailTeamName(player, locale) || player.team_name || '';
   const goals = player.goals_total || 0;
   const assists = player.assists || 0;
   const rating = player.rating || 0;
@@ -79,23 +124,54 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = titleFn(playerName, leagueName, currentYear);
   const description = descFn(playerName, teamName, leagueName, goals, assists, rating, currentYear);
 
-  // Generate canonical URL with player name slug
-  const playerSlug = playerNameToSlug(playerName);
-  const canonicalPath = locale === 'en'
-    ? `/leagues/${league}/player/${playerSlug}-${player.id}`
-    : `/${locale}/leagues/${league}/player/${playerSlug}-${player.id}`;
+  // Generate canonical URL with player name slug (use English name for URL)
+  const englishPlayerName = player.player_name || 'unknown';
+  const playerSlug = playerNameToSlug(englishPlayerName);
+  const baseUrl = 'https://www.oddsflow.ai';
+  const pathWithoutLocale = `/leagues/${league}/player/${playerSlug}-${player.id}`;
+  const canonicalUrl = locale === 'en' ? `${baseUrl}${pathWithoutLocale}` : `${baseUrl}/${locale}${pathWithoutLocale}`;
+
+  // Build alternate language URLs
+  const alternateLanguages: Record<string, string> = {
+    'en': `${baseUrl}${pathWithoutLocale}`,
+    'es': `${baseUrl}/es${pathWithoutLocale}`,
+    'pt': `${baseUrl}/pt${pathWithoutLocale}`,
+    'de': `${baseUrl}/de${pathWithoutLocale}`,
+    'fr': `${baseUrl}/fr${pathWithoutLocale}`,
+    'ja': `${baseUrl}/ja${pathWithoutLocale}`,
+    'ko': `${baseUrl}/ko${pathWithoutLocale}`,
+    'zh-CN': `${baseUrl}/zh${pathWithoutLocale}`,
+    'zh-TW': `${baseUrl}/tw${pathWithoutLocale}`,
+    'id': `${baseUrl}/id${pathWithoutLocale}`,
+    'x-default': `${baseUrl}${pathWithoutLocale}`,
+  };
 
   return {
     title,
     description,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
     alternates: {
-      canonical: `https://www.oddsflow.ai${canonicalPath}`,
+      canonical: canonicalUrl,
+      languages: alternateLanguages,
     },
     openGraph: {
       title,
       description,
       type: 'profile',
-      images: player.photo ? [{ url: player.photo, alt: playerName }] : undefined,
+      siteName: 'OddsFlow',
+      url: canonicalUrl,
+      locale: locale === 'zh' ? 'zh_CN' : locale === 'tw' ? 'zh_TW' : locale,
+      images: player.photo ? [{ url: player.photo, width: 200, height: 200, alt: playerName }] : undefined,
     },
     twitter: {
       card: 'summary',

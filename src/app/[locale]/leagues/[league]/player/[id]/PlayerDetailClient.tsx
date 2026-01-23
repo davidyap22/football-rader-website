@@ -6,7 +6,15 @@ import { supabase } from '@/lib/supabase';
 import FlagIcon from "@/components/FlagIcon";
 import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 import { User } from '@supabase/supabase-js';
-import { PlayerDetailData, playerNameToSlug } from '@/lib/team-data';
+import {
+  PlayerDetailData,
+  playerNameToSlug,
+  getLocalizedPlayerDetailName,
+  getLocalizedPlayerDetailNationality,
+  getLocalizedPlayerDetailTeamName,
+  getLocalizedPlayerTitle,
+  getLocalizedPlayerBio
+} from '@/lib/team-data';
 
 // League configuration
 const LEAGUES_CONFIG: Record<string, { name: string; country: string; logo: string; dbName: string }> = {
@@ -37,6 +45,7 @@ const translations: Record<string, Record<string, string>> = {
     foulsCommitted: "Fouls Committed", foulsDrawn: "Fouls Drawn",
     goalkeeper: "Goalkeeper", defender: "Defender", midfielder: "Midfielder", attacker: "Attacker",
     captain: "CAPTAIN", injured: "INJURED",
+    playerProfile: "Player Profile", aiAnalysis: "AI Analysis",
     allRightsReserved: "All rights reserved.", gamblingWarning: "Gambling involves risk. Please gamble responsibly.",
   },
   ES: {
@@ -56,6 +65,7 @@ const translations: Record<string, Record<string, string>> = {
     foulsCommitted: "Faltas Cometidas", foulsDrawn: "Faltas Recibidas",
     goalkeeper: "Portero", defender: "Defensa", midfielder: "Centrocampista", attacker: "Delantero",
     captain: "CAPITÁN", injured: "LESIONADO",
+    playerProfile: "Perfil del Jugador", aiAnalysis: "Análisis IA",
     allRightsReserved: "Todos los derechos reservados.", gamblingWarning: "El juego implica riesgo. Por favor juega responsablemente.",
   },
   PT: {
@@ -75,6 +85,7 @@ const translations: Record<string, Record<string, string>> = {
     foulsCommitted: "Faltas Cometidas", foulsDrawn: "Faltas Sofridas",
     goalkeeper: "Goleiro", defender: "Defensor", midfielder: "Meio-campista", attacker: "Atacante",
     captain: "CAPITÃO", injured: "LESIONADO",
+    playerProfile: "Perfil do Jogador", aiAnalysis: "Análise IA",
     allRightsReserved: "Todos os direitos reservados.", gamblingWarning: "Apostas envolvem risco. Por favor aposte com responsabilidade.",
   },
   DE: {
@@ -94,6 +105,7 @@ const translations: Record<string, Record<string, string>> = {
     foulsCommitted: "Fouls begangen", foulsDrawn: "Fouls erhalten",
     goalkeeper: "Torwart", defender: "Verteidiger", midfielder: "Mittelfeldspieler", attacker: "Stürmer",
     captain: "KAPITÄN", injured: "VERLETZT",
+    playerProfile: "Spielerprofil", aiAnalysis: "KI-Analyse",
     allRightsReserved: "Alle Rechte vorbehalten.", gamblingWarning: "Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
   },
   FR: {
@@ -113,6 +125,7 @@ const translations: Record<string, Record<string, string>> = {
     foulsCommitted: "Fautes Commises", foulsDrawn: "Fautes Subies",
     goalkeeper: "Gardien", defender: "Défenseur", midfielder: "Milieu", attacker: "Attaquant",
     captain: "CAPITAINE", injured: "BLESSÉ",
+    playerProfile: "Profil du Joueur", aiAnalysis: "Analyse IA",
     allRightsReserved: "Tous droits réservés.", gamblingWarning: "Le jeu comporte des risques. Veuillez jouer de manière responsable.",
   },
   JA: {
@@ -132,6 +145,7 @@ const translations: Record<string, Record<string, string>> = {
     foulsCommitted: "ファウル", foulsDrawn: "被ファウル",
     goalkeeper: "GK", defender: "DF", midfielder: "MF", attacker: "FW",
     captain: "キャプテン", injured: "負傷中",
+    playerProfile: "選手プロフィール", aiAnalysis: "AI分析",
     allRightsReserved: "全著作権所有。", gamblingWarning: "ギャンブルにはリスクが伴います。責任を持ってお楽しみください。",
   },
   KO: {
@@ -151,6 +165,7 @@ const translations: Record<string, Record<string, string>> = {
     foulsCommitted: "파울", foulsDrawn: "파울 유도",
     goalkeeper: "골키퍼", defender: "수비수", midfielder: "미드필더", attacker: "공격수",
     captain: "주장", injured: "부상",
+    playerProfile: "선수 프로필", aiAnalysis: "AI 분석",
     allRightsReserved: "모든 권리 보유.", gamblingWarning: "도박에는 위험이 따릅니다. 책임감 있게 즐기세요.",
   },
   '中文': {
@@ -170,6 +185,7 @@ const translations: Record<string, Record<string, string>> = {
     foulsCommitted: "犯规", foulsDrawn: "被犯规",
     goalkeeper: "门将", defender: "后卫", midfielder: "中场", attacker: "前锋",
     captain: "队长", injured: "受伤",
+    playerProfile: "球员简介", aiAnalysis: "AI分析",
     allRightsReserved: "版权所有。", gamblingWarning: "博彩有风险，请理性投注。",
   },
   '繁體': {
@@ -189,6 +205,7 @@ const translations: Record<string, Record<string, string>> = {
     foulsCommitted: "犯規", foulsDrawn: "被犯規",
     goalkeeper: "門將", defender: "後衛", midfielder: "中場", attacker: "前鋒",
     captain: "隊長", injured: "受傷",
+    playerProfile: "球員簡介", aiAnalysis: "AI分析",
     allRightsReserved: "版權所有。", gamblingWarning: "博彩有風險，請理性投注。",
   },
   ID: {
@@ -208,6 +225,7 @@ const translations: Record<string, Record<string, string>> = {
     foulsCommitted: "Pelanggaran", foulsDrawn: "Dilanggar",
     goalkeeper: "Kiper", defender: "Bek", midfielder: "Gelandang", attacker: "Penyerang",
     captain: "KAPTEN", injured: "CEDERA",
+    playerProfile: "Profil Pemain", aiAnalysis: "Analisis AI",
     allRightsReserved: "Hak cipta dilindungi.", gamblingWarning: "Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
   },
 };
@@ -224,6 +242,24 @@ export default function PlayerDetailClient({ player, locale, leagueSlug }: Playe
 
   // Translation helper
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
+
+  // Get localized player data
+  const localizedPlayerName = getLocalizedPlayerDetailName(player, locale);
+  const localizedTeamName = getLocalizedPlayerDetailTeamName(player, locale);
+  const localizedNationality = getLocalizedPlayerDetailNationality(player, locale);
+  const localizedTitle = getLocalizedPlayerTitle(player, locale);
+  const localizedBio = getLocalizedPlayerBio(player, locale);
+
+  // Helper to get localized position
+  const getLocalizedPosition = (position: string | null): string => {
+    if (!position) return '';
+    const posLower = position.toLowerCase();
+    if (posLower === 'goalkeeper') return t('goalkeeper');
+    if (posLower === 'defender') return t('defender');
+    if (posLower === 'midfielder') return t('midfielder');
+    if (posLower === 'attacker') return t('attacker');
+    return position;
+  };
 
   // Helper function for locale-aware paths
   const localePath = (path: string): string => {
@@ -421,20 +457,23 @@ export default function PlayerDetailClient({ player, locale, leagueSlug }: Playe
               {/* Player Info */}
               <div className="flex-1 text-center md:text-left">
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-2">
-                  <h1 className="text-3xl md:text-4xl font-bold text-white">{player.player_name}</h1>
+                  <h1 className="text-3xl md:text-4xl font-bold text-white">{localizedPlayerName}</h1>
                   {player.number && (
                     <span className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xl font-bold">
                       #{player.number}
                     </span>
                   )}
                 </div>
+                {localizedTitle && (
+                  <p className="text-gray-400 text-sm md:text-base mb-3 italic">{localizedTitle}</p>
+                )}
 
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-4">
                   {/* Team */}
                   {player.team_logo && (
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
-                      <img src={player.team_logo} alt={player.team_name || ''} className="w-5 h-5 object-contain" />
-                      <span className="text-white text-sm">{player.team_name}</span>
+                      <img src={player.team_logo} alt={localizedTeamName} className="w-5 h-5 object-contain" />
+                      <span className="text-white text-sm">{localizedTeamName}</span>
                     </div>
                   )}
 
@@ -445,12 +484,12 @@ export default function PlayerDetailClient({ player, locale, leagueSlug }: Playe
                     player.position === 'Midfielder' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                     'bg-red-500/20 text-red-400 border border-red-500/30'
                   }`}>
-                    {player.position || 'Unknown'}
+                    {getLocalizedPosition(player.position) || 'Unknown'}
                   </span>
 
                   {/* Nationality */}
                   <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-sm">
-                    {player.nationality}
+                    {localizedNationality}
                   </span>
                 </div>
 
@@ -634,6 +673,31 @@ export default function PlayerDetailClient({ player, locale, leagueSlug }: Playe
               </div>
             </div>
           </div>
+
+          {/* Player Bio Section */}
+          {localizedBio && (
+            <div className="mt-6 bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-white/10 rounded-2xl p-6 md:p-8">
+              <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-3">
+                <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                {t('playerProfile')}
+              </h3>
+              <div className="prose prose-invert max-w-none">
+                <p className="text-gray-300 leading-relaxed whitespace-pre-line">{localizedBio}</p>
+              </div>
+              {/* AI Analysis Indicator */}
+              <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-2">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30">
+                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                  <span className="text-xs font-medium text-emerald-400">{t('aiAnalysis')}</span>
+                </div>
+                <span className="text-xs text-gray-500">Powered by OddsFlow AI</span>
+              </div>
+            </div>
+          )}
         </div>
       </main>
 

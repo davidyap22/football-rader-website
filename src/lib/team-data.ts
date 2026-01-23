@@ -320,6 +320,228 @@ export const getLocalizedPlayerTeamName = (player: LeaguePlayerData, locale: str
   return player.team_name || '';
 }
 
+// Helper function to get localized player detail full name
+export const getLocalizedPlayerDetailName = (player: PlayerDetailData, locale: string): string => {
+  // For English, use full name (firstname + lastname)
+  if (locale === 'en') {
+    const firstName = player.firstname || '';
+    const lastName = player.lastname || '';
+    return `${firstName} ${lastName}`.trim() || player.player_name || '';
+  }
+
+  // Map locale codes to language keys
+  const localeMap: Record<string, string> = {
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const langKey = localeMap[locale];
+
+  if (langKey) {
+    // Handle both object and JSON string from Supabase
+    let firstNameLang = player.first_name_language;
+    let lastNameLang = player.last_name_language;
+
+    if (typeof firstNameLang === 'string') {
+      try { firstNameLang = JSON.parse(firstNameLang); } catch { firstNameLang = null; }
+    }
+    if (typeof lastNameLang === 'string') {
+      try { lastNameLang = JSON.parse(lastNameLang); } catch { lastNameLang = null; }
+    }
+
+    const localizedFirst = firstNameLang && typeof firstNameLang === 'object' ? (firstNameLang as Record<string, string>)[langKey] : undefined;
+    const localizedLast = lastNameLang && typeof lastNameLang === 'object' ? (lastNameLang as Record<string, string>)[langKey] : undefined;
+
+    if (localizedFirst || localizedLast) {
+      // For CJK languages, typically last name comes first
+      if (['ja', 'ko', 'zh_cn', 'zh_tw'].includes(langKey)) {
+        return `${localizedLast || ''}${localizedFirst || ''}`.trim();
+      }
+      return `${localizedFirst || ''} ${localizedLast || ''}`.trim();
+    }
+  }
+
+  // Fallback to full English name
+  const firstName = player.firstname || '';
+  const lastName = player.lastname || '';
+  return `${firstName} ${lastName}`.trim() || player.player_name || '';
+};
+
+// Helper function to get localized player detail nationality
+export const getLocalizedPlayerDetailNationality = (player: PlayerDetailData, locale: string): string => {
+  if (locale === 'en' || !player.nationality_language) {
+    return player.nationality || '';
+  }
+
+  const localeMap: Record<string, string> = {
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const langKey = localeMap[locale];
+  if (!langKey) {
+    return player.nationality || '';
+  }
+
+  // Handle both object and JSON string from Supabase
+  let natLang = player.nationality_language;
+  if (typeof natLang === 'string') {
+    try { natLang = JSON.parse(natLang); } catch { return player.nationality || ''; }
+  }
+
+  if (natLang && typeof natLang === 'object' && langKey in natLang) {
+    const localized = (natLang as Record<string, string>)[langKey];
+    if (localized) return localized;
+  }
+
+  return player.nationality || '';
+};
+
+// Helper function to get localized player detail team name
+export const getLocalizedPlayerDetailTeamName = (player: PlayerDetailData, locale: string): string => {
+  if (locale === 'en' || !player.team_name_language) {
+    return player.team_name || '';
+  }
+
+  const localeMap: Record<string, string> = {
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const langKey = localeMap[locale];
+  if (!langKey) {
+    return player.team_name || '';
+  }
+
+  // Handle both object and JSON string from Supabase
+  let teamLang = player.team_name_language;
+  if (typeof teamLang === 'string') {
+    try { teamLang = JSON.parse(teamLang); } catch { return player.team_name || ''; }
+  }
+
+  if (teamLang && typeof teamLang === 'object' && langKey in teamLang) {
+    const localized = (teamLang as Record<string, string>)[langKey];
+    if (localized) return localized;
+  }
+
+  return player.team_name || '';
+};
+
+// Helper function to get localized player title
+export const getLocalizedPlayerTitle = (player: PlayerDetailData, locale: string): string | null => {
+  if (!player.title && !player.title_language) {
+    return null;
+  }
+
+  if (locale === 'en' || !player.title_language) {
+    return player.title || null;
+  }
+
+  const localeMap: Record<string, string> = {
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const langKey = localeMap[locale];
+  if (!langKey) {
+    return player.title || null;
+  }
+
+  // Handle both object and JSON string from Supabase
+  let titleLang = player.title_language;
+  if (typeof titleLang === 'string') {
+    try {
+      titleLang = JSON.parse(titleLang);
+    } catch {
+      return player.title || null;
+    }
+  }
+
+  if (titleLang && typeof titleLang === 'object' && langKey in titleLang) {
+    const localizedTitle = (titleLang as Record<string, string>)[langKey];
+    if (localizedTitle) {
+      return localizedTitle;
+    }
+  }
+
+  return player.title || null;
+};
+
+// Helper function to get localized player bio
+export const getLocalizedPlayerBio = (player: PlayerDetailData, locale: string): string | null => {
+  if (!player.bio && !player.bio_language) {
+    return null;
+  }
+
+  if (locale === 'en' || !player.bio_language) {
+    return player.bio || null;
+  }
+
+  const localeMap: Record<string, string> = {
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const langKey = localeMap[locale];
+  if (!langKey) {
+    return player.bio || null;
+  }
+
+  // Handle both object and JSON string from Supabase
+  let bioLang = player.bio_language;
+  if (typeof bioLang === 'string') {
+    try {
+      bioLang = JSON.parse(bioLang);
+    } catch {
+      return player.bio || null;
+    }
+  }
+
+  if (bioLang && typeof bioLang === 'object' && langKey in bioLang) {
+    const localizedBio = (bioLang as Record<string, string>)[langKey];
+    if (localizedBio) {
+      return localizedBio;
+    }
+  }
+
+  return player.bio || null;
+};
+
 // Fetch all players for a league (server-side)
 async function fetchLeaguePlayers(leagueName: string): Promise<LeaguePlayerData[]> {
   if (!supabase) return [];
@@ -397,11 +619,14 @@ export interface PlayerDetailData {
   player_name: string | null;
   firstname: string | null;
   lastname: string | null;
+  first_name_language: PlayerNameLanguage | null;
+  last_name_language: PlayerNameLanguage | null;
   photo: string | null;
   age: number | null;
   birth_date: string | null;
   birth_country: string | null;
   nationality: string | null;
+  nationality_language: PlayerNameLanguage | null;
   height: string | null;
   weight: string | null;
   injured: boolean | null;
@@ -411,6 +636,7 @@ export interface PlayerDetailData {
   rating: number | null;
   team_id: number | null;
   team_name: string | null;
+  team_name_language: TeamNameLanguage | null;
   team_logo: string | null;
   league_id: number | null;
   league_name: string | null;
@@ -436,6 +662,11 @@ export interface PlayerDetailData {
   cards_red: number | null;
   penalty_scored: number | null;
   penalty_missed: number | null;
+  // Title and bio for player profile
+  title: string | null;
+  title_language: PlayerNameLanguage | null;
+  bio: string | null;
+  bio_language: PlayerNameLanguage | null;
 }
 
 // Fetch player by ID (server-side)
@@ -445,7 +676,60 @@ async function fetchPlayerById(playerId: number): Promise<PlayerDetailData | nul
   try {
     const { data, error } = await supabase
       .from('player_stats')
-      .select('*')
+      .select(`
+        id,
+        player_id,
+        player_name,
+        firstname,
+        lastname,
+        first_name_language,
+        last_name_language,
+        photo,
+        age,
+        birth_date,
+        birth_country,
+        nationality,
+        nationality_language,
+        height,
+        weight,
+        injured,
+        position,
+        number,
+        captain,
+        rating,
+        team_id,
+        team_name,
+        team_name_language,
+        team_logo,
+        league_id,
+        league_name,
+        league_logo,
+        season,
+        appearances,
+        lineups,
+        minutes,
+        goals_total,
+        conceded,
+        assists,
+        shots_total,
+        shots_on,
+        passes_total,
+        passes_key,
+        tackles_total,
+        interceptions,
+        duels_total,
+        duels_won,
+        fouls_drawn,
+        fouls_committed,
+        cards_yellow,
+        cards_red,
+        penalty_scored,
+        penalty_missed,
+        title,
+        title_language,
+        bio,
+        bio_language
+      `)
       .eq('id', playerId)
       .single();
 
