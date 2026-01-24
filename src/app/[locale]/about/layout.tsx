@@ -78,19 +78,20 @@ const SEO_METADATA: Record<string, { title: string; description: string; keyword
     ],
   },
   ja: {
-    title: "OddsFlowについて - AIサッカー予測・スポーツベッティング分析プラットフォーム | OddsFlow",
-    description: "OddsFlowについて。ウォール街のアルゴリズムを活用したAIサッカー予測プラットフォーム。オッズ分析、アジアンハンディキャップ、市場動向をデータドリブンで分析。スポーツベッティングを直感ではなくデータで。",
+    title: "OddsFlowについて - AIサッカー勝敗予想 & ブックメーカー攻略 | データ分析プラットフォーム",
+    description: "OddsFlowについて。ウォール街のアルゴリズムを活用したAIサッカー予想プラットフォーム。ブックメーカー投資、オッズ分析、アジアンハンディキャップ、買い目予想をデータドリブンで分析。直感ではなくデータで勝つ。",
     keywords: [
       "OddsFlowについて",
-      "AIサッカー予測",
-      "サッカー予測",
-      "スポーツベッティング",
-      "サッカー分析",
+      "AIサッカー予想",
+      "サッカー予想",
+      "ブックメーカー",
+      "ブックメーカー攻略",
+      "サッカー勝敗予想",
       "オッズ分析",
       "アジアンハンディキャップ",
-      "ブックメーカー分析",
-      "AI予測",
-      "Jリーグ予測",
+      "ブックメーカー投資",
+      "買い目予想",
+      "Jリーグ予想",
     ],
   },
   ko: {
@@ -169,18 +170,55 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const seo = SEO_METADATA[locale] || SEO_METADATA.en;
+  const baseUrl = 'https://www.oddsflow.ai';
+  const canonicalUrl = locale === 'en' ? `${baseUrl}/about` : `${baseUrl}/${locale}/about`;
+
+  // Build alternate language URLs
+  const alternateLanguages: Record<string, string> = {
+    'en': `${baseUrl}/about`,
+    'es': `${baseUrl}/es/about`,
+    'pt': `${baseUrl}/pt/about`,
+    'de': `${baseUrl}/de/about`,
+    'fr': `${baseUrl}/fr/about`,
+    'ja': `${baseUrl}/ja/about`,
+    'ko': `${baseUrl}/ko/about`,
+    'zh-CN': `${baseUrl}/zh/about`,
+    'zh-TW': `${baseUrl}/tw/about`,
+    'id': `${baseUrl}/id/about`,
+    'x-default': `${baseUrl}/about`,
+  };
 
   return {
     title: seo.title,
     description: seo.description,
     keywords: seo.keywords,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
     openGraph: {
       title: seo.title,
       description: seo.description,
       type: "website",
+      siteName: 'OddsFlow',
+      url: canonicalUrl,
+      locale: locale === 'zh' ? 'zh_CN' : locale === 'tw' ? 'zh_TW' : locale,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seo.title,
+      description: seo.description,
     },
     alternates: {
-      canonical: `https://www.oddsflow.ai/${locale === 'en' ? '' : locale + '/'}about`,
+      canonical: canonicalUrl,
+      languages: alternateLanguages,
     },
   };
 }
