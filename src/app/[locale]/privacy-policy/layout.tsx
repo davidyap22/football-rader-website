@@ -16,8 +16,8 @@ const SEO_METADATA: Record<string, { title: string; description: string }> = {
     description: "Política de privacidade e proteção de dados da OddsFlow. Saiba como coletamos, usamos e protegemos suas informações pessoais. Conforme LGPD e RGPD.",
   },
   de: {
-    title: "Datenschutzrichtlinie - DSGVO Konform | OddsFlow",
-    description: "OddsFlow Datenschutzrichtlinie und Datenschutzerklärung. Erfahren Sie, wie wir Ihre persönlichen Daten gemäß DSGVO auf unserer KI-Fußballvorhersage-Plattform erfassen und schützen.",
+    title: "Datenschutzerklärung - Datensicherheit & Privatsphäre | OddsFlow",
+    description: "OddsFlow Datenschutzerklärung gemäß DSGVO (Datenschutz-Grundverordnung). Erfahren Sie, wie wir Ihre persönlichen Daten auf unserer KI-Fußballvorhersage-Plattform erfassen, verwenden und schützen.",
   },
   fr: {
     title: "Politique de Confidentialité - Protection des Données | OddsFlow",
