@@ -216,8 +216,29 @@ export default async function PrivacyPolicyPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
       />
 
-      {/* Hidden SEO content for crawlers that don't execute JavaScript */}
-      <div className="sr-only" aria-hidden="true">
+      {/* SEO content for crawlers - visible in noscript, hidden with JS */}
+      <noscript>
+        <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+          <h1>{content.title}</h1>
+          <p><em>{content.lastUpdated}</em></p>
+          <article>
+            {content.sections.map((section, index) => (
+              <section key={index} style={{ marginBottom: '1.5rem' }}>
+                <h2>{section.title}</h2>
+                <p>{section.text}</p>
+              </section>
+            ))}
+          </article>
+        </div>
+      </noscript>
+
+      {/* Additional crawler-visible content using data attributes */}
+      <div
+        id="privacy-content-seo"
+        data-locale={locale}
+        data-title={content.title}
+        style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+      >
         <h1>{content.title}</h1>
         <p>{content.lastUpdated}</p>
         <article>

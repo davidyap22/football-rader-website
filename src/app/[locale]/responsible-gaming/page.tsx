@@ -424,8 +424,72 @@ export default async function ResponsibleGamingPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
       />
 
-      {/* Hidden SEO content for crawlers that don't execute JavaScript */}
-      <div className="sr-only" aria-hidden="true">
+      {/* SEO content for crawlers - visible in noscript, hidden with JS */}
+      <noscript>
+        <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+          <h1>{content.pageTitle}</h1>
+          <p><em>{content.pageSubtitle}</em></p>
+          <article>
+            <section style={{ marginBottom: '1.5rem' }}>
+              <h2>{content.section1Title}</h2>
+              <p>{content.section1Text}</p>
+            </section>
+            <section style={{ marginBottom: '1.5rem' }}>
+              <h2>{content.section2Title}</h2>
+              <p>{content.section2Text}</p>
+            </section>
+            <section style={{ marginBottom: '1.5rem' }}>
+              <h2>{content.section3Title}</h2>
+              <p>{content.section3Text}</p>
+            </section>
+            <section style={{ marginBottom: '1.5rem' }}>
+              <h2>{content.section4Title}</h2>
+              <p>{content.section4Intro}</p>
+              {content.section4Items.map((item, i) => (
+                <div key={i}>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </div>
+              ))}
+            </section>
+            <section style={{ marginBottom: '1.5rem' }}>
+              <h2>{content.section5Title}</h2>
+              <p>{content.section5Intro}</p>
+              <ul>
+                {content.section5Items.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+              <p>{content.section5Outro}</p>
+            </section>
+            <section style={{ marginBottom: '1.5rem' }}>
+              <h2>{content.section6Title}</h2>
+              <h3>{content.section6GlobalTitle}</h3>
+              <p>{content.section6GlobalText}</p>
+              <h3>{content.section6SelfExclusionTitle}</h3>
+              <p>{content.section6SelfExclusionText}</p>
+            </section>
+          </article>
+          <nav>
+            <h3>Help Resources</h3>
+            <ul>
+              {helpResources.map((resource, i) => (
+                <li key={i}>
+                  <a href={resource.url}>{resource.name} - {resource.phone}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </noscript>
+
+      {/* Additional crawler-visible content */}
+      <div
+        id="responsible-gaming-content-seo"
+        data-locale={validLocale}
+        data-title={content.pageTitle}
+        style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+      >
         <h1>{content.pageTitle}</h1>
         <p>{content.pageSubtitle}</p>
         <article>
@@ -444,40 +508,16 @@ export default async function ResponsibleGamingPage({ params }: PageProps) {
           <section>
             <h2>{content.section4Title}</h2>
             <p>{content.section4Intro}</p>
-            {content.section4Items.map((item, i) => (
-              <div key={i}>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </div>
-            ))}
           </section>
           <section>
             <h2>{content.section5Title}</h2>
             <p>{content.section5Intro}</p>
-            <ul>
-              {content.section5Items.map((item, i) => (
-                <li key={i}>{item}</li>
-              ))}
-            </ul>
-            <p>{content.section5Outro}</p>
           </section>
           <section>
             <h2>{content.section6Title}</h2>
-            <h3>{content.section6GlobalTitle}</h3>
             <p>{content.section6GlobalText}</p>
-            <h3>{content.section6SelfExclusionTitle}</h3>
-            <p>{content.section6SelfExclusionText}</p>
           </section>
         </article>
-        <nav aria-label="Help Resources">
-          <ul>
-            {helpResources.map((resource, i) => (
-              <li key={i}>
-                <a href={resource.url}>{resource.name} - {resource.phone}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
       </div>
 
       <ResponsibleGamingClient locale={validLocale}>
