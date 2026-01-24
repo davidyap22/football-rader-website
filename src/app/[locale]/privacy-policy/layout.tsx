@@ -20,8 +20,8 @@ const SEO_METADATA: Record<string, { title: string; description: string }> = {
     description: "OddsFlow Datenschutzerklärung gemäß DSGVO (Datenschutz-Grundverordnung). Erfahren Sie, wie wir Ihre persönlichen Daten auf unserer KI-Fußballvorhersage-Plattform erfassen, verwenden und schützen.",
   },
   fr: {
-    title: "Politique de Confidentialité - Protection des Données | OddsFlow",
-    description: "Politique de confidentialité et protection des données personnelles d'OddsFlow. Conforme RGPD. Découvrez comment nous protégeons vos informations sur notre plateforme de pronostics foot IA.",
+    title: "Politique de Confidentialité - Protection des Données RGPD | OddsFlow",
+    description: "Politique de confidentialité d'OddsFlow conforme au RGPD (Règlement Général sur la Protection des Données). Découvrez comment nous collectons, utilisons et protégeons vos données personnelles sur notre plateforme de pronostics foot IA.",
   },
   ja: {
     title: "プライバシーポリシー - 個人情報保護方針 | OddsFlow",
