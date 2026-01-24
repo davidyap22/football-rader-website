@@ -103,20 +103,21 @@ const SEO_METADATA: Record<string, { title: string; description: string; keyword
     ],
   },
   ja: {
-    title: "OddsFlowブログ: ベッティングガイド、戦略 & データ分析",
-    description: "サッカーオッズの読み方、暗黙の確率計算、ベッティング市場の理解方法を学びましょう。アジアンハンディキャップ、オーバー/アンダー、1X2ベッティング、AIサッカー予測のエキスパートガイド。",
-    ogTitle: "サッカーオッズガイド | OddsFlowブログ",
+    title: "OddsFlowブログ: ブックメーカー攻略ガイド、戦略 & データ分析",
+    description: "サッカーオッズの読み方、暗黙の確率計算、ブックメーカー市場の理解方法を学びましょう。アジアンハンディキャップ、オーバー/アンダー、1X2ベッティング、AIサッカー予想のエキスパートガイド。",
+    ogTitle: "サッカー予想ガイド | OddsFlowブログ",
     keywords: [
+      "サッカー予想",
+      "ブックメーカー攻略",
       "サッカーオッズ解説",
-      "ベッティングオッズ説明",
-      "暗黙の確率ベッティング",
+      "ブックメーカー投資",
       "アジアンハンディキャップガイド",
       "オーバーアンダー解説",
-      "AIサッカー予測",
-      "ベッティングチュートリアル",
+      "AIサッカー予想",
+      "買い目予想",
       "オッズ変動分析",
-      "Jリーグオッズ",
-      "プレミアリーグ予測",
+      "Jリーグ予想",
+      "プレミアリーグ予想",
     ],
   },
   ko: {
@@ -195,6 +196,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const seo = SEO_METADATA[locale] || SEO_METADATA.en;
+  const canonicalUrl = locale === 'en' ? `${baseUrl}/blog` : `${baseUrl}/${locale}/blog`;
+
+  // Build alternate language URLs
+  const alternateLanguages: Record<string, string> = {
+    'en': `${baseUrl}/blog`,
+    'es': `${baseUrl}/es/blog`,
+    'pt': `${baseUrl}/pt/blog`,
+    'de': `${baseUrl}/de/blog`,
+    'fr': `${baseUrl}/fr/blog`,
+    'ja': `${baseUrl}/ja/blog`,
+    'ko': `${baseUrl}/ko/blog`,
+    'zh-CN': `${baseUrl}/zh/blog`,
+    'zh-TW': `${baseUrl}/tw/blog`,
+    'id': `${baseUrl}/id/blog`,
+    'x-default': `${baseUrl}/blog`,
+  };
 
   return {
     title: seo.title,
@@ -205,12 +222,14 @@ export async function generateMetadata({
       description: seo.description,
       type: "website",
       siteName: "OddsFlow",
+      url: canonicalUrl,
+      locale: locale === 'zh' ? 'zh_CN' : locale === 'tw' ? 'zh_TW' : locale,
       images: [
         {
-          url: "/homepage/OddsFlow Logo2.png",
+          url: `${baseUrl}/homepage/OddsFlow Logo2.png`,
           width: 1200,
           height: 630,
-          alt: "OddsFlow Football Odds Guide",
+          alt: seo.ogTitle,
         },
       ],
     },
@@ -218,14 +237,22 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: seo.ogTitle,
       description: seo.description,
-      images: ["/homepage/OddsFlow Logo2.png"],
+      images: [`${baseUrl}/homepage/OddsFlow Logo2.png`],
     },
     alternates: {
-      canonical: `${baseUrl}/${locale === 'en' ? '' : locale + '/'}blog`,
+      canonical: canonicalUrl,
+      languages: alternateLanguages,
     },
     robots: {
       index: true,
       follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
   };
 }
