@@ -2576,7 +2576,7 @@ export default function MatchDetailClient() {
                             const getUnrealizedPnL = () => {
                               if (selectedMarket !== 'handicap') return null;
 
-                              // Parse score (e.g., "2-1" -> home: 2, away: 1)
+                              // Parse score (e.g., "0-2" -> home: 0, away: 2)
                               const scoreStr = record.score || '';
                               const scoreParts = scoreStr.split('-').map((s: string) => parseInt(s.trim(), 10));
                               if (scoreParts.length !== 2 || isNaN(scoreParts[0]) || isNaN(scoreParts[1])) {
@@ -2584,30 +2584,35 @@ export default function MatchDetailClient() {
                               }
                               const [homeGoals, awayGoals] = scoreParts;
 
-                              // Get selection
-                              const selection = String(rawRecord.selection_hdp || '').toUpperCase() as 'HOME' | 'AWAY';
-                              if (selection !== 'HOME' && selection !== 'AWAY') return null;
+                              // Get selection - use same logic as getSelectionLabel (defaults to AWAY if not home)
+                              const selStr = String(rawRecord.selection_hdp || '').toLowerCase().trim();
+                              const selection: 'HOME' | 'AWAY' = selStr === 'home' ? 'HOME' : 'AWAY';
 
-                              // Get line
+                              // Get line - the displayed line is the absolute value for the selected team
+                              // For AWAY selection, the line shown is the away team's handicap (positive = advantage)
                               const lineVal = rawRecord.handicap_main_line ?? rawRecord.handicap_mainline ?? rawRecord.line_hdp ?? rawRecord.line ?? null;
                               if (lineVal === null || lineVal === undefined) return null;
-                              const line = parseFloat(String(lineVal));
-                              if (isNaN(line)) return null;
+                              const lineNum = parseFloat(String(lineVal));
+                              if (isNaN(lineNum)) return null;
+                              // The line displayed is always positive for the selected team
+                              // If selection is AWAY and line shows "2", it means Away +2
+                              const line = lineNum;
 
-                              // Get market odds
+                              // Get market odds - handle both number and string formats
                               const oddsVal = rawRecord.market_odds_hdp;
                               if (oddsVal === null || oddsVal === undefined) return null;
-                              const odds = parseFloat(String(oddsVal));
+                              const odds = typeof oddsVal === 'number' ? oddsVal : parseFloat(String(oddsVal));
                               if (isNaN(odds) || odds <= 0) return null;
 
-                              // Get stake
+                              // Get stake - handle various formats (number, "2.21", "2.21%", "2.21 units")
                               const stakeVal = rawRecord.recommended_stake_hdp;
                               if (stakeVal === null || stakeVal === undefined) return null;
-                              const stakeStr = String(stakeVal).replace('%', '').replace('units', '').trim();
-                              const stake = parseFloat(stakeStr);
-                              if (isNaN(stake) || stake <= 0) return null;
+                              const stakeNum = typeof stakeVal === 'number'
+                                ? stakeVal
+                                : parseFloat(String(stakeVal).replace('%', '').replace('units', '').trim());
+                              if (isNaN(stakeNum) || stakeNum <= 0) return null;
 
-                              return calculateUnrealizedHdpPnL(homeGoals, awayGoals, selection, line, odds, stake);
+                              return calculateUnrealizedHdpPnL(homeGoals, awayGoals, selection, line, odds, stakeNum);
                             };
 
                             const getLine = () => {
@@ -2755,8 +2760,8 @@ export default function MatchDetailClient() {
                             }
                             const [homeGoals, awayGoals] = scoreParts;
 
-                            const selection = String(rawRecord.selection_hdp || '').toUpperCase() as 'HOME' | 'AWAY';
-                            if (selection !== 'HOME' && selection !== 'AWAY') return null;
+                            const selStr = String(rawRecord.selection_hdp || '').toLowerCase().trim();
+                            const selection: 'HOME' | 'AWAY' = selStr === 'home' ? 'HOME' : 'AWAY';
 
                             const lineVal = rawRecord.handicap_main_line ?? rawRecord.handicap_mainline ?? rawRecord.line_hdp ?? rawRecord.line ?? null;
                             if (lineVal === null || lineVal === undefined) return null;
@@ -2765,16 +2770,17 @@ export default function MatchDetailClient() {
 
                             const oddsVal = rawRecord.market_odds_hdp;
                             if (oddsVal === null || oddsVal === undefined) return null;
-                            const odds = parseFloat(String(oddsVal));
+                            const odds = typeof oddsVal === 'number' ? oddsVal : parseFloat(String(oddsVal));
                             if (isNaN(odds) || odds <= 0) return null;
 
                             const stakeVal = rawRecord.recommended_stake_hdp;
                             if (stakeVal === null || stakeVal === undefined) return null;
-                            const stakeStr = String(stakeVal).replace('%', '').replace('units', '').trim();
-                            const stake = parseFloat(stakeStr);
-                            if (isNaN(stake) || stake <= 0) return null;
+                            const stakeNum = typeof stakeVal === 'number'
+                              ? stakeVal
+                              : parseFloat(String(stakeVal).replace('%', '').replace('units', '').trim());
+                            if (isNaN(stakeNum) || stakeNum <= 0) return null;
 
-                            return calculateUnrealizedHdpPnL(homeGoals, awayGoals, selection, line, odds, stake);
+                            return calculateUnrealizedHdpPnL(homeGoals, awayGoals, selection, line, odds, stakeNum);
                           };
 
                           return (
