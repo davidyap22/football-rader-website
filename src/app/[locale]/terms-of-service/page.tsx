@@ -206,40 +206,30 @@ export default async function TermsOfServicePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
       />
 
-      {/* SEO content for crawlers - visible in noscript, hidden with JS */}
-      <noscript>
-        <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-          <h1>{content.title}</h1>
-          <p><em>{content.lastUpdated}</em></p>
-          <article>
-            {content.sections.map((section, index) => (
-              <section key={index} style={{ marginBottom: '1.5rem' }}>
-                <h2>{section.title}</h2>
-                <p>{section.text}</p>
-              </section>
-            ))}
-          </article>
-        </div>
-      </noscript>
-
-      {/* Additional crawler-visible content using data attributes */}
-      <div
-        id="terms-content-seo"
-        data-locale={locale}
-        data-title={content.title}
-        style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+      {/*
+        SEO Content Block - Visible semantic HTML for crawlers
+        Uses CSS clip-rect which is more crawler-friendly than position:absolute
+        This content is accessible to screen readers and crawlers
+      */}
+      <article
+        id="terms-of-service-content"
+        className="[clip:rect(0,0,0,0)] [clip-path:inset(50%)] h-px w-px overflow-hidden absolute whitespace-nowrap"
+        aria-label={content.title}
       >
         <h1>{content.title}</h1>
         <p>{content.lastUpdated}</p>
-        <article>
-          {content.sections.map((section, index) => (
-            <section key={index}>
-              <h2>{section.title}</h2>
-              <p>{section.text}</p>
-            </section>
-          ))}
-        </article>
-      </div>
+        {content.sections.map((section, index) => (
+          <section key={index}>
+            <h2>{section.title}</h2>
+            <p>{section.text}</p>
+          </section>
+        ))}
+      </article>
+
+      {/* Fallback for noscript environments */}
+      <noscript>
+        <style>{`#terms-of-service-content { clip: auto !important; clip-path: none !important; height: auto !important; width: auto !important; position: static !important; overflow: visible !important; white-space: normal !important; padding: 2rem; max-width: 800px; margin: 0 auto; }`}</style>
+      </noscript>
 
       <TermsClient locale={locale}>
         {/* Main Content - Server Side Rendered */}
