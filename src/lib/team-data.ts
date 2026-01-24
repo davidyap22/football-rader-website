@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { unstable_cache } from 'next/cache';
+import { getPlayerNameTranslation, getTeamNameTranslation } from './translations/team-player-translations';
 
 // Create a separate Supabase client for server-side use
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -227,11 +228,14 @@ export interface LeaguePlayerData {
 
 // Helper function to get localized player full name
 export const getLocalizedPlayerName = (player: LeaguePlayerData, locale: string): string => {
-  // For English, use full name (firstname + lastname)
+  // Get full English name first (used for fallback lookup)
+  const firstName = player.firstname || '';
+  const lastName = player.lastname || '';
+  const fullEnglishName = `${firstName} ${lastName}`.trim() || player.player_name || '';
+
+  // For English, just return the English name
   if (locale === 'en') {
-    const firstName = player.firstname || '';
-    const lastName = player.lastname || '';
-    return `${firstName} ${lastName}`.trim() || player.player_name || '';
+    return fullEnglishName;
   }
 
   // Map locale codes to language keys
@@ -249,6 +253,7 @@ export const getLocalizedPlayerName = (player: LeaguePlayerData, locale: string)
 
   const langKey = localeMap[locale];
 
+  // First try database translations
   if (langKey) {
     const localizedFirst = player.first_name_language?.[langKey];
     const localizedLast = player.last_name_language?.[langKey];
@@ -262,10 +267,14 @@ export const getLocalizedPlayerName = (player: LeaguePlayerData, locale: string)
     }
   }
 
-  // Fallback to full English name
-  const firstName = player.firstname || '';
-  const lastName = player.lastname || '';
-  return `${firstName} ${lastName}`.trim() || player.player_name || '';
+  // Fallback to static translation dictionary
+  const staticTranslation = getPlayerNameTranslation(fullEnglishName, locale);
+  if (staticTranslation !== fullEnglishName) {
+    return staticTranslation;
+  }
+
+  // Final fallback to English name
+  return fullEnglishName;
 };
 
 // Helper function to get localized player nationality
@@ -296,37 +305,51 @@ export const getLocalizedNationality = (player: LeaguePlayerData, locale: string
 
 // Helper function to get localized player team name
 export const getLocalizedPlayerTeamName = (player: LeaguePlayerData, locale: string): string => {
-  if (locale === 'en' || !player.team_name_language) {
-    return player.team_name || '';
+  const englishTeamName = player.team_name || '';
+
+  if (locale === 'en') {
+    return englishTeamName;
   }
 
-  const localeMap: Record<string, keyof TeamNameLanguage> = {
-    'es': 'es',
-    'pt': 'pt',
-    'de': 'de',
-    'fr': 'fr',
-    'ja': 'ja',
-    'ko': 'ko',
-    'zh': 'zh_cn',
-    'tw': 'zh_tw',
-    'id': 'id',
-  };
+  // First try database translations
+  if (player.team_name_language) {
+    const localeMap: Record<string, keyof TeamNameLanguage> = {
+      'es': 'es',
+      'pt': 'pt',
+      'de': 'de',
+      'fr': 'fr',
+      'ja': 'ja',
+      'ko': 'ko',
+      'zh': 'zh_cn',
+      'tw': 'zh_tw',
+      'id': 'id',
+    };
 
-  const langKey = localeMap[locale];
-  if (langKey && player.team_name_language[langKey]) {
-    return player.team_name_language[langKey] as string;
+    const langKey = localeMap[locale];
+    if (langKey && player.team_name_language[langKey]) {
+      return player.team_name_language[langKey] as string;
+    }
   }
 
-  return player.team_name || '';
+  // Fallback to static translation dictionary
+  const staticTranslation = getTeamNameTranslation(englishTeamName, locale);
+  if (staticTranslation !== englishTeamName) {
+    return staticTranslation;
+  }
+
+  return englishTeamName;
 }
 
 // Helper function to get localized player detail full name
 export const getLocalizedPlayerDetailName = (player: PlayerDetailData, locale: string): string => {
-  // For English, use full name (firstname + lastname)
+  // Get full English name first (used for fallback lookup)
+  const firstName = player.firstname || '';
+  const lastName = player.lastname || '';
+  const fullEnglishName = `${firstName} ${lastName}`.trim() || player.player_name || '';
+
+  // For English, just return the English name
   if (locale === 'en') {
-    const firstName = player.firstname || '';
-    const lastName = player.lastname || '';
-    return `${firstName} ${lastName}`.trim() || player.player_name || '';
+    return fullEnglishName;
   }
 
   // Map locale codes to language keys
@@ -344,6 +367,7 @@ export const getLocalizedPlayerDetailName = (player: PlayerDetailData, locale: s
 
   const langKey = localeMap[locale];
 
+  // First try database translations
   if (langKey) {
     // Handle both object and JSON string from Supabase
     let firstNameLang = player.first_name_language;
@@ -368,10 +392,14 @@ export const getLocalizedPlayerDetailName = (player: PlayerDetailData, locale: s
     }
   }
 
-  // Fallback to full English name
-  const firstName = player.firstname || '';
-  const lastName = player.lastname || '';
-  return `${firstName} ${lastName}`.trim() || player.player_name || '';
+  // Fallback to static translation dictionary
+  const staticTranslation = getPlayerNameTranslation(fullEnglishName, locale);
+  if (staticTranslation !== fullEnglishName) {
+    return staticTranslation;
+  }
+
+  // Final fallback to English name
+  return fullEnglishName;
 };
 
 // Helper function to get localized player detail nationality
@@ -413,8 +441,10 @@ export const getLocalizedPlayerDetailNationality = (player: PlayerDetailData, lo
 
 // Helper function to get localized player detail team name
 export const getLocalizedPlayerDetailTeamName = (player: PlayerDetailData, locale: string): string => {
-  if (locale === 'en' || !player.team_name_language) {
-    return player.team_name || '';
+  const englishTeamName = player.team_name || '';
+
+  if (locale === 'en') {
+    return englishTeamName;
   }
 
   const localeMap: Record<string, string> = {
@@ -430,22 +460,28 @@ export const getLocalizedPlayerDetailTeamName = (player: PlayerDetailData, local
   };
 
   const langKey = localeMap[locale];
-  if (!langKey) {
-    return player.team_name || '';
+
+  // First try database translations
+  if (langKey && player.team_name_language) {
+    // Handle both object and JSON string from Supabase
+    let teamLang: TeamNameLanguage | null = player.team_name_language;
+    if (typeof teamLang === 'string') {
+      try { teamLang = JSON.parse(teamLang); } catch { teamLang = null; }
+    }
+
+    if (teamLang && typeof teamLang === 'object' && langKey in teamLang) {
+      const localized = (teamLang as Record<string, string>)[langKey];
+      if (localized) return localized;
+    }
   }
 
-  // Handle both object and JSON string from Supabase
-  let teamLang = player.team_name_language;
-  if (typeof teamLang === 'string') {
-    try { teamLang = JSON.parse(teamLang); } catch { return player.team_name || ''; }
+  // Fallback to static translation dictionary
+  const staticTranslation = getTeamNameTranslation(englishTeamName, locale);
+  if (staticTranslation !== englishTeamName) {
+    return staticTranslation;
   }
 
-  if (teamLang && typeof teamLang === 'object' && langKey in teamLang) {
-    const localized = (teamLang as Record<string, string>)[langKey];
-    if (localized) return localized;
-  }
-
-  return player.team_name || '';
+  return englishTeamName;
 };
 
 // Helper function to get localized player title
