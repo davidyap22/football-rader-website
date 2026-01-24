@@ -10,6 +10,7 @@ import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
 import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
 import { parseFixtureIdFromSlug, generateMatchSlug } from '@/lib/slug-utils';
 import { SportsEventJsonLd } from '@/components/JsonLd';
+import { calculateUnrealizedHdpPnL, formatUnrealizedProfit, getUnrealizedStatusColor } from '@/lib/betting-utils';
 
 // Helper function to parse LiveSignals data from database
 const parseLiveSignals = (data: LiveSignals | null): LiveSignals | null => {
@@ -2490,6 +2491,9 @@ export default function MatchDetailClient() {
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Market Odds</th>
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">EV</th>
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Stake</th>
+                            {selectedMarket === 'handicap' && (
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Unrealized P/L</th>
+                            )}
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Status</th>
                           </tr>
                         </thead>
@@ -2567,6 +2571,45 @@ export default function MatchDetailClient() {
                               }
                             };
                             const isValuable = selectedMarket === 'moneyline' ? rawRecord.is_valuable_1x2 : selectedMarket === 'overunder' ? rawRecord.is_valuable_ou : rawRecord.is_valuable_hdp;
+
+                            // Calculate unrealized P/L for HDP
+                            const getUnrealizedPnL = () => {
+                              if (selectedMarket !== 'handicap') return null;
+
+                              // Parse score (e.g., "2-1" -> home: 2, away: 1)
+                              const scoreStr = record.score || '';
+                              const scoreParts = scoreStr.split('-').map((s: string) => parseInt(s.trim(), 10));
+                              if (scoreParts.length !== 2 || isNaN(scoreParts[0]) || isNaN(scoreParts[1])) {
+                                return null;
+                              }
+                              const [homeGoals, awayGoals] = scoreParts;
+
+                              // Get selection
+                              const selection = String(rawRecord.selection_hdp || '').toUpperCase() as 'HOME' | 'AWAY';
+                              if (selection !== 'HOME' && selection !== 'AWAY') return null;
+
+                              // Get line
+                              const lineVal = rawRecord.handicap_main_line ?? rawRecord.handicap_mainline ?? rawRecord.line_hdp ?? rawRecord.line ?? null;
+                              if (lineVal === null || lineVal === undefined) return null;
+                              const line = parseFloat(String(lineVal));
+                              if (isNaN(line)) return null;
+
+                              // Get market odds
+                              const oddsVal = rawRecord.market_odds_hdp;
+                              if (oddsVal === null || oddsVal === undefined) return null;
+                              const odds = parseFloat(String(oddsVal));
+                              if (isNaN(odds) || odds <= 0) return null;
+
+                              // Get stake
+                              const stakeVal = rawRecord.recommended_stake_hdp;
+                              if (stakeVal === null || stakeVal === undefined) return null;
+                              const stakeStr = String(stakeVal).replace('%', '').replace('units', '').trim();
+                              const stake = parseFloat(stakeStr);
+                              if (isNaN(stake) || stake <= 0) return null;
+
+                              return calculateUnrealizedHdpPnL(homeGoals, awayGoals, selection, line, odds, stake);
+                            };
+
                             const getLine = () => {
                               if (selectedMarket === 'overunder') {
                                 // Try multiple possible field names for O/U line
@@ -2598,6 +2641,14 @@ export default function MatchDetailClient() {
                                 <td className="py-3 px-2 text-center text-white font-medium">{getMarketOdds()}</td>
                                 <td className="py-3 px-2 text-center text-emerald-400 font-medium">{getEV()}</td>
                                 <td className="py-3 px-2 text-center text-yellow-400">{getStake()}</td>
+                                {selectedMarket === 'handicap' && (() => {
+                                  const unrealizedPnL = getUnrealizedPnL();
+                                  return (
+                                    <td className={`py-3 px-2 text-center font-medium ${unrealizedPnL ? getUnrealizedStatusColor(unrealizedPnL.status) : 'text-gray-500'}`}>
+                                      {unrealizedPnL ? formatUnrealizedProfit(unrealizedPnL.profit) : '-'}
+                                    </td>
+                                  );
+                                })()}
                                 <td className="py-3 px-2 text-center">
                                   {isValuable ? (
                                     <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">VALUE</span>
@@ -2693,6 +2744,39 @@ export default function MatchDetailClient() {
                             return null;
                           };
 
+                          // Calculate unrealized P/L for HDP (mobile)
+                          const getUnrealizedPnL = () => {
+                            if (selectedMarket !== 'handicap') return null;
+
+                            const scoreStr = record.score || '';
+                            const scoreParts = scoreStr.split('-').map((s: string) => parseInt(s.trim(), 10));
+                            if (scoreParts.length !== 2 || isNaN(scoreParts[0]) || isNaN(scoreParts[1])) {
+                              return null;
+                            }
+                            const [homeGoals, awayGoals] = scoreParts;
+
+                            const selection = String(rawRecord.selection_hdp || '').toUpperCase() as 'HOME' | 'AWAY';
+                            if (selection !== 'HOME' && selection !== 'AWAY') return null;
+
+                            const lineVal = rawRecord.handicap_main_line ?? rawRecord.handicap_mainline ?? rawRecord.line_hdp ?? rawRecord.line ?? null;
+                            if (lineVal === null || lineVal === undefined) return null;
+                            const line = parseFloat(String(lineVal));
+                            if (isNaN(line)) return null;
+
+                            const oddsVal = rawRecord.market_odds_hdp;
+                            if (oddsVal === null || oddsVal === undefined) return null;
+                            const odds = parseFloat(String(oddsVal));
+                            if (isNaN(odds) || odds <= 0) return null;
+
+                            const stakeVal = rawRecord.recommended_stake_hdp;
+                            if (stakeVal === null || stakeVal === undefined) return null;
+                            const stakeStr = String(stakeVal).replace('%', '').replace('units', '').trim();
+                            const stake = parseFloat(stakeStr);
+                            if (isNaN(stake) || stake <= 0) return null;
+
+                            return calculateUnrealizedHdpPnL(homeGoals, awayGoals, selection, line, odds, stake);
+                          };
+
                           return (
                             <div
                               key={record.id || index}
@@ -2726,7 +2810,7 @@ export default function MatchDetailClient() {
                               </div>
 
                               {/* Odds & EV Row */}
-                              <div className="grid grid-cols-4 gap-2 text-xs">
+                              <div className={`grid ${selectedMarket === 'handicap' ? 'grid-cols-5' : 'grid-cols-4'} gap-2 text-xs`}>
                                 <div className="text-center">
                                   <span className="text-gray-500 block text-[10px]">Fair</span>
                                   <span className="text-gray-400">{getFairOdds()}</span>
@@ -2743,6 +2827,17 @@ export default function MatchDetailClient() {
                                   <span className="text-gray-500 block text-[10px]">Stake</span>
                                   <span className="text-yellow-400">{getStake()}</span>
                                 </div>
+                                {selectedMarket === 'handicap' && (() => {
+                                  const unrealizedPnL = getUnrealizedPnL();
+                                  return (
+                                    <div className="text-center">
+                                      <span className="text-gray-500 block text-[10px]">P/L</span>
+                                      <span className={`font-medium ${unrealizedPnL ? getUnrealizedStatusColor(unrealizedPnL.status) : 'text-gray-500'}`}>
+                                        {unrealizedPnL ? formatUnrealizedProfit(unrealizedPnL.profit) : '-'}
+                                      </span>
+                                    </div>
+                                  );
+                                })()}
                               </div>
                             </div>
                           );
