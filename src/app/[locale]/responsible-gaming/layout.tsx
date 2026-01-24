@@ -44,6 +44,8 @@ const SEO_METADATA: Record<string, { title: string; description: string }> = {
   },
 };
 
+const baseUrl = 'https://www.oddsflow.ai';
+
 export async function generateMetadata({
   params,
 }: {
@@ -51,6 +53,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const seo = SEO_METADATA[locale] || SEO_METADATA.en;
+  const canonicalUrl = locale === 'en' ? `${baseUrl}/responsible-gaming` : `${baseUrl}/${locale}/responsible-gaming`;
+
+  // Build alternate language URLs for hreflang
+  const alternateLanguages: Record<string, string> = {
+    'en': `${baseUrl}/responsible-gaming`,
+    'es': `${baseUrl}/es/responsible-gaming`,
+    'pt': `${baseUrl}/pt/responsible-gaming`,
+    'de': `${baseUrl}/de/responsible-gaming`,
+    'fr': `${baseUrl}/fr/responsible-gaming`,
+    'ja': `${baseUrl}/ja/responsible-gaming`,
+    'ko': `${baseUrl}/ko/responsible-gaming`,
+    'zh-CN': `${baseUrl}/zh/responsible-gaming`,
+    'zh-TW': `${baseUrl}/tw/responsible-gaming`,
+    'id': `${baseUrl}/id/responsible-gaming`,
+    'x-default': `${baseUrl}/responsible-gaming`,
+  };
 
   return {
     title: seo.title,
@@ -71,13 +89,26 @@ export async function generateMetadata({
       title: seo.title,
       description: seo.description,
       type: "website",
+      siteName: "OddsFlow",
+      url: canonicalUrl,
+      locale: locale === 'zh' ? 'zh_CN' : locale === 'tw' ? 'zh_TW' : locale,
+    },
+    twitter: {
+      card: "summary",
+      title: seo.title,
+      description: seo.description,
+    },
+    alternates: {
+      canonical: canonicalUrl,
+      languages: alternateLanguages,
     },
     robots: {
       index: true,
       follow: true,
-    },
-    alternates: {
-      canonical: `https://www.oddsflow.ai/${locale === 'en' ? '' : locale + '/'}responsible-gaming`,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
     },
   };
 }
