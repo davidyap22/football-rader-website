@@ -69,10 +69,13 @@ const SEO_METADATA: Record<string, { title: string; description: string; keyword
     ],
   },
   de: {
-    title: "OddsFlow Blog: Wett-Guides, Strategie & Datenanalyse",
+    title: "Fußball-Wett-Blog: Experten-Tipps, Quoten-Guides & KI-Analysen | OddsFlow",
     description: "Lernen Sie, Fußball-Quoten zu interpretieren, implizite Wahrscheinlichkeiten zu berechnen und Wettmärkte zu verstehen. Experten-Guides zu Asiatischen Handicaps, Over/Under, 1X2-Wetten und KI-Fußballvorhersagen.",
-    ogTitle: "Fußball-Quoten Guide | OddsFlow Blog",
+    ogTitle: "Fußball-Wett-Blog | Experten-Tipps & KI-Analysen | OddsFlow",
     keywords: [
+      "Fußball Wett-Blog",
+      "Wett-Tipps",
+      "Experten Tipps Fußball",
       "Fußball Quoten interpretieren",
       "Wettquoten erklärt",
       "implizite Wahrscheinlichkeit Wetten",
@@ -82,7 +85,7 @@ const SEO_METADATA: Record<string, { title: string; description: string; keyword
       "Wett-Tutorials",
       "Quotenbewegung Analyse",
       "Bundesliga Quoten",
-      "Premier League Tipps",
+      "Bundesliga Tipps",
     ],
   },
   fr: {

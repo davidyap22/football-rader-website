@@ -92,8 +92,8 @@ const translations: Record<string, Record<string, string>> = {
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "Analyse",
     community: "Community", news: "Nachrichten", pricing: "Preise", login: "Anmelden", getStarted: "Loslegen",
-    blogTitle: "Blog",
-    blogSubtitle: "Einblicke, Tutorials und Updates vom OddsFlow-Team",
+    blogTitle: "Fußball-Wett-Blog",
+    blogSubtitle: "Experten-Tipps, Quoten-Guides und KI-Analysen für intelligentere Wetten",
     all: "Alle",
     tutorials: "Tutorials",
     insights: "Einblicke",
