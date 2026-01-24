@@ -199,31 +199,47 @@ export default async function TermsOfServicePage({ params }: PageProps) {
   };
 
   return (
-    <TermsClient locale={locale}>
-      {/* Schema for SEO */}
+    <>
+      {/* Schema for SEO - outside client component for crawlers */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
       />
 
-      {/* Main Content - Server Side Rendered */}
-      <section className="pt-32 pb-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
-            {content.title}
-          </h1>
-          <p className="text-gray-500 mb-12">{content.lastUpdated}</p>
+      {/* Hidden SEO content for crawlers that don't execute JavaScript */}
+      <div className="sr-only" aria-hidden="true">
+        <h1>{content.title}</h1>
+        <p>{content.lastUpdated}</p>
+        <article>
+          {content.sections.map((section, index) => (
+            <section key={index}>
+              <h2>{section.title}</h2>
+              <p>{section.text}</p>
+            </section>
+          ))}
+        </article>
+      </div>
 
-          <div className="space-y-8">
-            {content.sections.map((section, index) => (
-              <div key={index} className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 p-6">
-                <h2 className="text-xl font-semibold mb-3 text-emerald-400">{section.title}</h2>
-                <p className="text-gray-300 leading-relaxed">{section.text}</p>
-              </div>
-            ))}
+      <TermsClient locale={locale}>
+        {/* Main Content - Server Side Rendered */}
+        <section className="pt-32 pb-16 px-4">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
+              {content.title}
+            </h1>
+            <p className="text-gray-500 mb-12">{content.lastUpdated}</p>
+
+            <div className="space-y-8">
+              {content.sections.map((section, index) => (
+                <div key={index} className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-xl border border-white/10 p-6">
+                  <h2 className="text-xl font-semibold mb-3 text-emerald-400">{section.title}</h2>
+                  <p className="text-gray-300 leading-relaxed">{section.text}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-    </TermsClient>
+        </section>
+      </TermsClient>
+    </>
   );
 }
