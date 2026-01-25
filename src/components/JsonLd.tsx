@@ -10,7 +10,14 @@ export function OrganizationJsonLd() {
     description: 'AI-powered football prediction platform providing accurate betting tips for Premier League, Bundesliga, Serie A, La Liga and more.',
     foundingDate: '2024',
     sameAs: [
-      // Add social media URLs when available
+      'https://www.youtube.com/channel/UCwG9DWzF87_RZcGXN5Vk9Fg',
+      'https://x.com/Oddsflow_Nat',
+      'https://www.facebook.com/profile.php?id=61584728786578',
+      'https://www.tiktok.com/@oddsflow2',
+      'https://t.me/oddsflowai',
+      'https://www.reddit.com/user/Relative-Airport1274/',
+      'https://www.instagram.com/oddsflow.ai/',
+      'https://github.com/oddsflowai-team/oddsflow-ai-football-value-signals',
     ],
     contactPoint: {
       '@type': 'ContactPoint',
