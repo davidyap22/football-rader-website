@@ -1,5 +1,5 @@
-// Root layout - minimal wrapper
-// The actual layout with html/body is in [locale]/layout.tsx
+// Root layout - passes through to [locale]/layout.tsx which has the html/body tags
+// This is needed for Next.js App Router with i18n routing
 export default function RootLayout({
   children,
 }: Readonly<{

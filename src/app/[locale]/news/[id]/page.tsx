@@ -9,6 +9,7 @@ import ExclusiveReportTemplate from '@/components/ExclusiveReportTemplate';
 import { User } from '@supabase/supabase-js';
 import FlagIcon from "@/components/FlagIcon";
 import { locales, localeNames, localeToTranslationCode, type Locale } from '@/i18n/config';
+import Footer from '@/components/Footer';
 
 // Helper function to format date
 function formatDate(dateString: string | undefined): string {
@@ -716,65 +717,7 @@ export default function ArticlePage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 py-16 px-4 bg-black border-t border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 lg:gap-12 mb-12">
-            <div className="col-span-2">
-              <Link href={localePath('/')} className="flex items-center gap-3 mb-6">
-                <img src="/homepage/OddsFlow Logo2.png" alt="OddsFlow Logo" className="w-14 h-14 object-contain" />
-                <span className="text-xl font-bold">OddsFlow</span>
-              </Link>
-              <p className="text-gray-400 mb-6 leading-relaxed">{t('footerDesc')}</p>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-5 text-white">{t('product')}</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><Link href={localePath('/predictions')} className="hover:text-emerald-400 transition-colors">{t('predictions')}</Link></li>
-                <li><Link href={localePath('/leagues')} className="hover:text-emerald-400 transition-colors">{t('leagues')}</Link></li>
-                <li><Link href={localePath('/performance')} className="hover:text-emerald-400 transition-colors">{t('performance')}</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><Link href={localePath('/leagues/premier-league')} className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
-                <li><Link href={localePath('/leagues/la-liga')} className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
-                <li><Link href={localePath('/leagues/bundesliga')} className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-5 text-white">{t('company')}</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><Link href={localePath('/about')} className="hover:text-emerald-400 transition-colors">{t('aboutUs')}</Link></li>
-                <li><Link href={localePath('/contact')} className="hover:text-emerald-400 transition-colors">{t('contact')}</Link></li>
-                <li><Link href={localePath('/blog')} className="hover:text-emerald-400 transition-colors">{t('blog')}</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-5 text-white">{t('legal')}</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><Link href={localePath('/terms-of-service')} className="hover:text-emerald-400 transition-colors">{t('termsOfService')}</Link></li>
-                <li><Link href={localePath('/privacy-policy')} className="hover:text-emerald-400 transition-colors">{t('privacyPolicy')}</Link></li>
-                <li><Link href={localePath('/responsible-gaming')} className="hover:text-emerald-400 transition-colors">{t('responsibleGaming')}</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-8 border-t border-white/5">
-            <p className="text-gray-500 text-xs leading-relaxed">{t('disclaimer')}</p>
-          </div>
-
-          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 mt-8">
-            <p className="text-gray-500 text-sm">&copy; 2026 OddsFlow. {t('allRightsReserved')}</p>
-            <p className="text-gray-600 text-xs">{t('gamblingWarning')}</p>
-          </div>
-        </div>
-      </footer>
+<Footer localePath={localePath} t={t} />
     </div>
   );
 }
