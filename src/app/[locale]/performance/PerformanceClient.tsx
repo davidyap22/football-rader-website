@@ -756,8 +756,8 @@ export default function PerformanceClient({
   const selectedLang = localeToTranslationCode[locale as Locale] || 'EN';
 
   // Helper function to create locale-aware paths
+  // Always include locale prefix for App Router with [locale] segment
   const localePath = (path: string): string => {
-    if (locale === 'en') return path;
     return path === '/' ? `/${locale}` : `/${locale}${path}`;
   };
 
