@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { supabase, ProfitSummary } from '@/lib/supabase';
@@ -36,9 +36,34 @@ const translations: Record<string, Record<string, string>> = {
     totalMatches: "Total Matches",
     roi: "ROI",
     profitByMarket: "Profit by Market",
+    recommended: "Recommended",
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    betStyle: "Bet Style:",
+    allStyles: "All Styles",
+    hdpSniper: "HDP Sniper",
+    activeTrader: "Active Trader",
+    oddsflowCore: "Oddsflow Core Strategy",
+    oddsflowBeta: "Oddsflow Beta",
+    searchTeams: "Search teams...",
+    from: "From",
+    to: "To",
+    showing: "Showing",
+    of: "of",
+    matches: "matches",
+    previous: "Previous",
+    next: "Next",
+    comingSoon: "COMING SOON",
+    score: "SCORE",
+    total: "TOTAL",
+    aiPerformance: "AI Performance",
+    transparentAI: "Transparent AI",
+    safestTips: "Safest Tips",
+    mostAccurate: "Most Accurate",
+    today: "Today",
+    dayAgo: "day ago",
+    daysAgo: "days ago",
     profitSummary: "Profit Summary",
     totalInvested: "Total Invested",
     moneyline1x2: "1X2 Moneyline",
@@ -94,9 +119,34 @@ const translations: Record<string, Record<string, string>> = {
     totalMatches: "Partidos Totales",
     roi: "ROI",
     profitByMarket: "Ganancia por Mercado",
+    recommended: "Recomendado",
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    betStyle: "Estilo de Apuesta:",
+    allStyles: "Todos los Estilos",
+    hdpSniper: "HDP Sniper",
+    activeTrader: "Trader Activo",
+    oddsflowCore: "Estrategia Principal Oddsflow",
+    oddsflowBeta: "Oddsflow Beta",
+    searchTeams: "Buscar equipos...",
+    from: "Desde",
+    to: "Hasta",
+    showing: "Mostrando",
+    of: "de",
+    matches: "partidos",
+    previous: "Anterior",
+    next: "Siguiente",
+    comingSoon: "PRÓXIMAMENTE",
+    score: "RESULTADO",
+    total: "TOTAL",
+    aiPerformance: "Rendimiento IA",
+    transparentAI: "IA Transparente",
+    safestTips: "Consejos Seguros",
+    mostAccurate: "Más Preciso",
+    today: "Hoy",
+    dayAgo: "día atrás",
+    daysAgo: "días atrás",
     profitSummary: "Resumen de Ganancias",
     totalInvested: "Total Invertido",
     moneyline1x2: "1X2 Ganador",
@@ -152,9 +202,34 @@ const translations: Record<string, Record<string, string>> = {
     totalMatches: "Total de Partidas",
     roi: "ROI",
     profitByMarket: "Lucro por Mercado",
+    recommended: "Recomendado",
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    betStyle: "Estilo de Aposta:",
+    allStyles: "Todos os Estilos",
+    hdpSniper: "HDP Sniper",
+    activeTrader: "Trader Ativo",
+    oddsflowCore: "Estratégia Principal Oddsflow",
+    oddsflowBeta: "Oddsflow Beta",
+    searchTeams: "Pesquisar times...",
+    from: "De",
+    to: "Até",
+    showing: "Mostrando",
+    of: "de",
+    matches: "partidas",
+    previous: "Anterior",
+    next: "Próximo",
+    comingSoon: "EM BREVE",
+    score: "PLACAR",
+    total: "TOTAL",
+    aiPerformance: "Desempenho IA",
+    transparentAI: "IA Transparente",
+    safestTips: "Dicas Seguras",
+    mostAccurate: "Mais Preciso",
+    today: "Hoje",
+    dayAgo: "dia atrás",
+    daysAgo: "dias atrás",
     profitSummary: "Resumo de Lucros",
     totalInvested: "Total Investido",
     moneyline1x2: "1X2 Vencedor",
@@ -210,9 +285,34 @@ const translations: Record<string, Record<string, string>> = {
     totalMatches: "Gesamtspiele",
     roi: "ROI",
     profitByMarket: "Gewinn nach Markt",
+    recommended: "Empfohlen",
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    betStyle: "Wettstil:",
+    allStyles: "Alle Stile",
+    hdpSniper: "HDP Sniper",
+    activeTrader: "Aktiver Trader",
+    oddsflowCore: "Oddsflow Kernstrategie",
+    oddsflowBeta: "Oddsflow Beta",
+    searchTeams: "Teams suchen...",
+    from: "Von",
+    to: "Bis",
+    showing: "Zeige",
+    of: "von",
+    matches: "Spiele",
+    previous: "Zurück",
+    next: "Weiter",
+    comingSoon: "DEMNÄCHST",
+    score: "ERGEBNIS",
+    total: "GESAMT",
+    aiPerformance: "KI-Leistung",
+    transparentAI: "Transparente KI",
+    safestTips: "Sicherste Tipps",
+    mostAccurate: "Am Genauesten",
+    today: "Heute",
+    dayAgo: "Tag her",
+    daysAgo: "Tage her",
     profitSummary: "Gewinnübersicht",
     totalInvested: "Gesamtinvestition",
     moneyline1x2: "1X2 Siegwette",
@@ -268,9 +368,34 @@ const translations: Record<string, Record<string, string>> = {
     totalMatches: "Matchs Totaux",
     roi: "ROI",
     profitByMarket: "Profit par Marché",
+    recommended: "Recommandé",
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    betStyle: "Style de Pari:",
+    allStyles: "Tous les Styles",
+    hdpSniper: "HDP Sniper",
+    activeTrader: "Trader Actif",
+    oddsflowCore: "Stratégie Principale Oddsflow",
+    oddsflowBeta: "Oddsflow Beta",
+    searchTeams: "Rechercher des équipes...",
+    from: "De",
+    to: "À",
+    showing: "Affichage",
+    of: "de",
+    matches: "matchs",
+    previous: "Précédent",
+    next: "Suivant",
+    comingSoon: "BIENTÔT",
+    score: "SCORE",
+    total: "TOTAL",
+    aiPerformance: "Performance IA",
+    transparentAI: "IA Transparente",
+    safestTips: "Conseils Sûrs",
+    mostAccurate: "Plus Précis",
+    today: "Aujourd'hui",
+    dayAgo: "jour dernier",
+    daysAgo: "jours derniers",
     profitSummary: "Résumé des Profits",
     totalInvested: "Total Investi",
     moneyline1x2: "1X2 Vainqueur",
@@ -326,9 +451,34 @@ const translations: Record<string, Record<string, string>> = {
     totalMatches: "総試合数",
     roi: "ROI",
     profitByMarket: "市場別利益",
+    recommended: "おすすめ",
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    betStyle: "ベットスタイル:",
+    allStyles: "すべてのスタイル",
+    hdpSniper: "HDP スナイパー",
+    activeTrader: "アクティブトレーダー",
+    oddsflowCore: "Oddsflow コア戦略",
+    oddsflowBeta: "Oddsflow ベータ",
+    searchTeams: "チームを検索...",
+    from: "開始",
+    to: "終了",
+    showing: "表示中",
+    of: "/",
+    matches: "試合",
+    previous: "前へ",
+    next: "次へ",
+    comingSoon: "近日公開",
+    score: "スコア",
+    total: "合計",
+    aiPerformance: "AIパフォーマンス",
+    transparentAI: "透明なAI",
+    safestTips: "最も安全",
+    mostAccurate: "最も正確",
+    today: "今日",
+    dayAgo: "日前",
+    daysAgo: "日前",
     profitSummary: "利益サマリー",
     totalInvested: "総投資額",
     moneyline1x2: "1X2 勝利予想",
@@ -384,9 +534,34 @@ const translations: Record<string, Record<string, string>> = {
     totalMatches: "총 경기",
     roi: "ROI",
     profitByMarket: "시장별 수익",
+    recommended: "추천",
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    betStyle: "베팅 스타일:",
+    allStyles: "모든 스타일",
+    hdpSniper: "HDP 스나이퍼",
+    activeTrader: "액티브 트레이더",
+    oddsflowCore: "Oddsflow 핵심 전략",
+    oddsflowBeta: "Oddsflow 베타",
+    searchTeams: "팀 검색...",
+    from: "시작",
+    to: "종료",
+    showing: "표시 중",
+    of: "/",
+    matches: "경기",
+    previous: "이전",
+    next: "다음",
+    comingSoon: "출시 예정",
+    score: "점수",
+    total: "합계",
+    aiPerformance: "AI 성과",
+    transparentAI: "투명한 AI",
+    safestTips: "가장 안전",
+    mostAccurate: "가장 정확",
+    today: "오늘",
+    dayAgo: "일 전",
+    daysAgo: "일 전",
     profitSummary: "수익 요약",
     totalInvested: "총 투자",
     moneyline1x2: "1X2 승부예측",
@@ -442,9 +617,34 @@ const translations: Record<string, Record<string, string>> = {
     totalMatches: "总比赛",
     roi: "投资回报率",
     profitByMarket: "市场盈利",
+    recommended: "推荐",
     moneyline: "1x2",
     handicap: "让球",
     overUnder: "大小球",
+    betStyle: "投注风格:",
+    allStyles: "所有风格",
+    hdpSniper: "让球狙击手",
+    activeTrader: "活跃交易者",
+    oddsflowCore: "Oddsflow 核心策略",
+    oddsflowBeta: "Oddsflow 测试版",
+    searchTeams: "搜索球队...",
+    from: "从",
+    to: "到",
+    showing: "显示",
+    of: "共",
+    matches: "场比赛",
+    previous: "上一页",
+    next: "下一页",
+    comingSoon: "即将推出",
+    score: "比分",
+    total: "总计",
+    aiPerformance: "AI表现",
+    transparentAI: "透明AI",
+    safestTips: "最安全",
+    mostAccurate: "最准确",
+    today: "今天",
+    dayAgo: "天前",
+    daysAgo: "天前",
     profitSummary: "盈利详情",
     totalInvested: "总投资",
     moneyline1x2: "1X2 独赢",
@@ -500,9 +700,34 @@ const translations: Record<string, Record<string, string>> = {
     totalMatches: "總比賽",
     roi: "投資回報率",
     profitByMarket: "市場盈利",
+    recommended: "推薦",
     moneyline: "1x2",
     handicap: "讓球",
     overUnder: "大小球",
+    betStyle: "投注風格:",
+    allStyles: "所有風格",
+    hdpSniper: "讓球狙擊手",
+    activeTrader: "活躍交易者",
+    oddsflowCore: "Oddsflow 核心策略",
+    oddsflowBeta: "Oddsflow 測試版",
+    searchTeams: "搜尋球隊...",
+    from: "從",
+    to: "到",
+    showing: "顯示",
+    of: "共",
+    matches: "場比賽",
+    previous: "上一頁",
+    next: "下一頁",
+    comingSoon: "即將推出",
+    score: "比分",
+    total: "總計",
+    aiPerformance: "AI表現",
+    transparentAI: "透明AI",
+    safestTips: "最安全",
+    mostAccurate: "最準確",
+    today: "今天",
+    dayAgo: "天前",
+    daysAgo: "天前",
     profitSummary: "盈利詳情",
     totalInvested: "總投資",
     moneyline1x2: "1X2 獨贏",
@@ -558,9 +783,34 @@ const translations: Record<string, Record<string, string>> = {
     totalMatches: "Total Pertandingan",
     roi: "ROI",
     profitByMarket: "Keuntungan per Pasar",
+    recommended: "Direkomendasikan",
     moneyline: "1x2",
     handicap: "HDP",
     overUnder: "O/U",
+    betStyle: "Gaya Taruhan:",
+    allStyles: "Semua Gaya",
+    hdpSniper: "HDP Sniper",
+    activeTrader: "Trader Aktif",
+    oddsflowCore: "Strategi Inti Oddsflow",
+    oddsflowBeta: "Oddsflow Beta",
+    searchTeams: "Cari tim...",
+    from: "Dari",
+    to: "Hingga",
+    showing: "Menampilkan",
+    of: "dari",
+    matches: "pertandingan",
+    previous: "Sebelumnya",
+    next: "Berikutnya",
+    comingSoon: "SEGERA HADIR",
+    score: "SKOR",
+    total: "TOTAL",
+    aiPerformance: "Performa AI",
+    transparentAI: "AI Transparan",
+    safestTips: "Tips Teraman",
+    mostAccurate: "Paling Akurat",
+    today: "Hari ini",
+    dayAgo: "hari lalu",
+    daysAgo: "hari lalu",
     profitSummary: "Ringkasan Keuntungan",
     totalInvested: "Total Investasi",
     moneyline1x2: "1X2 Pemenang",
@@ -774,8 +1024,11 @@ export default function PerformanceClient({
   const [matches, setMatches] = useState<MatchSummary[]>(initialMatches || []);
   const [loading, setLoading] = useState(!hasSSRData);
   const [selectedLeague, setSelectedLeague] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: '', end: '' });
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 50;
+  const ITEMS_PER_PAGE = 20;
+  const [teamTranslations, setTeamTranslations] = useState<Record<string, any>>({});
   const [dailyPerformance, setDailyPerformance] = useState<DailyPerformance[]>(
     initialChartData?.map(d => ({
       date: d.date,
@@ -799,12 +1052,8 @@ export default function PerformanceClient({
     profitOU: initialStats?.profit_ou || 0,
   });
 
-  // Odds History Modal state
-  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  // Selected match for profit modal
   const [selectedMatch, setSelectedMatch] = useState<MatchSummary | null>(null);
-  const [historyTab, setHistoryTab] = useState<'1x2' | 'hdp' | 'ou'>('1x2');
-  const [oddsHistory, setOddsHistory] = useState<OddsHistoryItem[]>([]);
-  const [loadingHistory, setLoadingHistory] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [leagueDropdownOpen, setLeagueDropdownOpen] = useState(false);
@@ -818,7 +1067,166 @@ export default function PerformanceClient({
   const [loadingProfit, setLoadingProfit] = useState(false);
 
   // Bet Style filter for chart and past matches table
-  const BET_STYLES = ['Aggressive', 'Conservative', 'Balanced', 'Value Hunter', 'Safe Play'];
+  // Bet styles in display order (database values remain unchanged)
+  const BET_STYLES = ['Value Hunter', 'Aggressive', 'Balanced', 'Safe Play'];
+
+  // Display name mapping (frontend only)
+  const getBetStyleDisplayName = (style: string) => {
+    const mapping: Record<string, string> = {
+      'Value Hunter': 'HDP Sniper',
+      'Aggressive': 'Active Trader',
+      'Balanced': 'Oddsflow Core Strategy',
+      'Safe Play': 'Oddsflow Beta',
+    };
+    return mapping[style] || style;
+  };
+
+  // Get image path for bet style
+  const getBetStyleImage = (style: string) => {
+    const imageMap: Record<string, string> = {
+      'Value Hunter': '/performance/HDP Snipper.png',
+      'Aggressive': '/performance/Active trader.png',
+      'Balanced': '/performance/Oddsflow Core Strategy.png',
+      'Safe Play': '/performance/Oddsflow Beta.png',
+    };
+    return imageMap[style];
+  };
+
+  // Translate team name based on current locale
+  const translateTeamName = (teamName: string | null): string => {
+    if (!teamName) return '';
+
+    const translation = teamTranslations[teamName];
+    if (!translation || !translation.team_name_language) return teamName;
+
+    // Map locale to database key
+    const localeMap: Record<string, string> = {
+      'en': 'en',
+      'es': 'es',
+      'pt': 'pt',
+      'de': 'de',
+      'fr': 'fr',
+      'ja': 'ja',
+      'ko': 'ko',
+      'zh': 'zh_cn',
+      'tw': 'zh_tw',
+      'id': 'id'
+    };
+
+    const dbKey = localeMap[locale] || 'en';
+    return translation.team_name_language[dbKey] || teamName;
+  };
+
+  // Translate league name based on current locale
+  const translateLeagueName = (leagueName: string | null): string => {
+    if (!leagueName) return '';
+
+    const leagueTranslations: Record<string, Record<string, string>> = {
+      'Premier Leag': {
+        en: 'Premier Leag',
+        es: 'Premier Leag',
+        pt: 'Premier Leag',
+        de: 'Premier League',
+        fr: 'Premier League',
+        ja: 'プレミアリーグ',
+        ko: '프리미어리그',
+        zh: '英超',
+        tw: '英超',
+        id: 'Liga Premier'
+      },
+      'La Liga': {
+        en: 'La Liga',
+        es: 'La Liga',
+        pt: 'La Liga',
+        de: 'La Liga',
+        fr: 'La Liga',
+        ja: 'ラ・リーガ',
+        ko: '라리가',
+        zh: '西甲',
+        tw: '西甲',
+        id: 'La Liga'
+      },
+      'Serie A': {
+        en: 'Serie A',
+        es: 'Serie A',
+        pt: 'Série A',
+        de: 'Serie A',
+        fr: 'Serie A',
+        ja: 'セリエA',
+        ko: '세리에A',
+        zh: '意甲',
+        tw: '意甲',
+        id: 'Serie A'
+      },
+      'Bundesliga': {
+        en: 'Bundesliga',
+        es: 'Bundesliga',
+        pt: 'Bundesliga',
+        de: 'Bundesliga',
+        fr: 'Bundesliga',
+        ja: 'ブンデスリーガ',
+        ko: '분데스리가',
+        zh: '德甲',
+        tw: '德甲',
+        id: 'Bundesliga'
+      },
+      'Ligue 1': {
+        en: 'Ligue 1',
+        es: 'Ligue 1',
+        pt: 'Ligue 1',
+        de: 'Ligue 1',
+        fr: 'Ligue 1',
+        ja: 'リーグ・アン',
+        ko: '리그1',
+        zh: '法甲',
+        tw: '法甲',
+        id: 'Ligue 1'
+      }
+    };
+
+    const translations = leagueTranslations[leagueName];
+    if (!translations) return leagueName;
+
+    return translations[locale] || leagueName;
+  };
+
+  // Format relative time based on current locale
+  const formatRelativeTime = (dateString: string): string => {
+    const matchDate = new Date(dateString);
+    const now = new Date();
+    const diffInMs = now.getTime() - matchDate.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInDays === 0) {
+      return t('today');
+    } else if (diffInDays === 1) {
+      return `1 ${t('dayAgo')}`;
+    } else {
+      return `${diffInDays} ${t('daysAgo')}`;
+    }
+  };
+
+  // Get background color for bet style button
+  const getBetStyleColor = (style: string) => {
+    const colorMap: Record<string, string> = {
+      'Value Hunter': 'from-gray-800 to-black',        // Black
+      'Aggressive': 'from-sky-400 to-blue-400',        // Light blue
+      'Balanced': 'from-green-500 to-green-600',       // Grass green
+      'Safe Play': 'from-purple-600 to-purple-700',    // Purple
+    };
+    return colorMap[style] || 'from-gray-600 to-gray-700';
+  };
+
+  // Get logo background color for bet style
+  const getBetStyleLogoColor = (style: string) => {
+    const colorMap: Record<string, string> = {
+      'Value Hunter': 'from-red-500 to-red-600',           // Red
+      'Aggressive': 'from-sky-300 to-blue-300',            // Light blue
+      'Balanced': 'from-yellow-400 to-amber-500',          // Yellow (unchanged)
+      'Safe Play': 'from-yellow-400 to-amber-500',         // Yellow (unchanged)
+    };
+    return colorMap[style] || 'from-yellow-400 to-amber-500';
+  };
 
   // Chart/Stats Bet Style filter
   const [chartBetStyle, setChartBetStyle] = useState<string>('all');
@@ -897,7 +1305,7 @@ export default function PerformanceClient({
 
   // Compute filtered stats for chart based on chartBetStyle
   // Now uses RPC data when available for much faster performance
-  const filteredChartStats = (() => {
+  const filteredChartStats = useMemo(() => {
     // If RPC data is available, use it directly (much faster)
     if (rpcStats && rpcChartData) {
       // Convert RPC chart data to the expected format with index
@@ -934,25 +1342,23 @@ export default function PerformanceClient({
     let profitOU = 0;
     let totalProfit = 0;
     let totalInvested = 0;
+    let totalBets = 0;
 
     filtered.forEach(r => {
-      const profit = r.profit || 0;
-      const invested = r.stake_money || 0;
-      totalProfit += profit;
-      totalInvested += invested;
-
-      const betType = getBetTypeFromRecord(r);
-      if (betType === 'moneyline') profitMoneyline += profit;
-      else if (betType === 'handicap') profitHandicap += profit;
-      else profitOU += profit;
+      totalProfit += r.total_profit || 0;
+      totalInvested += r.total_invested || 0;
+      totalBets += r.total_bets || 0;
+      profitMoneyline += r.profit_moneyline || 0;
+      profitHandicap += r.profit_handicap || 0;
+      profitOU += r.profit_ou || 0;
     });
 
     const roi = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
 
     // Calculate daily cumulative data
     const sortedRecords = [...filtered]
-      .filter(r => r.bet_time && !isNaN(new Date(r.bet_time).getTime()))
-      .sort((a, b) => new Date(a.bet_time).getTime() - new Date(b.bet_time).getTime());
+      .filter(r => r.created_at && !isNaN(new Date(r.created_at).getTime()))
+      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
     let cumulative = 0;
     let cumulativeML = 0;
@@ -960,17 +1366,20 @@ export default function PerformanceClient({
     let cumulativeOU = 0;
 
     const dailyData = sortedRecords.map((r, index) => {
-      const profit = r.profit || 0;
-      const betType = getBetTypeFromRecord(r);
+      const profit = r.total_profit || 0;
+      const ml = r.profit_moneyline || 0;
+      const hdp = r.profit_handicap || 0;
+      const ou = r.profit_ou || 0;
+
       cumulative += profit;
-      if (betType === 'moneyline') cumulativeML += profit;
-      else if (betType === 'handicap') cumulativeHDP += profit;
-      else cumulativeOU += profit;
+      cumulativeML += ml;
+      cumulativeHDP += hdp;
+      cumulativeOU += ou;
 
       return {
         index: index,
-        date: r.bet_time.split('T')[0],
-        fullDateTime: r.bet_time,
+        date: r.created_at.split('T')[0],
+        fullDateTime: r.created_at,
         profit: profit,
         cumulative: cumulative,
         cumulativeMoneyline: cumulativeML,
@@ -987,12 +1396,12 @@ export default function PerformanceClient({
       totalInvested,
       roi,
       dailyData,
-      totalBets: filtered.length,
+      totalBets,
     };
-  })();
+  }, [rpcStats, rpcChartData, chartBetStyle, allBetRecords]);
 
   // Compute per-match profits filtered by chartBetStyle (for table)
-  const matchProfitsByStyle = (() => {
+  const matchProfitsByStyle = useMemo(() => {
     const profitMap = new Map<string, {
       profit_moneyline: number;
       profit_handicap: number;
@@ -1006,34 +1415,20 @@ export default function PerformanceClient({
       ? allBetRecords
       : allBetRecords.filter(r => r.bet_style?.toLowerCase() === chartBetStyle.toLowerCase());
 
-    // Group by fixture_id and calculate profits
+    // Data is already aggregated, just map it
     filtered.forEach(r => {
       const fixtureId = String(r.fixture_id);
-      const profit = r.profit || 0;
-      const invested = r.stake_money || 0;
-      const betType = getBetTypeFromRecord(r);
-
-      if (!profitMap.has(fixtureId)) {
-        profitMap.set(fixtureId, {
-          profit_moneyline: 0,
-          profit_handicap: 0,
-          profit_ou: 0,
-          total_profit: 0,
-          total_invested: 0,
-        });
-      }
-
-      const current = profitMap.get(fixtureId)!;
-      current.total_profit += profit;
-      current.total_invested += invested;
-
-      if (betType === 'moneyline') current.profit_moneyline += profit;
-      else if (betType === 'handicap') current.profit_handicap += profit;
-      else current.profit_ou += profit;
+      profitMap.set(fixtureId, {
+        profit_moneyline: r.profit_moneyline || 0,
+        profit_handicap: r.profit_handicap || 0,
+        profit_ou: r.profit_ou || 0,
+        total_profit: r.total_profit || 0,
+        total_invested: r.total_invested || 0,
+      });
     });
 
     return profitMap;
-  })();
+  }, [chartBetStyle, allBetRecords]);
 
   // Check auth session
   useEffect(() => {
@@ -1219,6 +1614,29 @@ export default function PerformanceClient({
         .filter(l => !topLeagueNames.includes(l));
       availableLeaguesList = [...topLeagueNames, ...otherLeagues];
       setAvailableLeagues(availableLeaguesList);
+
+      // Load team translations
+      const allTeamNames = [
+        ...new Set([
+          ...rpcMatches.map(m => m.home_name),
+          ...rpcMatches.map(m => m.away_name)
+        ])
+      ].filter(Boolean);
+
+      if (allTeamNames.length > 0) {
+        const { data: teamData } = await supabase
+          .from('team_statistics')
+          .select('team_name, team_name_language')
+          .in('team_name', allTeamNames);
+
+        if (teamData) {
+          const translationsMap: Record<string, any> = {};
+          teamData.forEach((team: any) => {
+            translationsMap[team.team_name] = team;
+          });
+          setTeamTranslations(translationsMap);
+        }
+      }
     }
     setMatchesLoaded(true);
 
@@ -1244,23 +1662,23 @@ export default function PerformanceClient({
   // Progressive legacy loading (without RPC) - loads ALL data with pagination
   const fetchProgressiveLegacy = async () => {
     try {
-      // Fetch ALL profit_summary data using pagination (Supabase default limit is 1000)
-      let allProfitData: any[] = [];
+      // Fetch ALL ai_performance_summary data using pagination
+      let allSummaryData: any[] = [];
       let page = 0;
       const pageSize = 1000;
       let hasMore = true;
 
       while (hasMore) {
         const { data: pageData, error: pageError } = await supabase
-          .from('profit_summary')
-          .select('fixture_id, league_name, profit, stake_money, type, selection, bet_time, home_score, away_score, bet_style, clock, line, odds, status')
-          .order('bet_time', { ascending: true })
+          .from('ai_performance_summary')
+          .select('fixture_id, league_name, bet_style, profit_moneyline, profit_handicap, profit_ou, total_profit, total_invested, roi_percentage, total_bets, created_at')
+          .order('created_at', { ascending: true })
           .range(page * pageSize, (page + 1) * pageSize - 1);
 
         if (pageError) throw pageError;
 
         if (pageData && pageData.length > 0) {
-          allProfitData = [...allProfitData, ...pageData];
+          allSummaryData = [...allSummaryData, ...pageData];
           page++;
           hasMore = pageData.length === pageSize;
 
@@ -1274,38 +1692,37 @@ export default function PerformanceClient({
         }
       }
 
-      // Store all bet records
-      setAllBetRecords(allProfitData);
+      // Store all summary records
+      setAllBetRecords(allSummaryData);
 
-      // Calculate stats from ALL data
+      // Calculate overall stats from aggregated data
       let totalProfit = 0;
       let totalInvested = 0;
-      let wins = 0;
+      let totalBets = 0;
       let profitMoneyline = 0;
       let profitHandicap = 0;
       let profitOU = 0;
       const fixtureSet = new Set<string>();
 
-      allProfitData.forEach((r: any) => {
-        const profit = r.profit || 0;
-        totalProfit += profit;
-        totalInvested += r.stake_money || 0;
-        if (profit > 0) wins++;
-        fixtureSet.add(String(r.fixture_id));
-
-        const betType = getBetTypeFromRecord(r);
-        if (betType === 'moneyline') profitMoneyline += profit;
-        else if (betType === 'handicap') profitHandicap += profit;
-        else profitOU += profit;
+      allSummaryData.forEach((record: any) => {
+        totalProfit += record.total_profit || 0;
+        totalInvested += record.total_invested || 0;
+        totalBets += record.total_bets || 0;
+        profitMoneyline += record.profit_moneyline || 0;
+        profitHandicap += record.profit_handicap || 0;
+        profitOU += record.profit_ou || 0;
+        fixtureSet.add(String(record.fixture_id));
       });
 
-      const winRate = allProfitData.length > 0 ? (wins / allProfitData.length) * 100 : 0;
+      // Calculate win rate based on profitable matches
+      const winningMatches = allSummaryData.filter(r => (r.total_profit || 0) > 0).length;
+      const winRate = allSummaryData.length > 0 ? (winningMatches / allSummaryData.length) * 100 : 0;
       const roi = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
 
       setOverallStats({
         totalProfit,
         winRate,
-        totalBets: allProfitData.length,
+        totalBets,
         roi,
         totalInvested,
         profitMoneyline,
@@ -1331,68 +1748,59 @@ export default function PerformanceClient({
         });
       }
 
-      // Aggregate by fixture
-      const profitMap = new Map<string, any>();
-      allProfitData.forEach((r: any) => {
-        const key = String(r.fixture_id);
-        const profit = r.profit || 0;
-        const betType = getBetTypeFromRecord(r);
-
-        if (!profitMap.has(key)) {
-          profitMap.set(key, {
-            fixture_id: key,
-            league_name: r.league_name || 'Unknown',
-            total_profit: 0,
-            total_invested: 0,
-            total_bets: 0,
-            profit_moneyline: 0,
-            profit_handicap: 0,
-            profit_ou: 0,
-            bet_time: r.bet_time,
-            home_score: r.home_score,
-            away_score: r.away_score,
-          });
-        }
-
-        const current = profitMap.get(key);
-        current.total_profit += profit;
-        current.total_invested += r.stake_money || 0;
-        current.total_bets += 1;
-        if (betType === 'moneyline') current.profit_moneyline += profit;
-        else if (betType === 'handicap') current.profit_handicap += profit;
-        else current.profit_ou += profit;
-      });
-
-      // Convert to MatchSummary array
+      // Convert to MatchSummary array (data is already aggregated)
       const combinedMatches: MatchSummary[] = [];
-      profitMap.forEach((data, fixtureId) => {
+      for (const record of allSummaryData) {
+        const fixtureId = String(record.fixture_id);
         const prematch = prematchesMap.get(fixtureId);
-        const matchRoi = data.total_invested > 0 ? (data.total_profit / data.total_invested) * 100 : 0;
 
         combinedMatches.push({
           fixture_id: fixtureId,
-          league_name: data.league_name,
+          league_name: record.league_name || 'Unknown',
           league_logo: prematch?.league_logo || '',
           home_name: prematch?.home_name || 'Home Team',
           home_logo: prematch?.home_logo || '',
           away_name: prematch?.away_name || 'Away Team',
           away_logo: prematch?.away_logo || '',
-          home_score: prematch?.goals_home ?? data.home_score ?? 0,
-          away_score: prematch?.goals_away ?? data.away_score ?? 0,
-          total_profit: data.total_profit,
-          total_invested: data.total_invested,
-          roi_percentage: matchRoi,
-          total_bets: data.total_bets,
-          profit_moneyline: data.profit_moneyline,
-          profit_handicap: data.profit_handicap,
-          profit_ou: data.profit_ou,
-          match_date: prematch?.start_date_msia || data.bet_time,
+          home_score: prematch?.goals_home ?? 0,
+          away_score: prematch?.goals_away ?? 0,
+          total_profit: record.total_profit || 0,
+          total_invested: record.total_invested || 0,
+          roi_percentage: record.roi_percentage || 0,
+          total_bets: record.total_bets || 0,
+          profit_moneyline: record.profit_moneyline || 0,
+          profit_handicap: record.profit_handicap || 0,
+          profit_ou: record.profit_ou || 0,
+          match_date: prematch?.start_date_msia || record.created_at
         });
-      });
+      }
 
       combinedMatches.sort((a, b) => new Date(b.match_date).getTime() - new Date(a.match_date).getTime());
       setMatches(combinedMatches);
       setMatchesLoaded(true);
+
+      // Load team translations
+      const allTeamNames = [
+        ...new Set([
+          ...combinedMatches.map(m => m.home_name),
+          ...combinedMatches.map(m => m.away_name)
+        ])
+      ].filter(Boolean);
+
+      if (allTeamNames.length > 0) {
+        const { data: teamData } = await supabase
+          .from('team_statistics')
+          .select('team_name, team_name_language')
+          .in('team_name', allTeamNames);
+
+        if (teamData) {
+          const translationsMap: Record<string, any> = {};
+          teamData.forEach((team: any) => {
+            translationsMap[team.team_name] = team;
+          });
+          setTeamTranslations(translationsMap);
+        }
+      }
 
       const topLeagueNames = TOP_LEAGUES.map(l => l.name);
       const otherLeagues = [...new Set(combinedMatches.map(m => m.league_name))]
@@ -1400,8 +1808,8 @@ export default function PerformanceClient({
       setAvailableLeagues([...topLeagueNames, ...otherLeagues]);
 
       // Calculate daily cumulative for chart
-      const sortedRecords = [...allProfitData].sort((a, b) =>
-        new Date(a.bet_time).getTime() - new Date(b.bet_time).getTime()
+      const sortedRecords = [...allSummaryData].sort((a, b) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       );
 
       let cumulative = 0;
@@ -1412,18 +1820,20 @@ export default function PerformanceClient({
       const dailyMap = new Map<string, { profit: number; ml: number; hdp: number; ou: number }>();
 
       sortedRecords.forEach((r) => {
-        const date = r.bet_time?.split('T')[0] || '';
-        const profit = r.profit || 0;
-        const betType = getBetTypeFromRecord(r);
+        const date = r.created_at?.split('T')[0] || '';
+        const profit = r.total_profit || 0;
+        const ml = r.profit_moneyline || 0;
+        const hdp = r.profit_handicap || 0;
+        const ou = r.profit_ou || 0;
 
         if (!dailyMap.has(date)) {
           dailyMap.set(date, { profit: 0, ml: 0, hdp: 0, ou: 0 });
         }
         const day = dailyMap.get(date)!;
         day.profit += profit;
-        if (betType === 'moneyline') day.ml += profit;
-        else if (betType === 'handicap') day.hdp += profit;
-        else day.ou += profit;
+        day.ml += ml;
+        day.hdp += hdp;
+        day.ou += ou;
       });
 
       [...dailyMap.entries()].sort((a, b) => a[0].localeCompare(b[0])).forEach(([date, day]) => {
@@ -1449,7 +1859,7 @@ export default function PerformanceClient({
         overallStats: {
           totalProfit,
           winRate,
-          totalBets: allProfitData.length,
+          totalBets,
           roi,
           totalInvested,
           profitMoneyline,
@@ -1458,7 +1868,7 @@ export default function PerformanceClient({
         },
         matches: combinedMatches,
         dailyPerformance: dailyData,
-        allBetRecords: allProfitData,
+        allBetRecords: allSummaryData,
         availableLeagues: [...topLeagueNames, ...otherLeagues],
       });
       console.log('Data cached successfully');
@@ -1544,18 +1954,59 @@ export default function PerformanceClient({
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
 
   // Filter matches by league only (bet style is already filtered server-side)
-  const filteredMatches = selectedLeague === 'all'
-    ? matches
-    : matches.filter(m => m.league_name === selectedLeague);
+  const filteredMatches = useMemo(() => {
+    // First filter by league
+    let filtered = selectedLeague === 'all'
+      ? matches
+      : matches.filter(m => m.league_name === selectedLeague);
 
-  // With server-side pagination, paginatedMatches is the same as filteredMatches
-  // (pagination is handled by loadMoreMatches)
-  const paginatedMatches = filteredMatches;
+    // Then filter by search query (search in home or away team names - both English and translated)
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(m =>
+        m.home_name?.toLowerCase().includes(query) ||
+        m.away_name?.toLowerCase().includes(query) ||
+        translateTeamName(m.home_name)?.toLowerCase().includes(query) ||
+        translateTeamName(m.away_name)?.toLowerCase().includes(query)
+      );
+    }
 
-  // Reset to page 1 when league or bet style filter changes
+    // Filter by date range
+    if (dateRange.start || dateRange.end) {
+      filtered = filtered.filter(m => {
+        const matchDate = m.match_date ? m.match_date.split('T')[0] : '';
+        if (!matchDate) return false;
+
+        const isAfterStart = !dateRange.start || matchDate >= dateRange.start;
+        const isBeforeEnd = !dateRange.end || matchDate <= dateRange.end;
+
+        return isAfterStart && isBeforeEnd;
+      });
+    }
+
+    return filtered;
+  }, [selectedLeague, searchQuery, dateRange, matches, teamTranslations, locale]);
+
+  // Client-side pagination: slice filteredMatches based on currentPage
+  const totalPages = Math.ceil(filteredMatches.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedMatches = filteredMatches.slice(startIndex, endIndex);
+
+  // Reset to page 1 when league, search query, date range, or bet style filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedLeague, chartBetStyle]);
+  }, [selectedLeague, searchQuery, dateRange, chartBetStyle]);
+
+  // Ref for scrolling to Past Matches section
+  const pastMatchesRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to Past Matches section when page changes
+  useEffect(() => {
+    if (pastMatchesRef.current) {
+      pastMatchesRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [currentPage]);
 
   // Format match date as "X days ago" or actual date
   const formatMatchDate = (dateStr: string) => {
@@ -1564,10 +2015,10 @@ export default function PerformanceClient({
     const diffTime = now.getTime() - matchDate.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 0) return { text: 'Today', isHot: true, daysAgo: 0 };
-    if (diffDays === 1) return { text: '1 day ago', isHot: true, daysAgo: 1 };
-    if (diffDays === 2) return { text: '2 days ago', isHot: true, daysAgo: 2 };
-    if (diffDays === 3) return { text: '3 days ago', isHot: true, daysAgo: 3 };
+    if (diffDays === 0) return { text: t('today'), isHot: true, daysAgo: 0 };
+    if (diffDays === 1) return { text: `1 ${t('dayAgo')}`, isHot: true, daysAgo: 1 };
+    if (diffDays === 2) return { text: `2 ${t('daysAgo')}`, isHot: true, daysAgo: 2 };
+    if (diffDays === 3) return { text: `3 ${t('daysAgo')}`, isHot: true, daysAgo: 3 };
 
     // More than 3 days ago - show actual date
     return {
@@ -1593,33 +2044,6 @@ export default function PerformanceClient({
     return localePath(`/performance/${leagueSlug}/profit-summary/${matchSlug}/${match.fixture_id}/${dateStr}`);
   };
 
-  // Fetch odds history for a match
-  const fetchOddsHistory = async (fixtureId: string) => {
-    setLoadingHistory(true);
-    try {
-      const { data, error } = await supabase
-        .from('odds_history')
-        .select('created_at, bookmaker, moneyline_1x2_home, moneyline_1x2_draw, moneyline_1x2_away, handicap_main_line, handicap_home, handicap_away, totalpoints_main_line, totalpoints_over, totalpoints_under')
-        .eq('fixture_id', parseInt(fixtureId))
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setOddsHistory(data || []);
-    } catch (error) {
-      console.error('Error fetching odds history:', error);
-      setOddsHistory([]);
-    } finally {
-      setLoadingHistory(false);
-    }
-  };
-
-  // Open odds history modal
-  const openOddsHistory = (match: MatchSummary) => {
-    setSelectedMatch(match);
-    setHistoryTab('1x2');
-    setShowHistoryModal(true);
-    fetchOddsHistory(match.fixture_id);
-  };
 
   // Fetch profit summary for a match (use allBetRecords for consistency with table)
   const fetchProfitSummary = (fixtureId: string) => {
@@ -1681,7 +2105,21 @@ export default function PerformanceClient({
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
+    <div
+      className="min-h-screen bg-[#0a0a0f] text-white relative"
+      style={{
+        backgroundImage: 'url(/performance/performance_background.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Dark overlay for better content readability */}
+      <div className="absolute inset-0 bg-black/40 pointer-events-none"></div>
+
+      {/* Content wrapper with relative positioning */}
+      <div className="relative z-10">
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/5">
         <div className="w-full px-4 sm:px-6 lg:px-12">
@@ -1858,26 +2296,26 @@ export default function PerformanceClient({
               <svg className="w-4 h-4 md:w-5 md:h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-xs md:text-sm text-emerald-400 font-medium">AI Performance</span>
+              <span className="text-xs md:text-sm text-emerald-400 font-medium">{t('aiPerformance')}</span>
             </div>
             <div className="flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20">
               <svg className="w-4 h-4 md:w-5 md:h-5 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
-              <span className="text-xs md:text-sm text-cyan-400 font-medium whitespace-nowrap">Transparent AI</span>
+              <span className="text-xs md:text-sm text-cyan-400 font-medium whitespace-nowrap">{t('transparentAI')}</span>
             </div>
             <div className="flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20">
               <svg className="w-4 h-4 md:w-5 md:h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
-              <span className="text-xs md:text-sm text-purple-400 font-medium whitespace-nowrap">Safest Tips</span>
+              <span className="text-xs md:text-sm text-purple-400 font-medium whitespace-nowrap">{t('safestTips')}</span>
             </div>
             <div className="flex items-center justify-center gap-1.5 md:gap-2 px-2 md:px-4 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/20">
               <svg className="w-4 h-4 md:w-5 md:h-5 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <span className="text-xs md:text-sm text-yellow-400 font-medium whitespace-nowrap">Most Accurate</span>
+              <span className="text-xs md:text-sm text-yellow-400 font-medium whitespace-nowrap">{t('mostAccurate')}</span>
             </div>
           </div>
 
@@ -1890,7 +2328,7 @@ export default function PerformanceClient({
             <>
               {/* Overall Stats Cards */}
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-                <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-6">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/5 p-6">
                   <p className="text-gray-400 text-sm mb-1">{t('totalProfit')}</p>
                   <p className={`text-2xl font-bold ${overallStats.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                     <AnimatedCounter
@@ -1901,7 +2339,7 @@ export default function PerformanceClient({
                   </p>
                   <p className="text-xs text-gray-500 mt-1">{t('invested')}: ${formatNumber(overallStats.totalInvested)}</p>
                 </div>
-                <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-6">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/5 p-6">
                   <p className="text-gray-400 text-sm mb-1">{t('winRate')}</p>
                   <p className="text-2xl font-bold text-white">
                     <AnimatedCounter
@@ -1912,7 +2350,7 @@ export default function PerformanceClient({
                     />
                   </p>
                 </div>
-                <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-6">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/5 p-6">
                   <p className="text-gray-400 text-sm mb-1">{t('totalBets')}</p>
                   <p className="text-2xl font-bold text-white">
                     <AnimatedCounter
@@ -1922,7 +2360,7 @@ export default function PerformanceClient({
                     />
                   </p>
                 </div>
-                <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-6">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/5 p-6">
                   <p className="text-gray-400 text-sm mb-1">{t('totalMatches')}</p>
                   <p className="text-2xl font-bold text-cyan-400">
                     <AnimatedCounter
@@ -1932,7 +2370,7 @@ export default function PerformanceClient({
                     />
                   </p>
                 </div>
-                <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-6">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/5 p-6">
                   <p className="text-gray-400 text-sm mb-1">{t('roi')}</p>
                   <p className={`text-2xl font-bold ${overallStats.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                     <AnimatedCounter
@@ -1948,39 +2386,93 @@ export default function PerformanceClient({
 
               {/* Bet Style Filter for Charts */}
               <div className="flex flex-wrap items-center gap-2 mb-6">
-                <span className="text-sm text-gray-400 mr-2">Bet Style:</span>
+                <span className="text-sm text-gray-400 mr-2">{t('betStyle')}</span>
                 <button
                   onClick={() => setChartBetStyle('all')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer relative overflow-hidden group flex items-center gap-2 ${
                     chartBetStyle === 'all'
-                      ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/50'
+                      ? 'bg-gradient-to-r from-amber-500/30 to-orange-500/30 text-amber-400 border border-amber-500/50 shadow-lg shadow-amber-500/20'
                       : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
                   }`}
                 >
-                  All Styles
+                  {chartBetStyle !== 'all' && (
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  )}
+                  {/* Icon placeholder for consistent sizing */}
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center relative z-10 transition-all bg-gradient-to-br from-amber-400 to-orange-500">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                  </div>
+                  <span className="relative z-10">{t('allStyles')}</span>
                 </button>
-                {BET_STYLES.map((style) => (
-                  <button
-                    key={style}
-                    onClick={() => setChartBetStyle(style)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
-                      chartBetStyle === style
-                        ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/50'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
-                    }`}
-                  >
-                    {style === 'Aggressive' && '🔥 '}
-                    {style === 'Conservative' && '🛡️ '}
-                    {style === 'Balanced' && '⚖️ '}
-                    {style === 'Value Hunter' && '💎 '}
-                    {style === 'Safe Play' && '✅ '}
-                    {style}
-                  </button>
-                ))}
+                {BET_STYLES.map((style) => {
+                  const imagePath = getBetStyleImage(style);
+                  const displayName = getBetStyleDisplayName(style);
+                  const gradientColor = getBetStyleColor(style);
+                  const logoColor = getBetStyleLogoColor(style);
+                  const isLocked = style === 'Balanced' || style === 'Safe Play';
+
+                  // Get translated display name
+                  const translatedName = style === 'Value Hunter' ? t('hdpSniper')
+                    : style === 'Aggressive' ? t('activeTrader')
+                    : style === 'Balanced' ? t('oddsflowCore')
+                    : style === 'Safe Play' ? t('oddsflowBeta')
+                    : displayName;
+
+                  return (
+                    <button
+                      key={style}
+                      onClick={() => !isLocked && setChartBetStyle(style)}
+                      disabled={isLocked}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all relative overflow-hidden group flex items-center gap-2 ${
+                        isLocked
+                          ? 'bg-gray-800 text-gray-400 border border-gray-700 cursor-not-allowed'
+                          : chartBetStyle === style
+                          ? `bg-gradient-to-r ${gradientColor} text-white border border-white/20 shadow-lg cursor-pointer`
+                          : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 cursor-pointer'
+                      }`}
+                    >
+                      {/* Coming Soon badge */}
+                      {isLocked && (
+                        <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full z-20 shadow-lg">
+                          {t('comingSoon')}
+                        </span>
+                      )}
+
+                      {/* Hover shine effect */}
+                      {chartBetStyle !== style && !isLocked && (
+                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                      )}
+
+                      {/* Icon image with custom background colors */}
+                      {imagePath && (
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center relative z-10 transition-all bg-gradient-to-br ${logoColor} ${
+                            chartBetStyle === style
+                              ? 'shadow-xl scale-110 ring-2 ring-white/30'
+                              : ''
+                          }`}
+                        >
+                          <img
+                            src={imagePath}
+                            alt={displayName}
+                            className={`object-contain transition-all ${
+                              chartBetStyle === style ? 'w-6 h-6' : 'w-5 h-5'
+                            }`}
+                          />
+                        </div>
+                      )}
+
+                      {/* Display name */}
+                      <span className="relative z-10">{translatedName}</span>
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Profit by Market */}
-              <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 p-4 md:p-6 mb-8">
+              <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/5 p-4 md:p-6 mb-8">
                 <h2 className="text-lg font-semibold text-white mb-4">{t('profitByMarket')}</h2>
                 {/* Mobile: Vertical layout */}
                 <div className="md:hidden space-y-3">
@@ -1990,7 +2482,13 @@ export default function PerformanceClient({
                       {filteredChartStats.profitMoneyline >= 0 ? '+$' : '-$'}{Math.abs(filteredChartStats.profitMoneyline).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg relative">
+                    {chartBetStyle === 'Value Hunter' && (
+                      <span className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-lg italic overflow-hidden">
+                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer"></span>
+                        <span className="relative z-10">{t('recommended')}</span>
+                      </span>
+                    )}
                     <span className="text-gray-400 text-sm">{t('handicap')}</span>
                     <span className={`text-lg font-bold ${filteredChartStats.profitHandicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                       {filteredChartStats.profitHandicap >= 0 ? '+$' : '-$'}{Math.abs(filteredChartStats.profitHandicap).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -2011,7 +2509,13 @@ export default function PerformanceClient({
                       {filteredChartStats.profitMoneyline >= 0 ? '+$' : '-$'}{Math.abs(filteredChartStats.profitMoneyline).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
-                  <div className="text-center p-4 bg-white/5 rounded-lg">
+                  <div className="text-center p-4 bg-white/5 rounded-lg relative">
+                    {chartBetStyle === 'Value Hunter' && (
+                      <span className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-lg z-10 italic overflow-hidden">
+                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer"></span>
+                        <span className="relative z-10">{t('recommended')}</span>
+                      </span>
+                    )}
                     <p className="text-gray-400 text-sm mb-1">{t('handicap')}</p>
                     <p className={`text-xl font-bold ${filteredChartStats.profitHandicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                       {filteredChartStats.profitHandicap >= 0 ? '+$' : '-$'}{Math.abs(filteredChartStats.profitHandicap).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -2334,28 +2838,155 @@ export default function PerformanceClient({
                 ))}
               </div>
 
+              {/* Search and Date Filters */}
+              <div className="mb-6 flex flex-col md:flex-row gap-4 md:items-end">
+                {/* Team Search */}
+                <div className="flex-1 max-w-md">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={selectedLeague === 'all' ? t('searchTeams') : `${t('searchTeams').replace('...', '')} ${selectedLeague}...`}
+                      className="w-full px-4 py-3 pl-11 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:bg-white/10 transition-all"
+                    />
+                    <svg
+                      className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                  {searchQuery && filteredMatches.length === 0 && (
+                    <p className="mt-2 text-sm text-gray-500">
+                      No teams found matching "{searchQuery}"
+                      {selectedLeague !== 'all' && ` in ${selectedLeague}`}
+                    </p>
+                  )}
+                </div>
+
+                {/* Date Range Filter */}
+                <div className="flex gap-3 items-start">
+                  <div className="flex-1">
+                    <label className="block text-xs text-gray-400 mb-1.5 ml-1">{t('from')}</label>
+                    <div className="relative">
+                      <input
+                        type="date"
+                        value={dateRange.start}
+                        onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
+                        className="w-full px-4 py-3 pl-11 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:bg-white/10 transition-all"
+                        style={{ colorScheme: 'dark' }}
+                      />
+                      <svg
+                        className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div className="flex-1">
+                    <label className="block text-xs text-gray-400 mb-1.5 ml-1">{t('to')}</label>
+                    <div className="relative">
+                      <input
+                        type="date"
+                        value={dateRange.end}
+                        onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
+                        className="w-full px-4 py-3 pl-11 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:bg-white/10 transition-all"
+                        style={{ colorScheme: 'dark' }}
+                      />
+                      <svg
+                        className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Clear date filters button */}
+                  {(dateRange.start || dateRange.end) && (
+                    <button
+                      onClick={() => setDateRange({ start: '', end: '' })}
+                      className="mt-7 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-gray-400 hover:text-white transition-all"
+                      title="Clear dates"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              </div>
+
               {/* Past Matches - Table Style */}
-              <div className="bg-gradient-to-br from-gray-900/80 to-gray-950/80 rounded-xl border border-white/5 overflow-hidden">
+              <div
+                ref={pastMatchesRef}
+                className="rounded-xl overflow-hidden"
+                style={{
+                  backgroundColor: '#111827',
+                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  boxShadow: 'none',
+                  scrollMarginTop: '100px'
+                }}
+              >
                 {/* Desktop Header - Hidden on mobile */}
                 <div className="hidden md:grid grid-cols-12 gap-2 px-4 py-3 bg-white/5 border-b border-white/5 text-xs font-medium text-gray-400 uppercase tracking-wider">
                   <div className="col-span-4">{t('pastMatches')}</div>
-                  <div className="col-span-2 text-center">Score</div>
+                  <div className="col-span-2 text-center">{t('score')}</div>
                   <div className="col-span-1 text-right">{t('moneyline')}</div>
                   <div className="col-span-1 text-right">{t('handicap')}</div>
                   <div className="col-span-1 text-right">{t('overUnder')}</div>
-                  <div className="col-span-1 text-right">ROI</div>
-                  <div className="col-span-2 text-right">Total</div>
+                  <div className="col-span-1 text-right">{t('roi').toUpperCase()}</div>
+                  <div className="col-span-2 text-right">{t('total')}</div>
                 </div>
 
                 {/* Mobile Header */}
-                <div className="md:hidden px-4 py-3 bg-white/5 border-b border-white/5">
-                  <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider">{t('pastMatches')}</h3>
+                <div
+                  className="md:hidden px-4 py-3"
+                  style={{
+                    backgroundColor: '#111827',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                    color: '#9CA3AF'
+                  }}
+                >
+                  <h3
+                    className="text-sm font-medium uppercase tracking-wider"
+                    style={{
+                      color: '#9CA3AF',
+                      backgroundColor: 'transparent'
+                    }}
+                  >
+                    {t('pastMatches')}
+                  </h3>
                 </div>
 
                 {filteredMatches.length === 0 ? (
                   <div className="p-8 text-center text-gray-500">{t('noMatches')}</div>
                 ) : (
-                  <div className="divide-y divide-white/5">
+                  <div>
                     {paginatedMatches.map((match, index) => {
                       const dateInfo = formatMatchDate(match.match_date);
                       const isHotMatch = dateInfo.isHot;
@@ -2373,12 +3004,20 @@ export default function PerformanceClient({
                         : 0;
 
                       return (
-                      <div key={match.fixture_id}>
+                      <div
+                        key={`${match.fixture_id}-${index}`}
+                        style={{
+                          borderBottom: index < paginatedMatches.length - 1 ? '1px solid rgba(255, 255, 255, 0.05)' : 'none'
+                        }}
+                      >
                         {/* Mobile Card Layout */}
                         <div
-                          className={`md:hidden relative p-4 transition-all ${
-                            index % 2 === 0 ? 'bg-white/[0.02]' : ''
-                          } ${isHotMatch ? 'bg-emerald-500/5' : ''}`}
+                          className="md:hidden relative p-4"
+                          style={{
+                            backgroundColor: 'rgb(17, 24, 39)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            transition: 'all 0.15s'
+                          }}
                         >
                           {/* Hot Match Indicator */}
                           {isHotMatch && (
@@ -2394,7 +3033,7 @@ export default function PerformanceClient({
                                 </div>
                               )}
                               <span className="text-xs text-emerald-400 font-medium">
-                                {match.league_name.length > 15 ? match.league_name.substring(0, 15) + '...' : match.league_name}
+                                {translateLeagueName(match.league_name).length > 15 ? translateLeagueName(match.league_name).substring(0, 15) + '...' : translateLeagueName(match.league_name)}
                               </span>
                             </div>
                             <span className={`text-xs flex items-center gap-1 ${dateInfo.isHot ? 'text-emerald-400 font-semibold' : 'text-gray-500'}`}>
@@ -2412,6 +3051,8 @@ export default function PerformanceClient({
                           <Link
                             href={localePath(`/predictions/${match.match_date ? match.match_date.split('T')[0] : new Date().toISOString().split('T')[0]}/${generateMatchSlug(match.home_name || 'home', match.away_name || 'away')}-${match.fixture_id}`)}
                             className="flex items-center justify-between mb-3 group/match hover:bg-white/5 -mx-2 px-2 py-1 rounded-lg transition-colors"
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
                             <div className="flex-1 min-w-0 mr-3">
                               <div className="flex items-center gap-2 mb-1">
@@ -2422,7 +3063,7 @@ export default function PerformanceClient({
                                     <span className="text-[8px] font-bold text-white">{(match.home_name || 'H').substring(0, 2)}</span>
                                   )}
                                 </div>
-                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{match.home_name}</span>
+                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{translateTeamName(match.home_name)}</span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <div className="w-6 h-6 rounded-full bg-white/10 p-0.5 flex items-center justify-center flex-shrink-0">
@@ -2432,7 +3073,7 @@ export default function PerformanceClient({
                                     <span className="text-[8px] font-bold text-white">{(match.away_name || 'A').substring(0, 2)}</span>
                                   )}
                                 </div>
-                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{match.away_name}</span>
+                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{translateTeamName(match.away_name)}</span>
                               </div>
                             </div>
                             <div className="flex flex-col items-center">
@@ -2442,8 +3083,8 @@ export default function PerformanceClient({
                           </Link>
 
                           {/* Row 3: Profit breakdown */}
-                          <div className="flex items-center justify-between gap-2 mb-2">
-                            <div className="flex items-center gap-3 text-xs">
+                          <div className="flex items-center justify-between gap-2 mb-2 bg-transparent">
+                            <div className="flex items-center gap-3 text-xs bg-transparent">
                               <div>
                                 <span className="text-gray-500">1x2: </span>
                                 <span className={filteredProfits.profit_moneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}>
@@ -2466,8 +3107,8 @@ export default function PerformanceClient({
                           </div>
 
                           {/* Row 4: Total Profit & ROI */}
-                          <div className="flex items-center justify-between">
-                            <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold ${
+                          <div className="flex items-center justify-between bg-transparent">
+                            <span className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold isolate ${
                               filteredProfits.total_profit >= 0
                                 ? 'bg-emerald-500/10 text-emerald-400'
                                 : 'bg-red-500/10 text-red-400'
@@ -2480,7 +3121,10 @@ export default function PerformanceClient({
                           </div>
 
                           {/* Row 5: Action Buttons */}
-                          <div className="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-white/5">
+                          <div
+                            className="flex items-center justify-end gap-2 mt-3 pt-3"
+                            style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}
+                          >
                             <Link
                               href={getProfitSummaryUrl(match)}
                               onClick={(e) => e.stopPropagation()}
@@ -2491,16 +3135,6 @@ export default function PerformanceClient({
                               </svg>
                               View Profit
                             </Link>
-                            <button
-                              onClick={(e) => { e.stopPropagation(); openOddsHistory(match); }}
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white text-xs font-medium transition-colors"
-                            >
-                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                              </svg>
-                              View Odds
-                            </button>
                           </div>
                         </div>
 
@@ -2523,6 +3157,8 @@ export default function PerformanceClient({
                           <Link
                             href={localePath(`/predictions/${match.match_date ? match.match_date.split('T')[0] : new Date().toISOString().split('T')[0]}/${generateMatchSlug(match.home_name || 'home', match.away_name || 'away')}-${match.fixture_id}`)}
                             className="col-span-4 relative group/match"
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
                             <div className="flex items-center gap-2 mb-1">
                               {match.league_logo && (
@@ -2531,7 +3167,7 @@ export default function PerformanceClient({
                                 </div>
                               )}
                               <span className="text-[10px] text-emerald-400 font-medium">
-                                {match.league_name.length > 12 ? match.league_name.substring(0, 12) : match.league_name}
+                                {translateLeagueName(match.league_name).length > 12 ? translateLeagueName(match.league_name).substring(0, 12) : translateLeagueName(match.league_name)}
                               </span>
                               <span className={`text-[10px] flex items-center gap-1 ${
                                 dateInfo.isHot
@@ -2561,7 +3197,7 @@ export default function PerformanceClient({
                                     <span className="text-[10px] font-bold text-white">{(match.home_name || 'H').substring(0, 2).toUpperCase()}</span>
                                   )}
                                 </div>
-                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{match.home_name}</span>
+                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{translateTeamName(match.home_name)}</span>
                               </div>
                               <span className="text-gray-500 text-xs font-medium">vs</span>
                               {/* Away Team */}
@@ -2573,7 +3209,7 @@ export default function PerformanceClient({
                                     <span className="text-[10px] font-bold text-white">{(match.away_name || 'A').substring(0, 2).toUpperCase()}</span>
                                   )}
                                 </div>
-                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{match.away_name}</span>
+                                <span className="text-sm text-white font-medium truncate group-hover/match:text-emerald-400 transition-colors">{translateTeamName(match.away_name)}</span>
                               </div>
                             </div>
                           </Link>
@@ -2627,20 +3263,6 @@ export default function PerformanceClient({
                                 View Profit Details
                               </span>
                             </div>
-                            <div className="relative group/odds">
-                              <button
-                                onClick={() => openOddsHistory(match)}
-                                className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                              </button>
-                              <span className="absolute top-full right-0 mt-2 px-2 py-1 text-xs font-medium text-white bg-gray-900 border border-white/10 rounded shadow-lg whitespace-nowrap opacity-0 group-hover/odds:opacity-100 pointer-events-none z-[100]">
-                                View Odds History
-                              </span>
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -2649,30 +3271,78 @@ export default function PerformanceClient({
                   </div>
                 )}
 
-                {/* Load More / Pagination with Infinite Scroll */}
-                <div className="flex flex-col items-center gap-3 p-4 border-t border-white/5">
+                {/* Pagination Controls */}
+                <div className="flex flex-col items-center gap-4 p-6" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
                   {/* Show count */}
-                  <span className="text-sm text-gray-500">
-                    Showing {matches.length} of {totalMatchCount > 0 ? totalMatchCount : matches.length} matches
+                  <span className="text-sm text-gray-400">
+                    {t('showing')} {startIndex + 1}-{Math.min(endIndex, filteredMatches.length)} {t('of')} {filteredMatches.length} {t('matches')}
                   </span>
 
-                  {/* Infinite scroll sentinel - triggers auto-loading */}
-                  <div ref={loadMoreSentinelRef} className="h-1 w-full" />
+                  {/* Pagination buttons */}
+                  {totalPages > 1 && (
+                    <div className="flex items-center gap-2">
+                      {/* Previous button */}
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        disabled={currentPage === 1}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          currentPage === 1
+                            ? 'bg-white/5 text-gray-600 cursor-not-allowed'
+                            : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
+                        }`}
+                        style={{ cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+                      >
+                        ← {t('previous')}
+                      </button>
 
-                  {/* Loading indicator for infinite scroll */}
-                  {loadingMore && (
-                    <div className="flex items-center gap-2 text-gray-400">
-                      <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                      <span className="text-sm">Loading more matches...</span>
+                      {/* Page numbers */}
+                      <div className="flex items-center gap-2">
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                          // Show first 3, current +/- 1, and last page
+                          let pageNum;
+                          if (totalPages <= 5) {
+                            pageNum = i + 1;
+                          } else if (currentPage <= 3) {
+                            pageNum = i + 1;
+                          } else if (currentPage >= totalPages - 2) {
+                            pageNum = totalPages - 4 + i;
+                          } else {
+                            pageNum = currentPage - 2 + i;
+                          }
+
+                          if (pageNum < 1 || pageNum > totalPages) return null;
+
+                          return (
+                            <button
+                              key={pageNum}
+                              onClick={() => setCurrentPage(pageNum)}
+                              className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
+                                currentPage === pageNum
+                                  ? 'bg-emerald-500 text-white'
+                                  : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                              }`}
+                              style={{ cursor: 'pointer' }}
+                            >
+                              {pageNum}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Next button */}
+                      <button
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                        disabled={currentPage === totalPages}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          currentPage === totalPages
+                            ? 'bg-white/5 text-gray-600 cursor-not-allowed'
+                            : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
+                        }`}
+                        style={{ cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
+                      >
+                        {t('next')} →
+                      </button>
                     </div>
-                  )}
-
-                  {/* End of list indicator */}
-                  {matches.length >= totalMatchCount && totalMatchCount > 0 && (
-                    <span className="text-xs text-gray-600">All matches loaded</span>
                   )}
                 </div>
               </div>
@@ -2680,247 +3350,6 @@ export default function PerformanceClient({
           )}
         </div>
       </main>
-
-      {/* Odds History Modal */}
-      {showHistoryModal && selectedMatch && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowHistoryModal(false)} />
-
-          {/* Modal */}
-          <div className="relative w-full max-w-6xl max-h-[85vh] bg-[#0d1117] border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
-            {/* Header */}
-            <div className="flex items-center justify-between p-5">
-              <h3 className="text-xl font-bold text-white">Odds History</h3>
-              <button
-                onClick={() => setShowHistoryModal(false)}
-                className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="px-5 pb-5">
-              <div className="bg-[#161b22] rounded-xl border border-white/5 overflow-hidden">
-                <div className="overflow-auto max-h-[65vh]">
-                  {loadingHistory ? (
-                    <div className="flex items-center justify-center py-12">
-                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-500"></div>
-                    </div>
-                  ) : (
-                    <>
-                    {/* Desktop Table */}
-                    <table className="w-full hidden md:table">
-                      <thead className="sticky top-0 bg-[#161b22] z-10">
-                        {/* Category Headers */}
-                        <tr className="border-b border-white/5">
-                          <th className="px-4 py-3"></th>
-                          <th colSpan={3} className="px-2 py-3 text-center">
-                            <span className="inline-flex px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-semibold">
-                              1X2
-                            </span>
-                          </th>
-                          <th colSpan={3} className="px-2 py-3 text-center">
-                            <span className="inline-flex px-4 py-1.5 rounded-full bg-cyan-500/20 text-cyan-400 text-xs font-semibold">
-                              OVER/UNDER
-                            </span>
-                          </th>
-                          <th colSpan={3} className="px-2 py-3 text-center">
-                            <span className="inline-flex px-4 py-1.5 rounded-full bg-purple-500/20 text-purple-400 text-xs font-semibold">
-                              HANDICAP
-                            </span>
-                          </th>
-                        </tr>
-                        {/* Column Headers */}
-                        <tr className="text-xs text-gray-500 border-b border-white/5">
-                          <th className="px-4 py-3 text-left font-medium">Time</th>
-                          <th className="px-3 py-3 text-center font-medium">Home</th>
-                          <th className="px-3 py-3 text-center font-medium">Draw</th>
-                          <th className="px-3 py-3 text-center font-medium border-r border-white/5">Away</th>
-                          <th className="px-3 py-3 text-center font-medium text-cyan-500">Line</th>
-                          <th className="px-3 py-3 text-center font-medium">Over</th>
-                          <th className="px-3 py-3 text-center font-medium border-r border-white/5">Under</th>
-                          <th className="px-3 py-3 text-center font-medium text-purple-500">Line</th>
-                          <th className="px-3 py-3 text-center font-medium">Home</th>
-                          <th className="px-3 py-3 text-center font-medium">Away</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-white/5">
-                        {oddsHistory.map((item, idx) => (
-                          <tr
-                            key={idx}
-                            className={`hover:bg-white/5 transition-colors ${
-                              idx === 0 ? 'bg-emerald-500/5' : ''
-                            }`}
-                          >
-                            <td className="px-4 py-3 text-sm text-gray-300 whitespace-nowrap">
-                              {new Date(item.created_at).toLocaleDateString('en-GB', {
-                                day: '2-digit',
-                                month: 'short'
-                              })} {new Date(item.created_at).toLocaleTimeString('en-GB', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: false
-                              })}
-                              {idx === 0 && (
-                                <span className="ml-2 text-emerald-400 text-xs">(Latest)</span>
-                              )}
-                            </td>
-                            {/* 1X2 */}
-                            <td className="px-3 py-3 text-sm text-white text-center font-medium">
-                              {item.moneyline_1x2_home?.toFixed(2) || '-'}
-                            </td>
-                            <td className="px-3 py-3 text-sm text-white text-center font-medium">
-                              {item.moneyline_1x2_draw?.toFixed(2) || '-'}
-                            </td>
-                            <td className="px-3 py-3 text-sm text-white text-center font-medium border-r border-white/5">
-                              {item.moneyline_1x2_away?.toFixed(2) || '-'}
-                            </td>
-                            {/* Over/Under */}
-                            <td className="px-3 py-3 text-sm text-cyan-400 text-center font-medium">
-                              {item.totalpoints_main_line ?? '-'}
-                            </td>
-                            <td className="px-3 py-3 text-sm text-white text-center font-medium">
-                              {item.totalpoints_over?.toFixed(2) || '-'}
-                            </td>
-                            <td className="px-3 py-3 text-sm text-white text-center font-medium border-r border-white/5">
-                              {item.totalpoints_under?.toFixed(2) || '-'}
-                            </td>
-                            {/* Handicap */}
-                            <td className="px-3 py-3 text-sm text-purple-400 text-center font-medium">
-                              {item.handicap_main_line ?? '-'}
-                            </td>
-                            <td className="px-3 py-3 text-sm text-white text-center font-medium">
-                              {item.handicap_home?.toFixed(2) || '-'}
-                            </td>
-                            <td className="px-3 py-3 text-sm text-white text-center font-medium">
-                              {item.handicap_away?.toFixed(2) || '-'}
-                            </td>
-                          </tr>
-                        ))}
-                        {oddsHistory.length === 0 && (
-                          <tr>
-                            <td colSpan={10} className="px-4 py-12 text-center text-gray-500">
-                              No odds history available
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-
-                    {/* Mobile Card Layout */}
-                    <div className="md:hidden space-y-3 p-3 max-h-[65vh] overflow-y-auto">
-                      {oddsHistory.length === 0 ? (
-                        <div className="text-center text-gray-500 py-12">
-                          No odds history available
-                        </div>
-                      ) : (
-                        oddsHistory.map((item, idx) => (
-                          <div
-                            key={idx}
-                            className={`bg-white/5 rounded-lg p-3 border ${
-                              idx === 0 ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-white/5'
-                            }`}
-                          >
-                            {/* Time Header */}
-                            <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/5">
-                              <span className="text-sm text-gray-300">
-                                {new Date(item.created_at).toLocaleDateString('en-GB', {
-                                  day: '2-digit',
-                                  month: 'short'
-                                })} {new Date(item.created_at).toLocaleTimeString('en-GB', {
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                  hour12: false
-                                })}
-                              </span>
-                              {idx === 0 && (
-                                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">
-                                  Latest
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Odds Grid */}
-                            <div className="space-y-2">
-                              {/* 1X2 */}
-                              <div className="flex items-center gap-2">
-                                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold w-12 text-center">
-                                  1X2
-                                </span>
-                                <div className="flex-1 grid grid-cols-3 gap-1 text-xs">
-                                  <div className="text-center">
-                                    <span className="text-gray-500 block text-[10px]">Home</span>
-                                    <span className="text-white font-medium">{item.moneyline_1x2_home?.toFixed(2) || '-'}</span>
-                                  </div>
-                                  <div className="text-center">
-                                    <span className="text-gray-500 block text-[10px]">Draw</span>
-                                    <span className="text-white font-medium">{item.moneyline_1x2_draw?.toFixed(2) || '-'}</span>
-                                  </div>
-                                  <div className="text-center">
-                                    <span className="text-gray-500 block text-[10px]">Away</span>
-                                    <span className="text-white font-medium">{item.moneyline_1x2_away?.toFixed(2) || '-'}</span>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Over/Under */}
-                              <div className="flex items-center gap-2">
-                                <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 text-[10px] font-semibold w-12 text-center">
-                                  O/U
-                                </span>
-                                <div className="flex-1 grid grid-cols-3 gap-1 text-xs">
-                                  <div className="text-center">
-                                    <span className="text-gray-500 block text-[10px]">Line</span>
-                                    <span className="text-cyan-400 font-medium">{item.totalpoints_main_line ?? '-'}</span>
-                                  </div>
-                                  <div className="text-center">
-                                    <span className="text-gray-500 block text-[10px]">Over</span>
-                                    <span className="text-white font-medium">{item.totalpoints_over?.toFixed(2) || '-'}</span>
-                                  </div>
-                                  <div className="text-center">
-                                    <span className="text-gray-500 block text-[10px]">Under</span>
-                                    <span className="text-white font-medium">{item.totalpoints_under?.toFixed(2) || '-'}</span>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Handicap */}
-                              <div className="flex items-center gap-2">
-                                <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 text-[10px] font-semibold w-12 text-center">
-                                  HDP
-                                </span>
-                                <div className="flex-1 grid grid-cols-3 gap-1 text-xs">
-                                  <div className="text-center">
-                                    <span className="text-gray-500 block text-[10px]">Line</span>
-                                    <span className="text-purple-400 font-medium">{item.handicap_main_line ?? '-'}</span>
-                                  </div>
-                                  <div className="text-center">
-                                    <span className="text-gray-500 block text-[10px]">Home</span>
-                                    <span className="text-white font-medium">{item.handicap_home?.toFixed(2) || '-'}</span>
-                                  </div>
-                                  <div className="text-center">
-                                    <span className="text-gray-500 block text-[10px]">Away</span>
-                                    <span className="text-white font-medium">{item.handicap_away?.toFixed(2) || '-'}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Profit Details Modal */}
       {showProfitModal && selectedMatch && (
@@ -3240,6 +3669,7 @@ export default function PerformanceClient({
       )}
 
       <Footer localePath={localePath} t={t} />
+      </div>
     </div>
   );
 }

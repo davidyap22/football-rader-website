@@ -11,34 +11,34 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-// SEO Metadata - Optimized with year, keywords, and compelling copy
+// SEO Metadata - Optimized for transparency and trust signals
 const currentYear = new Date().getFullYear();
 
 const titles: Record<string, string> = {
-  en: `AI Football Prediction Performance & Track Record (${currentYear})`,
-  es: `Rendimiento de Predicciones de Futbol IA y Historial (${currentYear})`,
-  pt: `Desempenho de Previsoes de Futebol IA e Historico (${currentYear})`,
-  de: `KI-Fussballvorhersage Leistung & Erfolgsbilanz (${currentYear})`,
-  fr: `Performance des Predictions Football IA & Historique (${currentYear})`,
-  ja: `AIサッカー予測の実績とトラックレコード (${currentYear})`,
-  ko: `AI 축구 예측 성과 및 실적 (${currentYear})`,
-  zh: `AI足球预测表现与业绩记录 (${currentYear})`,
-  tw: `AI足球預測表現與業績記錄 (${currentYear})`,
-  id: `Performa Prediksi Sepak Bola AI & Rekam Jejak (${currentYear})`,
+  en: `AI Football Prediction Performance & Verified ROI Records | OddsFlow`,
+  es: `Rendimiento de Predicciones IA & Registros ROI Verificados | OddsFlow`,
+  pt: `Performance de Previsões IA & Registros ROI Verificados | OddsFlow`,
+  de: `KI-Fußballvorhersage Leistung & Verifizierte ROI-Aufzeichnungen | OddsFlow`,
+  fr: `Performance des Prédictions IA & Historique ROI Vérifié | OddsFlow`,
+  ja: `AI サッカー予測パフォーマンス & 検証済み ROI 記録 | OddsFlow`,
+  ko: `AI 축구 예측 성능 & 검증된 ROI 기록 | OddsFlow`,
+  zh: `AI 足球预测历史战绩与 ROI 分析（真实可查）| OddsFlow`,
+  tw: `AI 足球預測歷史戰績與 ROI 分析（真實可查）| OddsFlow`,
+  id: `Performa Prediksi Sepak Bola AI & Catatan ROI Terverifikasi | OddsFlow`,
 };
 
-// Dynamic descriptions will be generated in generateMetadata with actual stats
+// Descriptions emphasizing transparency, verification, and data volume
 const baseDescriptions: Record<string, string> = {
-  en: "View OddsFlow's verified AI football betting performance. Real-time track record with detailed ROI analysis for Premier League, La Liga, Bundesliga, Serie A, and Ligue 1.",
-  es: "Ve el rendimiento verificado de apuestas de fútbol IA de OddsFlow. Historial en tiempo real con análisis detallado de ROI para La Liga, Premier League, Bundesliga y más.",
-  pt: "Veja o desempenho verificado de apostas de futebol IA do OddsFlow. Histórico em tempo real com análise detalhada de ROI para Premier League, La Liga, Bundesliga e mais.",
-  de: "Sehen Sie die verifizierte KI-Fußballwetten-Leistung von OddsFlow. Echtzeit-Erfolgsbilanz mit detaillierter ROI-Analyse für Bundesliga, Premier League, La Liga und mehr.",
-  fr: "Consultez les performances vérifiées des paris football IA d'OddsFlow. Historique en temps réel avec analyse ROI détaillée pour Ligue 1, Premier League, La Liga et plus.",
-  ja: "OddsFlowの検証済みAIサッカーベッティング実績をご覧ください。プレミアリーグ、ラ・リーガ、ブンデスリーガなどの詳細なROI分析付きリアルタイムトラックレコード。",
-  ko: "OddsFlow의 검증된 AI 축구 베팅 성과를 확인하세요. 프리미어리그, 라리가, 분데스리가 등의 상세 ROI 분석이 포함된 실시간 실적.",
-  zh: "查看OddsFlow经过验证的AI足球投注表现。包含英超、西甲、德甲、意甲、法甲详细ROI分析的实时业绩记录。",
-  tw: "查看OddsFlow經過驗證的AI足球投注表現。包含英超、西甲、德甲、意甲、法甲詳細ROI分析的實時業績記錄。",
-  id: "Lihat performa taruhan sepak bola AI OddsFlow yang terverifikasi. Rekam jejak real-time dengan analisis ROI terperinci untuk Premier League, La Liga, Bundesliga, dan lainnya.",
+  en: "Real-time verification of AI betting model performance. Track 11,000+ analyzed matches with transparent profit history, win rates, and cumulative ROI charts. Data-driven football predictions with full accountability.",
+  es: "Verificación en tiempo real del rendimiento de modelos IA de apuestas. Seguimiento de 11,000+ partidos analizados con historial de ganancias transparente, tasas de victoria y gráficos ROI acumulativos. Predicciones basadas en datos con responsabilidad total.",
+  pt: "Verificação em tempo real do desempenho de modelos IA de apostas. Acompanhamento de 11,000+ partidas analisadas com histórico de lucros transparente, taxas de vitória e gráficos ROI cumulativos. Previsões baseadas em dados com total responsabilidade.",
+  de: "Echtzeit-Verifizierung der KI-Wettmodell-Leistung. Verfolgung von 11,000+ analysierten Spielen mit transparentem Gewinnverlauf, Gewinnraten und kumulativen ROI-Diagrammen. Datengesteuerte Fußballvorhersagen mit voller Rechenschaftspflicht.",
+  fr: "Vérification en temps réel de la performance des modèles IA de paris. Suivi de 11,000+ matchs analysés avec historique de profits transparent, taux de victoire et graphiques ROI cumulatifs. Prédictions basées sur les données avec responsabilité totale.",
+  ja: "AI ベッティングモデルのパフォーマンスをリアルタイム検証。11,000+ 試合の分析データ、透明な利益履歴、勝率、累積 ROI チャートを追跡。完全な説明責任を持つデータ駆動型サッカー予測。",
+  ko: "AI 베팅 모델 성능의 실시간 검증. 11,000+ 분석된 경기, 투명한 수익 이력, 승률 및 누적 ROI 차트 추적. 완전한 책임성을 갖춘 데이터 기반 축구 예측.",
+  zh: "AI 投注模型实时验证。追踪 11,000+ 场比赛分析数据，透明盈利记录、胜率和累计 ROI 曲线图。基于数据的足球预测，完全可追溯。",
+  tw: "AI 投注模型即時驗證。追蹤 11,000+ 場比賽分析數據，透明盈利記錄、勝率和累計 ROI 曲線圖。基於數據的足球預測，完全可追溯。",
+  id: "Verifikasi real-time performa model taruhan AI. Lacak 11,000+ pertandingan yang dianalisis dengan riwayat profit transparan, win rate, dan grafik ROI kumulatif. Prediksi sepak bola berbasis data dengan akuntabilitas penuh.",
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
@@ -67,21 +67,36 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     title: titles[locale] || titles.en,
     description,
     keywords: [
-      'AI football predictions',
-      'football betting performance',
-      'AI betting track record',
-      'football prediction accuracy',
-      'betting ROI analysis',
-      'Premier League predictions',
-      'La Liga predictions',
-      'Bundesliga predictions',
-      'Serie A predictions',
-      'Ligue 1 predictions',
-      'verified betting results',
-      'AI sports betting',
+      'AI prediction accuracy',
+      'betting algorithm results',
+      'model backtesting',
+      'verified betting records',
+      'ROI analysis',
+      'handicap statistics',
+      'football prediction performance',
+      'transparent betting history',
+      'win rate analysis',
+      'prediction model verification',
+      'betting data analytics',
+      'sports prediction algorithm',
+      'AI model performance tracking',
+      'cumulative profit analysis',
     ],
     alternates: {
       canonical: locale === 'en' ? `${baseUrl}/performance` : `${baseUrl}/${locale}/performance`,
+      languages: {
+        'en': `${baseUrl}/en/performance`,
+        'es': `${baseUrl}/es/performance`,
+        'pt': `${baseUrl}/pt/performance`,
+        'de': `${baseUrl}/de/performance`,
+        'fr': `${baseUrl}/fr/performance`,
+        'ja': `${baseUrl}/ja/performance`,
+        'ko': `${baseUrl}/ko/performance`,
+        'zh-CN': `${baseUrl}/zh/performance`,
+        'zh-TW': `${baseUrl}/tw/performance`,
+        'id': `${baseUrl}/id/performance`,
+        'x-default': `${baseUrl}/performance`,
+      }
     },
     openGraph: {
       title: titles[locale] || titles.en,
