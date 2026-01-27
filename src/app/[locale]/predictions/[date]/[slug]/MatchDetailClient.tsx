@@ -418,7 +418,7 @@ export default function MatchDetailClient() {
   const dateParam = params.date as string;
   const slug = params.slug as string;
   const fixtureId = parseFixtureIdFromSlug(slug);
-  const matchId = fixtureId ? String(fixtureId) : '';
+  const matchId = fixtureId || null;
 
   const localePath = (path: string): string => {
     if (locale === 'en') return path;
@@ -777,6 +777,11 @@ export default function MatchDetailClient() {
 
   // Fetch match data from database
   const fetchMatch = useCallback(async (isRefresh: boolean = false) => {
+    if (!matchId) {
+      setLoading(false);
+      return null;
+    }
+
     try {
       const { data, error } = await supabase
         .from('prematches')
