@@ -1753,20 +1753,28 @@ export default function PerformanceClient({
       const fixtureIds = [...fixtureSet];
 
       // Fetch prematches info (batch by 100 to avoid query limits)
+      // IMPORTANT: Use id DESC to get the most recent record when there are duplicates
       const prematchesMap = new Map<string, any>();
       console.log('[Performance] Querying prematches for fixture_ids:', fixtureIds);
       for (let i = 0; i < fixtureIds.length; i += 100) {
         const batch = fixtureIds.slice(i, i + 100);
         const { data: prematchesData } = await supabase
           .from('prematches')
-          .select('fixture_id, league_logo, home_name, home_logo, away_name, away_logo, goals_home, goals_away, start_date_msia')
-          .in('fixture_id', batch);
+          .select('id, fixture_id, league_logo, home_name, home_logo, away_name, away_logo, goals_home, goals_away, start_date_msia')
+          .in('fixture_id', batch)
+          .order('id', { ascending: false }); // Get newest records first
 
         console.log('[Performance] Prematches batch result:', prematchesData?.length, 'records for', batch.length, 'fixture_ids');
         console.log('[Performance] Prematches data:', prematchesData);
 
+        // Only keep the first (newest) record for each fixture_id
         prematchesData?.forEach((m: any) => {
-          prematchesMap.set(String(m.fixture_id), m);
+          const key = String(m.fixture_id);
+          if (!prematchesMap.has(key)) {
+            prematchesMap.set(key, m);
+          } else {
+            console.log('[Performance] Duplicate fixture_id detected:', key, 'Keeping newest (id:', prematchesMap.get(key).id, '), ignoring older (id:', m.id, ')');
+          }
         });
       }
       console.log('[Performance] prematchesMap size:', prematchesMap.size);

@@ -195,7 +195,14 @@ BEGIN
         THEN ROUND((mp.total_profit / mp.total_invested) * 100, 1)
         ELSE 0 END as roi
     FROM match_profits mp
-    LEFT JOIN prematches pm ON mp.fixture_id::text = pm.fixture_id::text
+    LEFT JOIN (
+      -- Only get the most recent record for each fixture_id to avoid duplicates
+      SELECT DISTINCT ON (fixture_id)
+        fixture_id, home_name, home_logo, away_name, away_logo,
+        league_logo, start_date_msia
+      FROM prematches
+      ORDER BY fixture_id, id DESC
+    ) pm ON mp.fixture_id::text = pm.fixture_id::text
     ORDER BY mp.latest_bet_time DESC
     LIMIT p_page_size
     OFFSET p_page * p_page_size
