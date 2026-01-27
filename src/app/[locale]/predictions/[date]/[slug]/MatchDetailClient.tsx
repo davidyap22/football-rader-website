@@ -420,6 +420,8 @@ export default function MatchDetailClient() {
   const fixtureId = parseFixtureIdFromSlug(slug);
   const matchId = fixtureId || null;
 
+  console.log('[MatchDetail] URL params:', { dateParam, slug, fixtureId, matchId });
+
   const localePath = (path: string): string => {
     if (locale === 'en') return path;
     return path === '/' ? `/${locale}` : `/${locale}${path}`;
@@ -777,23 +779,29 @@ export default function MatchDetailClient() {
 
   // Fetch match data from database
   const fetchMatch = useCallback(async (isRefresh: boolean = false) => {
+    console.log('[MatchDetail] Fetching match, matchId:', matchId, 'type:', typeof matchId);
+
     if (!matchId) {
+      console.log('[MatchDetail] No matchId provided');
       setLoading(false);
       return null;
     }
 
     try {
+      console.log('[MatchDetail] Querying prematches with fixture_id:', matchId);
       const { data, error } = await supabase
         .from('prematches')
         .select('*')
         .eq('fixture_id', matchId)
         .single();
 
+      console.log('[MatchDetail] Query result - data:', data, 'error:', error);
+
       if (error) throw error;
       setMatch(data);
       return data;
     } catch (error) {
-      console.error('Error fetching match:', error);
+      console.error('[MatchDetail] Error fetching match:', error);
       return null;
     } finally {
       if (!isRefresh) {
