@@ -6,7 +6,7 @@ import { locales, localeNames, type Locale } from '@/i18n/config';
 import FlagIcon from '@/components/FlagIcon';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
+import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 // Translations
 const TRANSLATIONS: Record<string, Record<string, string>> = {
@@ -581,7 +581,7 @@ export default function ProfitSummaryClient({
     };
     fetchUser();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       setUser(session?.user ?? null);
     });
 
