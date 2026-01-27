@@ -1555,6 +1555,7 @@ export default function PerformanceClient({
     setTimeout(() => setAnimationStarted(true), 100);
 
     // Phase 2 & 3: Load chart and matches in parallel (background)
+    console.log('[Performance RPC] Calling RPC functions with bet_style:', betStyleParam);
     const [chartResult, matchesResult] = await Promise.all([
       supabase.rpc('get_performance_chart_data', { p_bet_style: betStyleParam }),
       supabase.rpc('get_performance_matches', {
@@ -1563,6 +1564,16 @@ export default function PerformanceClient({
         p_page_size: MATCHES_PAGE_SIZE
       })
     ]);
+    console.log('[Performance RPC] Chart result error:', chartResult.error);
+    console.log('[Performance RPC] Matches result error:', matchesResult.error);
+    if (matchesResult.error) {
+      console.error('[Performance RPC] get_performance_matches error details:', {
+        code: matchesResult.error.code,
+        message: matchesResult.error.message,
+        details: matchesResult.error.details,
+        hint: matchesResult.error.hint
+      });
+    }
 
     // Set chart data
     let dailyData: DailyPerformance[] = [];
@@ -1585,6 +1596,10 @@ export default function PerformanceClient({
     let availableLeaguesList: string[] = [];
     if (!matchesResult.error) {
       const matchesData = matchesResult.data;
+      console.log('[Performance RPC] get_performance_matches returned:', matchesData);
+      console.log('[Performance RPC] Total count:', matchesData?.total_count);
+      console.log('[Performance RPC] Matches array length:', matchesData?.matches?.length);
+      console.log('[Performance RPC] Match fixture_ids:', matchesData?.matches?.map((m: any) => m.fixture_id));
       setTotalMatchCount(matchesData?.total_count || 0);
       setMatchesPage(0);
 
@@ -1693,6 +1708,9 @@ export default function PerformanceClient({
       }
 
       // Store all summary records
+      console.log('[Performance] ai_performance_summary records fetched:', allSummaryData.length);
+      console.log('[Performance] Sample records:', allSummaryData.slice(0, 3));
+      console.log('[Performance] Fixture IDs:', allSummaryData.map(r => r.fixture_id));
       setAllBetRecords(allSummaryData);
 
       // Calculate overall stats from aggregated data
@@ -1736,6 +1754,7 @@ export default function PerformanceClient({
 
       // Fetch prematches info (batch by 100 to avoid query limits)
       const prematchesMap = new Map<string, any>();
+      console.log('[Performance] Querying prematches for fixture_ids:', fixtureIds);
       for (let i = 0; i < fixtureIds.length; i += 100) {
         const batch = fixtureIds.slice(i, i + 100);
         const { data: prematchesData } = await supabase
@@ -1743,10 +1762,15 @@ export default function PerformanceClient({
           .select('fixture_id, league_logo, home_name, home_logo, away_name, away_logo, goals_home, goals_away, start_date_msia')
           .in('fixture_id', batch);
 
+        console.log('[Performance] Prematches batch result:', prematchesData?.length, 'records for', batch.length, 'fixture_ids');
+        console.log('[Performance] Prematches data:', prematchesData);
+
         prematchesData?.forEach((m: any) => {
           prematchesMap.set(String(m.fixture_id), m);
         });
       }
+      console.log('[Performance] prematchesMap size:', prematchesMap.size);
+      console.log('[Performance] prematchesMap keys:', Array.from(prematchesMap.keys()));
 
       // Convert to MatchSummary array (data is already aggregated)
       const combinedMatches: MatchSummary[] = [];
@@ -1776,6 +1800,9 @@ export default function PerformanceClient({
       }
 
       combinedMatches.sort((a, b) => new Date(b.match_date).getTime() - new Date(a.match_date).getTime());
+      console.log('[Performance] combinedMatches created:', combinedMatches.length);
+      console.log('[Performance] combinedMatches fixture_ids:', combinedMatches.map(m => m.fixture_id));
+      console.log('[Performance] First 3 matches:', combinedMatches.slice(0, 3));
       setMatches(combinedMatches);
       setMatchesLoaded(true);
 
@@ -1986,6 +2013,18 @@ export default function PerformanceClient({
 
     return filtered;
   }, [selectedLeague, searchQuery, dateRange, matches, teamTranslations, locale]);
+
+  // Debug: log filtering results
+  useEffect(() => {
+    console.log('[Performance] Filtering results:');
+    console.log('  - Total matches:', matches.length);
+    console.log('  - After filtering:', filteredMatches.length);
+    console.log('  - selectedLeague:', selectedLeague);
+    console.log('  - searchQuery:', searchQuery);
+    console.log('  - dateRange:', dateRange);
+    console.log('  - chartBetStyle:', chartBetStyle);
+    console.log('  - filteredMatches fixture_ids:', filteredMatches.map(m => m.fixture_id));
+  }, [filteredMatches, matches, selectedLeague, searchQuery, dateRange, chartBetStyle]);
 
   // Client-side pagination: slice filteredMatches based on currentPage
   const totalPages = Math.ceil(filteredMatches.length / ITEMS_PER_PAGE);
