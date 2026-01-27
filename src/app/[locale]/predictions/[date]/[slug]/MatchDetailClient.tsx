@@ -795,13 +795,32 @@ export default function MatchDetailClient() {
         .eq('fixture_id', matchId)
         .single();
 
-      console.log('[MatchDetail] Query result - data:', data, 'error:', error);
+      console.log('[MatchDetail] Query result:');
+      console.log('  - data:', data);
+      console.log('  - error:', error);
 
-      if (error) throw error;
+      if (error) {
+        console.error('[MatchDetail] Supabase error details:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        });
+        throw error;
+      }
+
+      if (!data) {
+        console.warn('[MatchDetail] No data returned for fixture_id:', matchId);
+      }
+
       setMatch(data);
       return data;
     } catch (error) {
-      console.error('[MatchDetail] Error fetching match:', error);
+      console.error('[MatchDetail] Error fetching match:');
+      console.error('  - Error object:', error);
+      console.error('  - Error type:', typeof error);
+      console.error('  - Error keys:', Object.keys(error as object));
+      console.error('  - Full error:', JSON.stringify(error, null, 2));
       return null;
     } finally {
       if (!isRefresh) {
