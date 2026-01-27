@@ -789,14 +789,17 @@ export default function MatchDetailClient() {
 
     try {
       console.log('[MatchDetail] Querying prematches with fixture_id:', matchId);
+      // Use limit(1) instead of single() to handle duplicate records
+      // Order by id descending to get the most recent record
       const { data, error } = await supabase
         .from('prematches')
         .select('*')
         .eq('fixture_id', matchId)
-        .single();
+        .order('id', { ascending: false })
+        .limit(1);
 
       console.log('[MatchDetail] Query result:');
-      console.log('  - data:', data);
+      console.log('  - data array:', data);
       console.log('  - error:', error);
 
       if (error) {
@@ -809,12 +812,16 @@ export default function MatchDetailClient() {
         throw error;
       }
 
-      if (!data) {
+      // Extract first record from array
+      const matchData = data && data.length > 0 ? data[0] : null;
+      console.log('  - extracted match:', matchData);
+
+      if (!matchData) {
         console.warn('[MatchDetail] No data returned for fixture_id:', matchId);
       }
 
-      setMatch(data);
-      return data;
+      setMatch(matchData);
+      return matchData;
     } catch (error) {
       console.error('[MatchDetail] Error fetching match:');
       console.error('  - Error object:', error);
