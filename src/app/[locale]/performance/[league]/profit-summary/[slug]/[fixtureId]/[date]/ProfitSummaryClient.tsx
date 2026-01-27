@@ -575,8 +575,8 @@ export default function ProfitSummaryClient({
 
   // Check auth status
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
     });
 
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
