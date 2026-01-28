@@ -1224,7 +1224,9 @@ export default function ProfitSummaryClient({
                           <td className="py-3 text-sm text-gray-400">{record.line || '-'}</td>
                           <td className="py-3 text-sm text-white">{record.odds?.toFixed(2) || '-'}</td>
                           <td className="py-3 text-sm text-white">${record.stake_money?.toFixed(2) || '0.00'}</td>
-                          <td className="py-3 text-sm text-white">{record.home_score || 0}-{record.away_score || 0}</td>
+                          <td className="py-3 text-sm text-white">
+                            {(record.score_home_at_bet ?? record.home_score ?? 0)}-{(record.score_away_at_bet ?? record.away_score ?? 0)}
+                          </td>
                           <td className="py-3 text-sm">
                             <span className={`px-2 py-1 rounded text-xs ${
                               record.status?.toLowerCase() === 'win' ? 'bg-emerald-500/20 text-emerald-400' :
