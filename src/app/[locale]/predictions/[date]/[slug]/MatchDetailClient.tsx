@@ -676,9 +676,9 @@ export default function MatchDetailClient() {
       firstSignal: liveSignalsHistory[0]
     });
 
-    // Return first N records directly - each record contains data for all markets
+    // Return last N records in reverse order (latest first)
     // No filtering needed as live_signals_v7 table has all market data in each row
-    return liveSignalsHistory.slice(0, count);
+    return liveSignalsHistory.slice(-count).reverse();
   };
 
   // Get last 3 beta signals (for Oddsflow Beta v8) for a specific market
@@ -700,7 +700,8 @@ export default function MatchDetailClient() {
       firstSignal: filtered[0]
     });
 
-    return filtered.slice(0, count);
+    // Return the last N signals in reverse order (latest first)
+    return filtered.slice(-count).reverse();
   };
 
   // Fetch Value Hunter signal history
@@ -3984,20 +3985,17 @@ export default function MatchDetailClient() {
                                 const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
                                 const isValuable = raw.is_valuable_1x2;
                                 const clock = raw.clock;
-                                // Last item in array is the latest signal
-                                const isLatest = index === lastLiveSignals.length - 1;
+                                // First item in array is the latest signal
+                                const isLatest = index === 0;
 
                                 return (
-                                  <tr key={index} className="border-b border-white/5">
+                                  <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
                                     <td className="py-2 px-3">
-                                      <div className="flex items-center gap-2">
-                                        {isLatest && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
-                                        {clock !== null && clock !== undefined ? (
-                                          <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
-                                        ) : (
-                                          <span className="text-gray-500">-</span>
-                                        )}
-                                      </div>
+                                      {clock !== null && clock !== undefined ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
                                     </td>
                                     <td className="py-2 px-3">
                                       <span className="text-emerald-400 font-medium">{selectionLabel}</span>
@@ -4554,20 +4552,17 @@ export default function MatchDetailClient() {
                                 const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
                                 const isValuable = raw.is_valuable_ou;
                                 const clock = raw.clock;
-                                // Last item in array is the latest signal
-                                const isLatest = index === lastLiveSignals.length - 1;
+                                // First item in array is the latest signal
+                                const isLatest = index === 0;
 
                                 return (
-                                  <tr key={index} className="border-b border-white/5">
+                                  <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
                                     <td className="py-2 px-3">
-                                      <div className="flex items-center gap-2">
-                                        {isLatest && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
-                                        {clock !== null && clock !== undefined ? (
-                                          <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
-                                        ) : (
-                                          <span className="text-gray-500">-</span>
-                                        )}
-                                      </div>
+                                      {clock !== null && clock !== undefined ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
                                     </td>
                                     <td className="py-2 px-3">
                                       <span className="text-emerald-400 font-medium">{selectionLabel}</span>
@@ -4716,19 +4711,16 @@ export default function MatchDetailClient() {
                             </thead>
                             <tbody>
                               {lastBetaSignals.map((signal: any, index: number) => {
-                                // Last item in array is the latest signal
-                                const isLatest = index === lastBetaSignals.length - 1;
+                                // First item in array is the latest signal
+                                const isLatest = index === 0;
                                 return (
-                                  <tr key={index} className="border-b border-white/5">
+                                  <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
                                     <td className="py-2 px-3">
-                                      <div className="flex items-center gap-2">
-                                        {isLatest && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
-                                        {signal.minute_at_bet !== null && signal.minute_at_bet !== undefined ? (
-                                          <span className="text-red-400 font-bold tabular-nums">{signal.minute_at_bet}'</span>
-                                        ) : (
-                                          <span className="text-gray-500">-</span>
-                                        )}
-                                      </div>
+                                      {signal.minute_at_bet !== null && signal.minute_at_bet !== undefined ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{signal.minute_at_bet}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
                                     </td>
                                     <td className="py-2 px-3">
                                       <span className="text-cyan-400 text-xs font-medium">{signal.bet_type || '-'}</span>
@@ -5103,20 +5095,17 @@ export default function MatchDetailClient() {
                                 const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
                                 const isValuable = raw.is_valuable_hdp;
                                 const clock = raw.clock;
-                                // Last item in array is the latest signal
-                                const isLatest = index === lastLiveSignals.length - 1;
+                                // First item in array is the latest signal
+                                const isLatest = index === 0;
 
                                 return (
-                                  <tr key={index} className="border-b border-white/5">
+                                  <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
                                     <td className="py-2 px-3">
-                                      <div className="flex items-center gap-2">
-                                        {isLatest && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
-                                        {clock !== null && clock !== undefined ? (
-                                          <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
-                                        ) : (
-                                          <span className="text-gray-500">-</span>
-                                        )}
-                                      </div>
+                                      {clock !== null && clock !== undefined ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
                                     </td>
                                     <td className="py-2 px-3">
                                       <span className="text-emerald-400 font-medium">{selectionLabel}</span>
@@ -5265,19 +5254,16 @@ export default function MatchDetailClient() {
                             </thead>
                             <tbody>
                               {lastBetaSignals.map((signal: any, index: number) => {
-                                // Last item in array is the latest signal
-                                const isLatest = index === lastBetaSignals.length - 1;
+                                // First item in array is the latest signal
+                                const isLatest = index === 0;
                                 return (
-                                  <tr key={index} className="border-b border-white/5">
+                                  <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
                                     <td className="py-2 px-3">
-                                      <div className="flex items-center gap-2">
-                                        {isLatest && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
-                                        {signal.minute_at_bet !== null && signal.minute_at_bet !== undefined ? (
-                                          <span className="text-red-400 font-bold tabular-nums">{signal.minute_at_bet}'</span>
-                                        ) : (
-                                          <span className="text-gray-500">-</span>
-                                        )}
-                                      </div>
+                                      {signal.minute_at_bet !== null && signal.minute_at_bet !== undefined ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{signal.minute_at_bet}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
                                     </td>
                                     <td className="py-2 px-3">
                                       <span className="text-purple-400 text-xs font-medium">{signal.bet_type || '-'}</span>
