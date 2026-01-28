@@ -3939,73 +3939,87 @@ export default function MatchDetailClient() {
                         </div>
                       );
                     })()
-                  ) : liveSignals ? (
-                    // Show current live signal for ongoing match
+                  ) : liveSignalsHistory && liveSignalsHistory.length > 0 ? (
+                    // Show last 3 live signals in table for ongoing match
                     (() => {
-                      const raw = liveSignals as unknown as Record<string, unknown>;
-                      const selection = String(raw.selection_1x2 || '').toUpperCase();
-                      const selectionLabel = selection === 'HOME' || selection === '1' ? 'Home Win' : selection === 'DRAW' || selection === 'X' ? 'Draw' : 'Away Win';
-                      const fairOdds = raw.fair_odds_1x2 !== null && raw.fair_odds_1x2 !== undefined ? Number(raw.fair_odds_1x2).toFixed(2) : '-';
-                      const marketOdds = raw.market_odds_1x2 !== null && raw.market_odds_1x2 !== undefined ? Number(raw.market_odds_1x2).toFixed(2) : '-';
-                      const evStr = String(raw.expected_value_1x2 || '').replace('%', '');
-                      const evNum = parseFloat(evStr);
-                      const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
-                      const stakeStr = String(raw.recommended_stake_1x2 || '').replace('%', '');
-                      const stakeNum = parseFloat(stakeStr);
-                      const stakeDisplay = !isNaN(stakeNum) ? stakeNum.toFixed(2) : '-';
-                      const isValuable = raw.is_valuable_1x2;
-                      const score = raw.score as string | null;
-                      const clock = raw.clock;
-
+                      const lastLiveSignals = getLastLiveSignals('1x2', 3);
+                      if (lastLiveSignals.length === 0) {
+                        return (
+                          <div className="text-center py-8 text-gray-500">
+                            <div className="space-y-2">
+                              <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                              </svg>
+                              <p className="text-sm">AI no predictions</p>
+                            </div>
+                          </div>
+                        );
+                      }
                       return (
-                        <div className="rounded-xl bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border-purple-500/20 border overflow-hidden">
-                          <div className="flex items-center justify-between px-4 py-3 bg-black/20">
-                            <div className="flex items-center gap-3">
-                              {clock !== null && clock !== undefined && (
-                                <div className="flex items-center gap-1.5">
-                                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                                  <span className="text-white font-bold">{String(clock)}'</span>
-                                </div>
-                              )}
-                              {score && (
-                                <span className="text-gray-400 text-sm">Score: <span className="text-white font-semibold">{score}</span></span>
-                              )}
-                            </div>
-                            {Boolean(isValuable) && (
-                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border-emerald-500/40 border">
-                                <span className="text-emerald-400 text-xs font-bold">💎 VALUE BET</span>
-                              </div>
-                            )}
-                          </div>
-                          <div className="p-4">
-                            <div className="flex items-center justify-between mb-4">
-                              <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Recommended Bet</div>
-                                <div className="text-xl font-bold text-white">{selectionLabel}</div>
-                              </div>
-                              <div className="flex items-center gap-6">
-                                <div className="text-center">
-                                  <div className="text-[10px] text-gray-500 uppercase">Fair</div>
-                                  <div className="text-lg font-semibold text-gray-300">{fairOdds}</div>
-                                </div>
-                                <div className="text-gray-600">→</div>
-                                <div className="text-center">
-                                  <div className="text-[10px] text-gray-500 uppercase">Market</div>
-                                  <div className="text-xl font-bold text-white">{marketOdds}</div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                              <div className="bg-black/20 rounded-lg p-3">
-                                <div className="text-[10px] text-gray-500 uppercase tracking-wider">Expected Value</div>
-                                <div className="text-lg font-bold text-emerald-400">{evDisplay}</div>
-                              </div>
-                              <div className="bg-black/20 rounded-lg p-3">
-                                <div className="text-[10px] text-gray-500 uppercase tracking-wider">Stake</div>
-                                <div className="text-lg font-bold text-yellow-400">{stakeDisplay !== '-' ? `${stakeDisplay} units` : '-'}</div>
-                              </div>
-                            </div>
-                          </div>
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-white/10">
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {lastLiveSignals.map((signal: any, index: number) => {
+                                const raw = signal as Record<string, unknown>;
+                                const selection = String(raw.selection_1x2 || '').toUpperCase();
+                                const selectionLabel = selection === 'HOME' || selection === '1' ? 'Home' : selection === 'DRAW' || selection === 'X' ? 'Draw' : 'Away';
+                                const fairOdds = raw.fair_odds_1x2 !== null && raw.fair_odds_1x2 !== undefined ? Number(raw.fair_odds_1x2).toFixed(2) : '-';
+                                const marketOdds = raw.market_odds_1x2 !== null && raw.market_odds_1x2 !== undefined ? Number(raw.market_odds_1x2).toFixed(2) : '-';
+                                const evStr = String(raw.expected_value_1x2 || '').replace('%', '');
+                                const evNum = parseFloat(evStr);
+                                const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
+                                const stakeStr = String(raw.recommended_stake_1x2 || '').replace('%', '');
+                                const stakeNum = parseFloat(stakeStr);
+                                const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
+                                const isValuable = raw.is_valuable_1x2;
+                                const clock = raw.clock;
+                                // Last item in array is the latest signal
+                                const isLatest = index === lastLiveSignals.length - 1;
+
+                                return (
+                                  <tr key={index} className="border-b border-white/5">
+                                    <td className="py-2 px-3">
+                                      <div className="flex items-center gap-2">
+                                        {isLatest && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
+                                        {clock !== null && clock !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                        ) : (
+                                          <span className="text-gray-500">-</span>
+                                        )}
+                                      </div>
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-emerald-400 font-medium">{selectionLabel}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-gray-300">{fairOdds}</td>
+                                    <td className="py-2 px-3 text-white font-semibold">{marketOdds}</td>
+                                    <td className="py-2 px-3 text-emerald-400">{evDisplay}</td>
+                                    <td className="py-2 px-3 text-yellow-400">{stakeDisplay !== '-' ? `${stakeDisplay} units` : '-'}</td>
+                                    <td className="py-2 px-3">
+                                      {Boolean(isValuable) ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                                          💎
+                                        </span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
                         </div>
                       );
                     })()
@@ -4492,81 +4506,91 @@ export default function MatchDetailClient() {
                         </div>
                       );
                     })()
-                  ) : liveSignals ? (
-                    // Show current live signal for ongoing match
+                  ) : liveSignalsHistory && liveSignalsHistory.length > 0 ? (
+                    // Show last 3 live signals in table for ongoing match
                     (() => {
-                      const raw = liveSignals as unknown as Record<string, unknown>;
-                      const selection = String(raw.selection_ou || '').toLowerCase();
-                      const lineValue = raw.total_points_mainline ?? raw.totalpoints_main_line ?? raw.line_ou ?? raw.line ?? null;
-                      const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '';
-                      const selectionLabel = selection === 'over' ? 'Over' : 'Under';
-                      const fairOdds = raw.fair_odds_ou !== null && raw.fair_odds_ou !== undefined ? Number(raw.fair_odds_ou).toFixed(2) : '-';
-                      const marketOdds = raw.market_odds_ou !== null && raw.market_odds_ou !== undefined ? Number(raw.market_odds_ou).toFixed(2) : '-';
-                      const evStr = String(raw.expected_value_ou || '').replace('%', '');
-                      const evNum = parseFloat(evStr);
-                      const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
-                      const stakeStr = String(raw.recommended_stake_ou || '').replace('%', '');
-                      const stakeNum = parseFloat(stakeStr);
-                      const stakeDisplay = !isNaN(stakeNum) ? stakeNum.toFixed(2) : '-';
-                      const isValuable = raw.is_valuable_ou;
-                      const score = raw.score as string | null;
-                      const clock = raw.clock;
-
+                      const lastLiveSignals = getLastLiveSignals('ou', 3);
+                      if (lastLiveSignals.length === 0) {
+                        return (
+                          <div className="text-center py-8 text-gray-500">
+                            <div className="space-y-2">
+                              <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                              </svg>
+                              <p className="text-sm">AI no predictions</p>
+                            </div>
+                          </div>
+                        );
+                      }
                       return (
-                        <div className="rounded-xl bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border-cyan-500/20 border overflow-hidden">
-                          {/* Header with Clock and Status */}
-                          <div className="flex items-center justify-between px-4 py-3 bg-black/20">
-                            <div className="flex items-center gap-3">
-                              {clock !== null && clock !== undefined && (
-                                <div className="flex items-center gap-1.5">
-                                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                                  <span className="text-white font-bold">{String(clock)}'</span>
-                                </div>
-                              )}
-                              {score && (
-                                <span className="text-gray-400 text-sm">Score: <span className="text-white font-semibold">{score}</span></span>
-                              )}
-                            </div>
-                            {Boolean(isValuable) && (
-                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border-emerald-500/40 border">
-                                <span className="text-emerald-400 text-xs font-bold">💎 VALUE BET</span>
-                              </div>
-                            )}
-                          </div>
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-white/10">
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {lastLiveSignals.map((signal: any, index: number) => {
+                                const raw = signal as Record<string, unknown>;
+                                const selection = String(raw.selection_ou || '').toLowerCase();
+                                const selectionLabel = selection === 'over' ? 'Over' : 'Under';
+                                const lineValue = raw.total_points_mainline ?? raw.totalpoints_main_line ?? raw.line_ou ?? raw.line ?? null;
+                                const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '-';
+                                const fairOdds = raw.fair_odds_ou !== null && raw.fair_odds_ou !== undefined ? Number(raw.fair_odds_ou).toFixed(2) : '-';
+                                const marketOdds = raw.market_odds_ou !== null && raw.market_odds_ou !== undefined ? Number(raw.market_odds_ou).toFixed(2) : '-';
+                                const evStr = String(raw.expected_value_ou || '').replace('%', '');
+                                const evNum = parseFloat(evStr);
+                                const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
+                                const stakeStr = String(raw.recommended_stake_ou || '').replace('%', '');
+                                const stakeNum = parseFloat(stakeStr);
+                                const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
+                                const isValuable = raw.is_valuable_ou;
+                                const clock = raw.clock;
+                                // Last item in array is the latest signal
+                                const isLatest = index === lastLiveSignals.length - 1;
 
-                          {/* Main Content */}
-                          <div className="p-4">
-                            {/* Selection & Odds */}
-                            <div className="flex items-center justify-between mb-4">
-                              <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Recommended Bet</div>
-                                <div className="text-xl font-bold text-white">{selectionLabel} {line && <span className="text-amber-400">{line}</span>}</div>
-                              </div>
-                              <div className="flex items-center gap-6">
-                                <div className="text-center">
-                                  <div className="text-[10px] text-gray-500 uppercase">Fair</div>
-                                  <div className="text-lg font-semibold text-gray-300">{fairOdds}</div>
-                                </div>
-                                <div className="text-gray-600">→</div>
-                                <div className="text-center">
-                                  <div className="text-[10px] text-gray-500 uppercase">Market</div>
-                                  <div className="text-xl font-bold text-white">{marketOdds}</div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Stats Grid */}
-                            <div className="grid grid-cols-2 gap-3">
-                              <div className="bg-black/20 rounded-lg p-3">
-                                <div className="text-[10px] text-gray-500 uppercase tracking-wider">Expected Value</div>
-                                <div className="text-lg font-bold text-emerald-400">{evDisplay}</div>
-                              </div>
-                              <div className="bg-black/20 rounded-lg p-3">
-                                <div className="text-[10px] text-gray-500 uppercase tracking-wider">Stake</div>
-                                <div className="text-lg font-bold text-yellow-400">{stakeDisplay !== '-' ? `${stakeDisplay} units` : '-'}</div>
-                              </div>
-                            </div>
-                          </div>
+                                return (
+                                  <tr key={index} className="border-b border-white/5">
+                                    <td className="py-2 px-3">
+                                      <div className="flex items-center gap-2">
+                                        {isLatest && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
+                                        {clock !== null && clock !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                        ) : (
+                                          <span className="text-gray-500">-</span>
+                                        )}
+                                      </div>
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-emerald-400 font-medium">{selectionLabel}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-amber-400">{line}</td>
+                                    <td className="py-2 px-3 text-gray-300">{fairOdds}</td>
+                                    <td className="py-2 px-3 text-white font-semibold">{marketOdds}</td>
+                                    <td className="py-2 px-3 text-emerald-400">{evDisplay}</td>
+                                    <td className="py-2 px-3 text-yellow-400">{stakeDisplay !== '-' ? `${stakeDisplay} units` : '-'}</td>
+                                    <td className="py-2 px-3">
+                                      {Boolean(isValuable) ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                                          💎
+                                        </span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
                         </div>
                       );
                     })()
@@ -5031,81 +5055,91 @@ export default function MatchDetailClient() {
                         </div>
                       );
                     })()
-                  ) : liveSignals ? (
-                    // Show current live signal for ongoing match
+                  ) : liveSignalsHistory && liveSignalsHistory.length > 0 ? (
+                    // Show last 3 live signals in table for ongoing match
                     (() => {
-                      const raw = liveSignals as unknown as Record<string, unknown>;
-                      const selection = String(raw.selection_hdp || '').toLowerCase();
-                      const lineValue = raw.handicap_main_line ?? raw.handicap_mainline ?? raw.line_hdp ?? raw.line ?? null;
-                      const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '';
-                      const selectionLabel = selection === 'home' ? 'Home' : 'Away';
-                      const fairOdds = raw.fair_odds_hdp !== null && raw.fair_odds_hdp !== undefined ? Number(raw.fair_odds_hdp).toFixed(2) : '-';
-                      const marketOdds = raw.market_odds_hdp !== null && raw.market_odds_hdp !== undefined ? Number(raw.market_odds_hdp).toFixed(2) : '-';
-                      const evStr = String(raw.expected_value_hdp || '').replace('%', '');
-                      const evNum = parseFloat(evStr);
-                      const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
-                      const stakeStr = String(raw.recommended_stake_hdp || '').replace('%', '');
-                      const stakeNum = parseFloat(stakeStr);
-                      const stakeDisplay = !isNaN(stakeNum) ? stakeNum.toFixed(2) : '-';
-                      const isValuable = raw.is_valuable_hdp;
-                      const score = raw.score as string | null;
-                      const clock = raw.clock;
-
+                      const lastLiveSignals = getLastLiveSignals('hdp', 3);
+                      if (lastLiveSignals.length === 0) {
+                        return (
+                          <div className="text-center py-8 text-gray-500">
+                            <div className="space-y-2">
+                              <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                              </svg>
+                              <p className="text-sm">AI no predictions</p>
+                            </div>
+                          </div>
+                        );
+                      }
                       return (
-                        <div className="rounded-xl bg-gradient-to-br from-pink-900/40 to-purple-900/40 border-pink-500/20 border overflow-hidden">
-                          {/* Header with Clock and Status */}
-                          <div className="flex items-center justify-between px-4 py-3 bg-black/20">
-                            <div className="flex items-center gap-3">
-                              {clock !== null && clock !== undefined && (
-                                <div className="flex items-center gap-1.5">
-                                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                                  <span className="text-white font-bold">{String(clock)}'</span>
-                                </div>
-                              )}
-                              {score && (
-                                <span className="text-gray-400 text-sm">Score: <span className="text-white font-semibold">{score}</span></span>
-                              )}
-                            </div>
-                            {Boolean(isValuable) && (
-                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border-emerald-500/40 border">
-                                <span className="text-emerald-400 text-xs font-bold">💎 VALUE BET</span>
-                              </div>
-                            )}
-                          </div>
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-white/10">
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {lastLiveSignals.map((signal: any, index: number) => {
+                                const raw = signal as Record<string, unknown>;
+                                const selection = String(raw.selection_hdp || '').toLowerCase();
+                                const selectionLabel = selection === 'home' ? 'Home' : 'Away';
+                                const lineValue = raw.handicap_main_line ?? raw.handicap_mainline ?? raw.line_hdp ?? raw.line ?? null;
+                                const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '-';
+                                const fairOdds = raw.fair_odds_hdp !== null && raw.fair_odds_hdp !== undefined ? Number(raw.fair_odds_hdp).toFixed(2) : '-';
+                                const marketOdds = raw.market_odds_hdp !== null && raw.market_odds_hdp !== undefined ? Number(raw.market_odds_hdp).toFixed(2) : '-';
+                                const evStr = String(raw.expected_value_hdp || '').replace('%', '');
+                                const evNum = parseFloat(evStr);
+                                const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
+                                const stakeStr = String(raw.recommended_stake_hdp || '').replace('%', '');
+                                const stakeNum = parseFloat(stakeStr);
+                                const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
+                                const isValuable = raw.is_valuable_hdp;
+                                const clock = raw.clock;
+                                // Last item in array is the latest signal
+                                const isLatest = index === lastLiveSignals.length - 1;
 
-                          {/* Main Content */}
-                          <div className="p-4">
-                            {/* Selection & Odds */}
-                            <div className="flex items-center justify-between mb-4">
-                              <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Recommended Bet</div>
-                                <div className="text-xl font-bold text-white">{selectionLabel} {line && <span className="text-amber-400">{line}</span>}</div>
-                              </div>
-                              <div className="flex items-center gap-6">
-                                <div className="text-center">
-                                  <div className="text-[10px] text-gray-500 uppercase">Fair</div>
-                                  <div className="text-lg font-semibold text-gray-300">{fairOdds}</div>
-                                </div>
-                                <div className="text-gray-600">→</div>
-                                <div className="text-center">
-                                  <div className="text-[10px] text-gray-500 uppercase">Market</div>
-                                  <div className="text-xl font-bold text-white">{marketOdds}</div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Stats Grid */}
-                            <div className="grid grid-cols-2 gap-3">
-                              <div className="bg-black/20 rounded-lg p-3">
-                                <div className="text-[10px] text-gray-500 uppercase tracking-wider">Expected Value</div>
-                                <div className="text-lg font-bold text-emerald-400">{evDisplay}</div>
-                              </div>
-                              <div className="bg-black/20 rounded-lg p-3">
-                                <div className="text-[10px] text-gray-500 uppercase tracking-wider">Stake</div>
-                                <div className="text-lg font-bold text-yellow-400">{stakeDisplay !== '-' ? `${stakeDisplay} units` : '-'}</div>
-                              </div>
-                            </div>
-                          </div>
+                                return (
+                                  <tr key={index} className="border-b border-white/5">
+                                    <td className="py-2 px-3">
+                                      <div className="flex items-center gap-2">
+                                        {isLatest && <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
+                                        {clock !== null && clock !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                        ) : (
+                                          <span className="text-gray-500">-</span>
+                                        )}
+                                      </div>
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-emerald-400 font-medium">{selectionLabel}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-amber-400">{line}</td>
+                                    <td className="py-2 px-3 text-gray-300">{fairOdds}</td>
+                                    <td className="py-2 px-3 text-white font-semibold">{marketOdds}</td>
+                                    <td className="py-2 px-3 text-emerald-400">{evDisplay}</td>
+                                    <td className="py-2 px-3 text-yellow-400">{stakeDisplay !== '-' ? `${stakeDisplay} units` : '-'}</td>
+                                    <td className="py-2 px-3">
+                                      {Boolean(isValuable) ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                                          💎
+                                        </span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
                         </div>
                       );
                     })()
