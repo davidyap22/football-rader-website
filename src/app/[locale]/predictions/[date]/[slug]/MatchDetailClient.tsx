@@ -4645,6 +4645,79 @@ export default function MatchDetailClient() {
                         </div>
                       );
                     })()
+                  ) : betaSignalsHistory && betaSignalsHistory.length > 0 ? (
+                    // Live display - show latest bet for Oddsflow Beta v8
+                    (() => {
+                      // Filter by O/U market
+                      const ouSignals = betaSignalsHistory.filter((signal: any) => signal.bet_type === 'OVER_UNDER');
+                      if (ouSignals.length === 0) {
+                        return (
+                          <div className="text-center py-8 text-gray-500">
+                            <div className="space-y-2">
+                              <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                              </svg>
+                              <p className="text-sm">AI no predictions</p>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      // Get the latest signal (last in array)
+                      const latestSignal = ouSignals[ouSignals.length - 1] as unknown as Record<string, unknown>;
+                      const selection = String(latestSignal.selection || '-');
+                      const line = latestSignal.line !== null && latestSignal.line !== undefined ? String(latestSignal.line) : '';
+                      const odds = latestSignal.odds !== null && latestSignal.odds !== undefined ? Number(latestSignal.odds).toFixed(2) : '-';
+                      const stake = latestSignal.stake !== null && latestSignal.stake !== undefined ? `$${latestSignal.stake}` : '-';
+                      const clock = latestSignal.minute_at_bet;
+                      const scoreHome = latestSignal.score_home_at_bet;
+                      const scoreAway = latestSignal.score_away_at_bet;
+                      const score = (scoreHome !== null && scoreHome !== undefined && scoreAway !== null && scoreAway !== undefined)
+                        ? `${scoreHome}-${scoreAway}`
+                        : null;
+
+                      return (
+                        <div className="rounded-xl bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border-cyan-500/20 border overflow-hidden">
+                          {/* Header with Clock and Score */}
+                          <div className="flex items-center justify-between px-4 py-3 bg-black/20">
+                            <div className="flex items-center gap-3">
+                              {clock !== null && clock !== undefined && (
+                                <div className="flex items-center gap-1.5">
+                                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                                  <span className="text-white font-bold">{String(clock)}'</span>
+                                </div>
+                              )}
+                              {score && (
+                                <span className="text-gray-400 text-sm">Score: <span className="text-white font-semibold">{score}</span></span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Main Content */}
+                          <div className="p-4">
+                            {/* Selection & Odds */}
+                            <div className="flex items-center justify-between mb-4">
+                              <div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Recommended Bet</div>
+                                <div className="text-xl font-bold text-white">{selection} {line && <span className="text-amber-400">{line}</span>}</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-[10px] text-gray-500 uppercase">Market Odds</div>
+                                <div className="text-xl font-bold text-white">{odds}</div>
+                              </div>
+                            </div>
+
+                            {/* Stats Grid */}
+                            <div className="grid grid-cols-1 gap-3">
+                              <div className="bg-black/20 rounded-lg p-3">
+                                <div className="text-[10px] text-gray-500 uppercase tracking-wider">Stake</div>
+                                <div className="text-lg font-bold text-yellow-400">{stake}</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()
                   ) : (
                     <div className="text-center py-8 text-gray-500">
                       <div className="space-y-2">
@@ -5111,6 +5184,79 @@ export default function MatchDetailClient() {
                             </table>
                           </div>
                           <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                        </div>
+                      );
+                    })()
+                  ) : betaSignalsHistory && betaSignalsHistory.length > 0 ? (
+                    // Live display - show latest bet for Oddsflow Beta v8
+                    (() => {
+                      // Filter by HDP market
+                      const hdpSignals = betaSignalsHistory.filter((signal: any) => signal.bet_type === 'HANDICAP');
+                      if (hdpSignals.length === 0) {
+                        return (
+                          <div className="text-center py-8 text-gray-500">
+                            <div className="space-y-2">
+                              <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                              </svg>
+                              <p className="text-sm">AI no predictions</p>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      // Get the latest signal (last in array)
+                      const latestSignal = hdpSignals[hdpSignals.length - 1] as unknown as Record<string, unknown>;
+                      const selection = String(latestSignal.selection || '-');
+                      const line = latestSignal.line !== null && latestSignal.line !== undefined ? String(latestSignal.line) : '';
+                      const odds = latestSignal.odds !== null && latestSignal.odds !== undefined ? Number(latestSignal.odds).toFixed(2) : '-';
+                      const stake = latestSignal.stake !== null && latestSignal.stake !== undefined ? `$${latestSignal.stake}` : '-';
+                      const clock = latestSignal.minute_at_bet;
+                      const scoreHome = latestSignal.score_home_at_bet;
+                      const scoreAway = latestSignal.score_away_at_bet;
+                      const score = (scoreHome !== null && scoreHome !== undefined && scoreAway !== null && scoreAway !== undefined)
+                        ? `${scoreHome}-${scoreAway}`
+                        : null;
+
+                      return (
+                        <div className="rounded-xl bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border-purple-500/20 border overflow-hidden">
+                          {/* Header with Clock and Score */}
+                          <div className="flex items-center justify-between px-4 py-3 bg-black/20">
+                            <div className="flex items-center gap-3">
+                              {clock !== null && clock !== undefined && (
+                                <div className="flex items-center gap-1.5">
+                                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                                  <span className="text-white font-bold">{String(clock)}'</span>
+                                </div>
+                              )}
+                              {score && (
+                                <span className="text-gray-400 text-sm">Score: <span className="text-white font-semibold">{score}</span></span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Main Content */}
+                          <div className="p-4">
+                            {/* Selection & Odds */}
+                            <div className="flex items-center justify-between mb-4">
+                              <div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Recommended Bet</div>
+                                <div className="text-xl font-bold text-white">{selection} {line && <span className="text-amber-400">{line}</span>}</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-[10px] text-gray-500 uppercase">Market Odds</div>
+                                <div className="text-xl font-bold text-white">{odds}</div>
+                              </div>
+                            </div>
+
+                            {/* Stats Grid */}
+                            <div className="grid grid-cols-1 gap-3">
+                              <div className="bg-black/20 rounded-lg p-3">
+                                <div className="text-[10px] text-gray-500 uppercase tracking-wider">Stake</div>
+                                <div className="text-lg font-bold text-yellow-400">{stake}</div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       );
                     })()
