@@ -734,10 +734,9 @@ export default function MatchDetailClient() {
       fetchSignalHistory('overunder', selectedPersonality);
       fetchSignalHistory('handicap', selectedPersonality);
 
-      // Fetch live signals history for HDP Sniper (value personality)
-      if (selectedPersonality === 'value') {
-        fetchValueHunterHistory();
-      }
+      // Always fetch live signals history (for HDP Sniper) when match is finished
+      // This ensures data is available when user switches to HDP Sniper
+      fetchValueHunterHistory();
     }
   }, [match?.type, match?.fixture_id, selectedPersonality, fetchSignalHistory, fetchValueHunterHistory]);
 
