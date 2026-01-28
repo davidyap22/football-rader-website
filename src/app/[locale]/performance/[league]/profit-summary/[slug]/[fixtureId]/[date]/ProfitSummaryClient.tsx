@@ -656,17 +656,10 @@ export default function ProfitSummaryClient({
   });
 
   // Group bet records by model (bet_style)
-  // Debug: log unique bet_style values
-  const uniqueBetStyles = [...new Set(betRecords.map(r => r.bet_style))];
-  console.log('[ProfitSummary] Unique bet_style values in data:', uniqueBetStyles);
-  console.log('[ProfitSummary] Models we are filtering for:', models);
-
   const modelStats = models.map(model => {
     const records = model === 'All Models'
       ? betRecords
       : betRecords.filter(r => r.bet_style === model);
-
-    console.log(`[ProfitSummary] Model: ${model}, Records found: ${records.length}`);
 
     const totalProfit = records.reduce((sum, r) => sum + (r.profit ?? 0), 0);
     const totalInvested = records.reduce((sum, r) => sum + (r.stake_money ?? 0), 0);
