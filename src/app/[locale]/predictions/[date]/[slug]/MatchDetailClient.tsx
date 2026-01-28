@@ -655,6 +655,31 @@ export default function MatchDetailClient() {
     }
   }, [match?.fixture_id, selectedPersonality]);
 
+  // Get last 3 signals for finished matches
+  const getLastSignals = (type: 'moneyline' | 'overunder' | 'handicap', count: number = 3) => {
+    const signals = signalHistory[type];
+    if (!signals || signals.length === 0) return [];
+    return signals.slice(0, count);
+  };
+
+  // Get last 3 live signals (for HDP Sniper) for a specific market
+  const getLastLiveSignals = (marketType: '1x2' | 'ou' | 'hdp', count: number = 3) => {
+    if (!liveSignalsHistory || liveSignalsHistory.length === 0) return [];
+
+    // Filter for signals that have data for the requested market
+    const filtered = liveSignalsHistory.filter((signal: any) => {
+      if (marketType === '1x2') {
+        return signal.selection_1x2 || signal.fair_odds_1x2 || signal.market_odds_1x2;
+      } else if (marketType === 'ou') {
+        return signal.selection_ou || signal.fair_odds_ou || signal.market_odds_ou;
+      } else { // hdp
+        return signal.selection_hdp || signal.fair_odds_hdp || signal.market_odds_hdp;
+      }
+    });
+
+    return filtered.slice(0, count);
+  };
+
   // Fetch Value Hunter signal history
   const fetchValueHunterHistory = useCallback(async () => {
     if (!match?.fixture_id) return;
@@ -700,6 +725,21 @@ export default function MatchDetailClient() {
       fetchSignalHistory(modalMarketFilter, modalBetStyleFilter);
     }
   }, [showSignalHistory, modalMarketFilter, modalBetStyleFilter, fetchSignalHistory, fetchValueHunterHistory]);
+
+  // Fetch signal history when match is finished (to show last 3 signals)
+  useEffect(() => {
+    if (match?.type === 'Finished' && match?.fixture_id) {
+      // Fetch regular signal history for all markets
+      fetchSignalHistory('moneyline', selectedPersonality);
+      fetchSignalHistory('overunder', selectedPersonality);
+      fetchSignalHistory('handicap', selectedPersonality);
+
+      // Fetch live signals history for HDP Sniper (value personality)
+      if (selectedPersonality === 'value') {
+        fetchValueHunterHistory();
+      }
+    }
+  }, [match?.type, match?.fixture_id, selectedPersonality, fetchSignalHistory, fetchValueHunterHistory]);
 
   // Fetch profit summary for finished matches
   const fetchProfitSummary = useCallback(async (fixtureId: number, betStyle?: string) => {
@@ -3596,14 +3636,82 @@ export default function MatchDetailClient() {
             {selectedMarket === 'moneyline' && (
               <div className="space-y-3">
                 {match.type === 'Finished' ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <div className="space-y-2">
-                      <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <p className="text-sm">AI no predictions</p>
-                    </div>
-                  </div>
+                  (() => {
+                    const lastSignals = getLastSignals('moneyline', 3);
+                    if (lastSignals.length === 0) {
+                      return (
+                        <div className="text-center py-8 text-gray-500">
+                          <div className="space-y-2">
+                            <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p className="text-sm">Match has ended</p>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="opacity-30">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-white/10">
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Signal</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Home</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Draw</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Away</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Bookmaker</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stacking</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {lastSignals.map((signal: any, index: number) => {
+                                const odds = signal.odds || [];
+                                const homeOdds = typeof odds[0] === 'number' ? odds[0].toFixed(2) : '-';
+                                const drawOdds = typeof odds[1] === 'number' ? odds[1].toFixed(2) : '-';
+                                const awayOdds = typeof odds[2] === 'number' ? odds[2].toFixed(2) : '-';
+
+                                return (
+                                  <tr key={index} className="border-b border-white/5">
+                                    <td className="py-2 px-3">
+                                      {signal.clock !== null ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{signal.clock}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className={`font-bold ${
+                                        signal.signal?.includes('🟢') ? 'text-emerald-400' :
+                                        signal.signal?.includes('🔥') ? 'text-orange-400' :
+                                        signal.signal?.includes('🔵') ? 'text-blue-400' :
+                                        'text-gray-400'
+                                      }`}>
+                                        {signal.signal || '-'}
+                                      </span>
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-emerald-400 font-medium">{signal.selection || '-'}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-gray-300">{homeOdds}</td>
+                                    <td className="py-2 px-3 text-gray-300">{drawOdds}</td>
+                                    <td className="py-2 px-3 text-gray-300">{awayOdds}</td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-blue-400 text-xs font-bold uppercase">{signal.bookmaker || '-'}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-gray-300">{signal.stacking || '-'}</td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                      </div>
+                    );
+                  })()
                 ) : aiPredictions.moneyline ? (
                   <>
                     {/* Signal & Status Row */}
@@ -3786,6 +3894,85 @@ export default function MatchDetailClient() {
                       </div>
                     );
                   })()
+                ) : selectedPersonality === 'value' && match.type === 'Finished' ? (
+                  (() => {
+                    const lastLiveSignals = getLastLiveSignals('1x2', 3);
+                    if (lastLiveSignals.length === 0) {
+                      return (
+                        <div className="text-center py-8 text-gray-500">
+                          <div className="space-y-2">
+                            <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p className="text-sm">Match has ended</p>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="opacity-30">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-white/10">
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {lastLiveSignals.map((signal: any, index: number) => {
+                                const raw = signal as Record<string, unknown>;
+                                const selection = String(raw.selection_1x2 || '').toUpperCase();
+                                const selectionLabel = selection === 'HOME' || selection === '1' ? 'Home' : selection === 'DRAW' || selection === 'X' ? 'Draw' : 'Away';
+                                const fairOdds = raw.fair_odds_1x2 !== null && raw.fair_odds_1x2 !== undefined ? Number(raw.fair_odds_1x2).toFixed(2) : '-';
+                                const marketOdds = raw.market_odds_1x2 !== null && raw.market_odds_1x2 !== undefined ? Number(raw.market_odds_1x2).toFixed(2) : '-';
+                                const evStr = String(raw.expected_value_1x2 || '').replace('%', '');
+                                const evNum = parseFloat(evStr);
+                                const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
+                                const stakeStr = String(raw.recommended_stake_1x2 || '').replace('%', '');
+                                const stakeNum = parseFloat(stakeStr);
+                                const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
+                                const isValuable = raw.is_valuable_1x2;
+                                const clock = raw.clock;
+
+                                return (
+                                  <tr key={index} className="border-b border-white/5">
+                                    <td className="py-2 px-3">
+                                      {clock !== null && clock !== undefined ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-emerald-400 font-medium">{selectionLabel}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-gray-300">{fairOdds}</td>
+                                    <td className="py-2 px-3 text-white font-semibold">{marketOdds}</td>
+                                    <td className="py-2 px-3 text-emerald-400">{evDisplay}</td>
+                                    <td className="py-2 px-3 text-yellow-400">{stakeDisplay}</td>
+                                    <td className="py-2 px-3">
+                                      {Boolean(isValuable) ? (
+                                        <span className="text-emerald-400">💎</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                      </div>
+                    );
+                  })()
                 ) : (
                   <div className="text-center py-8 text-gray-500">
                     {match.type === 'Scheduled' ? (
@@ -3818,14 +4005,81 @@ export default function MatchDetailClient() {
             {selectedMarket === 'overunder' && (
               <div className="space-y-3">
                 {match.type === 'Finished' ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <div className="space-y-2">
-                      <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <p className="text-sm">AI no predictions</p>
-                    </div>
-                  </div>
+                  (() => {
+                    const lastSignals = getLastSignals('overunder', 3);
+                    if (lastSignals.length === 0) {
+                      return (
+                        <div className="text-center py-8 text-gray-500">
+                          <div className="space-y-2">
+                            <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p className="text-sm">Match has ended</p>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="opacity-30">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-white/10">
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Signal</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Over</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Under</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Bookmaker</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stacking</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {lastSignals.map((signal: any, index: number) => {
+                                const odds = signal.odds || [];
+                                const overOdds = typeof odds[0] === 'number' ? odds[0].toFixed(2) : '-';
+                                const underOdds = typeof odds[1] === 'number' ? odds[1].toFixed(2) : '-';
+
+                                return (
+                                  <tr key={index} className="border-b border-white/5">
+                                    <td className="py-2 px-3">
+                                      {signal.clock !== null ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{signal.clock}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className={`font-bold ${
+                                        signal.signal?.includes('🟢') ? 'text-emerald-400' :
+                                        signal.signal?.includes('🔥') ? 'text-orange-400' :
+                                        signal.signal?.includes('🔵') ? 'text-blue-400' :
+                                        'text-gray-400'
+                                      }`}>
+                                        {signal.signal || '-'}
+                                      </span>
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-emerald-400 font-medium">{signal.selection || '-'}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-gray-300">{signal.line || '-'}</td>
+                                    <td className="py-2 px-3 text-gray-300">{overOdds}</td>
+                                    <td className="py-2 px-3 text-gray-300">{underOdds}</td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-blue-400 text-xs font-bold uppercase">{signal.bookmaker || '-'}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-gray-300">{signal.stacking || '-'}</td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                      </div>
+                    );
+                  })()
                 ) : aiPredictions.overunder ? (
                   <>
                     {/* Signal & Status Row */}
@@ -4019,6 +4273,89 @@ export default function MatchDetailClient() {
                       </div>
                     );
                   })()
+                ) : selectedPersonality === 'value' && match.type === 'Finished' ? (
+                  (() => {
+                    const lastLiveSignals = getLastLiveSignals('ou', 3);
+                    if (lastLiveSignals.length === 0) {
+                      return (
+                        <div className="text-center py-8 text-gray-500">
+                          <div className="space-y-2">
+                            <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p className="text-sm">Match has ended</p>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="opacity-30">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-white/10">
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {lastLiveSignals.map((signal: any, index: number) => {
+                                const raw = signal as Record<string, unknown>;
+                                const selection = String(raw.selection_ou || '').toLowerCase();
+                                const lineValue = raw.total_points_mainline ?? raw.totalpoints_main_line ?? raw.line_ou ?? raw.line ?? null;
+                                const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '-';
+                                const selectionLabel = selection === 'over' ? 'Over' : 'Under';
+                                const fairOdds = raw.fair_odds_ou !== null && raw.fair_odds_ou !== undefined ? Number(raw.fair_odds_ou).toFixed(2) : '-';
+                                const marketOdds = raw.market_odds_ou !== null && raw.market_odds_ou !== undefined ? Number(raw.market_odds_ou).toFixed(2) : '-';
+                                const evStr = String(raw.expected_value_ou || '').replace('%', '');
+                                const evNum = parseFloat(evStr);
+                                const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
+                                const stakeStr = String(raw.recommended_stake_ou || '').replace('%', '');
+                                const stakeNum = parseFloat(stakeStr);
+                                const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
+                                const isValuable = raw.is_valuable_ou;
+                                const clock = raw.clock;
+
+                                return (
+                                  <tr key={index} className="border-b border-white/5">
+                                    <td className="py-2 px-3">
+                                      {clock !== null && clock !== undefined ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-emerald-400 font-medium">{selectionLabel}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-amber-400">{line}</td>
+                                    <td className="py-2 px-3 text-gray-300">{fairOdds}</td>
+                                    <td className="py-2 px-3 text-white font-semibold">{marketOdds}</td>
+                                    <td className="py-2 px-3 text-emerald-400">{evDisplay}</td>
+                                    <td className="py-2 px-3 text-yellow-400">{stakeDisplay}</td>
+                                    <td className="py-2 px-3">
+                                      {Boolean(isValuable) ? (
+                                        <span className="text-emerald-400">💎</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                      </div>
+                    );
+                  })()
                 ) : (
                   <div className="text-center py-8 text-gray-500">
                     {match.type === 'Scheduled' ? (
@@ -4051,14 +4388,81 @@ export default function MatchDetailClient() {
             {selectedMarket === 'handicap' && (
               <div className="space-y-3">
                 {match.type === 'Finished' ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <div className="space-y-2">
-                      <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <p className="text-sm">AI no predictions</p>
-                    </div>
-                  </div>
+                  (() => {
+                    const lastSignals = getLastSignals('handicap', 3);
+                    if (lastSignals.length === 0) {
+                      return (
+                        <div className="text-center py-8 text-gray-500">
+                          <div className="space-y-2">
+                            <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p className="text-sm">Match has ended</p>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="opacity-30">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-white/10">
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Signal</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Home</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Away</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Bookmaker</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stacking</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {lastSignals.map((signal: any, index: number) => {
+                                const odds = signal.odds || [];
+                                const homeOdds = typeof odds[0] === 'number' ? odds[0].toFixed(2) : '-';
+                                const awayOdds = typeof odds[1] === 'number' ? odds[1].toFixed(2) : '-';
+
+                                return (
+                                  <tr key={index} className="border-b border-white/5">
+                                    <td className="py-2 px-3">
+                                      {signal.clock !== null ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{signal.clock}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className={`font-bold ${
+                                        signal.signal?.includes('🟢') ? 'text-emerald-400' :
+                                        signal.signal?.includes('🔥') ? 'text-orange-400' :
+                                        signal.signal?.includes('🔵') ? 'text-blue-400' :
+                                        'text-gray-400'
+                                      }`}>
+                                        {signal.signal || '-'}
+                                      </span>
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-emerald-400 font-medium">{signal.selection || '-'}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-gray-300">{signal.line || '-'}</td>
+                                    <td className="py-2 px-3 text-gray-300">{homeOdds}</td>
+                                    <td className="py-2 px-3 text-gray-300">{awayOdds}</td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-blue-400 text-xs font-bold uppercase">{signal.bookmaker || '-'}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-gray-300">{signal.stacking || '-'}</td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                      </div>
+                    );
+                  })()
                 ) : aiPredictions.handicap ? (
                   <>
                     {/* Signal & Status Row */}
@@ -4249,6 +4653,89 @@ export default function MatchDetailClient() {
                             </div>
                           </div>
                         </div>
+                      </div>
+                    );
+                  })()
+                ) : selectedPersonality === 'value' && match.type === 'Finished' ? (
+                  (() => {
+                    const lastLiveSignals = getLastLiveSignals('hdp', 3);
+                    if (lastLiveSignals.length === 0) {
+                      return (
+                        <div className="text-center py-8 text-gray-500">
+                          <div className="space-y-2">
+                            <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p className="text-sm">Match has ended</p>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="opacity-30">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-white/10">
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {lastLiveSignals.map((signal: any, index: number) => {
+                                const raw = signal as Record<string, unknown>;
+                                const selection = String(raw.selection_hdp || '').toLowerCase();
+                                const lineValue = raw.handicap_mainline ?? raw.line_hdp ?? raw.line ?? null;
+                                const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '-';
+                                const selectionLabel = selection === 'home' ? 'Home' : 'Away';
+                                const fairOdds = raw.fair_odds_hdp !== null && raw.fair_odds_hdp !== undefined ? Number(raw.fair_odds_hdp).toFixed(2) : '-';
+                                const marketOdds = raw.market_odds_hdp !== null && raw.market_odds_hdp !== undefined ? Number(raw.market_odds_hdp).toFixed(2) : '-';
+                                const evStr = String(raw.expected_value_hdp || '').replace('%', '');
+                                const evNum = parseFloat(evStr);
+                                const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
+                                const stakeStr = String(raw.recommended_stake_hdp || '').replace('%', '');
+                                const stakeNum = parseFloat(stakeStr);
+                                const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
+                                const isValuable = raw.is_valuable_hdp;
+                                const clock = raw.clock;
+
+                                return (
+                                  <tr key={index} className="border-b border-white/5">
+                                    <td className="py-2 px-3">
+                                      {clock !== null && clock !== undefined ? (
+                                        <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                    <td className="py-2 px-3">
+                                      <span className="text-emerald-400 font-medium">{selectionLabel}</span>
+                                    </td>
+                                    <td className="py-2 px-3 text-purple-400">{line}</td>
+                                    <td className="py-2 px-3 text-gray-300">{fairOdds}</td>
+                                    <td className="py-2 px-3 text-white font-semibold">{marketOdds}</td>
+                                    <td className="py-2 px-3 text-emerald-400">{evDisplay}</td>
+                                    <td className="py-2 px-3 text-yellow-400">{stakeDisplay}</td>
+                                    <td className="py-2 px-3">
+                                      {Boolean(isValuable) ? (
+                                        <span className="text-emerald-400">💎</span>
+                                      ) : (
+                                        <span className="text-gray-500">-</span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
                       </div>
                     );
                   })()
