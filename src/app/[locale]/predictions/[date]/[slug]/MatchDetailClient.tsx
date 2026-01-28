@@ -331,7 +331,7 @@ const translations: Record<string, Record<string, string>> = {
 const PERSONALITIES = [
   {
     id: 'value',
-    aiModel: 'value model',
+    aiModel: 'Value Hunter', // Database value (displays as "HDP Sniper")
     name: 'HDP Sniper',
     nameZh: 'HDP狙击手',
     image: '/performance/HDP Snipper.png',
@@ -344,7 +344,7 @@ const PERSONALITIES = [
   },
   {
     id: 'aggressive',
-    aiModel: 'aggressive model',
+    aiModel: 'Aggressive', // Database value (displays as "Active Trader")
     name: 'Active Trader',
     nameZh: '活跃交易者',
     image: '/performance/Active trader.png',
@@ -357,7 +357,7 @@ const PERSONALITIES = [
   },
   {
     id: 'balanced',
-    aiModel: 'balanced model',
+    aiModel: 'Balanced', // Database value (displays as "Oddsflow Core Strategy")
     name: 'Oddsflow Core Strategy',
     nameZh: 'Oddsflow核心策略',
     image: '/performance/Oddsflow Core Strategy.png',
@@ -370,7 +370,7 @@ const PERSONALITIES = [
   },
   {
     id: 'beta',
-    aiModel: 'Oddsflow Beta v8',
+    aiModel: 'Oddsflow Beta v8', // Database value (displays as "Oddsflow Beta")
     name: 'Oddsflow Beta',
     nameZh: 'Oddsflow测试版',
     image: '/performance/Oddsflow Beta.png',
