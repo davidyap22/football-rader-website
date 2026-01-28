@@ -1781,32 +1781,51 @@ export default function PerformanceClient({
       console.log('[Performance] prematchesMap keys:', Array.from(prematchesMap.keys()));
 
       // Convert to MatchSummary array (data is already aggregated)
-      const combinedMatches: MatchSummary[] = [];
+      // Use Map to deduplicate by fixture_id (in case ai_performance_summary has duplicates)
+      const matchesMap = new Map<string, MatchSummary>();
+
       for (const record of allSummaryData) {
         const fixtureId = String(record.fixture_id);
         const prematch = prematchesMap.get(fixtureId);
 
-        combinedMatches.push({
-          fixture_id: fixtureId,
-          league_name: record.league_name || 'Unknown',
-          league_logo: prematch?.league_logo || '',
-          home_name: prematch?.home_name || 'Home Team',
-          home_logo: prematch?.home_logo || '',
-          away_name: prematch?.away_name || 'Away Team',
-          away_logo: prematch?.away_logo || '',
-          home_score: prematch?.goals_home ?? 0,
-          away_score: prematch?.goals_away ?? 0,
-          total_profit: record.total_profit || 0,
-          total_invested: record.total_invested || 0,
-          roi_percentage: record.roi_percentage || 0,
-          total_bets: record.total_bets || 0,
-          profit_moneyline: record.profit_moneyline || 0,
-          profit_handicap: record.profit_handicap || 0,
-          profit_ou: record.profit_ou || 0,
-          match_date: prematch?.start_date_msia || record.created_at
-        });
+        // If fixture_id already exists, aggregate the profits
+        if (matchesMap.has(fixtureId)) {
+          const existing = matchesMap.get(fixtureId)!;
+          existing.total_profit += record.total_profit || 0;
+          existing.total_invested += record.total_invested || 0;
+          existing.total_bets += record.total_bets || 0;
+          existing.profit_moneyline += record.profit_moneyline || 0;
+          existing.profit_handicap += record.profit_handicap || 0;
+          existing.profit_ou += record.profit_ou || 0;
+          // Recalculate ROI
+          existing.roi_percentage = existing.total_invested > 0
+            ? (existing.total_profit / existing.total_invested) * 100
+            : 0;
+          console.log('[Performance] Duplicate fixture_id found in ai_performance_summary:', fixtureId, 'Aggregating profits');
+        } else {
+          matchesMap.set(fixtureId, {
+            fixture_id: fixtureId,
+            league_name: record.league_name || 'Unknown',
+            league_logo: prematch?.league_logo || '',
+            home_name: prematch?.home_name || 'Home Team',
+            home_logo: prematch?.home_logo || '',
+            away_name: prematch?.away_name || 'Away Team',
+            away_logo: prematch?.away_logo || '',
+            home_score: prematch?.goals_home ?? 0,
+            away_score: prematch?.goals_away ?? 0,
+            total_profit: record.total_profit || 0,
+            total_invested: record.total_invested || 0,
+            roi_percentage: record.roi_percentage || 0,
+            total_bets: record.total_bets || 0,
+            profit_moneyline: record.profit_moneyline || 0,
+            profit_handicap: record.profit_handicap || 0,
+            profit_ou: record.profit_ou || 0,
+            match_date: prematch?.start_date_msia || record.created_at
+          });
+        }
       }
 
+      const combinedMatches = Array.from(matchesMap.values());
       combinedMatches.sort((a, b) => new Date(b.match_date).getTime() - new Date(a.match_date).getTime());
       console.log('[Performance] combinedMatches created:', combinedMatches.length);
       console.log('[Performance] combinedMatches fixture_ids:', combinedMatches.map(m => m.fixture_id));
