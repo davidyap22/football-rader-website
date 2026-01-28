@@ -5,20 +5,17 @@ import Link from 'next/link';
 import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
-
-const PLAN_DETAILS: Record<string, { name: string; price: number; period: string }> = {
-  starter: { name: 'Starter', price: 3, period: '/month' },
-  pro: { name: 'Pro', price: 5, period: '/month' },
-  ultimate: { name: 'Ultimate', price: 10, period: '/month' },
-};
+import { formatCurrency, getPlanDetails, PLAN_PRICING } from '@/lib/x1pag';
+import { locales, type Locale } from '@/i18n/config';
 
 export default function CheckoutPage() {
   const params = useParams();
-  const locale = (params.locale as string) || 'en';
+  const urlLocale = (params?.locale as string) || 'en';
+  const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
   const searchParams = useSearchParams();
   const router = useRouter();
   const plan = searchParams.get('plan') || 'starter';
-  const planInfo = PLAN_DETAILS[plan] || PLAN_DETAILS.starter;
+  const planDetails = getPlanDetails(plan);
 
   const localePath = (path: string): string => {
     if (locale === 'en') return path;
@@ -26,235 +23,244 @@ export default function CheckoutPage() {
   };
 
   const [user, setUser] = useState<User | null>(null);
-  const [code, setCode] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [result, setResult] = useState<'success' | 'failed' | null>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
-        router.push(localePath('/login'));
+        // Redirect to login with return URL
+        const returnUrl = encodeURIComponent(`/checkout?plan=${plan}`);
+        router.push(localePath(`/login?returnUrl=${returnUrl}`));
         return;
       }
       setUser(session.user);
     };
     checkUser();
-  }, [router]);
+  }, [router, plan]);
 
   const handlePayment = async () => {
+    if (!user) return;
+
     setError('');
     setIsProcessing(true);
 
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // Call our payment API to create X1PAG payment
+      const response = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          planType: plan,
+        }),
+      });
 
-    if (code === '1234') {
-      // Payment successful - update subscription in database
-      if (user) {
-        const startDate = new Date();
-        const endDate = new Date();
-        endDate.setMonth(endDate.getMonth() + 1); // 1 month subscription
+      const data = await response.json();
 
-        // First, delete any existing subscription for this user
-        await supabase
-          .from('user_subscriptions')
-          .delete()
-          .eq('user_id', user.id);
-
-        // Then insert the new subscription
-        await supabase
-          .from('user_subscriptions')
-          .insert({
-            user_id: user.id,
-            email: user.email,
-            package_type: plan,
-            package_name: planInfo.name,
-            price: planInfo.price,
-            leagues_allowed: plan === 'ultimate' ? 6 : plan === 'pro' ? 5 : 1,
-            betting_styles_allowed: plan === 'ultimate' ? 5 : 1,
-            start_date: startDate.toISOString(),
-            end_date: endDate.toISOString(),
-            status: 'active',
-          });
+      if (!response.ok) {
+        throw new Error(data.message || 'Payment initiation failed');
       }
-      setResult('success');
-    } else {
-      setResult('failed');
-      setError('Invalid payment code. Please try again.');
-    }
 
-    setIsProcessing(false);
+      // For free trial, redirect to dashboard
+      if (plan === 'free_trial') {
+        router.push(localePath('/dashboard?trial=activated'));
+        return;
+      }
+
+      // For paid plans, redirect to X1PAG payment page
+      if (data.paymentUrl) {
+        window.location.href = data.paymentUrl;
+      } else {
+        throw new Error('No payment URL received');
+      }
+    } catch (err: any) {
+      console.error('Payment error:', err);
+      setError(err.message || 'Failed to initiate payment. Please try again.');
+      setIsProcessing(false);
+    }
   };
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
+      <div className="min-h-screen bg-[#05080d] flex items-center justify-center">
         <div className="w-10 h-10 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
       </div>
     );
   }
 
+  if (!planDetails) {
+    return (
+      <div className="min-h-screen bg-[#05080d] text-white flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center">
+          <h1 className="text-2xl font-bold mb-4">Invalid Plan</h1>
+          <p className="text-gray-400 mb-6">The selected plan is not available.</p>
+          <Link
+            href={localePath('/pricing')}
+            className="inline-block px-6 py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold hover:shadow-lg transition-all"
+          >
+            View Plans
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
-      {/* Background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-[#0a0a0f] via-[#0d1117] to-[#0a0a0f]" />
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[150px]" />
+    <div className="min-h-screen bg-[#05080d] text-white">
+      {/* Background effects */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-[150px]" />
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-[150px]" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          {/* Back Link */}
-          <Link href={localePath('/pricing')} className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-2xl">
+          {/* Back Button */}
+          <Link
+            href={localePath('/pricing')}
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
+          >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back to Pricing
           </Link>
 
-          {/* Success State */}
-          {result === 'success' && (
-            <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-emerald-500/30 rounded-2xl p-8 text-center">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                <svg className="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-emerald-400 mb-2">Payment Successful!</h2>
-              <p className="text-gray-400 mb-6">
-                Your {planInfo.name} plan is now active. Enjoy your premium features!
-              </p>
-              <Link
-                href={localePath('/pricing')}
-                className="inline-block w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-center hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
-              >
-                Back to Pricing
-              </Link>
+          <div className="bg-[#0a0e14] border border-white/10 rounded-2xl p-8 shadow-2xl">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold mb-2">Complete Your Purchase</h1>
+              <p className="text-gray-400">Subscribe to {planDetails.name}</p>
             </div>
-          )}
 
-          {/* Failed State */}
-          {result === 'failed' && (
-            <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-red-500/30 rounded-2xl p-8 text-center">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center">
-                <svg className="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+            {/* Order Summary */}
+            <div className="bg-white/5 rounded-xl p-6 mb-8">
+              <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Plan</span>
+                  <span className="font-semibold">{planDetails.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Duration</span>
+                  <span className="font-semibold">{planDetails.duration}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Billing Cycle</span>
+                  <span className="font-semibold capitalize">{planDetails.billingCycle || 'One-time'}</span>
+                </div>
+
+                <div className="border-t border-white/10 pt-3 mt-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-semibold">Total</span>
+                    <span className="text-2xl font-bold text-emerald-400">
+                      {plan === 'free_trial' ? 'Free' : formatCurrency(planDetails.amount, planDetails.currency)}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <h2 className="text-2xl font-bold text-red-400 mb-2">Payment Failed</h2>
-              <p className="text-gray-400 mb-6">
-                {error || 'Something went wrong. Please try again.'}
-              </p>
-              <button
-                onClick={() => {
-                  setResult(null);
-                  setCode('');
-                }}
-                className="w-full py-3 px-4 rounded-xl bg-white/10 text-white font-semibold hover:bg-white/20 transition-all mb-3"
-              >
-                Try Again
-              </button>
-              <Link
-                href={localePath('/pricing')}
-                className="inline-block w-full py-3 px-4 rounded-xl border border-white/20 text-white font-semibold text-center hover:bg-white/10 transition-all"
-              >
-                Back to Pricing
-              </Link>
             </div>
-          )}
 
-          {/* Payment Form */}
-          {!result && (
-            <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-white/10 rounded-2xl p-8">
-              {/* Header */}
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            {/* Payment Features */}
+            <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-6 mb-8">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Secure Payment
+              </h3>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                </div>
-                <h1 className="text-2xl font-bold mb-2">Complete Your Purchase</h1>
-                <p className="text-gray-400">Demo Payment Gateway</p>
-              </div>
-
-              {/* Plan Summary */}
-              <div className="bg-white/5 rounded-xl p-4 mb-6">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-semibold text-white">{planInfo.name} Plan</h3>
-                    <p className="text-sm text-gray-400">Monthly subscription</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-2xl font-bold text-emerald-400">${planInfo.price}</span>
-                    <span className="text-gray-400">{planInfo.period}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Demo Notice */}
-              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-6">
-                <div className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  256-bit SSL encryption
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <div>
-                    <p className="text-yellow-400 font-medium text-sm">Demo Mode</p>
-                    <p className="text-yellow-400/70 text-xs mt-1">Enter code <span className="font-mono bg-yellow-500/20 px-1 rounded">1234</span> for successful payment</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Payment Code Input */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Payment Code
-                </label>
-                <input
-                  type="text"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  placeholder="Enter payment code"
-                  maxLength={4}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all text-center text-2xl tracking-widest font-mono"
-                />
-              </div>
-
-              {/* Pay Button */}
-              <button
-                onClick={handlePayment}
-                disabled={isProcessing || code.length !== 4}
-                className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${
-                  isProcessing || code.length !== 4
-                    ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-black hover:shadow-lg hover:shadow-emerald-500/25 cursor-pointer'
-                }`}
-              >
-                {isProcessing ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Processing...
-                  </span>
-                ) : (
-                  `Pay $${planInfo.price}`
-                )}
-              </button>
-
-              {/* Security Note */}
-              <div className="mt-6 flex items-center justify-center gap-2 text-gray-500 text-xs">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-                <span>Secure demo payment</span>
-              </div>
+                  PCI DSS compliant payment processor
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Cancel anytime, no questions asked
+                </li>
+              </ul>
             </div>
-          )}
+
+            {/* Error Message */}
+            {error && (
+              <div className="bg-rose-500/10 border border-rose-500/30 rounded-lg p-4 mb-6">
+                <p className="text-rose-400 text-sm">{error}</p>
+              </div>
+            )}
+
+            {/* Payment Button */}
+            <button
+              onClick={handlePayment}
+              disabled={isProcessing}
+              className="w-full px-6 py-4 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-lg hover:shadow-lg hover:shadow-emerald-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isProcessing ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                  Processing...
+                </>
+              ) : plan === 'free_trial' ? (
+                'Start Free Trial'
+              ) : (
+                <>
+                  Proceed to Payment
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </>
+              )}
+            </button>
+
+            {/* Terms */}
+            <p className="text-center text-xs text-gray-500 mt-4">
+              By proceeding, you agree to our{' '}
+              <Link href={localePath('/terms-of-service')} className="text-emerald-400 hover:underline">
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link href={localePath('/privacy-policy')} className="text-emerald-400 hover:underline">
+                Privacy Policy
+              </Link>
+            </p>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="mt-8 flex items-center justify-center gap-6 text-gray-500 text-sm">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              Secure Payment
+            </div>
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
+              </svg>
+              Instant Activation
+            </div>
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              Money-back Guarantee
+            </div>
+          </div>
         </div>
       </div>
     </div>
