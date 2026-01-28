@@ -557,7 +557,8 @@ export default function MatchDetailClient() {
     overunder: OverUnderPrediction[];
     handicap: HandicapPrediction[];
   }>({ moneyline: [], overunder: [], handicap: [] });
-  const [liveSignalsHistory, setLiveSignalsHistory] = useState<LiveSignals[]>([]);
+  const [liveSignalsHistory, setLiveSignalsHistory] = useState<LiveSignals[]>([]); // HDP Sniper (v7)
+  const [betaSignalsHistory, setBetaSignalsHistory] = useState<LiveSignals[]>([]); // Oddsflow Beta (v8)
 
   // Signal History modal filters (independent from main selection)
   const [modalMarketFilter, setModalMarketFilter] = useState<'moneyline' | 'overunder' | 'handicap'>('moneyline');
@@ -680,6 +681,24 @@ export default function MatchDetailClient() {
     return liveSignalsHistory.slice(0, count);
   };
 
+  // Get last 3 beta signals (for Oddsflow Beta v8) for a specific market
+  const getLastBetaSignals = (marketType: '1x2' | 'ou' | 'hdp', count: number = 3) => {
+    if (!betaSignalsHistory || betaSignalsHistory.length === 0) {
+      console.log('getLastBetaSignals: betaSignalsHistory is empty or null');
+      return [];
+    }
+
+    console.log('getLastBetaSignals:', {
+      marketType,
+      historyLength: betaSignalsHistory.length,
+      firstSignal: betaSignalsHistory[0]
+    });
+
+    // Return first N records directly - each record contains data for all markets
+    // No filtering needed as live_signals_v8 table has all market data in each row
+    return betaSignalsHistory.slice(0, count);
+  };
+
   // Fetch Value Hunter signal history
   const fetchValueHunterHistory = useCallback(async () => {
     if (!match?.fixture_id) {
@@ -707,6 +726,35 @@ export default function MatchDetailClient() {
       }
     } catch (error) {
       console.error('Error fetching value hunter history:', error);
+    }
+  }, [match?.fixture_id]);
+
+  // Fetch Oddsflow Beta signal history (v8)
+  const fetchBetaSignalsHistory = useCallback(async () => {
+    if (!match?.fixture_id) {
+      console.log('fetchBetaSignalsHistory: No fixture_id');
+      return;
+    }
+    console.log('fetchBetaSignalsHistory: Fetching for fixture_id', match.fixture_id);
+    try {
+      const { data, error } = await supabase
+        .from('live_signals_v8')
+        .select('*')
+        .eq('fixture_id', match.fixture_id)
+        .order('created_at', { ascending: false });
+
+      console.log('fetchBetaSignalsHistory result:', {
+        dataLength: data?.length || 0,
+        error: error?.message,
+        firstRecord: data?.[0]
+      });
+
+      if (!error && data) {
+        setBetaSignalsHistory(data as LiveSignals[]);
+        console.log('fetchBetaSignalsHistory: Set betaSignalsHistory with', data.length, 'records');
+      }
+    } catch (error) {
+      console.error('Error fetching beta signals history:', error);
     }
   }, [match?.fixture_id]);
 
@@ -748,8 +796,12 @@ export default function MatchDetailClient() {
       // Always fetch live signals history (for HDP Sniper) when match is finished
       // This ensures data is available when user switches to HDP Sniper
       fetchValueHunterHistory();
+
+      // Always fetch beta signals history (for Oddsflow Beta) when match is finished
+      // This ensures data is available when user switches to Oddsflow Beta
+      fetchBetaSignalsHistory();
     }
-  }, [match?.type, match?.fixture_id, selectedPersonality, fetchSignalHistory, fetchValueHunterHistory]);
+  }, [match?.type, match?.fixture_id, selectedPersonality, fetchSignalHistory, fetchValueHunterHistory, fetchBetaSignalsHistory]);
 
   // Fetch profit summary for finished matches
   const fetchProfitSummary = useCallback(async (fixtureId: number, betStyle?: string) => {
