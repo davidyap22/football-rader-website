@@ -203,15 +203,61 @@ export default async function ProfitSummaryPage({ params }: PageProps) {
       console.log('No fixture data found for fixture_id:', fixtureId);
     }
 
-    // Fetch all bet records for this fixture
+    // Fetch all bet records for this fixture from profit_summary
     const { data: profitData } = await supabase
       .from('profit_summary')
       .select('*')
       .eq('fixture_id', fixtureId)
       .order('clock', { ascending: true });
 
-    if (profitData && profitData.length > 0) {
-      betRecords = profitData;
+    // Fetch Oddsflow Beta v8 bets from live_bets_v8 table
+    const { data: liveBetsV8 } = await supabase
+      .from('live_bets_v8')
+      .select('*')
+      .eq('fixture_id', parseInt(fixtureId))
+      .order('minute_at_bet', { ascending: true });
+
+    console.log('[page.tsx] live_bets_v8 query returned', liveBetsV8?.length || 0, 'records');
+
+    // Convert live_bets_v8 to profit_summary format
+    const convertedLiveBets = (liveBetsV8 || []).map((bet: any) => ({
+      fixture_id: bet.fixture_id,
+      bet_style: 'Oddsflow Beta v8',
+      profit: bet.profit_loss || 0,
+      stake_money: bet.stake || 0,
+      selection: bet.selection || '',
+      type: bet.bet_type || '',
+      clock: bet.minute_at_bet ? `${bet.minute_at_bet}'` : '0\'',
+      odds: bet.odds || 0,
+      line: bet.line || 0,
+      status: bet.status || 'PENDING',
+      score_home_at_bet: bet.score_home_at_bet,
+      score_away_at_bet: bet.score_away_at_bet,
+      signal_id: bet.signal_id,
+      created_at: bet.created_at,
+      settled_at: bet.settled_at,
+      expected_value: bet.expected_value,
+      calculated_probability: bet.calculated_probability
+    }));
+
+    console.log('[page.tsx] Converted', convertedLiveBets.length, 'live_bets_v8 to profit_summary format');
+
+    // Merge both data sources
+    betRecords = [...(profitData || []), ...convertedLiveBets];
+
+    if (betRecords.length > 0) {
+      // Debug: log unique bet_style values
+      const uniqueBetStyles = [...new Set(betRecords.map((r: any) => r.bet_style))];
+      console.log('[page.tsx] Total bet records:', betRecords.length);
+      console.log('[page.tsx] Unique bet_style values:', uniqueBetStyles);
+      console.log('[page.tsx] Breakdown:');
+      uniqueBetStyles.forEach(style => {
+        const count = betRecords.filter(r => r.bet_style === style).length;
+        const profit = betRecords.filter(r => r.bet_style === style).reduce((sum, r) => sum + (r.profit || 0), 0);
+        console.log(`  - ${style}: ${count} bets, $${profit.toFixed(2)} profit`);
+      });
+    } else {
+      console.log('[page.tsx] No bet records found for fixture_id:', fixtureId);
     }
 
     // Fetch odds history for Live bookmaker

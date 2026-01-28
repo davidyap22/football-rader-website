@@ -470,22 +470,31 @@ const getBetStyleLogoColor = (style: string) => {
 };
 
 interface BetRecord {
-  id: number;
+  id?: number;
   fixture_id: string;
-  bet_time: string | null;
+  bet_time?: string | null;
   odds: number | null;
-  stake_units: number | null;
+  stake_units?: number | null;
   stake_money: number | null;
   profit: number | null;
-  home_score: number | null;
-  away_score: number | null;
-  clock: number | null;
+  home_score?: number | null;
+  away_score?: number | null;
+  clock: number | string | null;
   line: number | null;
-  league_name: string | null;
+  league_name?: string | null;
   selection: string | null;
   type: string | null;
   status: string | null;
   bet_style: string | null;
+  // Additional fields from live_bets_v8
+  signal_id?: string;
+  score_home_at_bet?: number;
+  score_away_at_bet?: number;
+  minute_at_bet?: number;
+  expected_value?: number;
+  calculated_probability?: number;
+  settled_at?: string;
+  created_at?: string;
 }
 
 interface Props {
