@@ -1068,7 +1068,7 @@ export default function PerformanceClient({
 
   // Bet Style filter for chart and past matches table
   // Bet styles in display order (database values remain unchanged)
-  const BET_STYLES = ['Value Hunter', 'Aggressive', 'Balanced', 'Safe Play'];
+  const BET_STYLES = ['Value Hunter', 'Aggressive', 'Balanced', 'Oddsflow Beta v8'];
 
   // Display name mapping (frontend only)
   const getBetStyleDisplayName = (style: string) => {
@@ -1076,7 +1076,7 @@ export default function PerformanceClient({
       'Value Hunter': 'HDP Sniper',
       'Aggressive': 'Active Trader',
       'Balanced': 'Oddsflow Core Strategy',
-      'Safe Play': 'Oddsflow Beta',
+      'Oddsflow Beta v8': 'Oddsflow Beta',
     };
     return mapping[style] || style;
   };
@@ -1087,7 +1087,7 @@ export default function PerformanceClient({
       'Value Hunter': '/performance/HDP Snipper.png',
       'Aggressive': '/performance/Active trader.png',
       'Balanced': '/performance/Oddsflow Core Strategy.png',
-      'Safe Play': '/performance/Oddsflow Beta.png',
+      'Oddsflow Beta v8': '/performance/Oddsflow Beta.png',
     };
     return imageMap[style];
   };
@@ -1212,7 +1212,7 @@ export default function PerformanceClient({
       'Value Hunter': 'from-gray-800 to-black',        // Black
       'Aggressive': 'from-sky-400 to-blue-400',        // Light blue
       'Balanced': 'from-green-500 to-green-600',       // Grass green
-      'Safe Play': 'from-purple-600 to-purple-700',    // Purple
+      'Oddsflow Beta v8': 'from-purple-600 to-purple-700',    // Purple
     };
     return colorMap[style] || 'from-gray-600 to-gray-700';
   };
@@ -1223,7 +1223,7 @@ export default function PerformanceClient({
       'Value Hunter': 'from-red-500 to-red-600',           // Red
       'Aggressive': 'from-sky-300 to-blue-300',            // Light blue
       'Balanced': 'from-yellow-400 to-amber-500',          // Yellow (unchanged)
-      'Safe Play': 'from-yellow-400 to-amber-500',         // Yellow (unchanged)
+      'Oddsflow Beta v8': 'from-yellow-400 to-amber-500',         // Yellow (unchanged)
     };
     return colorMap[style] || 'from-yellow-400 to-amber-500';
   };
@@ -2458,13 +2458,13 @@ export default function PerformanceClient({
                   const displayName = getBetStyleDisplayName(style);
                   const gradientColor = getBetStyleColor(style);
                   const logoColor = getBetStyleLogoColor(style);
-                  const isLocked = style === 'Balanced' || style === 'Safe Play';
+                  const isLocked = style === 'Balanced'; // Only lock 'Balanced', unlock 'Oddsflow Beta v8'
 
                   // Get translated display name
                   const translatedName = style === 'Value Hunter' ? t('hdpSniper')
                     : style === 'Aggressive' ? t('activeTrader')
                     : style === 'Balanced' ? t('oddsflowCore')
-                    : style === 'Safe Play' ? t('oddsflowBeta')
+                    : style === 'Oddsflow Beta v8' ? t('oddsflowBeta')
                     : displayName;
 
                   return (
@@ -3586,7 +3586,7 @@ export default function PerformanceClient({
                             {style === 'Conservative' && '🛡️ '}
                             {style === 'Balanced' && '⚖️ '}
                             {style === 'Value Hunter' && '💎 '}
-                            {style === 'Safe Play' && '✅ '}
+                            {style === 'Oddsflow Beta v8' && '✅ '}
                             {style}
                           </button>
                         ))}
