@@ -742,7 +742,7 @@ export default function MatchDetailClient() {
     console.log('fetchBetaSignalsHistory: Fetching for fixture_id', match.fixture_id);
     try {
       const { data, error } = await supabase
-        .from('live_signals_v8')
+        .from('live_bets_v8')
         .select('*')
         .eq('fixture_id', match.fixture_id)
         .order('created_at', { ascending: false });
@@ -4469,6 +4469,7 @@ export default function MatchDetailClient() {
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Odds at Signal</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Status</th>
@@ -4495,6 +4496,7 @@ export default function MatchDetailClient() {
                                       <td className="py-2 px-3 text-white font-semibold">
                                         {signal.odds_at_signal !== null && signal.odds_at_signal !== undefined ? Number(signal.odds_at_signal).toFixed(2) : '-'}
                                       </td>
+                                      <td className="py-2 px-3 text-yellow-400">{signal.stake !== null && signal.stake !== undefined ? signal.stake : '-'}</td>
                                       <td className="py-2 px-3 text-gray-300">{signal.score_home !== null && signal.score_home !== undefined ? signal.score_home : '-'}</td>
                                       <td className="py-2 px-3 text-gray-300">{signal.score_away !== null && signal.score_away !== undefined ? signal.score_away : '-'}</td>
                                       <td className="py-2 px-3">
@@ -4944,6 +4946,7 @@ export default function MatchDetailClient() {
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Odds at Signal</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Status</th>
@@ -4970,6 +4973,7 @@ export default function MatchDetailClient() {
                                       <td className="py-2 px-3 text-white font-semibold">
                                         {signal.odds_at_signal !== null && signal.odds_at_signal !== undefined ? Number(signal.odds_at_signal).toFixed(2) : '-'}
                                       </td>
+                                      <td className="py-2 px-3 text-yellow-400">{signal.stake !== null && signal.stake !== undefined ? signal.stake : '-'}</td>
                                       <td className="py-2 px-3 text-gray-300">{signal.score_home !== null && signal.score_home !== undefined ? signal.score_home : '-'}</td>
                                       <td className="py-2 px-3 text-gray-300">{signal.score_away !== null && signal.score_away !== undefined ? signal.score_away : '-'}</td>
                                       <td className="py-2 px-3">
