@@ -784,10 +784,12 @@ export default function MatchDetailClient() {
 
     if (modalBetStyleFilter === 'value') {
       fetchValueHunterHistory();
+    } else if (modalBetStyleFilter === 'beta') {
+      fetchBetaSignalsHistory();
     } else {
       fetchSignalHistory(modalMarketFilter, modalBetStyleFilter);
     }
-  }, [showSignalHistory, modalMarketFilter, modalBetStyleFilter, fetchSignalHistory, fetchValueHunterHistory]);
+  }, [showSignalHistory, modalMarketFilter, modalBetStyleFilter, fetchSignalHistory, fetchValueHunterHistory, fetchBetaSignalsHistory]);
 
   // Fetch signal history when match is finished (to show last 3 signals)
   useEffect(() => {
@@ -3057,6 +3059,139 @@ export default function MatchDetailClient() {
                     ) : (
                       <div className="text-center py-8 text-gray-500">No HDP Sniper signal history available</div>
                     )
+                  ) : modalBetStyleFilter === 'beta' ? (
+                    (() => {
+                      // Filter beta signals based on modalMarketFilter
+                      const filteredBetaSignals = betaSignalsHistory.filter((signal: any) => {
+                        if (modalMarketFilter === 'overunder') return signal.bet_type === 'OVER_UNDER';
+                        if (modalMarketFilter === 'handicap') return signal.bet_type === 'HANDICAP';
+                        return false; // No 1X2 data in live_bets_v8
+                      });
+
+                      return filteredBetaSignals.length > 0 ? (
+                        <>
+                        {/* Desktop Table */}
+                        <table className="w-full text-sm border-collapse hidden md:table">
+                          <thead className="sticky top-0 bg-[#0d1117]">
+                            <tr>
+                              <th className="text-left py-3 px-2 text-gray-400 font-medium">Clock</th>
+                              <th className="text-left py-3 px-2 text-gray-400 font-medium">Bet Type</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Selection</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Line</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Odds</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Stake</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Score Home</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Score Away</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredBetaSignals.map((signal: any, index: number) => (
+                              <tr key={signal.id || index} className={`border-b border-white/5 ${index === 0 ? 'bg-purple-500/10' : 'hover:bg-white/5'} transition-colors`}>
+                                <td className="py-3 px-2 text-gray-300">
+                                  {signal.minute_at_bet !== null ? `${signal.minute_at_bet}'` : '-'}
+                                </td>
+                                <td className="py-3 px-2">
+                                  <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                    signal.bet_type === 'OVER_UNDER' ? 'bg-cyan-500/20 text-cyan-400' : 'bg-purple-500/20 text-purple-400'
+                                  }`}>
+                                    {signal.bet_type === 'OVER_UNDER' ? 'O/U' : 'HDP'}
+                                  </span>
+                                </td>
+                                <td className="py-3 px-2 text-center">
+                                  <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                    signal.bet_type === 'OVER_UNDER' ? 'bg-cyan-500/20 text-cyan-400' : 'bg-purple-500/20 text-purple-400'
+                                  }`}>
+                                    {signal.selection || '-'}
+                                  </span>
+                                </td>
+                                <td className="py-3 px-2 text-center text-amber-400 font-medium">
+                                  {signal.line !== null && signal.line !== undefined ? signal.line : '-'}
+                                </td>
+                                <td className="py-3 px-2 text-center text-white font-medium">
+                                  {signal.odds !== null && signal.odds !== undefined ? Number(signal.odds).toFixed(2) : '-'}
+                                </td>
+                                <td className="py-3 px-2 text-center text-yellow-400">
+                                  {signal.stake !== null && signal.stake !== undefined ? `$${signal.stake}` : '-'}
+                                </td>
+                                <td className="py-3 px-2 text-center text-gray-300">
+                                  {signal.score_home_at_bet !== null ? signal.score_home_at_bet : '-'}
+                                </td>
+                                <td className="py-3 px-2 text-center text-gray-300">
+                                  {signal.score_away_at_bet !== null ? signal.score_away_at_bet : '-'}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+
+                        {/* Mobile Card Layout for Oddsflow Beta */}
+                        <div className="md:hidden space-y-3 p-2">
+                          {filteredBetaSignals.map((signal: any, index: number) => (
+                            <div
+                              key={signal.id || index}
+                              className={`bg-white/5 rounded-lg p-3 border ${
+                                index === 0 ? 'border-purple-500/30 bg-purple-500/5' : 'border-white/5'
+                              }`}
+                            >
+                              {/* Header: Clock & Bet Type */}
+                              <div className="flex items-center justify-between mb-2 pb-2 border-b border-white/5">
+                                <span className="text-gray-400 text-sm">
+                                  {signal.minute_at_bet !== null ? `${signal.minute_at_bet}'` : '-'}
+                                </span>
+                                <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                  signal.bet_type === 'OVER_UNDER' ? 'bg-cyan-500/20 text-cyan-400' : 'bg-purple-500/20 text-purple-400'
+                                }`}>
+                                  {signal.bet_type === 'OVER_UNDER' ? 'O/U' : 'HDP'}
+                                </span>
+                              </div>
+
+                              {/* Selection & Line */}
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                  signal.bet_type === 'OVER_UNDER' ? 'bg-cyan-500/20 text-cyan-400' : 'bg-purple-500/20 text-purple-400'
+                                }`}>
+                                  {signal.selection || '-'}
+                                </span>
+                                <span className="text-amber-400 text-sm font-medium">
+                                  Line: {signal.line !== null && signal.line !== undefined ? signal.line : '-'}
+                                </span>
+                              </div>
+
+                              {/* Stats Grid */}
+                              <div className="grid grid-cols-4 gap-2 text-xs">
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Odds</span>
+                                  <span className="text-white font-medium">
+                                    {signal.odds !== null && signal.odds !== undefined ? Number(signal.odds).toFixed(2) : '-'}
+                                  </span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Stake</span>
+                                  <span className="text-yellow-400">
+                                    {signal.stake !== null && signal.stake !== undefined ? `$${signal.stake}` : '-'}
+                                  </span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Home</span>
+                                  <span className="text-gray-300">
+                                    {signal.score_home_at_bet !== null ? signal.score_home_at_bet : '-'}
+                                  </span>
+                                </div>
+                                <div className="text-center">
+                                  <span className="text-gray-500 block text-[10px]">Away</span>
+                                  <span className="text-gray-300">
+                                    {signal.score_away_at_bet !== null ? signal.score_away_at_bet : '-'}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        </>
+                      ) : (
+                        <div className="text-center py-8 text-gray-500">No Oddsflow Beta signal history available</div>
+                      );
+                    })()
                   ) : signalHistory[modalMarketFilter]?.length > 0 ? (
                     <>
                     {/* Desktop Table */}
@@ -4948,8 +5083,8 @@ export default function MatchDetailClient() {
                                   return (
                                     <tr key={index} className="border-b border-white/5">
                                       <td className="py-2 px-3">
-                                        {signal.minute !== null && signal.minute !== undefined ? (
-                                          <span className="text-red-400 font-bold tabular-nums">{signal.minute}'</span>
+                                        {signal.minute_at_bet !== null && signal.minute_at_bet !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{signal.minute_at_bet}'</span>
                                         ) : (
                                           <span className="text-gray-500">-</span>
                                         )}
@@ -4962,20 +5097,13 @@ export default function MatchDetailClient() {
                                       </td>
                                       <td className="py-2 px-3 text-amber-400">{signal.line !== null && signal.line !== undefined ? signal.line : '-'}</td>
                                       <td className="py-2 px-3 text-white font-semibold">
-                                        {signal.odds_at_signal !== null && signal.odds_at_signal !== undefined ? Number(signal.odds_at_signal).toFixed(2) : '-'}
+                                        {signal.odds !== null && signal.odds !== undefined ? Number(signal.odds).toFixed(2) : '-'}
                                       </td>
-                                      <td className="py-2 px-3 text-yellow-400">{signal.stake !== null && signal.stake !== undefined ? signal.stake : '-'}</td>
-                                      <td className="py-2 px-3 text-gray-300">{signal.score_home !== null && signal.score_home !== undefined ? signal.score_home : '-'}</td>
-                                      <td className="py-2 px-3 text-gray-300">{signal.score_away !== null && signal.score_away !== undefined ? signal.score_away : '-'}</td>
-                                      <td className="py-2 px-3">
-                                        <span className={`text-xs font-medium ${
-                                          signal.status === 'WIN' ? 'text-emerald-400' :
-                                          signal.status === 'LOSS' ? 'text-red-400' :
-                                          'text-gray-400'
-                                        }`}>
-                                          {signal.status || '-'}
-                                        </span>
+                                      <td className="py-2 px-3 text-yellow-400">
+                                        {signal.stake !== null && signal.stake !== undefined ? `$${signal.stake}` : '-'}
                                       </td>
+                                      <td className="py-2 px-3 text-gray-300">{signal.score_home_at_bet !== null && signal.score_home_at_bet !== undefined ? signal.score_home_at_bet : '-'}</td>
+                                      <td className="py-2 px-3 text-gray-300">{signal.score_away_at_bet !== null && signal.score_away_at_bet !== undefined ? signal.score_away_at_bet : '-'}</td>
                                     </tr>
                                   );
                                 })}
