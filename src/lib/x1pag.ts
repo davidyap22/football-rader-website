@@ -1,11 +1,16 @@
 /**
- * X1PAG Payment Gateway Integration
+ * X1PAG Payment Gateway Integration - Server-Side Only
  * Documentation: https://docs.x1pag.com/docs/guides/checkout_integration/
+ *
+ * IMPORTANT: This file uses Node.js crypto module and is SERVER-SIDE ONLY.
+ * Only import this in API routes or server components (NOT in client components).
+ * For client-safe exports, use @/lib/x1pag-client instead.
  */
 
 import crypto from 'crypto';
+import { PLAN_PRICING } from './x1pag-client';
 
-// X1PAG Configuration
+// X1PAG Configuration (server-side only - contains sensitive data)
 export const X1PAG_CONFIG = {
   merchantName: process.env.X1PAG_MERCHANT_NAME || 'OddsFlow',
   merchantKey: process.env.X1PAG_MERCHANT_KEY || '',
@@ -14,37 +19,6 @@ export const X1PAG_CONFIG = {
   callbackUrl: process.env.X1PAG_CALLBACK_URL || '',
   returnUrl: process.env.X1PAG_RETURN_URL || '',
   cancelUrl: process.env.X1PAG_CANCEL_URL || '',
-};
-
-// Plan pricing configuration
-export const PLAN_PRICING = {
-  free_trial: {
-    amount: 0,
-    currency: 'BRL', // Brazilian Real
-    name: 'Free Trial',
-    duration: '7 days',
-  },
-  starter: {
-    amount: 29.90, // Weekly price in BRL
-    currency: 'BRL',
-    name: 'Starter Plan',
-    duration: '1 week',
-    billingCycle: 'weekly',
-  },
-  pro: {
-    amount: 89.90, // Monthly price in BRL
-    currency: 'BRL',
-    name: 'Pro Plan',
-    duration: '1 month',
-    billingCycle: 'monthly',
-  },
-  ultimate: {
-    amount: 199.90, // Monthly price in BRL
-    currency: 'BRL',
-    name: 'Ultimate Plan',
-    duration: '1 month',
-    billingCycle: 'monthly',
-  },
 };
 
 export interface X1PAGPaymentRequest {
@@ -216,21 +190,4 @@ export async function createPaymentRequest(params: {
       message: 'Failed to connect to payment gateway',
     };
   }
-}
-
-/**
- * Format amount for display
- */
-export function formatCurrency(amount: number, currency: string = 'BRL'): string {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: currency,
-  }).format(amount);
-}
-
-/**
- * Get plan details by type
- */
-export function getPlanDetails(planType: string) {
-  return PLAN_PRICING[planType as keyof typeof PLAN_PRICING] || null;
 }

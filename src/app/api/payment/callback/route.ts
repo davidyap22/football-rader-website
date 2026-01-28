@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { verifyCallbackSignature, X1PAGCallbackData, PLAN_PRICING } from '@/lib/x1pag';
+import { verifyCallbackSignature, X1PAGCallbackData } from '@/lib/x1pag';
+import { PLAN_PRICING } from '@/lib/x1pag-client';
 
 // Create Supabase admin client for server-side operations
 const supabase = createClient(

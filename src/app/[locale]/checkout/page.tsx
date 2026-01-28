@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
-import { formatCurrency, getPlanDetails, PLAN_PRICING } from '@/lib/x1pag';
+import { formatCurrency, getPlanDetails, PLAN_PRICING } from '@/lib/x1pag-client';
 import { locales, type Locale } from '@/i18n/config';
 
 export default function CheckoutPage() {
@@ -55,6 +55,9 @@ export default function CheckoutPage() {
         },
         body: JSON.stringify({
           planType: plan,
+          userId: user.id,
+          userEmail: user.email,
+          userName: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
         }),
       });
 

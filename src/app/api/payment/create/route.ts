@@ -1,28 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 import { createPaymentRequest } from '@/lib/x1pag';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
-
-    // Check authentication
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    // Get request body
+    // Get request body - client will send user info from their session
     const body = await request.json();
-    const { planType } = body;
+    const { planType, userId, userEmail, userName } = body;
 
+    // Validate required fields
     if (!planType) {
       return NextResponse.json(
         { error: 'Missing plan type' },
@@ -30,15 +16,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = session.user;
+    if (!userId || !userEmail) {
+      return NextResponse.json(
+        { error: 'Missing user information' },
+        { status: 400 }
+      );
+    }
 
     // Create payment request with X1PAG
     const paymentResult = await createPaymentRequest({
       planType,
-      userId: user.id,
-      userEmail: user.email || '',
-      userName: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
-      userPhone: user.user_metadata?.phone || undefined,
+      userId,
+      userEmail,
+      userName: userName || userEmail.split('@')[0] || 'User',
+      userPhone: undefined,
     });
 
     if (!paymentResult.success) {
@@ -56,8 +47,14 @@ export async function POST(request: NextRequest) {
       const expiryDate = new Date();
       expiryDate.setDate(expiryDate.getDate() + 7);
 
-      await supabase.from('user_subscriptions').upsert({
-        user_id: user.id,
+      // Use service role key for admin operations
+      const adminSupabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+        process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+      );
+
+      await adminSupabase.from('user_subscriptions').upsert({
+        user_id: userId,
         package_type: 'free_trial',
         expiry_date: expiryDate.toISOString(),
         status: 'active',
