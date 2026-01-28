@@ -643,7 +643,7 @@ export default function MatchDetailClient() {
         .select('*')
         .eq('fixture_id', match.fixture_id)
         .eq('ai_model', personality.aiModel)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: true });
 
       if (!error && data) {
         setSignalHistory(prev => ({
@@ -715,7 +715,7 @@ export default function MatchDetailClient() {
         .from('live_signals_v7')
         .select('*')
         .eq('fixture_id', match.fixture_id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: true });
 
       console.log('fetchValueHunterHistory result:', {
         dataLength: data?.length || 0,
@@ -745,7 +745,7 @@ export default function MatchDetailClient() {
         .from('live_bets_v8')
         .select('*')
         .eq('fixture_id', match.fixture_id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: true });
 
       console.log('fetchBetaSignalsHistory result:', {
         dataLength: data?.length || 0,
