@@ -81,6 +81,17 @@ const translations: Record<string, Record<string, string>> = {
     possession: "Ball Possession", totalShots: "Total Shots", shotsOnGoal: "Shots on Target", shotsOffGoal: "Shots off Target",
     corners: "Corner Kicks", fouls: "Fouls", offsides: "Offsides", yellowCards: "Yellow Cards", redCards: "Red Cards",
     saves: "Goalkeeper Saves", passes: "Total Passes", passAccuracy: "Pass Accuracy", expectedGoals: "Expected Goals (xG)",
+    // Market tabs
+    overUnderMarket: "Over/Under", asianHandicapMarket: "Asian Handicap",
+    // Buttons
+    signalHistory: "Signal History", profitSummary: "Profit Summary",
+    // Bet styles
+    allStyles: "All Styles", hdpSniper: "HDP Sniper", activeTrader: "Active Trader",
+    oddsflowCoreStrategy: "Oddsflow Core Strategy", oddsflowBeta: "Oddsflow Beta",
+    // Table columns
+    clock: "Clock", selection: "Selection", line: "Line", fairOdds: "Fair Odds",
+    marketOdds: "Market Odds", ev: "EV", stake: "Stake", value: "Value",
+    betType: "Bet Type", oddsAtSignal: "Odds at Signal", scoreHome: "Score Home", scoreAway: "Score Away",
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA", community: "Comunidad", news: "Noticias", solution: "Solución", pricing: "Precios",
@@ -108,6 +119,17 @@ const translations: Record<string, Record<string, string>> = {
     possession: "Posesión", totalShots: "Tiros Totales", shotsOnGoal: "Tiros a Puerta", shotsOffGoal: "Tiros Fuera",
     corners: "Córners", fouls: "Faltas", offsides: "Fueras de Juego", yellowCards: "Amarillas", redCards: "Rojas",
     saves: "Paradas", passes: "Pases Totales", passAccuracy: "Precisión de Pases", expectedGoals: "Goles Esperados (xG)",
+    // Market tabs
+    overUnderMarket: "Más/Menos", asianHandicapMarket: "Hándicap Asiático",
+    // Buttons
+    signalHistory: "Historial de Señales", profitSummary: "Resumen de Beneficios",
+    // Bet styles
+    allStyles: "Todos los Estilos", hdpSniper: "Francotirador HDP", activeTrader: "Trader Activo",
+    oddsflowCoreStrategy: "Estrategia Central Oddsflow", oddsflowBeta: "Oddsflow Beta",
+    // Table columns
+    clock: "Reloj", selection: "Selección", line: "Línea", fairOdds: "Cuotas Justas",
+    marketOdds: "Cuotas del Mercado", ev: "EV", stake: "Apuesta", value: "Valor",
+    betType: "Tipo de Apuesta", oddsAtSignal: "Cuotas en Señal", scoreHome: "Goles Local", scoreAway: "Goles Visitante",
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho IA", community: "Comunidade", news: "Notícias", solution: "Solução", pricing: "Preços",
@@ -135,6 +157,17 @@ const translations: Record<string, Record<string, string>> = {
     possession: "Posse de Bola", totalShots: "Chutes Totais", shotsOnGoal: "Chutes no Gol", shotsOffGoal: "Chutes Fora",
     corners: "Escanteios", fouls: "Faltas", offsides: "Impedimentos", yellowCards: "Amarelos", redCards: "Vermelhos",
     saves: "Defesas", passes: "Passes Totais", passAccuracy: "Precisão de Passes", expectedGoals: "Gols Esperados (xG)",
+    // Market tabs
+    overUnderMarket: "Mais/Menos", asianHandicapMarket: "Handicap Asiático",
+    // Buttons
+    signalHistory: "Histórico de Sinais", profitSummary: "Resumo de Lucros",
+    // Bet styles
+    allStyles: "Todos os Estilos", hdpSniper: "Atirador HDP", activeTrader: "Trader Ativo",
+    oddsflowCoreStrategy: "Estratégia Central Oddsflow", oddsflowBeta: "Oddsflow Beta",
+    // Table columns
+    clock: "Relógio", selection: "Seleção", line: "Linha", fairOdds: "Odds Justas",
+    marketOdds: "Odds do Mercado", ev: "EV", stake: "Aposta", value: "Valor",
+    betType: "Tipo de Aposta", oddsAtSignal: "Odds no Sinal", scoreHome: "Gols Casa", scoreAway: "Gols Fora",
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung", community: "Community", news: "Nachrichten", solution: "Lösung", pricing: "Preise",
@@ -162,6 +195,17 @@ const translations: Record<string, Record<string, string>> = {
     possession: "Ballbesitz", totalShots: "Schüsse Gesamt", shotsOnGoal: "Schüsse aufs Tor", shotsOffGoal: "Schüsse Vorbei",
     corners: "Eckstöße", fouls: "Fouls", offsides: "Abseitspositionen", yellowCards: "Gelbe Karten", redCards: "Rote Karten",
     saves: "Paraden", passes: "Pässe Gesamt", passAccuracy: "Passgenauigkeit", expectedGoals: "Erwartete Tore (xG)",
+    // Market tabs
+    overUnderMarket: "Über/Unter", asianHandicapMarket: "Asiatisches Handicap",
+    // Buttons
+    signalHistory: "Signalverlauf", profitSummary: "Gewinnzusammenfassung",
+    // Bet styles
+    allStyles: "Alle Stile", hdpSniper: "HDP-Scharfschütze", activeTrader: "Aktiver Händler",
+    oddsflowCoreStrategy: "Oddsflow Kernstrategie", oddsflowBeta: "Oddsflow Beta",
+    // Table columns
+    clock: "Uhr", selection: "Auswahl", line: "Linie", fairOdds: "Faire Quoten",
+    marketOdds: "Marktquoten", ev: "EV", stake: "Einsatz", value: "Wert",
+    betType: "Wetttyp", oddsAtSignal: "Quoten bei Signal", scoreHome: "Tore Heim", scoreAway: "Tore Auswärts",
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance IA", community: "Communauté", news: "Actualités", solution: "Solution", pricing: "Tarifs",
@@ -189,6 +233,17 @@ const translations: Record<string, Record<string, string>> = {
     possession: "Possession", totalShots: "Tirs Totaux", shotsOnGoal: "Tirs Cadrés", shotsOffGoal: "Tirs Non Cadrés",
     corners: "Corners", fouls: "Fautes", offsides: "Hors-jeu", yellowCards: "Cartons Jaunes", redCards: "Cartons Rouges",
     saves: "Arrêts", passes: "Passes Totales", passAccuracy: "Précision des Passes", expectedGoals: "Buts Attendus (xG)",
+    // Market tabs
+    overUnderMarket: "Plus/Moins", asianHandicapMarket: "Handicap Asiatique",
+    // Buttons
+    signalHistory: "Historique des Signaux", profitSummary: "Résumé des Profits",
+    // Bet styles
+    allStyles: "Tous les Styles", hdpSniper: "Tireur HDP", activeTrader: "Trader Actif",
+    oddsflowCoreStrategy: "Stratégie de Base Oddsflow", oddsflowBeta: "Oddsflow Beta",
+    // Table columns
+    clock: "Horloge", selection: "Sélection", line: "Ligne", fairOdds: "Cotes Justes",
+    marketOdds: "Cotes du Marché", ev: "EV", stake: "Mise", value: "Valeur",
+    betType: "Type de Pari", oddsAtSignal: "Cotes au Signal", scoreHome: "Score Domicile", scoreAway: "Score Extérieur",
   },
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AIパフォーマンス", community: "コミュニティ", news: "ニュース", solution: "ソリューション", pricing: "料金",
@@ -216,6 +271,17 @@ const translations: Record<string, Record<string, string>> = {
     possession: "ボール支配率", totalShots: "総シュート数", shotsOnGoal: "枠内シュート", shotsOffGoal: "枠外シュート",
     corners: "コーナーキック", fouls: "ファウル", offsides: "オフサイド", yellowCards: "イエローカード", redCards: "レッドカード",
     saves: "GKセーブ", passes: "パス総数", passAccuracy: "パス成功率", expectedGoals: "期待ゴール (xG)",
+    // Market tabs
+    overUnderMarket: "オーバー/アンダー", asianHandicapMarket: "アジアンハンディキャップ",
+    // Buttons
+    signalHistory: "シグナル履歴", profitSummary: "利益サマリー",
+    // Bet styles
+    allStyles: "全スタイル", hdpSniper: "HDP スナイパー", activeTrader: "アクティブトレーダー",
+    oddsflowCoreStrategy: "Oddsflow コア戦略", oddsflowBeta: "Oddsflow ベータ",
+    // Table columns
+    clock: "時計", selection: "選択", line: "ライン", fairOdds: "適正オッズ",
+    marketOdds: "市場オッズ", ev: "EV", stake: "ステーク", value: "バリュー",
+    betType: "ベットタイプ", oddsAtSignal: "シグナル時オッズ", scoreHome: "ホームスコア", scoreAway: "アウェイスコア",
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성능", community: "커뮤니티", news: "뉴스", solution: "솔루션", pricing: "가격",
@@ -243,6 +309,17 @@ const translations: Record<string, Record<string, string>> = {
     possession: "점유율", totalShots: "총 슈팅", shotsOnGoal: "유효 슈팅", shotsOffGoal: "슈팅 빗나감",
     corners: "코너킥", fouls: "파울", offsides: "오프사이드", yellowCards: "옐로카드", redCards: "레드카드",
     saves: "선방", passes: "총 패스", passAccuracy: "패스 성공률", expectedGoals: "기대 골 (xG)",
+    // Market tabs
+    overUnderMarket: "오버/언더", asianHandicapMarket: "아시안 핸디캡",
+    // Buttons
+    signalHistory: "시그널 히스토리", profitSummary: "수익 요약",
+    // Bet styles
+    allStyles: "모든 스타일", hdpSniper: "HDP 스나이퍼", activeTrader: "액티브 트레이더",
+    oddsflowCoreStrategy: "Oddsflow 코어 전략", oddsflowBeta: "Oddsflow 베타",
+    // Table columns
+    clock: "시간", selection: "선택", line: "라인", fairOdds: "공정 배당률",
+    marketOdds: "시장 배당률", ev: "EV", stake: "스테이크", value: "가치",
+    betType: "베팅 유형", oddsAtSignal: "시그널 시 배당률", scoreHome: "홈 득점", scoreAway: "원정 득점",
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现", community: "社区", news: "新闻", solution: "解决方案", pricing: "价格",
@@ -270,6 +347,17 @@ const translations: Record<string, Record<string, string>> = {
     possession: "控球率", totalShots: "射门总数", shotsOnGoal: "射正", shotsOffGoal: "射偏",
     corners: "角球", fouls: "犯规", offsides: "越位", yellowCards: "黄牌", redCards: "红牌",
     saves: "扑救", passes: "传球总数", passAccuracy: "传球成功率", expectedGoals: "预期进球 (xG)",
+    // Market tabs
+    overUnderMarket: "大小球", asianHandicapMarket: "亚洲让球",
+    // Buttons
+    signalHistory: "信号历史", profitSummary: "利润摘要",
+    // Bet styles
+    allStyles: "所有风格", hdpSniper: "让球狙击手", activeTrader: "活跃交易者",
+    oddsflowCoreStrategy: "Oddsflow 核心策略", oddsflowBeta: "Oddsflow 测试版",
+    // Table columns
+    clock: "时钟", selection: "选择", line: "让球", fairOdds: "公平赔率",
+    marketOdds: "市场赔率", ev: "EV", stake: "赌注", value: "价值",
+    betType: "投注类型", oddsAtSignal: "信号时赔率", scoreHome: "主队比分", scoreAway: "客队比分",
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現", community: "社區", news: "新聞", solution: "解決方案", pricing: "價格",
@@ -297,6 +385,17 @@ const translations: Record<string, Record<string, string>> = {
     possession: "控球率", totalShots: "射門總數", shotsOnGoal: "射正", shotsOffGoal: "射偏",
     corners: "角球", fouls: "犯規", offsides: "越位", yellowCards: "黃牌", redCards: "紅牌",
     saves: "撲救", passes: "傳球總數", passAccuracy: "傳球成功率", expectedGoals: "預期進球 (xG)",
+    // Market tabs
+    overUnderMarket: "大小球", asianHandicapMarket: "亞洲讓球",
+    // Buttons
+    signalHistory: "信號歷史", profitSummary: "利潤摘要",
+    // Bet styles
+    allStyles: "所有風格", hdpSniper: "讓球狙擊手", activeTrader: "活躍交易者",
+    oddsflowCoreStrategy: "Oddsflow 核心策略", oddsflowBeta: "Oddsflow 測試版",
+    // Table columns
+    clock: "時鐘", selection: "選擇", line: "讓球", fairOdds: "公平賠率",
+    marketOdds: "市場賠率", ev: "EV", stake: "賭注", value: "價值",
+    betType: "投注類型", oddsAtSignal: "信號時賠率", scoreHome: "主隊比分", scoreAway: "客隊比分",
   },
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI", community: "Komunitas", news: "Berita", solution: "Solusi", pricing: "Harga",
@@ -332,8 +431,7 @@ const PERSONALITIES = [
   {
     id: 'value',
     aiModel: 'Value Hunter', // Database value (displays as "HDP Sniper")
-    name: 'HDP Sniper',
-    nameZh: 'HDP狙击手',
+    nameKey: 'hdpSniper', // Translation key
     image: '/performance/HDP Snipper.png',
     description: 'Precision handicap betting with high accuracy.',
     color: 'from-gray-800 to-black',
@@ -345,8 +443,7 @@ const PERSONALITIES = [
   {
     id: 'aggressive',
     aiModel: 'Aggressive', // Database value (displays as "Active Trader")
-    name: 'Active Trader',
-    nameZh: '活跃交易者',
+    nameKey: 'activeTrader', // Translation key
     image: '/performance/Active trader.png',
     description: 'Dynamic trading strategy with live signals.',
     color: 'from-sky-400 to-blue-400',
@@ -358,8 +455,7 @@ const PERSONALITIES = [
   {
     id: 'balanced',
     aiModel: 'Balanced', // Database value (displays as "Oddsflow Core Strategy")
-    name: 'Oddsflow Core Strategy',
-    nameZh: 'Oddsflow核心策略',
+    nameKey: 'oddsflowCoreStrategy', // Translation key
     image: '/performance/Oddsflow Core Strategy.png',
     description: 'Balanced approach with core algorithms.',
     color: 'from-green-500 to-green-600',
@@ -371,8 +467,7 @@ const PERSONALITIES = [
   {
     id: 'beta',
     aiModel: 'Oddsflow Beta v8', // Database value (displays as "Oddsflow Beta")
-    name: 'Oddsflow Beta',
-    nameZh: 'Oddsflow测试版',
+    nameKey: 'oddsflowBeta', // Translation key
     image: '/performance/Oddsflow Beta.png',
     description: 'Advanced beta algorithms with cutting-edge AI.',
     color: 'from-purple-600 to-purple-700',
@@ -2705,10 +2800,10 @@ export default function MatchDetailClient() {
                         >
                           {p.image && (
                             <div className={`w-6 h-6 rounded flex items-center justify-center bg-gradient-to-br ${p.logoColor}`}>
-                              <img src={p.image} alt={p.name} className="w-4 h-4 object-contain" />
+                              <img src={p.image} alt={t(p.nameKey)} className="w-4 h-4 object-contain" />
                             </div>
                           )}
-                          <span>{p.name}</span>
+                          <span>{t(p.nameKey)}</span>
                         </button>
                       ))}
                     </div>
@@ -3722,7 +3817,7 @@ export default function MatchDetailClient() {
                 <div>
                   <h2 className="text-lg font-bold text-white">{t('aiPredictions')}</h2>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-gray-500">{currentPersonality.name}</span>
+                    <span className="text-xs text-gray-500">{t(currentPersonality.nameKey)}</span>
                   </div>
                 </div>
                 {/* Live Refresh Countdown */}
@@ -3758,7 +3853,7 @@ export default function MatchDetailClient() {
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
-                    Profit Summary
+                    {t('profitSummary')}
                   </button>
                 )}
                 <button
@@ -3768,7 +3863,7 @@ export default function MatchDetailClient() {
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Signal History
+                  {t('signalHistory')}
                 </button>
               </div>
             </div>
@@ -3814,7 +3909,7 @@ export default function MatchDetailClient() {
                       >
                         <img
                           src={p.image}
-                          alt={p.name}
+                          alt={t(p.nameKey)}
                           className={`object-contain transition-all ${
                             selectedPersonality === p.id ? 'w-6 h-6' : 'w-5 h-5'
                           }`}
@@ -3822,7 +3917,7 @@ export default function MatchDetailClient() {
                       </div>
                     )}
 
-                    <span className="relative z-10 whitespace-nowrap">{p.name}</span>
+                    <span className="relative z-10 whitespace-nowrap">{t(p.nameKey)}</span>
 
                     {/* Lock icon for subscription-locked styles */}
                     {!p.isLocked && !available && (
@@ -3855,7 +3950,7 @@ export default function MatchDetailClient() {
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                O/U
+                {t('overUnderMarket')}
               </button>
               <button
                 onClick={() => setSelectedMarket('handicap')}
@@ -3865,7 +3960,7 @@ export default function MatchDetailClient() {
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                HDP
+                {t('asianHandicapMarket')}
               </button>
             </div>
 
