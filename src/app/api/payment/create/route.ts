@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     // Get request body - client will send user info from their session
     const body = await request.json();
-    const { planType, userId, userEmail, userName } = body;
+    const { planType, currency = 'USD', userId, userEmail, userName } = body;
 
     // Validate required fields
     if (!planType) {
@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
     // Create payment request with X1PAG
     const paymentResult = await createPaymentRequest({
       planType,
+      currency,
       userId,
       userEmail,
       userName: userName || userEmail.split('@')[0] || 'User',

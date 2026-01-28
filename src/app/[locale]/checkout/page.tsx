@@ -5,7 +5,14 @@ import Link from 'next/link';
 import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
-import { formatCurrency, getPlanDetails, PLAN_PRICING } from '@/lib/x1pag-client';
+import {
+  formatCurrency,
+  getPlanDetails,
+  PLAN_PRICING,
+  type SupportedCurrency,
+  CURRENCY_INFO,
+  detectPreferredCurrency,
+} from '@/lib/x1pag-client';
 import { locales, type Locale } from '@/i18n/config';
 
 export default function CheckoutPage() {
@@ -15,7 +22,10 @@ export default function CheckoutPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const plan = searchParams.get('plan') || 'starter';
-  const planDetails = getPlanDetails(plan);
+
+  // Currency state - default to user's preferred currency
+  const [selectedCurrency, setSelectedCurrency] = useState<SupportedCurrency>('USD');
+  const planDetails = getPlanDetails(plan, selectedCurrency);
 
   const localePath = (path: string): string => {
     if (locale === 'en') return path;
@@ -25,6 +35,12 @@ export default function CheckoutPage() {
   const [user, setUser] = useState<User | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
+
+  // Initialize preferred currency on mount
+  useEffect(() => {
+    const preferred = detectPreferredCurrency();
+    setSelectedCurrency(preferred);
+  }, []);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -55,6 +71,7 @@ export default function CheckoutPage() {
         },
         body: JSON.stringify({
           planType: plan,
+          currency: selectedCurrency,
           userId: user.id,
           userEmail: user.email,
           userName: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
@@ -140,6 +157,37 @@ export default function CheckoutPage() {
               <p className="text-gray-400">Subscribe to {planDetails.name}</p>
             </div>
 
+            {/* Currency Selector */}
+            <div className="bg-white/5 rounded-xl p-4 mb-6">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-400">Select Currency</span>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSelectedCurrency('USD')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+                      selectedCurrency === 'USD'
+                        ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-black'
+                        : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                    }`}
+                  >
+                    <span>{CURRENCY_INFO.USD.flag}</span>
+                    <span>USD ($)</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedCurrency('BRL')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+                      selectedCurrency === 'BRL'
+                        ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-black'
+                        : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                    }`}
+                  >
+                    <span>{CURRENCY_INFO.BRL.flag}</span>
+                    <span>BRL (R$)</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* Order Summary */}
             <div className="bg-white/5 rounded-xl p-6 mb-8">
               <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
@@ -162,7 +210,7 @@ export default function CheckoutPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold">Total</span>
                     <span className="text-2xl font-bold text-emerald-400">
-                      {plan === 'free_trial' ? 'Free' : formatCurrency(planDetails.amount, planDetails.currency)}
+                      {plan === 'free_trial' ? 'Free' : formatCurrency(planDetails.amount, selectedCurrency)}
                     </span>
                   </div>
                 </div>

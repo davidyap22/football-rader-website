@@ -8,7 +8,7 @@
  */
 
 import crypto from 'crypto';
-import { PLAN_PRICING } from './x1pag-client';
+import { PLAN_PRICING_MULTI_CURRENCY, type SupportedCurrency } from './x1pag-client';
 
 // X1PAG Configuration (server-side only - contains sensitive data)
 export const X1PAG_CONFIG = {
@@ -94,23 +94,27 @@ export function verifyCallbackSignature(data: X1PAGCallbackData): boolean {
  */
 export async function createPaymentRequest(params: {
   planType: string;
+  currency?: SupportedCurrency;
   userId: string;
   userEmail: string;
   userName: string;
   userPhone?: string;
 }): Promise<X1PAGPaymentResponse> {
-  const { planType, userId, userEmail, userName, userPhone } = params;
+  const { planType, currency = 'USD', userId, userEmail, userName, userPhone } = params;
+
+  // Get pricing for the selected currency
+  const pricing = PLAN_PRICING_MULTI_CURRENCY[currency];
 
   // Validate plan type
-  if (!PLAN_PRICING[planType as keyof typeof PLAN_PRICING]) {
+  if (!pricing || !pricing[planType as keyof typeof pricing]) {
     return {
       success: false,
       error: 'INVALID_PLAN',
-      message: 'Invalid plan type',
+      message: 'Invalid plan type or currency',
     };
   }
 
-  const plan = PLAN_PRICING[planType as keyof typeof PLAN_PRICING];
+  const plan = pricing[planType as keyof typeof pricing];
 
   // Free trial doesn't require payment
   if (planType === 'free_trial') {
