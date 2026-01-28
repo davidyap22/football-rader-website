@@ -551,13 +551,17 @@ export default function MatchDetailClient() {
   const previousOddsRef = useRef<OddsHistory | null>(null);
 
   // Signal History state
-  const [showSignalHistory, setShowSignalHistory] = useState<'moneyline' | 'overunder' | 'handicap' | 'value' | null>(null);
+  const [showSignalHistory, setShowSignalHistory] = useState(false);
   const [signalHistory, setSignalHistory] = useState<{
     moneyline: Moneyline1x2Prediction[];
     overunder: OverUnderPrediction[];
     handicap: HandicapPrediction[];
   }>({ moneyline: [], overunder: [], handicap: [] });
   const [liveSignalsHistory, setLiveSignalsHistory] = useState<LiveSignals[]>([]);
+
+  // Signal History modal filters (independent from main selection)
+  const [modalMarketFilter, setModalMarketFilter] = useState<'moneyline' | 'overunder' | 'handicap'>('moneyline');
+  const [modalBetStyleFilter, setModalBetStyleFilter] = useState<string>('value'); // personality id
 
   // Market type filter
   const [selectedMarket, setSelectedMarket] = useState<'moneyline' | 'overunder' | 'handicap'>('moneyline');
@@ -617,11 +621,14 @@ export default function MatchDetailClient() {
     setSelectedPersonality(personalityId);
   };
 
-  // Fetch signal history for a specific market type
-  const fetchSignalHistory = useCallback(async (type: 'moneyline' | 'overunder' | 'handicap') => {
+  // Fetch signal history for a specific market type and personality
+  const fetchSignalHistory = useCallback(async (
+    type: 'moneyline' | 'overunder' | 'handicap',
+    personalityId?: string
+  ) => {
     if (!match?.fixture_id) return;
 
-    const personality = PERSONALITIES.find(p => p.id === selectedPersonality);
+    const personality = PERSONALITIES.find(p => p.id === (personalityId || selectedPersonality));
     if (!personality) return;
 
     try {
@@ -667,15 +674,32 @@ export default function MatchDetailClient() {
     }
   }, [match?.fixture_id]);
 
-  // Open signal history modal
-  const openSignalHistory = (type: 'moneyline' | 'overunder' | 'handicap' | 'value') => {
-    if (type === 'value') {
+  // Open signal history modal with default filters
+  const openSignalHistory = () => {
+    // Set default filters based on current selections
+    setModalMarketFilter(selectedMarket);
+    setModalBetStyleFilter(selectedPersonality);
+
+    // Fetch initial data
+    if (selectedPersonality === 'value') {
       fetchValueHunterHistory();
     } else {
-      fetchSignalHistory(type);
+      fetchSignalHistory(selectedMarket, selectedPersonality);
     }
-    setShowSignalHistory(type);
+
+    setShowSignalHistory(true);
   };
+
+  // Fetch data when modal filters change
+  useEffect(() => {
+    if (!showSignalHistory) return;
+
+    if (modalBetStyleFilter === 'value') {
+      fetchValueHunterHistory();
+    } else {
+      fetchSignalHistory(modalMarketFilter, modalBetStyleFilter);
+    }
+  }, [showSignalHistory, modalMarketFilter, modalBetStyleFilter, fetchSignalHistory, fetchValueHunterHistory]);
 
   // Fetch profit summary for finished matches
   const fetchProfitSummary = useCallback(async (fixtureId: number, betStyle?: string) => {
@@ -2462,20 +2486,18 @@ export default function MatchDetailClient() {
               {/* Backdrop */}
               <div
                 className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-                onClick={() => setShowSignalHistory(null)}
+                onClick={() => setShowSignalHistory(false)}
               />
               {/* Modal */}
-              <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl border border-white/10 p-6 max-w-5xl w-full max-h-[80vh] flex flex-col overflow-hidden">
+              <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl border border-white/10 p-6 max-w-6xl w-full max-h-[85vh] flex flex-col overflow-hidden">
                 {/* Background glow */}
                 <div className="absolute top-0 left-1/4 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
                 <div className="absolute top-0 right-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
                 <div className="flex items-center justify-between mb-4 relative z-10">
-                  <h3 className="text-xl font-bold text-white">
-                    Signal History - {showSignalHistory === 'moneyline' ? '1X2' : showSignalHistory === 'overunder' ? 'Over/Under' : showSignalHistory === 'handicap' ? 'Handicap' : `💎 HDP Sniper (${selectedMarket === 'moneyline' ? '1X2' : selectedMarket === 'overunder' ? 'O/U' : 'HDP'})`}
-                  </h3>
+                  <h3 className="text-xl font-bold text-white">Signal History</h3>
                   <button
-                    onClick={() => setShowSignalHistory(null)}
+                    onClick={() => setShowSignalHistory(false)}
                     className="p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
                   >
                     <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2484,8 +2506,73 @@ export default function MatchDetailClient() {
                   </button>
                 </div>
 
+                {/* Filters Section */}
+                <div className="relative z-10 space-y-3 mb-4">
+                  {/* Market Type Filter */}
+                  <div>
+                    <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Market Type</label>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setModalMarketFilter('moneyline')}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                          modalMarketFilter === 'moneyline'
+                            ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-black'
+                            : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                        }`}
+                      >
+                        1X2
+                      </button>
+                      <button
+                        onClick={() => setModalMarketFilter('overunder')}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                          modalMarketFilter === 'overunder'
+                            ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-black'
+                            : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                        }`}
+                      >
+                        O/U
+                      </button>
+                      <button
+                        onClick={() => setModalMarketFilter('handicap')}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                          modalMarketFilter === 'handicap'
+                            ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-black'
+                            : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                        }`}
+                      >
+                        HDP
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Bet Style Filter */}
+                  <div>
+                    <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Bet Style</label>
+                    <div className="flex gap-2 overflow-x-auto pb-1">
+                      {PERSONALITIES.filter(p => isStyleAvailable(p.id)).map((p) => (
+                        <button
+                          key={p.id}
+                          onClick={() => setModalBetStyleFilter(p.id)}
+                          className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all flex items-center gap-2 ${
+                            modalBetStyleFilter === p.id
+                              ? `bg-gradient-to-r ${p.color} text-white border border-white/20`
+                              : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                          }`}
+                        >
+                          {p.image && (
+                            <div className={`w-6 h-6 rounded flex items-center justify-center bg-gradient-to-br ${p.logoColor}`}>
+                              <img src={p.image} alt={p.name} className="w-4 h-4 object-contain" />
+                            </div>
+                          )}
+                          <span>{p.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
                 <div className="overflow-auto flex-1 relative z-10">
-                  {showSignalHistory === 'value' ? (
+                  {modalBetStyleFilter === 'value' ? (
                     liveSignalsHistory.length > 0 ? (
                       <>
                       {/* Desktop Table */}
@@ -2495,14 +2582,14 @@ export default function MatchDetailClient() {
                             <th className="text-left py-3 px-2 text-gray-400 font-medium">Clock</th>
                             <th className="text-left py-3 px-2 text-gray-400 font-medium">Score</th>
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Selection</th>
-                            {(selectedMarket === 'overunder' || selectedMarket === 'handicap') && (
+                            {(modalMarketFilter === 'overunder' || modalMarketFilter === 'handicap') && (
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Line</th>
                             )}
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Fair Odds</th>
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Market Odds</th>
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">EV</th>
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Stake</th>
-                            {selectedMarket === 'handicap' && (
+                            {modalMarketFilter === 'handicap' && (
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Unrealized P/L</th>
                             )}
                             <th className="text-center py-3 px-2 text-gray-400 font-medium">Status</th>
@@ -2510,14 +2597,14 @@ export default function MatchDetailClient() {
                         </thead>
                         <tbody>
                           {liveSignalsHistory.map((record, index) => {
-                            // Get data based on selected market
+                            // Get data based on modal market filter
                             // Note: Database stores selection as "HOME"/"DRAW"/"AWAY" text, and odds as single numeric values
                             const rawRecord = record as unknown as Record<string, unknown>;
                             const getSelectionLabel = () => {
-                              if (selectedMarket === 'moneyline') {
+                              if (modalMarketFilter === 'moneyline') {
                                 const sel = String(rawRecord.selection_1x2 || '').toUpperCase();
                                 return sel === 'HOME' || sel === '1' ? 'Home' : sel === 'DRAW' || sel === 'X' ? 'Draw' : 'Away';
-                              } else if (selectedMarket === 'overunder') {
+                              } else if (modalMarketFilter === 'overunder') {
                                 const sel = String(rawRecord.selection_ou || '').toLowerCase();
                                 return sel === 'over' ? 'Over' : 'Under';
                               } else {
@@ -2526,10 +2613,10 @@ export default function MatchDetailClient() {
                               }
                             };
                             const getFairOdds = () => {
-                              if (selectedMarket === 'moneyline') {
+                              if (modalMarketFilter === 'moneyline') {
                                 const val = rawRecord.fair_odds_1x2;
                                 return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
-                              } else if (selectedMarket === 'overunder') {
+                              } else if (modalMarketFilter === 'overunder') {
                                 const val = rawRecord.fair_odds_ou;
                                 return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
                               } else {
@@ -2538,10 +2625,10 @@ export default function MatchDetailClient() {
                               }
                             };
                             const getMarketOdds = () => {
-                              if (selectedMarket === 'moneyline') {
+                              if (modalMarketFilter === 'moneyline') {
                                 const val = rawRecord.market_odds_1x2;
                                 return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
-                              } else if (selectedMarket === 'overunder') {
+                              } else if (modalMarketFilter === 'overunder') {
                                 const val = rawRecord.market_odds_ou;
                                 return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
                               } else {
@@ -2557,9 +2644,9 @@ export default function MatchDetailClient() {
                                 const num = parseFloat(str);
                                 return !isNaN(num) ? `+${num.toFixed(2)}%` : '-';
                               };
-                              if (selectedMarket === 'moneyline') {
+                              if (modalMarketFilter === 'moneyline') {
                                 return parseEV(rawRecord.expected_value_1x2);
-                              } else if (selectedMarket === 'overunder') {
+                              } else if (modalMarketFilter === 'overunder') {
                                 return parseEV(rawRecord.expected_value_ou);
                               } else {
                                 return parseEV(rawRecord.expected_value_hdp);
@@ -2573,15 +2660,15 @@ export default function MatchDetailClient() {
                                 const num = parseFloat(str);
                                 return !isNaN(num) ? `${num.toFixed(2)} units` : '-';
                               };
-                              if (selectedMarket === 'moneyline') {
+                              if (modalMarketFilter === 'moneyline') {
                                 return parseStake(rawRecord.recommended_stake_1x2);
-                              } else if (selectedMarket === 'overunder') {
+                              } else if (modalMarketFilter === 'overunder') {
                                 return parseStake(rawRecord.recommended_stake_ou);
                               } else {
                                 return parseStake(rawRecord.recommended_stake_hdp);
                               }
                             };
-                            const isValuable = selectedMarket === 'moneyline' ? rawRecord.is_valuable_1x2 : selectedMarket === 'overunder' ? rawRecord.is_valuable_ou : rawRecord.is_valuable_hdp;
+                            const isValuable = modalMarketFilter === 'moneyline' ? rawRecord.is_valuable_1x2 : modalMarketFilter === 'overunder' ? rawRecord.is_valuable_ou : rawRecord.is_valuable_hdp;
 
                             // Calculate unrealized P/L for HDP
                             const getUnrealizedPnL = () => {
@@ -2627,11 +2714,11 @@ export default function MatchDetailClient() {
                             };
 
                             const getLine = () => {
-                              if (selectedMarket === 'overunder') {
+                              if (modalMarketFilter === 'overunder') {
                                 // Try multiple possible field names for O/U line
                                 const val = rawRecord.total_points_mainline ?? rawRecord.totalpoints_main_line ?? rawRecord.line_ou ?? rawRecord.line ?? null;
                                 return val !== null && val !== undefined ? String(val) : '-';
-                              } else if (selectedMarket === 'handicap') {
+                              } else if (modalMarketFilter === 'handicap') {
                                 // Try multiple possible field names for HDP line
                                 const val = rawRecord.handicap_main_line ?? rawRecord.handicap_mainline ?? rawRecord.line_hdp ?? rawRecord.line ?? null;
                                 return val !== null && val !== undefined ? String(val) : '-';
@@ -2645,19 +2732,19 @@ export default function MatchDetailClient() {
                                 <td className="py-3 px-2 text-white font-bold">{record.score || '-'}</td>
                                 <td className="py-3 px-2 text-center">
                                   <span className={`px-2 py-1 rounded text-xs font-bold ${
-                                    selectedMarket === 'moneyline' ? 'bg-emerald-500/20 text-emerald-400' :
-                                    selectedMarket === 'overunder' ? 'bg-cyan-500/20 text-cyan-400' :
+                                    modalMarketFilter === 'moneyline' ? 'bg-emerald-500/20 text-emerald-400' :
+                                    modalMarketFilter === 'overunder' ? 'bg-cyan-500/20 text-cyan-400' :
                                     'bg-pink-500/20 text-pink-400'
                                   }`}>{getSelectionLabel()}</span>
                                 </td>
-                                {(selectedMarket === 'overunder' || selectedMarket === 'handicap') && (
+                                {(modalMarketFilter === 'overunder' || modalMarketFilter === 'handicap') && (
                                   <td className="py-3 px-2 text-center text-amber-400 font-medium">{getLine()}</td>
                                 )}
                                 <td className="py-3 px-2 text-center text-gray-400">{getFairOdds()}</td>
                                 <td className="py-3 px-2 text-center text-white font-medium">{getMarketOdds()}</td>
                                 <td className="py-3 px-2 text-center text-emerald-400 font-medium">{getEV()}</td>
                                 <td className="py-3 px-2 text-center text-yellow-400">{getStake()}</td>
-                                {selectedMarket === 'handicap' && (() => {
+                                {modalMarketFilter === 'handicap' && (() => {
                                   const unrealizedPnL = getUnrealizedPnL();
                                   return (
                                     <td className={`py-3 px-2 text-center font-medium ${unrealizedPnL ? getUnrealizedStatusColor(unrealizedPnL.status) : 'text-gray-500'}`}>
@@ -2683,10 +2770,10 @@ export default function MatchDetailClient() {
                         {liveSignalsHistory.map((record, index) => {
                           const rawRecord = record as unknown as Record<string, unknown>;
                           const getSelectionLabel = () => {
-                            if (selectedMarket === 'moneyline') {
+                            if (modalMarketFilter === 'moneyline') {
                               const sel = String(rawRecord.selection_1x2 || '').toUpperCase();
                               return sel === 'HOME' || sel === '1' ? 'Home' : sel === 'DRAW' || sel === 'X' ? 'Draw' : 'Away';
-                            } else if (selectedMarket === 'overunder') {
+                            } else if (modalMarketFilter === 'overunder') {
                               const sel = String(rawRecord.selection_ou || '').toLowerCase();
                               return sel === 'over' ? 'Over' : 'Under';
                             } else {
@@ -2695,10 +2782,10 @@ export default function MatchDetailClient() {
                             }
                           };
                           const getFairOdds = () => {
-                            if (selectedMarket === 'moneyline') {
+                            if (modalMarketFilter === 'moneyline') {
                               const val = rawRecord.fair_odds_1x2;
                               return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
-                            } else if (selectedMarket === 'overunder') {
+                            } else if (modalMarketFilter === 'overunder') {
                               const val = rawRecord.fair_odds_ou;
                               return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
                             } else {
@@ -2707,10 +2794,10 @@ export default function MatchDetailClient() {
                             }
                           };
                           const getMarketOdds = () => {
-                            if (selectedMarket === 'moneyline') {
+                            if (modalMarketFilter === 'moneyline') {
                               const val = rawRecord.market_odds_1x2;
                               return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
-                            } else if (selectedMarket === 'overunder') {
+                            } else if (modalMarketFilter === 'overunder') {
                               const val = rawRecord.market_odds_ou;
                               return val !== null && val !== undefined ? Number(val).toFixed(2) : '-';
                             } else {
@@ -2725,9 +2812,9 @@ export default function MatchDetailClient() {
                               const num = parseFloat(str);
                               return !isNaN(num) ? `+${num.toFixed(2)}%` : '-';
                             };
-                            if (selectedMarket === 'moneyline') {
+                            if (modalMarketFilter === 'moneyline') {
                               return parseEV(rawRecord.expected_value_1x2);
-                            } else if (selectedMarket === 'overunder') {
+                            } else if (modalMarketFilter === 'overunder') {
                               return parseEV(rawRecord.expected_value_ou);
                             } else {
                               return parseEV(rawRecord.expected_value_hdp);
@@ -2740,20 +2827,20 @@ export default function MatchDetailClient() {
                               const num = parseFloat(str);
                               return !isNaN(num) ? `${num.toFixed(2)}u` : '-';
                             };
-                            if (selectedMarket === 'moneyline') {
+                            if (modalMarketFilter === 'moneyline') {
                               return parseStake(rawRecord.recommended_stake_1x2);
-                            } else if (selectedMarket === 'overunder') {
+                            } else if (modalMarketFilter === 'overunder') {
                               return parseStake(rawRecord.recommended_stake_ou);
                             } else {
                               return parseStake(rawRecord.recommended_stake_hdp);
                             }
                           };
-                          const isValuable = selectedMarket === 'moneyline' ? rawRecord.is_valuable_1x2 : selectedMarket === 'overunder' ? rawRecord.is_valuable_ou : rawRecord.is_valuable_hdp;
+                          const isValuable = modalMarketFilter === 'moneyline' ? rawRecord.is_valuable_1x2 : modalMarketFilter === 'overunder' ? rawRecord.is_valuable_ou : rawRecord.is_valuable_hdp;
                           const getLine = () => {
-                            if (selectedMarket === 'overunder') {
+                            if (modalMarketFilter === 'overunder') {
                               const val = rawRecord.total_points_mainline ?? rawRecord.totalpoints_main_line ?? rawRecord.line_ou ?? rawRecord.line ?? null;
                               return val !== null && val !== undefined ? String(val) : '-';
-                            } else if (selectedMarket === 'handicap') {
+                            } else if (modalMarketFilter === 'handicap') {
                               const val = rawRecord.handicap_main_line ?? rawRecord.handicap_mainline ?? rawRecord.line_hdp ?? rawRecord.line ?? null;
                               return val !== null && val !== undefined ? String(val) : '-';
                             }
@@ -2817,8 +2904,8 @@ export default function MatchDetailClient() {
                               {/* Selection & Line */}
                               <div className="flex items-center gap-2 mb-2">
                                 <span className={`px-2 py-1 rounded text-xs font-bold ${
-                                  selectedMarket === 'moneyline' ? 'bg-emerald-500/20 text-emerald-400' :
-                                  selectedMarket === 'overunder' ? 'bg-cyan-500/20 text-cyan-400' :
+                                  modalMarketFilter === 'moneyline' ? 'bg-emerald-500/20 text-emerald-400' :
+                                  modalMarketFilter === 'overunder' ? 'bg-cyan-500/20 text-cyan-400' :
                                   'bg-pink-500/20 text-pink-400'
                                 }`}>{getSelectionLabel()}</span>
                                 {getLine() && (
@@ -2827,7 +2914,7 @@ export default function MatchDetailClient() {
                               </div>
 
                               {/* Odds & EV Row */}
-                              <div className={`grid ${selectedMarket === 'handicap' ? 'grid-cols-5' : 'grid-cols-4'} gap-2 text-xs`}>
+                              <div className={`grid ${modalMarketFilter === 'handicap' ? 'grid-cols-5' : 'grid-cols-4'} gap-2 text-xs`}>
                                 <div className="text-center">
                                   <span className="text-gray-500 block text-[10px]">Fair</span>
                                   <span className="text-gray-400">{getFairOdds()}</span>
@@ -2844,7 +2931,7 @@ export default function MatchDetailClient() {
                                   <span className="text-gray-500 block text-[10px]">Stake</span>
                                   <span className="text-yellow-400">{getStake()}</span>
                                 </div>
-                                {selectedMarket === 'handicap' && (() => {
+                                {modalMarketFilter === 'handicap' && (() => {
                                   const unrealizedPnL = getUnrealizedPnL();
                                   return (
                                     <div className="text-center">
@@ -2862,9 +2949,9 @@ export default function MatchDetailClient() {
                       </div>
                       </>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">No Value Hunter signal history available</div>
+                      <div className="text-center py-8 text-gray-500">No HDP Sniper signal history available</div>
                     )
-                  ) : signalHistory[showSignalHistory as 'moneyline' | 'overunder' | 'handicap']?.length > 0 ? (
+                  ) : signalHistory[modalMarketFilter]?.length > 0 ? (
                     <>
                     {/* Desktop Table */}
                     <table className="w-full text-sm border-collapse hidden md:table">
@@ -2873,21 +2960,21 @@ export default function MatchDetailClient() {
                           <th className="text-left py-3 px-3 text-gray-400 font-medium">Clock</th>
                           <th className="text-left py-3 px-3 text-gray-400 font-medium">Signal</th>
                           <th className="text-left py-3 px-3 text-gray-400 font-medium">Selection</th>
-                          {showSignalHistory === 'moneyline' && (
+                          {modalMarketFilter === 'moneyline' && (
                             <>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Home</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Draw</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Away</th>
                             </>
                           )}
-                          {showSignalHistory === 'overunder' && (
+                          {modalMarketFilter === 'overunder' && (
                             <>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Line</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Over</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Under</th>
                             </>
                           )}
-                          {showSignalHistory === 'handicap' && (
+                          {modalMarketFilter === 'handicap' && (
                             <>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Line</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Home</th>
@@ -2900,7 +2987,7 @@ export default function MatchDetailClient() {
                         </tr>
                       </thead>
                       <tbody>
-                        {signalHistory[showSignalHistory as 'moneyline' | 'overunder' | 'handicap'].map((record, index) => (
+                        {signalHistory[modalMarketFilter].map((record, index) => (
                           <tr key={record.id} className={`border-b border-white/5 ${index === 0 ? 'bg-emerald-500/10' : 'hover:bg-white/5'} transition-colors`}>
                             <td className="py-3 px-3 text-gray-300">
                               {record.clock !== null ? `${record.clock}'` : '-'}
@@ -2917,21 +3004,21 @@ export default function MatchDetailClient() {
                               </span>
                             </td>
                             <td className="py-3 px-3 text-white font-medium">{record.selection || '-'}</td>
-                            {showSignalHistory === 'moneyline' && (
+                            {modalMarketFilter === 'moneyline' && (
                               <>
                                 <td className="py-3 px-2 text-center text-cyan-400 font-medium">{(record as Moneyline1x2Prediction).moneyline_1x2_home?.toFixed(2) ?? '-'}</td>
                                 <td className="py-3 px-2 text-center text-cyan-400 font-medium">{(record as Moneyline1x2Prediction).moneyline_1x2_draw?.toFixed(2) ?? '-'}</td>
                                 <td className="py-3 px-2 text-center text-cyan-400 font-medium">{(record as Moneyline1x2Prediction).moneyline_1x2_away?.toFixed(2) ?? '-'}</td>
                               </>
                             )}
-                            {showSignalHistory === 'overunder' && (
+                            {modalMarketFilter === 'overunder' && (
                               <>
                                 <td className="py-3 px-2 text-center text-purple-400 font-medium">{(record as OverUnderPrediction).line ?? '-'}</td>
                                 <td className="py-3 px-2 text-center text-cyan-400 font-medium">{(record as OverUnderPrediction).over?.toFixed(2) ?? '-'}</td>
                                 <td className="py-3 px-2 text-center text-cyan-400 font-medium">{(record as OverUnderPrediction).under?.toFixed(2) ?? '-'}</td>
                               </>
                             )}
-                            {showSignalHistory === 'handicap' && (
+                            {modalMarketFilter === 'handicap' && (
                               <>
                                 <td className="py-3 px-2 text-center text-purple-400 font-medium">{(record as HandicapPrediction).line ?? '-'}</td>
                                 <td className="py-3 px-2 text-center text-cyan-400 font-medium">{(record as HandicapPrediction).home_odds?.toFixed(2) ?? '-'}</td>
@@ -2948,7 +3035,7 @@ export default function MatchDetailClient() {
 
                     {/* Mobile Card Layout for Regular Signals */}
                     <div className="md:hidden space-y-3 p-2">
-                      {signalHistory[showSignalHistory as 'moneyline' | 'overunder' | 'handicap'].map((record, index) => (
+                      {signalHistory[modalMarketFilter].map((record, index) => (
                         <div
                           key={record.id}
                           className={`bg-white/5 rounded-lg p-3 border ${
@@ -2976,7 +3063,7 @@ export default function MatchDetailClient() {
 
                           {/* Market-specific odds */}
                           <div className="grid grid-cols-3 gap-2 text-xs mb-2">
-                            {showSignalHistory === 'moneyline' && (
+                            {modalMarketFilter === 'moneyline' && (
                               <>
                                 <div className="text-center">
                                   <span className="text-gray-500 block text-[10px]">Home</span>
@@ -2992,7 +3079,7 @@ export default function MatchDetailClient() {
                                 </div>
                               </>
                             )}
-                            {showSignalHistory === 'overunder' && (
+                            {modalMarketFilter === 'overunder' && (
                               <>
                                 <div className="text-center">
                                   <span className="text-gray-500 block text-[10px]">Line</span>
@@ -3008,7 +3095,7 @@ export default function MatchDetailClient() {
                                 </div>
                               </>
                             )}
-                            {showSignalHistory === 'handicap' && (
+                            {modalMarketFilter === 'handicap' && (
                               <>
                                 <div className="text-center">
                                   <span className="text-gray-500 block text-[10px]">Line</span>
@@ -3398,7 +3485,7 @@ export default function MatchDetailClient() {
                   </button>
                 )}
                 <button
-                  onClick={() => openSignalHistory(selectedPersonality === 'value' ? 'value' : selectedMarket)}
+                  onClick={openSignalHistory}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-400 text-xs font-medium hover:from-amber-500/30 hover:to-orange-500/30 transition-all cursor-pointer"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
