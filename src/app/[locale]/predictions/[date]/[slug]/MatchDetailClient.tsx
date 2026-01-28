@@ -682,7 +682,11 @@ export default function MatchDetailClient() {
 
   // Fetch Value Hunter signal history
   const fetchValueHunterHistory = useCallback(async () => {
-    if (!match?.fixture_id) return;
+    if (!match?.fixture_id) {
+      console.log('fetchValueHunterHistory: No fixture_id');
+      return;
+    }
+    console.log('fetchValueHunterHistory: Fetching for fixture_id', match.fixture_id);
     try {
       const { data, error } = await supabase
         .from('live_signals_v7')
@@ -690,9 +694,16 @@ export default function MatchDetailClient() {
         .eq('fixture_id', match.fixture_id)
         .order('created_at', { ascending: false });
 
+      console.log('fetchValueHunterHistory result:', {
+        dataLength: data?.length || 0,
+        error: error?.message,
+        firstRecord: data?.[0]
+      });
+
       if (!error && data) {
         // Use raw data directly without parsing (database has single values, not arrays)
         setLiveSignalsHistory(data as LiveSignals[]);
+        console.log('fetchValueHunterHistory: Set liveSignalsHistory with', data.length, 'records');
       }
     } catch (error) {
       console.error('Error fetching value hunter history:', error);
@@ -3896,6 +3907,13 @@ export default function MatchDetailClient() {
                 ) : selectedPersonality === 'value' && match.type === 'Finished' ? (
                   (() => {
                     const lastLiveSignals = getLastLiveSignals('1x2', 3);
+                    console.log('Rendering 1X2 for HDP Sniper (Finished):', {
+                      liveSignalsHistoryLength: liveSignalsHistory.length,
+                      lastLiveSignalsLength: lastLiveSignals.length,
+                      matchType: match.type,
+                      selectedPersonality
+                    });
+
                     if (lastLiveSignals.length === 0) {
                       return (
                         <div className="text-center py-8 text-gray-500">
