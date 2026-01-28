@@ -8,8 +8,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { planType, currency = 'USD', userId, userEmail, userName } = body;
 
+    console.log('Payment Create API Called:', { planType, currency, userId: userId ? '***' : 'MISSING' });
+
     // Validate required fields
     if (!planType) {
+      console.error('Missing plan type');
       return NextResponse.json(
         { error: 'Missing plan type' },
         { status: 400 }
@@ -17,6 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!userId || !userEmail) {
+      console.error('Missing user information:', { userId: !!userId, userEmail: !!userEmail });
       return NextResponse.json(
         { error: 'Missing user information' },
         { status: 400 }

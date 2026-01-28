@@ -152,6 +152,14 @@ export async function createPaymentRequest(params: {
   };
 
   try {
+    // Log request for debugging
+    console.log('X1PAG Request:', {
+      url: `${X1PAG_CONFIG.host}/api/v1/checkout`,
+      currency: plan.currency,
+      amount: plan.amount,
+      merchantKey: X1PAG_CONFIG.merchantKey ? '***' + X1PAG_CONFIG.merchantKey.slice(-4) : 'NOT_SET',
+    });
+
     // Send request to X1PAG
     const response = await fetch(`${X1PAG_CONFIG.host}/api/v1/checkout`, {
       method: 'POST',
@@ -162,12 +170,15 @@ export async function createPaymentRequest(params: {
       body: JSON.stringify(requestData),
     });
 
+    console.log('X1PAG Response Status:', response.status, response.statusText);
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      console.error('X1PAG API Error:', errorData);
       return {
         success: false,
         error: 'PAYMENT_API_ERROR',
-        message: errorData.message || 'Payment gateway error',
+        message: errorData.message || `Payment gateway error (${response.status}: ${response.statusText})`,
       };
     }
 
