@@ -423,7 +423,7 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
 };
 
 // Bet styles in display order (database values remain unchanged)
-const BET_STYLES = ['Value Hunter', 'Aggressive', 'Balanced', 'Safe Play'];
+const BET_STYLES = ['Value Hunter', 'Aggressive', 'Balanced', 'Oddsflow Beta v8'];
 
 // Display name mapping (frontend only)
 const getBetStyleDisplayName = (style: string) => {
@@ -431,7 +431,7 @@ const getBetStyleDisplayName = (style: string) => {
     'Value Hunter': 'HDP Sniper',
     'Aggressive': 'Active Trader',
     'Balanced': 'Oddsflow Core Strategy',
-    'Safe Play': 'Oddsflow Beta',
+    'Oddsflow Beta v8': 'Oddsflow Beta',
   };
   return mapping[style] || style;
 };
@@ -442,7 +442,7 @@ const getBetStyleImage = (style: string) => {
     'Value Hunter': '/performance/HDP Snipper.png',
     'Aggressive': '/performance/Active trader.png',
     'Balanced': '/performance/Oddsflow Core Strategy.png',
-    'Safe Play': '/performance/Oddsflow Beta.png',
+    'Oddsflow Beta v8': '/performance/Oddsflow Beta.png',
   };
   return imageMap[style];
 };
@@ -453,7 +453,7 @@ const getBetStyleColor = (style: string) => {
     'Value Hunter': 'from-gray-800 to-black',        // Black
     'Aggressive': 'from-sky-400 to-blue-400',        // Light blue
     'Balanced': 'from-green-500 to-green-600',       // Grass green
-    'Safe Play': 'from-purple-600 to-purple-700',    // Purple
+    'Oddsflow Beta v8': 'from-purple-600 to-purple-700',    // Purple
   };
   return colorMap[style] || 'from-gray-600 to-gray-700';
 };
@@ -464,7 +464,7 @@ const getBetStyleLogoColor = (style: string) => {
     'Value Hunter': 'from-red-500 to-red-600',           // Red
     'Aggressive': 'from-sky-300 to-blue-300',            // Light blue
     'Balanced': 'from-yellow-400 to-amber-500',          // Yellow (unchanged)
-    'Safe Play': 'from-yellow-400 to-amber-500',         // Yellow (unchanged)
+    'Oddsflow Beta v8': 'from-yellow-400 to-amber-500',         // Yellow (unchanged)
   };
   return colorMap[style] || 'from-yellow-400 to-amber-500';
 };
@@ -631,9 +631,9 @@ export default function ProfitSummaryClient({
     return 'ou';
   };
 
-  // Define 5 models (All Models first, Core and Beta locked)
-  const models = ['All Models', 'Value Hunter', 'Aggressive', 'Balanced', 'Safe Play'];
-  const lockedModels = ['Balanced', 'Safe Play'];
+  // Define 5 models (All Models first, only Core locked, Beta unlocked)
+  const models = ['All Models', 'Value Hunter', 'Aggressive', 'Balanced', 'Oddsflow Beta v8'];
+  const lockedModels = ['Balanced']; // Only lock Balanced (Oddsflow Core Strategy)
 
   // Filter odds history - remove data points where any odds > 10
   const filtered1x2Data = oddsHistory.filter((d: any) => {
@@ -1006,7 +1006,7 @@ export default function ProfitSummaryClient({
               const modelName = stat.model === 'Value Hunter' ? t('hdpSniper')
                 : stat.model === 'Aggressive' ? t('activeTrader')
                 : stat.model === 'Balanced' ? t('oddsflowCore')
-                : stat.model === 'Safe Play' ? t('oddsflowBeta')
+                : stat.model === 'Oddsflow Beta v8' ? t('oddsflowBeta')
                 : t('allModels');
 
               const isLocked = lockedModels.includes(stat.model);
@@ -1016,7 +1016,7 @@ export default function ProfitSummaryClient({
                 : stat.model === 'Value Hunter' ? '/performance/Hdp-snipper.png'
                 : stat.model === 'Aggressive' ? '/performance/Active-trader.png'
                 : stat.model === 'Balanced' ? '/performance/Oddsflow-core-strategic.png'
-                : stat.model === 'Safe Play' ? '/performance/Oddsflow-beta.png'
+                : stat.model === 'Oddsflow Beta v8' ? '/performance/Oddsflow-beta.png'
                 : '';
 
               return (
@@ -1136,7 +1136,7 @@ export default function ProfitSummaryClient({
                 {t('betDetails')} - {selectedModel === 'Value Hunter' ? t('hdpSniper')
                   : selectedModel === 'Aggressive' ? t('activeTrader')
                   : selectedModel === 'Balanced' ? t('oddsflowCore')
-                  : selectedModel === 'Safe Play' ? t('oddsflowBeta')
+                  : selectedModel === 'Oddsflow Beta v8' ? t('oddsflowBeta')
                   : t('allModels')}
               </h2>
 
