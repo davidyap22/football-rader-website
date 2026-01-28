@@ -630,7 +630,17 @@ export default function ProfitSummaryClient({
   };
 
   // Helper to determine bet type
-  const getBetType = (selection: string | null): 'moneyline' | 'handicap' | 'ou' => {
+  const getBetType = (record: any): 'moneyline' | 'handicap' | 'ou' => {
+    // For live_bets_v8, use the type field directly
+    if (record.type) {
+      const type = record.type.toUpperCase();
+      if (type === 'HANDICAP' || type.includes('HDP')) return 'handicap';
+      if (type === 'OVER_UNDER' || type.includes('OVER') || type.includes('UNDER')) return 'ou';
+      if (type === '1X2' || type === 'MONEYLINE') return 'moneyline';
+    }
+
+    // Fallback to selection-based detection for profit_summary records
+    const selection = record.selection;
     if (!selection) return 'ou';
     const sel = selection.toLowerCase();
     if (sel.includes('hdp') || sel.includes('handicap')) return 'handicap';
@@ -675,9 +685,9 @@ export default function ProfitSummaryClient({
     const totalBets = records.length;
     const roi = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
 
-    const profitMoneyline = records.filter(r => getBetType(r.selection) === 'moneyline').reduce((sum, r) => sum + (r.profit ?? 0), 0);
-    const profitHandicap = records.filter(r => getBetType(r.selection) === 'handicap').reduce((sum, r) => sum + (r.profit ?? 0), 0);
-    const profitOU = records.filter(r => getBetType(r.selection) === 'ou').reduce((sum, r) => sum + (r.profit ?? 0), 0);
+    const profitMoneyline = records.filter(r => getBetType(r) === 'moneyline').reduce((sum, r) => sum + (r.profit ?? 0), 0);
+    const profitHandicap = records.filter(r => getBetType(r) === 'handicap').reduce((sum, r) => sum + (r.profit ?? 0), 0);
+    const profitOU = records.filter(r => getBetType(r) === 'ou').reduce((sum, r) => sum + (r.profit ?? 0), 0);
 
     return {
       model,
@@ -1171,7 +1181,7 @@ export default function ProfitSummaryClient({
                 const allRecords = modelStats.find(s => s.model === selectedModel)?.records || [];
                 const filteredRecords = allRecords.filter(record => {
                   if (betTypeFilter === 'All') return true;
-                  const betType = getBetType(record.selection);
+                  const betType = getBetType(record);
                   if (betTypeFilter === 'HDP') return betType === 'handicap';
                   if (betTypeFilter === '1X2') return betType === 'moneyline';
                   if (betTypeFilter === 'OU') return betType === 'ou';
