@@ -664,20 +664,20 @@ export default function MatchDetailClient() {
 
   // Get last 3 live signals (for HDP Sniper) for a specific market
   const getLastLiveSignals = (marketType: '1x2' | 'ou' | 'hdp', count: number = 3) => {
-    if (!liveSignalsHistory || liveSignalsHistory.length === 0) return [];
+    if (!liveSignalsHistory || liveSignalsHistory.length === 0) {
+      console.log('getLastLiveSignals: liveSignalsHistory is empty or null');
+      return [];
+    }
 
-    // Filter for signals that have data for the requested market
-    const filtered = liveSignalsHistory.filter((signal: any) => {
-      if (marketType === '1x2') {
-        return signal.selection_1x2 || signal.fair_odds_1x2 || signal.market_odds_1x2;
-      } else if (marketType === 'ou') {
-        return signal.selection_ou || signal.fair_odds_ou || signal.market_odds_ou;
-      } else { // hdp
-        return signal.selection_hdp || signal.fair_odds_hdp || signal.market_odds_hdp;
-      }
+    console.log('getLastLiveSignals:', {
+      marketType,
+      historyLength: liveSignalsHistory.length,
+      firstSignal: liveSignalsHistory[0]
     });
 
-    return filtered.slice(0, count);
+    // Return first N records directly - each record contains data for all markets
+    // No filtering needed as live_signals_v7 table has all market data in each row
+    return liveSignalsHistory.slice(0, count);
   };
 
   // Fetch Value Hunter signal history
