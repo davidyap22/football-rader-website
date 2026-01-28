@@ -327,62 +327,59 @@ const translations: Record<string, Record<string, string>> = {
   },
 };
 
-// Betting personality types - maps to ai_model in database
+// Betting personality types - updated to match Performance page
 const PERSONALITIES = [
+  {
+    id: 'value',
+    aiModel: 'value model',
+    name: 'HDP Sniper',
+    nameZh: 'HDP狙击手',
+    image: '/performance/HDP Snipper.png',
+    description: 'Precision handicap betting with high accuracy.',
+    color: 'from-gray-800 to-black',
+    logoColor: 'from-red-500 to-red-600',
+    bgColor: 'bg-gray-800/20',
+    textColor: 'text-gray-400',
+    isLocked: false,
+  },
   {
     id: 'aggressive',
     aiModel: 'aggressive model',
-    name: 'Aggressive',
-    nameZh: '攻击型',
-    icon: '🔥',
-    description: 'High risk, high reward. Favors home wins and over goals.',
-    color: 'from-red-500 to-orange-500',
-    bgColor: 'bg-red-500/20',
-    textColor: 'text-red-400',
-  },
-  {
-    id: 'conservative',
-    aiModel: 'conservative model',
-    name: 'Conservative',
-    nameZh: '保守型',
-    icon: '🛡️',
-    description: 'Low risk approach. Prefers draws and under goals.',
-    color: 'from-blue-500 to-cyan-500',
-    bgColor: 'bg-blue-500/20',
-    textColor: 'text-blue-400',
+    name: 'Active Trader',
+    nameZh: '活跃交易者',
+    image: '/performance/Active trader.png',
+    description: 'Dynamic trading strategy with live signals.',
+    color: 'from-sky-400 to-blue-400',
+    logoColor: 'from-sky-300 to-blue-300',
+    bgColor: 'bg-sky-500/20',
+    textColor: 'text-sky-400',
+    isLocked: false,
   },
   {
     id: 'balanced',
     aiModel: 'balanced model',
-    name: 'Balanced',
-    nameZh: '平衡型',
-    icon: '⚖️',
-    description: 'Moderate risk with balanced predictions.',
-    color: 'from-emerald-500 to-cyan-500',
-    bgColor: 'bg-emerald-500/20',
-    textColor: 'text-emerald-400',
+    name: 'Oddsflow Core Strategy',
+    nameZh: 'Oddsflow核心策略',
+    image: '/performance/Oddsflow Core Strategy.png',
+    description: 'Balanced approach with core algorithms.',
+    color: 'from-green-500 to-green-600',
+    logoColor: 'from-yellow-400 to-amber-500',
+    bgColor: 'bg-green-500/20',
+    textColor: 'text-green-400',
+    isLocked: true, // Coming Soon
   },
   {
-    id: 'value',
-    aiModel: 'value model',
-    name: 'Value Hunter',
-    nameZh: '价值型',
-    icon: '💎',
-    description: 'Seeks undervalued odds and value bets.',
-    color: 'from-purple-500 to-pink-500',
-    bgColor: 'bg-purple-500/20',
+    id: 'beta',
+    aiModel: 'Oddsflow Beta v8',
+    name: 'Oddsflow Beta',
+    nameZh: 'Oddsflow测试版',
+    image: '/performance/Oddsflow Beta.png',
+    description: 'Advanced beta algorithms with cutting-edge AI.',
+    color: 'from-purple-600 to-purple-700',
+    logoColor: 'from-yellow-400 to-amber-500',
+    bgColor: 'bg-purple-600/20',
     textColor: 'text-purple-400',
-  },
-  {
-    id: 'safe',
-    aiModel: 'safe model',
-    name: 'Safe Play',
-    nameZh: '稳健型',
-    icon: '🏦',
-    description: 'Very safe picks with high confidence.',
-    color: 'from-yellow-500 to-amber-500',
-    bgColor: 'bg-yellow-500/20',
-    textColor: 'text-yellow-400',
+    isLocked: false,
   },
 ];
 
@@ -435,7 +432,7 @@ export default function MatchDetailClient() {
 
   const [match, setMatch] = useState<Prematch | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedPersonality, setSelectedPersonality] = useState('aggressive');
+  const [selectedPersonality, setSelectedPersonality] = useState('value'); // Default to HDP Sniper
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
@@ -480,22 +477,25 @@ export default function MatchDetailClient() {
 
   // Check if a betting style is available based on subscription
   const isStyleAvailable = (styleId: string) => {
-    // Aggressive is always available
-    if (styleId === 'aggressive') return true;
+    // Oddsflow Core Strategy is locked (Coming Soon)
+    if (styleId === 'balanced') return false;
 
-    // If no subscription or free trial, only aggressive is available
+    // HDP Sniper (value) is always available
+    if (styleId === 'value') return true;
+
+    // If no subscription or free trial, only HDP Sniper is available
     if (!userSubscription || userSubscription.package_type === 'free_trial') {
       return false;
     }
 
-    // Starter and Pro plans: only 1 betting style (aggressive)
+    // Starter and Pro plans: only HDP Sniper (value) available
     if (userSubscription.package_type === 'starter' || userSubscription.package_type === 'pro') {
       return false;
     }
 
-    // Ultimate plan: all styles available
+    // Ultimate plan: all unlocked styles available (except balanced which is locked)
     if (userSubscription.package_type === 'ultimate') {
-      return true;
+      return styleId !== 'balanced'; // balanced is locked for everyone
     }
 
     return false;
@@ -551,7 +551,7 @@ export default function MatchDetailClient() {
   const previousOddsRef = useRef<OddsHistory | null>(null);
 
   // Signal History state
-  const [showSignalHistory, setShowSignalHistory] = useState<'moneyline' | 'overunder' | 'handicap' | 'value' | 'conservative' | null>(null);
+  const [showSignalHistory, setShowSignalHistory] = useState<'moneyline' | 'overunder' | 'handicap' | 'value' | null>(null);
   const [signalHistory, setSignalHistory] = useState<{
     moneyline: Moneyline1x2Prediction[];
     overunder: OverUnderPrediction[];
@@ -667,25 +667,10 @@ export default function MatchDetailClient() {
     }
   }, [match?.fixture_id]);
 
-  // Fetch Conservative signal history
-  const fetchConservativeHistory = useCallback(async () => {
-    if (!match?.fixture_id) return;
-    try {
-      const { data, error } = await getLiveSignalsHistoryByBetStyle(match.fixture_id, 'Conservative');
-      if (!error && data) {
-        setLiveSignalsHistory(data);
-      }
-    } catch (error) {
-      console.error('Error fetching conservative history:', error);
-    }
-  }, [match?.fixture_id]);
-
   // Open signal history modal
-  const openSignalHistory = (type: 'moneyline' | 'overunder' | 'handicap' | 'value' | 'conservative') => {
+  const openSignalHistory = (type: 'moneyline' | 'overunder' | 'handicap' | 'value') => {
     if (type === 'value') {
       fetchValueHunterHistory();
-    } else if (type === 'conservative') {
-      fetchConservativeHistory();
     } else {
       fetchSignalHistory(type);
     }
@@ -727,14 +712,16 @@ export default function MatchDetailClient() {
   // Open profit summary modal
   const openProfitSummary = () => {
     if (match?.fixture_id) {
-      // For specific personalities, filter by bet_style
+      // Map personality ID to database bet_style values
       let betStyle: string | undefined;
-      if (selectedPersonality === 'aggressive') {
-        betStyle = 'Aggressive';
-      } else if (selectedPersonality === 'conservative') {
-        betStyle = 'Conservative';
-      } else if (selectedPersonality === 'value') {
-        betStyle = 'Value Hunter';
+      if (selectedPersonality === 'value') {
+        betStyle = 'Value Hunter'; // HDP Sniper in database
+      } else if (selectedPersonality === 'aggressive') {
+        betStyle = 'Aggressive'; // Active Trader in database
+      } else if (selectedPersonality === 'balanced') {
+        betStyle = 'Balanced'; // Oddsflow Core Strategy in database
+      } else if (selectedPersonality === 'beta') {
+        betStyle = 'Oddsflow Beta v8'; // Oddsflow Beta in database
       }
       fetchProfitSummary(match.fixture_id, betStyle);
       setShowProfitModal(true);
@@ -758,19 +745,6 @@ export default function MatchDetailClient() {
           setLiveSignalsLoading(false);
         }).catch((err) => {
           console.error('[Value Hunter] Error:', err);
-          setLiveSignalsLoading(false);
-        });
-      }
-
-      // Fetch live signals for Conservative personality
-      if (selectedPersonality === 'conservative') {
-        setLiveSignalsLoading(true);
-        getLiveSignalsByBetStyle(match.fixture_id, 'Conservative').then(({ data, error }) => {
-          console.log('[Conservative] Response:', { data, error });
-          setLiveSignals(data);
-          setLiveSignalsLoading(false);
-        }).catch((err) => {
-          console.error('[Conservative] Error:', err);
           setLiveSignalsLoading(false);
         });
       }
@@ -910,12 +884,10 @@ export default function MatchDetailClient() {
         getFixtureEvents(matchData.fixture_id),
         // Fetch match statistics
         getMatchStatistics(matchData.fixture_id),
-        // Fetch live signals for Value Hunter or Conservative (refresh on every cycle)
+        // Fetch live signals for Value Hunter (refresh on every cycle)
         selectedPersonality === 'value'
           ? getLiveSignals(matchData.fixture_id)
-          : selectedPersonality === 'conservative'
-            ? getLiveSignalsByBetStyle(matchData.fixture_id, 'Conservative')
-            : Promise.resolve({ data: null }),
+          : Promise.resolve({ data: null }),
       ]);
       if (predictionResult?.data) {
         setMatchPrediction(predictionResult.data);
@@ -932,7 +904,7 @@ export default function MatchDetailClient() {
       if (statsResult?.data) {
         setMatchStats(statsResult.data);
       }
-      // Update live signals state for Value Hunter / Conservative
+      // Update live signals state for Value Hunter
       if (liveSignalsResult?.data) {
         setLiveSignals(liveSignalsResult.data);
       }
@@ -2500,7 +2472,7 @@ export default function MatchDetailClient() {
 
                 <div className="flex items-center justify-between mb-4 relative z-10">
                   <h3 className="text-xl font-bold text-white">
-                    Signal History - {showSignalHistory === 'moneyline' ? '1X2' : showSignalHistory === 'overunder' ? 'Over/Under' : showSignalHistory === 'handicap' ? 'Handicap' : showSignalHistory === 'conservative' ? `🛡️ Conservative (${selectedMarket === 'moneyline' ? '1X2' : selectedMarket === 'overunder' ? 'O/U' : 'HDP'})` : `💎 Value Hunter (${selectedMarket === 'moneyline' ? '1X2' : selectedMarket === 'overunder' ? 'O/U' : 'HDP'})`}
+                    Signal History - {showSignalHistory === 'moneyline' ? '1X2' : showSignalHistory === 'overunder' ? 'Over/Under' : showSignalHistory === 'handicap' ? 'Handicap' : `💎 HDP Sniper (${selectedMarket === 'moneyline' ? '1X2' : selectedMarket === 'overunder' ? 'O/U' : 'HDP'})`}
                   </h3>
                   <button
                     onClick={() => setShowSignalHistory(null)}
@@ -2513,7 +2485,7 @@ export default function MatchDetailClient() {
                 </div>
 
                 <div className="overflow-auto flex-1 relative z-10">
-                  {(showSignalHistory === 'value' || showSignalHistory === 'conservative') ? (
+                  {showSignalHistory === 'value' ? (
                     liveSignalsHistory.length > 0 ? (
                       <>
                       {/* Desktop Table */}
@@ -3094,7 +3066,13 @@ export default function MatchDetailClient() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold text-white">{selectedPersonality === 'aggressive' ? 'Aggressive Profit Summary' : selectedPersonality === 'conservative' ? 'Conservative Profit Summary' : selectedPersonality === 'value' ? 'Value Hunter Profit Summary' : 'Profit Summary'}</h3>
+                    <h3 className="text-xl font-bold text-white">
+                      {selectedPersonality === 'value' ? 'HDP Sniper Profit Summary'
+                        : selectedPersonality === 'aggressive' ? 'Active Trader Profit Summary'
+                        : selectedPersonality === 'balanced' ? 'Oddsflow Core Strategy Profit Summary'
+                        : selectedPersonality === 'beta' ? 'Oddsflow Beta Profit Summary'
+                        : 'Profit Summary'}
+                    </h3>
                   </div>
                   <button
                     onClick={() => setShowProfitModal(false)}
@@ -3380,7 +3358,7 @@ export default function MatchDetailClient() {
                 <div>
                   <h2 className="text-lg font-bold text-white">{t('aiPredictions')}</h2>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-gray-500">{currentPersonality.icon} {currentPersonality.name}</span>
+                    <span className="text-xs text-gray-500">{currentPersonality.name}</span>
                   </div>
                 </div>
                 {/* Live Refresh Countdown */}
@@ -3420,7 +3398,7 @@ export default function MatchDetailClient() {
                   </button>
                 )}
                 <button
-                  onClick={() => openSignalHistory(selectedPersonality === 'value' ? 'value' : selectedPersonality === 'conservative' ? 'conservative' : selectedMarket)}
+                  onClick={() => openSignalHistory(selectedPersonality === 'value' ? 'value' : selectedMarket)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-400 text-xs font-medium hover:from-amber-500/30 hover:to-orange-500/30 transition-all cursor-pointer"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -3431,27 +3409,60 @@ export default function MatchDetailClient() {
               </div>
             </div>
 
-            {/* Personality Quick Select */}
-            <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1">
+            {/* Personality Quick Select - Updated to match Performance page */}
+            <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
               {PERSONALITIES.map((p) => {
                 const available = isStyleAvailable(p.id);
+                const isLocked = p.isLocked || !available;
                 return (
                   <button
                     key={p.id}
-                    onClick={() => available && handlePersonalityChange(p.id)}
-                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-                      !available
-                        ? 'bg-white/5 text-gray-600 cursor-not-allowed opacity-60'
+                    onClick={() => !isLocked && handlePersonalityChange(p.id)}
+                    disabled={isLocked}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all relative overflow-hidden group flex items-center gap-2 ${
+                      isLocked
+                        ? 'bg-gray-800 text-gray-400 border border-gray-700 cursor-not-allowed'
                         : selectedPersonality === p.id
-                        ? `bg-gradient-to-r ${p.color} text-black cursor-pointer`
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10 cursor-pointer'
+                        ? `bg-gradient-to-r ${p.color} text-white border border-white/20 shadow-lg cursor-pointer`
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 cursor-pointer'
                     }`}
-                    title={!available ? 'Upgrade to Ultimate to unlock' : ''}
                   >
-                    <span>{p.icon}</span>
-                    <span>{p.name}</span>
-                    {!available && (
-                      <svg className="w-3 h-3 ml-0.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {/* Coming Soon badge for locked features */}
+                    {p.isLocked && (
+                      <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full z-20 shadow-lg">
+                        COMING SOON
+                      </span>
+                    )}
+
+                    {/* Hover shine effect */}
+                    {selectedPersonality !== p.id && !isLocked && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                    )}
+
+                    {/* Icon image with custom background colors */}
+                    {p.image && (
+                      <div
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center relative z-10 transition-all bg-gradient-to-br ${p.logoColor} ${
+                          selectedPersonality === p.id
+                            ? 'shadow-xl scale-110 ring-2 ring-white/30'
+                            : ''
+                        }`}
+                      >
+                        <img
+                          src={p.image}
+                          alt={p.name}
+                          className={`object-contain transition-all ${
+                            selectedPersonality === p.id ? 'w-6 h-6' : 'w-5 h-5'
+                          }`}
+                        />
+                      </div>
+                    )}
+
+                    <span className="relative z-10 whitespace-nowrap">{p.name}</span>
+
+                    {/* Lock icon for subscription-locked styles */}
+                    {!p.isLocked && !available && (
+                      <svg className="w-3 h-3 relative z-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
                     )}
@@ -3612,7 +3623,7 @@ export default function MatchDetailClient() {
                       </div>
                     )}
                   </>
-                ) : (selectedPersonality === 'value' || selectedPersonality === 'conservative') && liveSignals ? (
+                ) : selectedPersonality === 'value' && liveSignals ? (
                   (() => {
                     // Cast to raw record to access database values directly
                     const raw = liveSignals as unknown as Record<string, unknown>;
@@ -3629,10 +3640,9 @@ export default function MatchDetailClient() {
                     const isValuable = raw.is_valuable_1x2;
                     const score = raw.score as string | null;
                     const clock = raw.clock;
-                    const isConservative = selectedPersonality === 'conservative';
 
                     return (
-                      <div className={`rounded-xl bg-gradient-to-br ${isConservative ? 'from-blue-900/40 to-cyan-900/40 border-blue-500/20' : 'from-purple-900/40 to-indigo-900/40 border-purple-500/20'} border overflow-hidden`}>
+                      <div className="rounded-xl bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border-purple-500/20 border overflow-hidden">
                         {/* Header with Clock and Status */}
                         <div className="flex items-center justify-between px-4 py-3 bg-black/20">
                           <div className="flex items-center gap-3">
@@ -3647,8 +3657,8 @@ export default function MatchDetailClient() {
                             )}
                           </div>
                           {Boolean(isValuable) && (
-                            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full ${isConservative ? 'bg-blue-500/20 border-blue-500/40' : 'bg-emerald-500/20 border-emerald-500/40'} border`}>
-                              <span className={`${isConservative ? 'text-blue-400' : 'text-emerald-400'} text-xs font-bold`}>{isConservative ? '🛡️ SAFE BET' : '💎 VALUE BET'}</span>
+                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border-emerald-500/40 border">
+                              <span className="text-emerald-400 text-xs font-bold">💎 VALUE BET</span>
                             </div>
                           )}
                         </div>
@@ -3678,7 +3688,7 @@ export default function MatchDetailClient() {
                           <div className="grid grid-cols-2 gap-3">
                             <div className="bg-black/20 rounded-lg p-3">
                               <div className="text-[10px] text-gray-500 uppercase tracking-wider">Expected Value</div>
-                              <div className={`text-lg font-bold ${isConservative ? 'text-blue-400' : 'text-emerald-400'}`}>{evDisplay}</div>
+                              <div className="text-lg font-bold text-emerald-400">{evDisplay}</div>
                             </div>
                             <div className="bg-black/20 rounded-lg p-3">
                               <div className="text-[10px] text-gray-500 uppercase tracking-wider">Stake</div>
@@ -3843,7 +3853,7 @@ export default function MatchDetailClient() {
                       </div>
                     )}
                   </>
-                ) : (selectedPersonality === 'value' || selectedPersonality === 'conservative') && liveSignals ? (
+                ) : selectedPersonality === 'value' && liveSignals ? (
                   (() => {
                     // Cast to raw record to access database values directly
                     const raw = liveSignals as unknown as Record<string, unknown>;
@@ -3863,10 +3873,9 @@ export default function MatchDetailClient() {
                     const isValuable = raw.is_valuable_ou;
                     const score = raw.score as string | null;
                     const clock = raw.clock;
-                    const isConservative = selectedPersonality === 'conservative';
 
                     return (
-                      <div className={`rounded-xl bg-gradient-to-br ${isConservative ? 'from-blue-900/40 to-cyan-900/40 border-blue-500/20' : 'from-cyan-900/40 to-blue-900/40 border-cyan-500/20'} border overflow-hidden`}>
+                      <div className="rounded-xl bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border-cyan-500/20 border overflow-hidden">
                         {/* Header with Clock and Status */}
                         <div className="flex items-center justify-between px-4 py-3 bg-black/20">
                           <div className="flex items-center gap-3">
@@ -3881,8 +3890,8 @@ export default function MatchDetailClient() {
                             )}
                           </div>
                           {Boolean(isValuable) && (
-                            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full ${isConservative ? 'bg-blue-500/20 border-blue-500/40' : 'bg-emerald-500/20 border-emerald-500/40'} border`}>
-                              <span className={`${isConservative ? 'text-blue-400' : 'text-emerald-400'} text-xs font-bold`}>{isConservative ? '🛡️ SAFE BET' : '💎 VALUE BET'}</span>
+                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border-emerald-500/40 border">
+                              <span className="text-emerald-400 text-xs font-bold">💎 VALUE BET</span>
                             </div>
                           )}
                         </div>
@@ -4077,7 +4086,7 @@ export default function MatchDetailClient() {
                       </div>
                     )}
                   </>
-                ) : (selectedPersonality === 'value' || selectedPersonality === 'conservative') && liveSignals ? (
+                ) : selectedPersonality === 'value' && liveSignals ? (
                   (() => {
                     // Cast to raw record to access database values directly
                     const raw = liveSignals as unknown as Record<string, unknown>;
@@ -4097,10 +4106,9 @@ export default function MatchDetailClient() {
                     const isValuable = raw.is_valuable_hdp;
                     const score = raw.score as string | null;
                     const clock = raw.clock;
-                    const isConservative = selectedPersonality === 'conservative';
 
                     return (
-                      <div className={`rounded-xl bg-gradient-to-br ${isConservative ? 'from-blue-900/40 to-cyan-900/40 border-blue-500/20' : 'from-pink-900/40 to-purple-900/40 border-pink-500/20'} border overflow-hidden`}>
+                      <div className="rounded-xl bg-gradient-to-br from-pink-900/40 to-purple-900/40 border-pink-500/20 border overflow-hidden">
                         {/* Header with Clock and Status */}
                         <div className="flex items-center justify-between px-4 py-3 bg-black/20">
                           <div className="flex items-center gap-3">
@@ -4115,8 +4123,8 @@ export default function MatchDetailClient() {
                             )}
                           </div>
                           {Boolean(isValuable) && (
-                            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full ${isConservative ? 'bg-blue-500/20 border-blue-500/40' : 'bg-emerald-500/20 border-emerald-500/40'} border`}>
-                              <span className={`${isConservative ? 'text-blue-400' : 'text-emerald-400'} text-xs font-bold`}>{isConservative ? '🛡️ SAFE BET' : '💎 VALUE BET'}</span>
+                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border-emerald-500/40 border">
+                              <span className="text-emerald-400 text-xs font-bold">💎 VALUE BET</span>
                             </div>
                           )}
                         </div>
