@@ -4472,7 +4472,6 @@ export default function MatchDetailClient() {
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Status</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -4480,8 +4479,8 @@ export default function MatchDetailClient() {
                                   return (
                                     <tr key={index} className="border-b border-white/5">
                                       <td className="py-2 px-3">
-                                        {signal.minute !== null && signal.minute !== undefined ? (
-                                          <span className="text-red-400 font-bold tabular-nums">{signal.minute}'</span>
+                                        {signal.minute_at_bet !== null && signal.minute_at_bet !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{signal.minute_at_bet}'</span>
                                         ) : (
                                           <span className="text-gray-500">-</span>
                                         )}
@@ -4494,20 +4493,13 @@ export default function MatchDetailClient() {
                                       </td>
                                       <td className="py-2 px-3 text-amber-400">{signal.line !== null && signal.line !== undefined ? signal.line : '-'}</td>
                                       <td className="py-2 px-3 text-white font-semibold">
-                                        {signal.odds_at_signal !== null && signal.odds_at_signal !== undefined ? Number(signal.odds_at_signal).toFixed(2) : '-'}
+                                        {signal.odds !== null && signal.odds !== undefined ? Number(signal.odds).toFixed(2) : '-'}
                                       </td>
-                                      <td className="py-2 px-3 text-yellow-400">{signal.stake !== null && signal.stake !== undefined ? signal.stake : '-'}</td>
-                                      <td className="py-2 px-3 text-gray-300">{signal.score_home !== null && signal.score_home !== undefined ? signal.score_home : '-'}</td>
-                                      <td className="py-2 px-3 text-gray-300">{signal.score_away !== null && signal.score_away !== undefined ? signal.score_away : '-'}</td>
-                                      <td className="py-2 px-3">
-                                        <span className={`text-xs font-medium ${
-                                          signal.status === 'WIN' ? 'text-emerald-400' :
-                                          signal.status === 'LOSS' ? 'text-red-400' :
-                                          'text-gray-400'
-                                        }`}>
-                                          {signal.status || '-'}
-                                        </span>
+                                      <td className="py-2 px-3 text-yellow-400">
+                                        {signal.stake !== null && signal.stake !== undefined ? `$${signal.stake}` : '-'}
                                       </td>
+                                      <td className="py-2 px-3 text-gray-300">{signal.score_home_at_bet !== null && signal.score_home_at_bet !== undefined ? signal.score_home_at_bet : '-'}</td>
+                                      <td className="py-2 px-3 text-gray-300">{signal.score_away_at_bet !== null && signal.score_away_at_bet !== undefined ? signal.score_away_at_bet : '-'}</td>
                                     </tr>
                                   );
                                 })}
@@ -4949,7 +4941,6 @@ export default function MatchDetailClient() {
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Status</th>
                                 </tr>
                               </thead>
                               <tbody>
