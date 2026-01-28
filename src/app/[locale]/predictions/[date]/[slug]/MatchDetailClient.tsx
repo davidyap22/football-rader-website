@@ -4479,8 +4479,8 @@ export default function MatchDetailClient() {
                                   return (
                                     <tr key={index} className="border-b border-white/5">
                                       <td className="py-2 px-3">
-                                        {signal.clock !== null && signal.clock !== undefined ? (
-                                          <span className="text-red-400 font-bold tabular-nums">{signal.clock}'</span>
+                                        {signal.minute !== null && signal.minute !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{signal.minute}'</span>
                                         ) : (
                                           <span className="text-gray-500">-</span>
                                         )}
@@ -4954,8 +4954,8 @@ export default function MatchDetailClient() {
                                   return (
                                     <tr key={index} className="border-b border-white/5">
                                       <td className="py-2 px-3">
-                                        {signal.clock !== null && signal.clock !== undefined ? (
-                                          <span className="text-red-400 font-bold tabular-nums">{signal.clock}'</span>
+                                        {signal.minute !== null && signal.minute !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{signal.minute}'</span>
                                         ) : (
                                           <span className="text-gray-500">-</span>
                                         )}
