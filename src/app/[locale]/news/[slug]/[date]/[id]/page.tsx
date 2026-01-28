@@ -520,10 +520,10 @@ export default function ArticlePage() {
       articleSchema.about = {
         '@type': 'SportsEvent',
         name: `${matchInfo.home_name} vs ${matchInfo.away_name}`,
-        startDate: matchInfo.fixture_date,
+        startDate: matchInfo.start_date_msia,
         location: {
           '@type': 'Place',
-          name: matchInfo.venue || 'Stadium',
+          name: matchInfo.venue_name || 'Stadium',
         },
         homeTeam: {
           '@type': 'SportsTeam',
