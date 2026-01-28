@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       paymentUrl: paymentResult.paymentUrl,
-      transactionId: paymentResult.transactionId,
+      sessionId: paymentResult.sessionId,
     });
   } catch (error) {
     console.error('Payment creation error:', error);
