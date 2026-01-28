@@ -810,10 +810,31 @@ export default function MatchDetailClient() {
     }
   }, [match?.type, match?.fixture_id, selectedPersonality, fetchSignalHistory, fetchValueHunterHistory, fetchBetaSignalsHistory]);
 
+  // Auto-refresh live signals for HDP Sniper every 5 seconds for live matches
+  useEffect(() => {
+    if (match?.type !== 'Finished' && selectedPersonality === 'value' && match?.fixture_id) {
+      // Initial fetch
+      fetchValueHunterHistory();
+
+      // Set up auto-refresh
+      const intervalId = setInterval(() => {
+        console.log('Auto-refreshing HDP Sniper signals for live match...');
+        fetchValueHunterHistory();
+      }, 5000); // Refresh every 5 seconds
+
+      // Cleanup on unmount or when dependencies change
+      return () => clearInterval(intervalId);
+    }
+  }, [match?.type, match?.fixture_id, selectedPersonality, fetchValueHunterHistory]);
+
   // Auto-refresh beta signals every 5 seconds for live matches with Oddsflow Beta
   useEffect(() => {
     // Only refresh if match is live and Oddsflow Beta is selected
     if (match?.type !== 'Finished' && selectedPersonality === 'beta' && match?.fixture_id) {
+      // Initial fetch
+      fetchBetaSignalsHistory();
+
+      // Set up auto-refresh
       const intervalId = setInterval(() => {
         console.log('Auto-refreshing beta signals for live match...');
         fetchBetaSignalsHistory();
