@@ -3876,6 +3876,115 @@ export default function MatchDetailClient() {
                       )}
                     </div>
                   )
+                ) : selectedPersonality === 'beta' ? (
+                  // Oddsflow Beta - check for finished OR live signals
+                  match.type === 'Finished' ? (
+                    // Show last 3 beta signals for finished matches
+                    (() => {
+                      const lastBetaSignals = getLastBetaSignals('1x2', 3);
+                      console.log('Rendering 1X2 for Oddsflow Beta (Finished):', {
+                        betaSignalsHistoryLength: betaSignalsHistory.length,
+                        lastBetaSignalsLength: lastBetaSignals.length,
+                        matchType: match.type,
+                        selectedPersonality
+                      });
+
+                      if (lastBetaSignals.length === 0) {
+                        return (
+                          <div className="text-center py-8 text-gray-500">
+                            <div className="space-y-2">
+                              <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              <p className="text-sm">Match has ended</p>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return (
+                        <div className="opacity-30">
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                              <thead>
+                                <tr className="border-b border-white/10">
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {lastBetaSignals.map((signal: any, index: number) => {
+                                  const raw = signal as Record<string, unknown>;
+                                  const selection = String(raw.selection_1x2 || '').toUpperCase();
+                                  const selectionLabel = selection === 'HOME' || selection === '1' ? 'Home' : selection === 'DRAW' || selection === 'X' ? 'Draw' : 'Away';
+                                  const fairOdds = raw.fair_odds_1x2 !== null && raw.fair_odds_1x2 !== undefined ? Number(raw.fair_odds_1x2).toFixed(2) : '-';
+                                  const marketOdds = raw.market_odds_1x2 !== null && raw.market_odds_1x2 !== undefined ? Number(raw.market_odds_1x2).toFixed(2) : '-';
+                                  const evStr = String(raw.expected_value_1x2 || '').replace('%', '');
+                                  const evNum = parseFloat(evStr);
+                                  const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
+                                  const stakeStr = String(raw.recommended_stake_1x2 || '').replace('%', '');
+                                  const stakeNum = parseFloat(stakeStr);
+                                  const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
+                                  const isValuable = raw.is_valuable_1x2;
+                                  const clock = raw.clock;
+
+                                  return (
+                                    <tr key={index} className="border-b border-white/5">
+                                      <td className="py-2 px-3">
+                                        {clock !== null && clock !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                        ) : (
+                                          <span className="text-gray-500">-</span>
+                                        )}
+                                      </td>
+                                      <td className="py-2 px-3">
+                                        <span className="text-emerald-400 font-medium">{selectionLabel}</span>
+                                      </td>
+                                      <td className="py-2 px-3 text-gray-300">{fairOdds}</td>
+                                      <td className="py-2 px-3 text-white font-semibold">{marketOdds}</td>
+                                      <td className="py-2 px-3 text-emerald-400">{evDisplay}</td>
+                                      <td className="py-2 px-3 text-yellow-400">{stakeDisplay}</td>
+                                      <td className="py-2 px-3">
+                                        {Boolean(isValuable) ? (
+                                          <span className="text-emerald-400">💎</span>
+                                        ) : (
+                                          <span className="text-gray-500">-</span>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                          <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                        </div>
+                      );
+                    })()
+                  ) : (
+                    // No beta signals available or match not finished
+                    <div className="text-center py-8 text-gray-500">
+                      {match.type === 'Scheduled' ? (
+                        <div className="space-y-2">
+                          <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <p className="text-sm">Match has not started yet</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                          </svg>
+                          <p className="text-sm">AI no predictions</p>
+                        </div>
+                      )}
+                    </div>
+                  )
                 ) : match.type === 'Finished' ? (
                   // Regular AI personalities - show last 3 signals for finished matches
                   (() => {
