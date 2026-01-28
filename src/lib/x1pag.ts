@@ -154,7 +154,7 @@ export async function createPaymentRequest(params: {
   // Generate hash
   const hash = generateHash(orderNumber, amountString, plan.currency, description);
 
-  // Prepare session request
+  // Prepare session request (field order matches X1PAG documentation example)
   const sessionRequest: X1PAGSessionRequest = {
     merchant_key: X1PAG_CONFIG.merchantKey,
     operation: 'purchase',
@@ -166,11 +166,11 @@ export async function createPaymentRequest(params: {
     },
     success_url: X1PAG_CONFIG.successUrl,
     cancel_url: X1PAG_CONFIG.cancelUrl,
-    hash: hash,
     customer: {
       name: userName,
       email: userEmail,
     },
+    hash: hash,
   };
 
   // Log request for debugging
@@ -181,6 +181,21 @@ export async function createPaymentRequest(params: {
     amount: amountString,
     merchantKey: X1PAG_CONFIG.merchantKey ? '***' + X1PAG_CONFIG.merchantKey.slice(-4) : 'NOT_SET',
     hash: hash.slice(0, 10) + '...',
+  });
+
+  // Log full request body for debugging (hide sensitive data)
+  const debugRequest = {
+    ...sessionRequest,
+    merchant_key: sessionRequest.merchant_key ? '***' + sessionRequest.merchant_key.slice(-4) : 'NOT_SET',
+    hash: sessionRequest.hash.slice(0, 16) + '...',
+  };
+  console.log('Full Request Body:', JSON.stringify(debugRequest, null, 2));
+
+  // Log hash generation details
+  console.log('Hash Generation:', {
+    input: `${orderNumber}${amountString}${plan.currency}${description}[PASSWORD]`,
+    uppercased_length: (orderNumber + amountString + plan.currency + description + X1PAG_CONFIG.password).length,
+    hash_result: hash,
   });
 
   try {
@@ -213,10 +228,31 @@ export async function createPaymentRequest(params: {
 
     if (!response.ok) {
       console.error('X1PAG API Error:', result);
+
+      // Handle specific X1PAG error codes
+      let errorMessage = result.error_message || result.message || result.error || `Payment gateway error (${response.status}: ${response.statusText})`;
+
+      // Check for detailed validation errors
+      if (result.errors && Array.isArray(result.errors) && result.errors.length > 0) {
+        const firstError = result.errors[0];
+
+        // Error 100000: Protocol mapping not found
+        if (firstError.error_code === 100000) {
+          errorMessage = 'Payment gateway configuration error. Please contact support with error code: 100000 (Protocol mapping not found)';
+          console.error('X1PAG Configuration Error: Protocol mapping not found. This usually means:');
+          console.error('1. Merchant account is not fully activated');
+          console.error('2. Currency (USD) is not enabled for this merchant');
+          console.error('3. Payment protocol/method configuration is missing');
+          console.error('4. Merchant needs to contact X1PAG support to verify account setup');
+        } else {
+          errorMessage = `${errorMessage} - ${firstError.error_message} (code: ${firstError.error_code})`;
+        }
+      }
+
       return {
         success: false,
         error: 'PAYMENT_API_ERROR',
-        message: result.message || result.error || `Payment gateway error (${response.status}: ${response.statusText})`,
+        message: errorMessage,
       };
     }
 
