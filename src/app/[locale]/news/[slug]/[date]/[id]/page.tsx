@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { supabase, FootballNews, Prematch, ExclusiveReportData } from '@/lib/supabase';
+import { supabase, FootballNews, Prematch, ExclusiveReportData, getLocalizedNewsContent, generateNewsSlug, formatNewsDate, buildNewsUrl } from '@/lib/supabase';
 import { addTeamLinks } from '@/lib/auto-link-teams';
 import ExclusiveReportTemplate from '@/components/ExclusiveReportTemplate';
 import { User } from '@supabase/supabase-js';
@@ -239,9 +239,12 @@ export default function ArticlePage() {
   const locale = locales.includes(urlLocale as Locale) ? urlLocale : 'en';
   const selectedLang = localeToTranslationCode[locale as keyof typeof localeToTranslationCode] || 'EN';
   const articleId = params.id as string;
+  const slug = params.slug as string;
+  const date = params.date as string;
 
   const [article, setArticle] = useState<FootballNews | null>(null);
   const [matchInfo, setMatchInfo] = useState<Prematch | null>(null);
+  const [relatedNews, setRelatedNews] = useState<FootballNews[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -253,10 +256,27 @@ export default function ArticlePage() {
   };
 
   const getLocaleUrl = (targetLocale: Locale): string => {
-    return targetLocale === 'en' ? `/news/${articleId}` : `/${targetLocale}/news/${articleId}`;
+    const basePath = targetLocale === 'en' ? '' : `/${targetLocale}`;
+    return `${basePath}/news/${slug}/${date}/${articleId}`;
   };
 
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
+
+  // Helper to convert JSONB article_data to localized strings
+  const localizeArticleData = (data: any, locale: string): ExclusiveReportData => {
+    if (!data) return data;
+
+    return {
+      ...data,
+      sections: data.sections?.map((section: any) => ({
+        ...section,
+        title: getLocalizedNewsContent(section.title, locale),
+        content: getLocalizedNewsContent(section.content, locale),
+      })) || [],
+      key_stats: data.key_stats,
+      verdict: data.verdict,
+    };
+  };
 
   // Check auth
   useEffect(() => {
@@ -328,6 +348,225 @@ export default function ArticlePage() {
 
     fetchMatchInfo();
   }, [article?.fixture_id]);
+
+  // Fetch related news based on league
+  useEffect(() => {
+    async function fetchRelatedNews() {
+      if (!article?.league || !article?.id) return;
+
+      try {
+        // Fetch more recent articles (up to 10) to randomly select from
+        const { data, error } = await supabase
+          .from('football_news')
+          .select('*')
+          .eq('league', article.league)
+          .neq('id', article.id) // Exclude current article
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        if (error) {
+          console.error('Error fetching related news:', error);
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          setRelatedNews([]);
+          return;
+        }
+
+        // If we have more than 3 articles, randomly select 3
+        if (data.length > 3) {
+          const shuffled = [...data].sort(() => Math.random() - 0.5);
+          setRelatedNews(shuffled.slice(0, 3));
+        } else {
+          setRelatedNews(data);
+        }
+      } catch (error) {
+        console.error('Error fetching related news:', error);
+      }
+    }
+
+    fetchRelatedNews();
+  }, [article?.league, article?.id]);
+
+  // Dynamic SEO: Update meta tags and Schema markup
+  useEffect(() => {
+    if (!article) return;
+
+    const title = getLocalizedNewsContent(article.title, locale);
+    const description = getLocalizedNewsContent(article.summary, locale) || title;
+    const imageUrl = article.image_url || 'https://oddsflow.com/news/news.webp';
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const publishedDate = article.created_at || article.published_at;
+
+    // Update document title
+    document.title = `${title} | OddsFlow`;
+
+    // Helper function to update or create meta tag
+    const updateMetaTag = (selector: string, content: string, attributeName: string = 'content') => {
+      let metaTag = document.querySelector(selector);
+      if (!metaTag) {
+        metaTag = document.createElement('meta');
+        const selectorParts = selector.match(/\[(.+?)=["'](.+?)["']\]/);
+        if (selectorParts) {
+          metaTag.setAttribute(selectorParts[1], selectorParts[2]);
+        }
+        document.head.appendChild(metaTag);
+      }
+      metaTag.setAttribute(attributeName, content);
+    };
+
+    // Standard meta tags
+    updateMetaTag('meta[name="description"]', description);
+
+    // Extract keywords from SEO field
+    if (article.seo && typeof article.seo === 'object') {
+      const seoData = article.seo as Record<string, any>;
+      const keywords = seoData.keywords || seoData[locale]?.keywords || '';
+      if (keywords) {
+        updateMetaTag('meta[name="keywords"]', keywords);
+      }
+    }
+
+    // Open Graph tags
+    updateMetaTag('meta[property="og:title"]', title);
+    updateMetaTag('meta[property="og:description"]', description);
+    updateMetaTag('meta[property="og:image"]', imageUrl);
+    updateMetaTag('meta[property="og:url"]', currentUrl);
+    updateMetaTag('meta[property="og:type"]', 'article');
+    updateMetaTag('meta[property="og:site_name"]', 'OddsFlow');
+    if (publishedDate) {
+      updateMetaTag('meta[property="article:published_time"]', publishedDate);
+    }
+    if (article.league) {
+      updateMetaTag('meta[property="article:section"]', article.league);
+    }
+
+    // Twitter Card tags
+    updateMetaTag('meta[name="twitter:card"]', 'summary_large_image');
+    updateMetaTag('meta[name="twitter:title"]', title);
+    updateMetaTag('meta[name="twitter:description"]', description);
+    updateMetaTag('meta[name="twitter:image"]', imageUrl);
+
+    // JSON-LD Schema Markup for NewsArticle
+    const schemaData = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'NewsArticle',
+          '@id': currentUrl,
+          headline: title,
+          description: description,
+          image: imageUrl,
+          datePublished: publishedDate,
+          dateModified: publishedDate,
+          author: {
+            '@type': 'Organization',
+            name: 'OddsFlow Analysis Team',
+            url: 'https://oddsflow.com',
+            logo: {
+              '@type': 'ImageObject',
+              url: 'https://oddsflow.com/homepage/OddsFlow Logo2.png',
+            },
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'OddsFlow',
+            url: 'https://oddsflow.com',
+            logo: {
+              '@type': 'ImageObject',
+              url: 'https://oddsflow.com/homepage/OddsFlow Logo2.png',
+            },
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': currentUrl,
+          },
+          articleSection: article.league || 'Football',
+          inLanguage: locale,
+        },
+        {
+          '@type': 'Organization',
+          '@id': 'https://oddsflow.com/#organization',
+          name: 'OddsFlow',
+          url: 'https://oddsflow.com',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://oddsflow.com/homepage/OddsFlow Logo2.png',
+          },
+          sameAs: [
+            'https://twitter.com/oddsflow',
+            'https://facebook.com/oddsflow',
+            'https://instagram.com/oddsflow',
+          ],
+        },
+        {
+          '@type': 'WebSite',
+          '@id': 'https://oddsflow.com/#website',
+          url: 'https://oddsflow.com',
+          name: 'OddsFlow',
+          description: 'AI-powered football odds analysis for smarter predictions',
+          publisher: {
+            '@id': 'https://oddsflow.com/#organization',
+          },
+          inLanguage: locale,
+        },
+      ],
+    };
+
+    // Add match-specific GeoCoordinates if we have match info
+    if (matchInfo) {
+      const articleSchema = schemaData['@graph'][0] as any;
+      articleSchema.about = {
+        '@type': 'SportsEvent',
+        name: `${matchInfo.home_name} vs ${matchInfo.away_name}`,
+        startDate: matchInfo.fixture_date,
+        location: {
+          '@type': 'Place',
+          name: matchInfo.venue || 'Stadium',
+        },
+        homeTeam: {
+          '@type': 'SportsTeam',
+          name: matchInfo.home_name,
+        },
+        awayTeam: {
+          '@type': 'SportsTeam',
+          name: matchInfo.away_name,
+        },
+        sport: 'Football',
+        competitor: [
+          {
+            '@type': 'SportsTeam',
+            name: matchInfo.home_name,
+          },
+          {
+            '@type': 'SportsTeam',
+            name: matchInfo.away_name,
+          },
+        ],
+      };
+    }
+
+    // Remove existing schema script if any
+    const existingSchema = document.getElementById('news-schema');
+    if (existingSchema) {
+      existingSchema.remove();
+    }
+
+    // Add new schema script
+    const schemaScript = document.createElement('script');
+    schemaScript.id = 'news-schema';
+    schemaScript.type = 'application/ld+json';
+    schemaScript.textContent = JSON.stringify(schemaData);
+    document.head.appendChild(schemaScript);
+
+    // Cleanup function
+    return () => {
+      if (existingSchema) {
+        existingSchema.remove();
+      }
+    };
+  }, [article, matchInfo, locale]);
 
   if (loading) {
     return (
@@ -490,7 +729,7 @@ export default function ArticlePage() {
         <div className="relative w-full h-[50vh] min-h-[400px] max-h-[600px]">
           <img
             src={article.image_url}
-            alt={article.title}
+            alt={getLocalizedNewsContent(article.title, locale)}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#05080d] via-[#05080d]/60 to-transparent" />
@@ -529,12 +768,12 @@ export default function ArticlePage() {
               {article.source === 'OddsFlow Exclusive Report' && article.article_data ? (
                 /* EXCLUSIVE REPORT TEMPLATE */
                 <ExclusiveReportTemplate
-                  title={article.title}
-                  summary={article.summary}
-                  publishedAt={article.published_at}
+                  title={getLocalizedNewsContent(article.title, locale)}
+                  summary={getLocalizedNewsContent(article.summary, locale)}
+                  publishedAt={article.created_at || article.published_at}
                   imageUrl={article.image_url}
                   matchInfo={matchInfo}
-                  articleData={article.article_data as ExclusiveReportData}
+                  articleData={localizeArticleData(article.article_data, locale)}
                   locale={locale}
                 />
               ) : (
@@ -547,31 +786,31 @@ export default function ArticlePage() {
                     </span>
                     {article.league && (
                       <span className="px-3 py-1.5 rounded-full bg-white/5 text-gray-300 text-xs font-medium border border-white/10">
-                        {article.league}
+                        {typeof article.league === 'string' ? article.league : ''}
                       </span>
                     )}
                   </div>
 
                   {/* Title */}
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 leading-tight">
-                    {article.title}
+                    {getLocalizedNewsContent(article.title, locale)}
                   </h1>
 
                   {/* Meta Info */}
                   <div className="flex flex-wrap items-center gap-4 text-gray-400 text-sm mb-8">
-                    {article.published_at && (
+                    {(article.created_at || article.published_at) && (
                       <div className="flex items-center gap-2">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <span>{formatDate(article.published_at)}</span>
+                        <span>{formatDate(article.created_at || article.published_at)}</span>
                       </div>
                     )}
                     <div className="flex items-center gap-2">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <span>{calculateReadingTime(article.content)} {t('minRead')}</span>
+                      <span>{calculateReadingTime(getLocalizedNewsContent(article.content, locale))} {t('minRead')}</span>
                     </div>
                   </div>
 
@@ -632,9 +871,9 @@ export default function ArticlePage() {
                   )}
 
                   {/* Summary */}
-                  {article.summary && (
+                  {article.summary && getLocalizedNewsContent(article.summary, locale) && (
                     <div className="mb-10 p-6 rounded-xl bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border-l-4 border-emerald-500">
-                      <p className="text-lg text-gray-200 leading-relaxed italic">{article.summary}</p>
+                      <p className="text-lg text-gray-200 leading-relaxed italic">{getLocalizedNewsContent(article.summary, locale)}</p>
                     </div>
                   )}
 
@@ -653,7 +892,7 @@ export default function ArticlePage() {
                       prose-li:text-gray-300 prose-li:mb-2
                       prose-blockquote:border-l-emerald-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-400
                       prose-img:rounded-xl prose-img:my-8"
-                    dangerouslySetInnerHTML={{ __html: addTeamLinks(article.content || '', locale) }}
+                    dangerouslySetInnerHTML={{ __html: addTeamLinks(getLocalizedNewsContent(article.content, locale) || '', locale) }}
                   />
                 </>
               )}
@@ -677,7 +916,7 @@ export default function ArticlePage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank')}
+                    onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(getLocalizedNewsContent(article.title, locale))}&url=${encodeURIComponent(window.location.href)}`, '_blank')}
                     className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all"
                   >
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -698,23 +937,82 @@ export default function ArticlePage() {
               </div>
             </div>
           </article>
-
-          {/* Comments Link */}
-          <div className="mt-6">
-            <Link
-              href={localePath(`/news/${articleId}/comments`)}
-              className="flex items-center justify-center gap-3 w-full px-6 py-4 rounded-xl bg-[#0a0e14] border border-white/5 hover:border-emerald-500/30 text-gray-300 hover:text-white transition-all group"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-              <span className="font-medium">View Comments & Discussion</span>
-              <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
         </div>
+
+        {/* Related News Section - Full Width */}
+        {relatedNews.length > 0 && (
+          <div className="max-w-7xl mx-auto mt-12 px-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-6 flex items-center gap-2">
+              <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+              </svg>
+              {t('relatedArticles')}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                {relatedNews.map((news) => (
+                  <Link
+                    key={news.id}
+                    href={buildNewsUrl(news, locale)}
+                    className="group bg-[#0a0e14] border border-white/5 rounded-xl overflow-hidden hover:border-emerald-500/30 transition-all"
+                  >
+                    {/* News Image */}
+                    <div className="relative h-40 sm:h-48 overflow-hidden bg-white/5">
+                      {news.image_url ? (
+                        <img
+                          src={news.image_url}
+                          alt={getLocalizedNewsContent(news.title, locale)}
+                          className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <svg className="w-16 h-16 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                          </svg>
+                        </div>
+                      )}
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] via-transparent to-transparent" />
+                    </div>
+
+                    {/* News Content */}
+                    <div className="p-4">
+                      {/* Source & League */}
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        {news.league && (
+                          <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20">
+                            {news.league}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="text-white font-semibold text-sm sm:text-base line-clamp-2 mb-2 group-hover:text-emerald-400 transition-colors">
+                        {getLocalizedNewsContent(news.title, locale)}
+                      </h3>
+
+                      {/* Summary */}
+                      {news.summary && (
+                        <p className="text-gray-400 text-xs sm:text-sm line-clamp-2">
+                          {getLocalizedNewsContent(news.summary, locale)}
+                        </p>
+                      )}
+
+                      {/* Date */}
+                      {news.created_at && (
+                        <div className="flex items-center gap-1 mt-3 text-gray-500 text-xs">
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>{new Date(news.created_at).toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+            </div>
+          </div>
+        )}
+
       </main>
 
 <Footer localePath={localePath} t={t} />

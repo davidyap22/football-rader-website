@@ -62,6 +62,169 @@ const sectionConfig: Record<string, { icon: React.ReactNode; color: string; bgCo
   },
 };
 
+// Translations for UI labels and stat names
+const translations: Record<string, Record<string, string>> = {
+  fullTime: {
+    en: 'FULL TIME',
+    es: 'TIEMPO COMPLETO',
+    pt: 'TEMPO COMPLETO',
+    de: 'VOLLZEIT',
+    fr: 'TEMPS PLEIN',
+    ja: 'フルタイム',
+    ko: '풀타임',
+    zh_cn: '全场',
+    zh_tw: '全場',
+    id: 'WAKTU PENUH',
+  },
+  predictionResult: {
+    en: 'OddsFlow Prediction Result',
+    es: 'Resultado de Predicción OddsFlow',
+    pt: 'Resultado da Previsão OddsFlow',
+    de: 'OddsFlow Vorhersageergebnis',
+    fr: 'Résultat de Prédiction OddsFlow',
+    ja: 'OddsFlow予測結果',
+    ko: 'OddsFlow 예측 결과',
+    zh_cn: 'OddsFlow 预测结果',
+    zh_tw: 'OddsFlow 預測結果',
+    id: 'Hasil Prediksi OddsFlow',
+  },
+  win: {
+    en: 'WIN',
+    es: 'GANANCIA',
+    pt: 'VITÓRIA',
+    de: 'GEWINN',
+    fr: 'GAGNÉ',
+    ja: '勝ち',
+    ko: '승',
+    zh_cn: '赢',
+    zh_tw: '贏',
+    id: 'MENANG',
+  },
+  loss: {
+    en: 'LOSS',
+    es: 'PÉRDIDA',
+    pt: 'PERDA',
+    de: 'VERLUST',
+    fr: 'PERDU',
+    ja: '負け',
+    ko: '패',
+    zh_cn: '输',
+    zh_tw: '輸',
+    id: 'KALAH',
+  },
+  push: {
+    en: 'PUSH',
+    es: 'EMPATE',
+    pt: 'EMPATE',
+    de: 'UNENTSCHIEDEN',
+    fr: 'NUL',
+    ja: '引き分け',
+    ko: '무승부',
+    zh_cn: '平',
+    zh_tw: '平',
+    id: 'SERI',
+  },
+  // Common stat labels
+  roi: {
+    en: 'ROI',
+    es: 'ROI',
+    pt: 'ROI',
+    de: 'ROI',
+    fr: 'ROI',
+    ja: 'ROI',
+    ko: 'ROI',
+    zh_cn: '投资回报率',
+    zh_tw: '投資回報率',
+    id: 'ROI',
+  },
+  totalProfit: {
+    en: 'TOTAL PROFIT',
+    es: 'BENEFICIO TOTAL',
+    pt: 'LUCRO TOTAL',
+    de: 'GESAMTGEWINN',
+    fr: 'PROFIT TOTAL',
+    ja: '総利益',
+    ko: '총 수익',
+    zh_cn: '总利润',
+    zh_tw: '總利潤',
+    id: 'TOTAL KEUNTUNGAN',
+  },
+  winRate: {
+    en: 'WIN RATE',
+    es: 'TASA DE VICTORIAS',
+    pt: 'TAXA DE VITÓRIA',
+    de: 'GEWINNRATE',
+    fr: 'TAUX DE VICTOIRE',
+    ja: '勝率',
+    ko: '승률',
+    zh_cn: '胜率',
+    zh_tw: '勝率',
+    id: 'TINGKAT KEMENANGAN',
+  },
+  totalBets: {
+    en: 'TOTAL BETS',
+    es: 'APUESTAS TOTALES',
+    pt: 'APOSTAS TOTAIS',
+    de: 'GESAMTWETTEN',
+    fr: 'PARIS TOTAUX',
+    ja: '総ベット数',
+    ko: '총 베팅',
+    zh_cn: '总投注数',
+    zh_tw: '總投注數',
+    id: 'TOTAL TARUHAN',
+  },
+};
+
+// Helper function to get translation
+function getTranslation(key: string, locale: string): string {
+  const localeMap: Record<string, string> = {
+    'en': 'en',
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn',
+    'tw': 'zh_tw',
+    'id': 'id',
+  };
+
+  const mappedLocale = localeMap[locale] || 'en';
+  return translations[key]?.[mappedLocale] || translations[key]?.['en'] || key;
+}
+
+// Helper function to translate stat labels
+function translateStatLabel(label: string, locale: string): string {
+  const labelMap: Record<string, string> = {
+    'ROI': 'roi',
+    'TOTAL PROFIT': 'totalProfit',
+    'WIN RATE': 'winRate',
+    'TOTAL BETS': 'totalBets',
+  };
+
+  const key = labelMap[label.toUpperCase()];
+  if (key) {
+    return getTranslation(key, locale);
+  }
+  return label;
+}
+
+// Helper function to translate prediction result
+function translatePredictionResult(result: string, locale: string): string {
+  const resultMap: Record<string, string> = {
+    'WIN': 'win',
+    'LOSS': 'loss',
+    'PUSH': 'push',
+  };
+
+  const key = resultMap[result.toUpperCase()];
+  if (key) {
+    return getTranslation(key, locale);
+  }
+  return result;
+}
+
 // Helper to format date
 function formatDate(dateString: string | undefined): string {
   if (!dateString) return '';
@@ -134,7 +297,7 @@ export default function ExclusiveReportTemplate({
               <span className="text-white text-sm font-medium">{matchInfo.league_name}</span>
             </div>
             <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">
-              FULL TIME
+              {getTranslation('fullTime', locale)}
             </span>
           </div>
 
@@ -191,7 +354,7 @@ export default function ExclusiveReportTemplate({
 
             return (
               <div key={idx} className={`p-4 rounded-xl border ${colorClass}`}>
-                <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">{stat.label}</p>
+                <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">{translateStatLabel(stat.label, locale)}</p>
                 <p className="text-xl font-bold">{stat.value}</p>
               </div>
             );
@@ -230,7 +393,7 @@ export default function ExclusiveReportTemplate({
             )}
           </div>
           <div>
-            <p className="text-gray-400 text-xs">OddsFlow Prediction Result</p>
+            <p className="text-gray-400 text-xs">{getTranslation('predictionResult', locale)}</p>
             <p className={`text-lg font-bold ${
               verdict.prediction_result === 'WIN'
                 ? 'text-emerald-400'
@@ -238,7 +401,7 @@ export default function ExclusiveReportTemplate({
                 ? 'text-rose-400'
                 : 'text-amber-400'
             }`}>
-              {verdict.prediction_result}
+              {translatePredictionResult(verdict.prediction_result, locale)}
             </p>
           </div>
         </div>

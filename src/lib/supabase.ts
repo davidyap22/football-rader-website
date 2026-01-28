@@ -864,22 +864,96 @@ export interface ExclusiveReportData {
 }
 
 export interface FootballNews {
-  id: number;
-  fixture_id?: number;
-  title: string;
-  summary: string;
-  content: string;
+  id: string; // UUID
+  fixture_id?: string; // TEXT
+  // JSONB multilingual fields
+  title: Record<string, string>; // { en: "Title", es: "Título", ... }
+  summary: Record<string, string>;
+  content: Record<string, string>;
+  seo?: Record<string, any>;
+  article_data?: ExclusiveReportData | Record<string, any>;
+  // Direct string fields
   source: string;
   source_url: string;
   image_url?: string;
+  image_prompt?: string;
+  language?: string;
+  is_ai_rewritten?: boolean;
+  created_at?: string;
+  // Deprecated fields (kept for backward compatibility)
   published_at?: string;
   league?: string;
   tags?: string;
-  language?: string;
-  is_ai_rewritten?: boolean;
-  // For Exclusive Reports - structured JSON data
-  article_data?: ExclusiveReportData;
 }
+
+// Helper function to extract localized content from JSONB field
+export const getLocalizedNewsContent = (
+  jsonbField: Record<string, string> | string | null | undefined,
+  locale: string
+): string => {
+  // If it's already a string (old data), return it
+  if (typeof jsonbField === 'string') {
+    return jsonbField;
+  }
+
+  // If null or undefined, return empty string
+  if (!jsonbField || typeof jsonbField !== 'object') {
+    return '';
+  }
+
+  // Map locale codes to JSONB keys
+  const localeMap: Record<string, string> = {
+    'en': 'en',
+    'es': 'es',
+    'pt': 'pt',
+    'de': 'de',
+    'fr': 'fr',
+    'ja': 'ja',
+    'ko': 'ko',
+    'zh': 'zh_cn', // Simplified Chinese
+    'tw': 'zh_tw', // Traditional Chinese
+    'id': 'id',
+  };
+
+  const key = localeMap[locale] || 'en';
+
+  // Try requested language, fallback to English, then any available language
+  return jsonbField[key] || jsonbField['en'] || jsonbField[Object.keys(jsonbField)[0]] || '';
+};
+
+// Helper function to generate URL-friendly slug from title
+export const generateNewsSlug = (title: Record<string, string> | string): string => {
+  // Get English title
+  const englishTitle = typeof title === 'string' ? title : (title['en'] || title[Object.keys(title)[0]] || 'news');
+
+  return englishTitle
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric with hyphens
+    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+    .substring(0, 100); // Limit length
+};
+
+// Helper function to format date for URL (YYYY-MM-DD)
+export const formatNewsDate = (dateString: string | undefined): string => {
+  if (!dateString) return 'unknown';
+
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
+
+// Helper function to build SEO-friendly news URL
+export const buildNewsUrl = (news: FootballNews, locale: string = 'en'): string => {
+  const slug = generateNewsSlug(news.title);
+  const date = formatNewsDate(news.created_at || news.published_at);
+  const id = news.id;
+
+  const basePath = locale === 'en' ? '' : `/${locale}`;
+  return `${basePath}/news/${slug}/${date}/${id}`;
+};
 
 // Contact message interface
 export interface ContactMessage {
@@ -1749,7 +1823,7 @@ export const toggleCommentReaction = async (commentId: string, userId: string, r
 
 export interface NewsComment {
   id: string;
-  news_id: number;
+  news_id: string | number; // Support both UUID (string) and legacy number IDs
   user_id: string;
   content: string;
   parent_id: string | null;
@@ -1773,8 +1847,10 @@ export interface NewsCommentReaction {
 }
 
 // Get comments for a news article with nested replies and reactions
-export const getNewsComments = async (newsId: number, userId?: string) => {
+export const getNewsComments = async (newsId: string | number, userId?: string) => {
   try {
+    console.log('[getNewsComments] Fetching comments for newsId:', newsId, 'type:', typeof newsId);
+
     // Fetch all comments for this news article
     const { data: comments, error } = await supabase
       .from('news_comments')
@@ -1782,9 +1858,12 @@ export const getNewsComments = async (newsId: number, userId?: string) => {
       .eq('news_id', newsId)
       .order('created_at', { ascending: true });
 
+    console.log('[getNewsComments] Result:', { comments: comments?.length || 0, error });
+
     if (error) {
       console.error('Error fetching comments:', error);
-      return { data: [], error: { message: error.message } };
+      const errorMessage = error.message || 'Failed to fetch comments. The news_comments table may need to be updated to support UUID news_id.';
+      return { data: [], error: { message: errorMessage } };
     }
     if (!comments || comments.length === 0) {
       return { data: [], error: null };
@@ -1844,7 +1923,7 @@ export const getNewsComments = async (newsId: number, userId?: string) => {
 };
 
 // Get comment count for a news article
-export const getNewsCommentCount = async (newsId: number) => {
+export const getNewsCommentCount = async (newsId: string | number) => {
   try {
     const { count, error } = await supabase
       .from('news_comments')
@@ -1860,7 +1939,7 @@ export const getNewsCommentCount = async (newsId: number) => {
 
 // Add a new comment to a news article
 export const addNewsComment = async (
-  newsId: number,
+  newsId: string | number,
   userId: string,
   content: string,
   parentId?: string,

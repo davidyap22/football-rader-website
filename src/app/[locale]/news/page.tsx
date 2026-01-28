@@ -7,6 +7,8 @@ import {
   supabase,
   FootballNews,
   getNewsCommentCount,
+  getLocalizedNewsContent,
+  buildNewsUrl,
 } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 
@@ -677,7 +679,7 @@ export default function NewsPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Comment counts for display
-  const [commentCounts, setCommentCounts] = useState<Record<number, number>>({});
+  const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
 
   // Check auth session
   useEffect(() => {
@@ -696,7 +698,7 @@ export default function NewsPage() {
   // Fetch comment counts when news changes
   useEffect(() => {
     const fetchCommentCounts = async () => {
-      const counts: Record<number, number> = {};
+      const counts: Record<string, number> = {};
       for (const item of news) {
         const result = await getNewsCommentCount(item.id);
         counts[item.id] = result.count;
@@ -709,6 +711,216 @@ export default function NewsPage() {
   }, [news]);
 
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;
+
+  // Dynamic SEO for News Listing Page
+  useEffect(() => {
+    const seoTitles: Record<string, string> = {
+      en: 'Football News & Betting Insights | OddsFlow AI Analysis',
+      es: 'Noticias de Fútbol y Análisis de Apuestas | OddsFlow',
+      pt: 'Notícias de Futebol e Análises de Apostas | OddsFlow',
+      de: 'Fußball Nachrichten & Wett-Analysen | OddsFlow',
+      fr: 'Actualités Football et Analyses Paris | OddsFlow',
+      ja: 'サッカーニュース＆ベッティング分析 | OddsFlow',
+      ko: '축구 뉴스 및 베팅 분석 | OddsFlow',
+      zh: '足球新闻与博彩分析 | OddsFlow AI',
+      tw: '足球新聞與博彩分析 | OddsFlow AI',
+      id: 'Berita Sepak Bola & Analisis Taruhan | OddsFlow',
+    };
+
+    const seoDescriptions: Record<string, string> = {
+      en: 'Stay updated with the latest football news, AI-powered betting insights, match analysis, and predictions. Expert coverage of Premier League, La Liga, Serie A, and more.',
+      es: 'Mantente actualizado con las últimas noticias de fútbol, análisis de apuestas impulsados por IA y predicciones. Cobertura experta de Premier League, La Liga, Serie A y más.',
+      pt: 'Fique atualizado com as últimas notícias de futebol, análises de apostas alimentadas por IA e previsões. Cobertura especializada da Premier League, La Liga, Serie A e muito mais.',
+      de: 'Bleiben Sie auf dem Laufenden mit den neuesten Fußballnachrichten, KI-gestützten Wettanalysen und Vorhersagen. Expertenberichterstattung über Premier League, La Liga, Serie A und mehr.',
+      fr: 'Restez informé des dernières actualités football, analyses de paris par IA et prédictions. Couverture experte de Premier League, La Liga, Serie A et plus encore.',
+      ja: '最新のサッカーニュース、AI駆動のベッティング分析、予測で常に最新情報を入手。プレミアリーグ、ラリーガ、セリエAなどの専門カバレッジ。',
+      ko: '최신 축구 뉴스, AI 기반 베팅 분석 및 예측으로 최신 정보를 유지하세요. 프리미어 리그, 라 리가, 세리에 A 등의 전문 커버리지.',
+      zh: '获取最新足球新闻、AI驱动的博彩分析和预测。专业报道英超、西甲、意甲等联赛。',
+      tw: '獲取最新足球新聞、AI驅動的博彩分析和預測。專業報導英超、西甲、意甲等聯賽。',
+      id: 'Tetap update dengan berita sepak bola terbaru, analisis taruhan bertenaga AI, dan prediksi. Liputan ahli Premier League, La Liga, Serie A, dan lainnya.',
+    };
+
+    const seoKeywords: Record<string, string> = {
+      en: 'football news, soccer news, betting analysis, AI predictions, Premier League, La Liga, Serie A, Bundesliga, match previews, betting tips, odds analysis, football insights, ROI optimization, handicap betting, over under tips',
+      es: 'noticias fútbol, análisis apuestas, predicciones IA, Premier League, La Liga, Serie A, consejos apuestas, análisis cuotas',
+      pt: 'notícias futebol, análise apostas, previsões IA, Premier League, La Liga, Serie A, dicas apostas, análise odds',
+      de: 'Fußball Nachrichten, Wettanalysen, KI Vorhersagen, Premier League, La Liga, Serie A, Wetttipps, Quotenanalyse',
+      fr: 'actualités football, analyse paris, prédictions IA, Premier League, La Liga, Serie A, conseils paris, analyse cotes',
+      ja: 'サッカーニュース, ベッティング分析, AI予測, プレミアリーグ, ラ・リーガ, セリエA, ベッティングヒント, オッズ分析',
+      ko: '축구 뉴스, 베팅 분석, AI 예측, 프리미어 리그, 라 리가, 세리에 A, 베팅 팁, 배당률 분석',
+      zh: '足球新闻, 博彩分析, AI预测, 英超, 西甲, 意甲, 德甲, 投注技巧, 赔率分析, 让球盘, 大小球',
+      tw: '足球新聞, 博彩分析, AI預測, 英超, 西甲, 意甲, 德甲, 投注技巧, 賠率分析, 讓球盤, 大小球',
+      id: 'berita sepak bola, analisis taruhan, prediksi AI, Premier League, La Liga, Serie A, tips taruhan, analisis odds',
+    };
+
+    const title = seoTitles[locale] || seoTitles['en'];
+    const description = seoDescriptions[locale] || seoDescriptions['en'];
+    const keywords = seoKeywords[locale] || seoKeywords['en'];
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+    // Update document title
+    document.title = title;
+
+    // Helper function to update or create meta tag
+    const updateMetaTag = (selector: string, content: string, attributeName: string = 'content') => {
+      let metaTag = document.querySelector(selector);
+      if (!metaTag) {
+        metaTag = document.createElement('meta');
+        const selectorParts = selector.match(/\[(.+?)=["'](.+?)["']\]/);
+        if (selectorParts) {
+          metaTag.setAttribute(selectorParts[1], selectorParts[2]);
+        }
+        document.head.appendChild(metaTag);
+      }
+      metaTag.setAttribute(attributeName, content);
+    };
+
+    // Standard meta tags
+    updateMetaTag('meta[name="description"]', description);
+    updateMetaTag('meta[name="keywords"]', keywords);
+
+    // Open Graph tags
+    updateMetaTag('meta[property="og:title"]', title);
+    updateMetaTag('meta[property="og:description"]', description);
+    updateMetaTag('meta[property="og:image"]', 'https://oddsflow.com/news/news.webp');
+    updateMetaTag('meta[property="og:url"]', currentUrl);
+    updateMetaTag('meta[property="og:type"]', 'website');
+    updateMetaTag('meta[property="og:site_name"]', 'OddsFlow');
+
+    // Twitter Card tags
+    updateMetaTag('meta[name="twitter:card"]', 'summary_large_image');
+    updateMetaTag('meta[name="twitter:title"]', title);
+    updateMetaTag('meta[name="twitter:description"]', description);
+    updateMetaTag('meta[name="twitter:image"]', 'https://oddsflow.com/news/news.webp');
+
+    // JSON-LD Schema Markup for News Listing Page
+    const itemListElements = news.slice(0, 10).map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'NewsArticle',
+        '@id': `https://oddsflow.com${buildNewsUrl(item, locale)}`,
+        headline: getLocalizedNewsContent(item.title, locale),
+        description: getLocalizedNewsContent(item.summary, locale),
+        image: item.image_url || 'https://oddsflow.com/news/news.webp',
+        datePublished: item.created_at || item.published_at,
+        author: {
+          '@type': 'Organization',
+          name: 'OddsFlow Analysis Team',
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'OddsFlow',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://oddsflow.com/homepage/OddsFlow Logo2.png',
+          },
+        },
+      },
+    }));
+
+    const schemaData = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'CollectionPage',
+          '@id': currentUrl,
+          url: currentUrl,
+          name: title,
+          description: description,
+          publisher: {
+            '@id': 'https://oddsflow.com/#organization',
+          },
+          inLanguage: locale,
+        },
+        {
+          '@type': 'ItemList',
+          '@id': `${currentUrl}#newslist`,
+          itemListElement: itemListElements,
+        },
+        {
+          '@type': 'BreadcrumbList',
+          '@id': `${currentUrl}#breadcrumb`,
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              item: {
+                '@id': 'https://oddsflow.com',
+                name: 'Home',
+              },
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              item: {
+                '@id': currentUrl,
+                name: 'News',
+              },
+            },
+          ],
+        },
+        {
+          '@type': 'Organization',
+          '@id': 'https://oddsflow.com/#organization',
+          name: 'OddsFlow',
+          url: 'https://oddsflow.com',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://oddsflow.com/homepage/OddsFlow Logo2.png',
+          },
+          description: 'AI-powered football odds analysis for smarter predictions',
+          sameAs: [
+            'https://twitter.com/oddsflow',
+            'https://facebook.com/oddsflow',
+            'https://instagram.com/oddsflow',
+            'https://linkedin.com/company/oddsflow',
+            'https://youtube.com/@oddsflow',
+          ],
+        },
+        {
+          '@type': 'WebSite',
+          '@id': 'https://oddsflow.com/#website',
+          url: 'https://oddsflow.com',
+          name: 'OddsFlow',
+          description: 'AI-powered football odds analysis for smarter predictions',
+          publisher: {
+            '@id': 'https://oddsflow.com/#organization',
+          },
+          inLanguage: locale,
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: {
+              '@type': 'EntryPoint',
+              urlTemplate: 'https://oddsflow.com/search?q={search_term_string}',
+            },
+            'query-input': 'required name=search_term_string',
+          },
+        },
+      ],
+    };
+
+    // Remove existing schema script if any
+    const existingSchema = document.getElementById('news-list-schema');
+    if (existingSchema) {
+      existingSchema.remove();
+    }
+
+    // Add new schema script
+    const schemaScript = document.createElement('script');
+    schemaScript.id = 'news-list-schema';
+    schemaScript.type = 'application/ld+json';
+    schemaScript.textContent = JSON.stringify(schemaData);
+    document.head.appendChild(schemaScript);
+
+    // Cleanup function
+    return () => {
+      const schema = document.getElementById('news-list-schema');
+      if (schema) {
+        schema.remove();
+      }
+    };
+  }, [news, locale]);
 
   useEffect(() => {
     async function fetchNews() {
@@ -725,7 +937,7 @@ export default function NewsPage() {
         const { data, error } = await supabase
           .from('football_news')
           .select('*')
-          .order('published_at', { ascending: false, nullsFirst: false })
+          .order('created_at', { ascending: false, nullsFirst: false })
           .range(from, to);
 
         if (error) throw error;
@@ -978,7 +1190,7 @@ export default function NewsPage() {
                             <>
                               <img
                                 src={featuredNews.image_url || '/news/oddsFlow news.png'}
-                                alt={featuredNews.title}
+                                alt={getLocalizedNewsContent(featuredNews.title, locale)}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                               />
                               {/* Gradient overlay */}
@@ -1012,19 +1224,19 @@ export default function NewsPage() {
                                 {featuredNews.source}
                               </span>
                             )}
-                            {featuredNews.published_at && (
+                            {(featuredNews.created_at || featuredNews.published_at) && (
                               <span className="text-xs text-gray-500 font-medium">
-                                {getRelativeTime(featuredNews.published_at)}
+                                {getRelativeTime(featuredNews.created_at || featuredNews.published_at)}
                               </span>
                             )}
                           </div>
 
                           <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4 leading-tight group-hover:text-emerald-400 transition-colors duration-300">
-                            {featuredNews.title}
+                            {getLocalizedNewsContent(featuredNews.title, locale)}
                           </h2>
 
                           <p className="text-gray-400 mb-6 leading-relaxed line-clamp-3 text-sm lg:text-base">
-                            {featuredNews.summary}
+                            {getLocalizedNewsContent(featuredNews.summary, locale)}
                           </p>
 
                           {/* Read more with arrow */}
@@ -1040,7 +1252,7 @@ export default function NewsPage() {
                   );
 
                   return isExclusive ? (
-                    <Link href={localePath(`/news/${featuredNews.id}`)} className="block relative group">
+                    <Link href={buildNewsUrl(featuredNews, locale)} className="block relative group">
                       {CardContent}
                     </Link>
                   ) : (
@@ -1073,7 +1285,7 @@ export default function NewsPage() {
                           <>
                             <img
                               src={item.image_url || '/news/oddsFlow news.png'}
-                              alt={item.title}
+                              alt={getLocalizedNewsContent(item.title, locale)}
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] to-transparent" />
@@ -1104,18 +1316,18 @@ export default function NewsPage() {
                       {/* Content */}
                       <div className="p-5">
                         {/* Time */}
-                        {item.published_at && (
+                        {(item.created_at || item.published_at) && (
                           <span className="text-[11px] text-emerald-400/80 font-medium uppercase tracking-wide">
-                            {getRelativeTime(item.published_at)}
+                            {getRelativeTime(item.created_at || item.published_at)}
                           </span>
                         )}
 
                         <h3 className="font-bold text-white mt-2 mb-3 leading-snug group-hover:text-emerald-400 transition-colors duration-300 line-clamp-2">
-                          {item.title}
+                          {getLocalizedNewsContent(item.title, locale)}
                         </h3>
 
                         <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">
-                          {item.summary}
+                          {getLocalizedNewsContent(item.summary, locale)}
                         </p>
 
                         {/* Read indicator */}
@@ -1136,7 +1348,7 @@ export default function NewsPage() {
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     {isExclusive ? (
-                      <Link href={localePath(`/news/${item.id}`)} className="group block">
+                      <Link href={buildNewsUrl(item, locale)} className="group block">
                         {CardContent}
                       </Link>
                     ) : (
@@ -1147,7 +1359,7 @@ export default function NewsPage() {
 
                     {/* Comment Button - Link to comments page */}
                     <Link
-                      href={localePath(`/news/${item.id}/comments`)}
+                      href={`${buildNewsUrl(item, locale)}/comments`}
                       className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border bg-[#0a0e14] border-white/5 text-gray-400 hover:border-emerald-500/20 hover:text-white transition-all"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
