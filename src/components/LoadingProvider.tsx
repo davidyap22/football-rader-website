@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 // Main menu routes that should trigger loading
 // Disabled - no loading screen for any routes
@@ -43,7 +43,7 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
   const [currentImage, setCurrentImage] = useState('');
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  // Removed useSearchParams() - no longer needed since MAIN_ROUTES is empty
 
   const startLoading = useCallback(() => {
     // Clear any existing timer
@@ -90,7 +90,7 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
         setIsClosing(false);
       }, 500);
     }
-  }, [minTimeElapsed, pathname, searchParams, isLoading, isClosing]);
+  }, [minTimeElapsed, pathname, isLoading, isClosing]);
 
   // Intercept main menu link clicks only (when switching between different sections)
   useEffect(() => {
