@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { supabase } from '@/lib/supabase';
 import ProfitSummaryClient from './ProfitSummaryClient';
+import VerificationMetadata from '../../../../../VerificationMetadata';
 
 interface PageProps {
   params: Promise<{
@@ -379,6 +380,9 @@ export default async function ProfitSummaryPage({ params }: PageProps) {
 
   return (
     <>
+      {/* Official Verification Hub - Schema and visible text for AI crawlers */}
+      <VerificationMetadata />
+
       {/* Schema Markup for SEO */}
       <script
         type="application/ld+json"

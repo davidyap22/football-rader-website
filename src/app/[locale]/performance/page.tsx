@@ -5,6 +5,7 @@ import { getInitialPerformanceData } from '@/lib/performance-data';
 import PerformanceClient from './PerformanceClient';
 import { locales, type Locale } from '@/i18n/config';
 import { PerformanceDatasetJsonLd } from '@/components/JsonLd';
+import VerificationMetadata from './VerificationMetadata';
 
 // Generate static params for all locales
 export function generateStaticParams() {
@@ -170,6 +171,9 @@ export default async function PerformancePage({ params }: { params: Promise<{ lo
 
   return (
     <>
+      {/* Official Verification Hub - Schema and visible text for AI crawlers */}
+      <VerificationMetadata />
+
       {/* Dataset Schema for SEO - helps Google Dataset Search */}
       {initialData.stats && (
         <PerformanceDatasetJsonLd
