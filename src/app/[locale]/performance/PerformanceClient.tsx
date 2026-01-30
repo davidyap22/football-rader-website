@@ -1122,17 +1122,17 @@ export default function PerformanceClient({
     if (!leagueName) return '';
 
     const leagueTranslations: Record<string, Record<string, string>> = {
-      'Premier Leag': {
-        en: 'Premier Leag',
-        es: 'Premier Leag',
-        pt: 'Premier Leag',
+      'Premier League': {
+        en: 'Premier League',
+        es: 'Premier League',
+        pt: 'Premier League',
         de: 'Premier League',
         fr: 'Premier League',
         ja: 'プレミアリーグ',
         ko: '프리미어리그',
         zh: '英超',
         tw: '英超',
-        id: 'Liga Premier'
+        id: 'Liga Primer'
       },
       'La Liga': {
         en: 'La Liga',
@@ -1149,13 +1149,13 @@ export default function PerformanceClient({
       'Serie A': {
         en: 'Serie A',
         es: 'Serie A',
-        pt: 'Série A',
+        pt: 'Serie A',
         de: 'Serie A',
         fr: 'Serie A',
         ja: 'セリエA',
-        ko: '세리에A',
+        ko: '세리에 A',
         zh: '意甲',
-        tw: '意甲',
+        tw: '義甲',
         id: 'Serie A'
       },
       'Bundesliga': {
@@ -1177,14 +1177,38 @@ export default function PerformanceClient({
         de: 'Ligue 1',
         fr: 'Ligue 1',
         ja: 'リーグ・アン',
-        ko: '리그1',
+        ko: '리그 1',
         zh: '法甲',
         tw: '法甲',
         id: 'Ligue 1'
+      },
+      'UEFA Champions League': {
+        en: 'Champions League',
+        es: 'Champions League',
+        pt: 'Liga dos Campeões',
+        de: 'Champions League',
+        fr: 'Ligue des Champions',
+        ja: 'チャンピオンズリーグ',
+        ko: '챔피언스리그',
+        zh: '欧冠',
+        tw: '歐冠',
+        id: 'Liga Champions'
       }
     };
 
-    const translations = leagueTranslations[leagueName];
+    // Try exact match first
+    let translations = leagueTranslations[leagueName];
+
+    // If no exact match, try partial match (e.g., "UEFA Champio" matches "UEFA Champions League")
+    if (!translations) {
+      for (const key of Object.keys(leagueTranslations)) {
+        if (leagueName.startsWith(key.substring(0, 10)) || key.startsWith(leagueName.substring(0, 10))) {
+          translations = leagueTranslations[key];
+          break;
+        }
+      }
+    }
+
     if (!translations) return leagueName;
 
     return translations[locale] || leagueName;
@@ -2789,7 +2813,7 @@ export default function PerformanceClient({
                       </div>
                     )}
                     <span className="text-white font-medium">
-                      {selectedLeague === 'all' ? t('allLeagues') : selectedLeague}
+                      {selectedLeague === 'all' ? t('allLeagues') : translateLeagueName(selectedLeague)}
                     </span>
                   </div>
                   <svg className={`w-5 h-5 text-gray-400 transition-transform ${leagueDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2848,7 +2872,7 @@ export default function PerformanceClient({
                               <span className="text-[10px] font-bold text-white">{league.substring(0, 2)}</span>
                             </div>
                           )}
-                          <span className="font-medium">{league}</span>
+                          <span className="font-medium">{translateLeagueName(league)}</span>
                           {selectedLeague === league && (
                             <svg className="w-5 h-5 ml-auto text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -2899,7 +2923,7 @@ export default function PerformanceClient({
                         <span className="text-[8px] font-bold">{league.substring(0, 2)}</span>
                       </div>
                     )}
-                    {league}
+                    {translateLeagueName(league)}
                   </button>
                 ))}
               </div>
