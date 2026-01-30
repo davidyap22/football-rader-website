@@ -3419,7 +3419,7 @@ function Footer() {
               {footerLeagues.map((league) => (
                 <li key={league.slug}>
                   <Link href={localePath(`/leagues/${league.slug}`)} className="hover:text-emerald-400 transition-colors">
-                    {league.names[locale] || league.names['en']}
+                    {league.names[locale as keyof typeof league.names] || league.names['en']}
                   </Link>
                 </li>
               ))}
