@@ -5226,7 +5226,7 @@ export default function MatchDetailClient() {
                         );
                       }
                       // Get latest signal for mobile card view
-                      const latestBetaSignal = lastBetaSignals[0];
+                      const latestBetaSignal = lastBetaSignals[0] as any;
                       const mobileClockBetaOU = latestBetaSignal?.minute_at_bet;
                       const mobileScoreHomeBetaOU = latestBetaSignal?.score_home_at_bet ?? '-';
                       const mobileScoreAwayBetaOU = latestBetaSignal?.score_away_at_bet ?? '-';
@@ -5323,7 +5323,7 @@ export default function MatchDetailClient() {
                         );
                       }
                       // Get latest signal for mobile card view
-                      const latestBetaSignalLive = lastBetaSignals[0];
+                      const latestBetaSignalLive = lastBetaSignals[0] as any;
                       const mobileClockBetaOULive = latestBetaSignalLive?.minute_at_bet;
                       const mobileScoreHomeBetaOULive = latestBetaSignalLive?.score_home_at_bet ?? '-';
                       const mobileScoreAwayBetaOULive = latestBetaSignalLive?.score_away_at_bet ?? '-';
@@ -5871,7 +5871,7 @@ export default function MatchDetailClient() {
                         );
                       }
                       // Get latest signal for mobile card view
-                      const latestBetaSignalHdp = lastBetaSignals[0];
+                      const latestBetaSignalHdp = lastBetaSignals[0] as any;
                       const mobileClockBetaHdp = latestBetaSignalHdp?.minute_at_bet;
                       const mobileScoreHomeBetaHdp = latestBetaSignalHdp?.score_home_at_bet ?? '-';
                       const mobileScoreAwayBetaHdp = latestBetaSignalHdp?.score_away_at_bet ?? '-';
@@ -5968,7 +5968,7 @@ export default function MatchDetailClient() {
                         );
                       }
                       // Get latest signal for mobile card view
-                      const latestBetaSignalHdpLive = lastBetaSignals[0];
+                      const latestBetaSignalHdpLive = lastBetaSignals[0] as any;
                       const mobileClockBetaHdpLive = latestBetaSignalHdpLive?.minute_at_bet;
                       const mobileScoreHomeBetaHdpLive = latestBetaSignalHdpLive?.score_home_at_bet ?? '-';
                       const mobileScoreAwayBetaHdpLive = latestBetaSignalHdpLive?.score_away_at_bet ?? '-';
