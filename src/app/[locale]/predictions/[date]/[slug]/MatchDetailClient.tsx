@@ -694,6 +694,15 @@ export default function MatchDetailClient() {
     loadSubscription();
   }, [user]);
 
+  // Set default tab based on login status
+  // Logged in: default to 'odds' (Odds & AI)
+  // Not logged in: default to 'comparison'
+  useEffect(() => {
+    if (authChecked) {
+      setSelectedSection(user ? 'odds' : 'comparison');
+    }
+  }, [authChecked, user]);
+
   // Check if a betting style is available based on subscription
   const isStyleAvailable = (styleId: string) => {
     // Oddsflow Core Strategy is locked (Coming Soon)
