@@ -4344,7 +4344,7 @@ export default function MatchDetailClient() {
                               {/* Header: Clock, Score */}
                               <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
-                                  <span className="text-white font-bold">{mobileClock !== null && mobileClock !== undefined ? `${String(mobileClock)}''` : '-'}</span>
+                                  <span className="text-red-400 font-bold">{mobileClock !== null && mobileClock !== undefined ? `${String(mobileClock)}''` : '-'}</span>
                                   <span className="text-gray-300">{String(mobileScoreHome)}-{String(mobileScoreAway)}</span>
                                 </div>
                               </div>
@@ -4478,7 +4478,7 @@ export default function MatchDetailClient() {
                               {/* Header: Clock, Score, Status */}
                               <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
-                                  <span className="text-white font-bold">{mobileClock !== null && mobileClock !== undefined ? `${String(mobileClock)}''` : '-'}</span>
+                                  <span className="text-red-400 font-bold">{mobileClock !== null && mobileClock !== undefined ? `${String(mobileClock)}''` : '-'}</span>
                                   <span className="text-gray-300">{String(mobileScoreHome)}-{String(mobileScoreAway)}</span>
                                 </div>
                                 <span className="px-2 py-1 rounded text-xs bg-gray-700 text-gray-300">NORMAL</span>
@@ -5018,7 +5018,7 @@ export default function MatchDetailClient() {
                             <div className="bg-gray-800/50 rounded-xl p-3 border border-white/10">
                               <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
-                                  <span className="text-white font-bold">{mobileClock !== null && mobileClock !== undefined ? `${String(mobileClock)}''` : '-'}</span>
+                                  <span className="text-red-400 font-bold">{mobileClock !== null && mobileClock !== undefined ? `${String(mobileClock)}''` : '-'}</span>
                                   <span className="text-gray-300">{String(mobileScoreHome)}-{String(mobileScoreAway)}</span>
                                 </div>
                               </div>
@@ -5241,7 +5241,7 @@ export default function MatchDetailClient() {
                           <div className="md:hidden">
                             <div className="bg-gray-800/50 rounded-xl p-3 border border-white/10">
                               <div className="flex items-center justify-between mb-3">
-                                <span className="text-white font-bold">{mobileClockBetaOU !== null && mobileClockBetaOU !== undefined ? `${String(mobileClockBetaOU)}'` : '-'}</span>
+                                <span className="text-red-400 font-bold">{mobileClockBetaOU !== null && mobileClockBetaOU !== undefined ? `${String(mobileClockBetaOU)}'` : '-'}</span>
                                 <span className="text-gray-300">{String(mobileScoreHomeBetaOU)}-{String(mobileScoreAwayBetaOU)}</span>
                               </div>
                               <div className="flex items-center gap-2 mb-3">
@@ -5338,7 +5338,7 @@ export default function MatchDetailClient() {
                           <div className="md:hidden">
                             <div className="bg-red-500/20 rounded-xl p-3 border border-red-500/40">
                               <div className="flex items-center justify-between mb-3">
-                                <span className="text-white font-bold">{mobileClockBetaOULive !== null && mobileClockBetaOULive !== undefined ? `${String(mobileClockBetaOULive)}'` : '-'}</span>
+                                <span className="text-red-400 font-bold">{mobileClockBetaOULive !== null && mobileClockBetaOULive !== undefined ? `${String(mobileClockBetaOULive)}'` : '-'}</span>
                                 <span className="text-gray-300">{String(mobileScoreHomeBetaOULive)}-{String(mobileScoreAwayBetaOULive)}</span>
                               </div>
                               <div className="flex items-center gap-2 mb-3">
@@ -5663,7 +5663,7 @@ export default function MatchDetailClient() {
                             <div className="bg-gray-800/50 rounded-xl p-3 border border-white/10">
                               <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
-                                  <span className="text-white font-bold">{mobileClock !== null && mobileClock !== undefined ? `${String(mobileClock)}''` : '-'}</span>
+                                  <span className="text-red-400 font-bold">{mobileClock !== null && mobileClock !== undefined ? `${String(mobileClock)}''` : '-'}</span>
                                   <span className="text-gray-300">{String(mobileScoreHome)}-{String(mobileScoreAway)}</span>
                                 </div>
                               </div>
@@ -5886,7 +5886,7 @@ export default function MatchDetailClient() {
                           <div className="md:hidden">
                             <div className="bg-gray-800/50 rounded-xl p-3 border border-white/10">
                               <div className="flex items-center justify-between mb-3">
-                                <span className="text-white font-bold">{mobileClockBetaHdp !== null && mobileClockBetaHdp !== undefined ? `${String(mobileClockBetaHdp)}'` : '-'}</span>
+                                <span className="text-red-400 font-bold">{mobileClockBetaHdp !== null && mobileClockBetaHdp !== undefined ? `${String(mobileClockBetaHdp)}'` : '-'}</span>
                                 <span className="text-gray-300">{String(mobileScoreHomeBetaHdp)}-{String(mobileScoreAwayBetaHdp)}</span>
                               </div>
                               <div className="flex items-center gap-2 mb-3">
@@ -5983,7 +5983,7 @@ export default function MatchDetailClient() {
                           <div className="md:hidden">
                             <div className="bg-red-500/20 rounded-xl p-3 border border-red-500/40">
                               <div className="flex items-center justify-between mb-3">
-                                <span className="text-white font-bold">{mobileClockBetaHdpLive !== null && mobileClockBetaHdpLive !== undefined ? `${String(mobileClockBetaHdpLive)}'` : '-'}</span>
+                                <span className="text-red-400 font-bold">{mobileClockBetaHdpLive !== null && mobileClockBetaHdpLive !== undefined ? `${String(mobileClockBetaHdpLive)}'` : '-'}</span>
                                 <span className="text-gray-300">{String(mobileScoreHomeBetaHdpLive)}-{String(mobileScoreAwayBetaHdpLive)}</span>
                               </div>
                               <div className="flex items-center gap-2 mb-3">
