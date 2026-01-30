@@ -1152,6 +1152,7 @@ export interface PlayerTranslation {
   player_id: number;
   first_name_language: PlayerNameLanguage | null;
   last_name_language: PlayerNameLanguage | null;
+  photo: string | null;
 }
 
 // Get player name translations from player_stats table
@@ -1163,7 +1164,7 @@ export const getPlayerTranslations = async (playerIds: number[]) => {
   try {
     const { data, error } = await supabase
       .from('player_stats')
-      .select('player_id, first_name_language, last_name_language')
+      .select('player_id, first_name_language, last_name_language, photo')
       .in('player_id', playerIds);
 
     if (error) {

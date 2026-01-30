@@ -799,6 +799,12 @@ export default function MatchDetailClient() {
     return player.player_name?.split(' ').pop() || player.player_name;
   };
 
+  // Get player photo URL
+  const getPlayerPhoto = (player: FixturePlayer): string | null => {
+    const translation = playerTranslations[player.player_id];
+    return translation?.photo || null;
+  };
+
   // Odds related state
   const [currentOdds, setCurrentOdds] = useState<OddsHistory | null>(null);
   const [oddsHistory, setOddsHistory] = useState<OddsHistory[]>([]);
@@ -1428,11 +1434,11 @@ export default function MatchDetailClient() {
     fetchTeamNames();
   }, [match, locale]);
 
-  // Fetch player name translations when lineups are loaded
+  // Fetch player data (translations + photos) when lineups are loaded
   useEffect(() => {
-    if (!lineups || lineups.length === 0 || locale === 'en') return;
+    if (!lineups || lineups.length === 0) return;
 
-    async function fetchPlayerNames() {
+    async function fetchPlayerData() {
       // Guard against null (TypeScript doesn't narrow in async closures)
       if (!lineups) return;
 
@@ -1455,8 +1461,8 @@ export default function MatchDetailClient() {
       }
     }
 
-    fetchPlayerNames();
-  }, [lineups, locale]);
+    fetchPlayerData();
+  }, [lineups]);
 
   // Set up polling and countdown - refresh all data every 10 seconds
   useEffect(() => {
@@ -2386,15 +2392,22 @@ export default function MatchDetailClient() {
                       const verticalCount = playersInRow.length;
                       const topAdjusted = verticalCount === 1 ? 50 : ((col - 1) / Math.max(verticalCount - 1, 1)) * 70 + 15;
 
+                      const playerPhoto = getPlayerPhoto(player);
                       return (
                         <div
                           key={player.id}
                           className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
                           style={{ left: `${left}%`, top: `${topAdjusted}%` }}
                         >
-                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white text-xs sm:text-sm font-bold shadow-lg">
-                            {player.number || '?'}
-                          </div>
+                          {playerPhoto ? (
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-blue-400 overflow-hidden shadow-lg bg-gray-800">
+                              <img src={playerPhoto} alt={player.player_name} className="w-full h-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white text-xs sm:text-sm font-bold shadow-lg">
+                              {player.number || '?'}
+                            </div>
+                          )}
                           <span className="mt-1 px-1 bg-black/60 rounded text-[8px] sm:text-[10px] text-white whitespace-nowrap max-w-[60px] truncate">
                             {getLocalizedPlayerLastName(player)}
                           </span>
@@ -2412,15 +2425,22 @@ export default function MatchDetailClient() {
                       const verticalCount = playersInRow.length;
                       const topAdjusted = verticalCount === 1 ? 50 : ((col - 1) / Math.max(verticalCount - 1, 1)) * 70 + 15;
 
+                      const playerPhoto = getPlayerPhoto(player);
                       return (
                         <div
                           key={player.id}
                           className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
                           style={{ left: `${left}%`, top: `${topAdjusted}%` }}
                         >
-                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-500 border-2 border-white flex items-center justify-center text-white text-xs sm:text-sm font-bold shadow-lg">
-                            {player.number || '?'}
-                          </div>
+                          {playerPhoto ? (
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-green-400 overflow-hidden shadow-lg bg-gray-800">
+                              <img src={playerPhoto} alt={player.player_name} className="w-full h-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-500 border-2 border-white flex items-center justify-center text-white text-xs sm:text-sm font-bold shadow-lg">
+                              {player.number || '?'}
+                            </div>
+                          )}
                           <span className="mt-1 px-1 bg-black/60 rounded text-[8px] sm:text-[10px] text-white whitespace-nowrap max-w-[60px] truncate">
                             {getLocalizedPlayerLastName(player)}
                           </span>
