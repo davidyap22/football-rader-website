@@ -7,21 +7,11 @@ import { locales, defaultLocale } from './i18n/config';
 const intlMiddleware = createIntlMiddleware({
   locales,
   defaultLocale,
-  localePrefix: 'as-needed',
+  localePrefix: 'always',  // Always include locale prefix to fix deep nested routes
   localeDetection: false,
 });
 
 export async function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-
-  // Handle /news/* paths without locale prefix - redirect to /en/news/*
-  // This fixes deep nested routes that don't work well with as-needed locale prefix
-  if (pathname.startsWith('/news/') && !locales.some(locale => pathname.startsWith(`/${locale}/news/`))) {
-    const url = request.nextUrl.clone();
-    url.pathname = `/en${pathname}`;
-    return NextResponse.redirect(url);
-  }
-
   // Create a response object that we'll modify
   let response = NextResponse.next({
     request: {
