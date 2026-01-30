@@ -716,6 +716,9 @@ export default function MatchDetailClient() {
   // Section tab filter: 'odds' | 'comparison' | 'lineups' | 'events' | 'stats'
   const [selectedSection, setSelectedSection] = useState<'odds' | 'comparison' | 'lineups' | 'events' | 'stats'>('odds');
 
+  // Mobile section dropdown state
+  const [showSectionDropdown, setShowSectionDropdown] = useState(false);
+
   // Translation function
   const t = (key: string): string => {
     return translations[selectedLang]?.[key] || translations['EN']?.[key] || key;
@@ -1724,8 +1727,89 @@ export default function MatchDetailClient() {
             )}
           </div>
 
-          {/* Section Tab Filter */}
-          <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
+          {/* Section Tab Filter - Mobile Dropdown */}
+          <div className="md:hidden mb-6 relative">
+            <button
+              onClick={() => setShowSectionDropdown(!showSectionDropdown)}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 text-white"
+            >
+              <span className="flex items-center gap-2 font-medium">
+                {selectedSection === 'odds' && (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                    {t('tabOdds')}
+                  </>
+                )}
+                {selectedSection === 'comparison' && (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    {t('tabComparison')}
+                  </>
+                )}
+                {selectedSection === 'lineups' && (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    {t('tabLineups')}
+                  </>
+                )}
+                {selectedSection === 'events' && (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    {t('tabEvents')}
+                    {match.type === 'In Play' && <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />}
+                  </>
+                )}
+                {selectedSection === 'stats' && (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    {t('tabStats')}
+                    {match.type === 'In Play' && <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />}
+                  </>
+                )}
+              </span>
+              <svg className={`w-5 h-5 transition-transform ${showSectionDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {showSectionDropdown && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+                {[
+                  { id: 'odds', label: t('tabOdds'), icon: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', gradient: 'from-emerald-500 to-cyan-500' },
+                  { id: 'comparison', label: t('tabComparison'), icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', gradient: 'from-purple-500 to-pink-500' },
+                  { id: 'lineups', label: t('tabLineups'), icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z', gradient: 'from-green-500 to-emerald-600' },
+                  { id: 'events', label: t('tabEvents'), icon: 'M13 10V3L4 14h7v7l9-11h-7z', gradient: 'from-orange-500 to-amber-600', hasLive: true },
+                  { id: 'stats', label: t('tabStats'), icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', gradient: 'from-cyan-500 to-blue-600', hasLive: true },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => { setSelectedSection(tab.id as typeof selectedSection); setShowSectionDropdown(false); }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
+                      selectedSection === tab.id ? `bg-gradient-to-r ${tab.gradient} text-white` : 'text-gray-300 hover:bg-white/5'
+                    }`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={tab.icon} />
+                    </svg>
+                    {tab.label}
+                    {tab.hasLive && match.type === 'In Play' && <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse ml-auto" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Section Tab Filter - Desktop Tabs */}
+          <div className="hidden md:flex items-center gap-2 mb-6 overflow-x-auto pb-2">
             <button
               onClick={() => setSelectedSection('odds')}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
@@ -2398,18 +2482,18 @@ export default function MatchDetailClient() {
                         return (
                           <div
                             key={event.id}
-                            className={`relative flex items-start gap-4 ${isFirst ? 'pt-0' : 'pt-3'} ${isLast ? 'pb-0' : 'pb-3'}`}
+                            className={`relative flex items-start gap-2 md:gap-4 ${isFirst ? 'pt-0' : 'pt-3'} ${isLast ? 'pb-0' : 'pb-3'}`}
                           >
                             {/* Timeline dot */}
-                            <div className="relative z-10 flex-shrink-0 w-12 flex flex-col items-center">
+                            <div className="relative z-10 flex-shrink-0 w-8 md:w-12 flex flex-col items-center">
                               <div className={`w-3 h-3 rounded-full ${style.dotColor} ring-4 ring-gray-900/80`} />
                             </div>
 
                             {/* Event Card */}
-                            <div className={`flex-1 flex items-center gap-3 p-3 rounded-xl ${style.bgColor} border ${style.borderColor}`}>
+                            <div className={`flex-1 flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-xl ${style.bgColor} border ${style.borderColor} min-w-0`}>
                               {/* Time */}
-                              <div className="flex-shrink-0 w-14 text-center">
-                                <span className={`text-lg font-bold ${style.textColor}`}>
+                              <div className="flex-shrink-0 w-10 md:w-14 text-center">
+                                <span className={`text-base md:text-lg font-bold ${style.textColor}`}>
                                   {event.elapsed_time || '-'}&apos;
                                 </span>
                                 {event.extra_time && (
@@ -2418,26 +2502,26 @@ export default function MatchDetailClient() {
                               </div>
 
                               {/* Event Icon */}
-                              <div className="flex-shrink-0 text-2xl">
+                              <div className="flex-shrink-0 text-xl md:text-2xl">
                                 {style.icon}
                               </div>
 
                               {/* Event Details */}
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-semibold text-white truncate">{event.player_name || 'Unknown'}</span>
+                              <div className="flex-1 min-w-0 overflow-hidden">
+                                <div className="flex flex-wrap items-center gap-1 md:gap-2">
+                                  <span className="font-semibold text-white text-sm md:text-base truncate max-w-[120px] md:max-w-none">{event.player_name || 'Unknown'}</span>
                                   {event.assist_name && (
-                                    <span className="text-gray-400 text-sm truncate">({event.assist_name})</span>
+                                    <span className="text-gray-400 text-xs md:text-sm truncate max-w-[80px] md:max-w-none">({event.assist_name})</span>
                                   )}
                                 </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                  <span className={`${isHomeTeam ? 'text-blue-400' : 'text-green-400'}`}>
+                                <div className="flex flex-wrap items-center gap-1 md:gap-2 text-xs md:text-sm">
+                                  <span className={`${isHomeTeam ? 'text-blue-400' : 'text-green-400'} truncate max-w-[80px] md:max-w-none`}>
                                     {event.team_name || 'Unknown Team'}
                                   </span>
                                   {event.event_detail && (
                                     <>
                                       <span className="text-gray-600">•</span>
-                                      <span className="text-gray-400">{event.event_detail}</span>
+                                      <span className="text-gray-400 truncate">{event.event_detail}</span>
                                     </>
                                   )}
                                 </div>
@@ -2447,7 +2531,7 @@ export default function MatchDetailClient() {
                               </div>
 
                               {/* Team indicator */}
-                              <div className={`flex-shrink-0 w-1 h-12 rounded-full ${isHomeTeam ? 'bg-blue-500' : 'bg-green-500'}`} />
+                              <div className={`flex-shrink-0 w-1 h-10 md:h-12 rounded-full ${isHomeTeam ? 'bg-blue-500' : 'bg-green-500'}`} />
                             </div>
                           </div>
                         );
@@ -4241,69 +4325,128 @@ export default function MatchDetailClient() {
                           </div>
                         );
                       }
-                      return (
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-sm">
-                            <thead>
-                              <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('fairOdds')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('marketOdds')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('ev')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {lastLiveSignals.map((signal: any, index: number) => {
-                                const raw = signal as Record<string, unknown>;
-                                const selection = String(raw.selection_1x2 || '').toUpperCase();
-                                const selectionLabel = selection === 'HOME' || selection === '1' ? 'Home' : selection === 'DRAW' || selection === 'X' ? 'Draw' : 'Away';
-                                const fairOdds = raw.fair_odds_1x2 !== null && raw.fair_odds_1x2 !== undefined ? Number(raw.fair_odds_1x2).toFixed(2) : '-';
-                                const marketOdds = raw.market_odds_1x2 !== null && raw.market_odds_1x2 !== undefined ? Number(raw.market_odds_1x2).toFixed(2) : '-';
-                                const evStr = String(raw.expected_value_1x2 || '').replace('%', '');
-                                const evNum = parseFloat(evStr);
-                                const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
-                                const stakeStr = String(raw.recommended_stake_1x2 || '').replace('%', '');
-                                const stakeNum = parseFloat(stakeStr);
-                                const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
-                                const isValuable = raw.is_valuable_1x2;
-                                const clock = raw.clock;
-                                // First item in array is the latest signal
-                                const isLatest = index === 0;
+                      // Get first signal data for mobile card
+                      const firstSignal = lastLiveSignals[0] as unknown as Record<string, unknown>;
+                      const mobileSelection = String(firstSignal.selection_1x2 || '').toUpperCase();
+                      const mobileSelectionLabel = mobileSelection === 'HOME' || mobileSelection === '1' ? t('home_team') : mobileSelection === 'DRAW' || mobileSelection === 'X' ? t('draw') : t('away_team');
+                      const mobileFairOdds = firstSignal.fair_odds_1x2 !== null && firstSignal.fair_odds_1x2 !== undefined ? Number(firstSignal.fair_odds_1x2).toFixed(2) : '-';
+                      const mobileMarketOdds = firstSignal.market_odds_1x2 !== null && firstSignal.market_odds_1x2 !== undefined ? Number(firstSignal.market_odds_1x2).toFixed(2) : '-';
+                      const mobileEvStr = String(firstSignal.expected_value_1x2 || '').replace('%', '');
+                      const mobileEvNum = parseFloat(mobileEvStr);
+                      const mobileEvDisplay = !isNaN(mobileEvNum) ? `+${mobileEvNum.toFixed(2)}%` : '-';
+                      const mobileStakeStr = String(firstSignal.recommended_stake_1x2 || '').replace('%', '');
+                      const mobileStakeNum = parseFloat(mobileStakeStr);
+                      const mobileStakeDisplay = !isNaN(mobileStakeNum) ? `${mobileStakeNum.toFixed(2)}u` : '-';
+                      const mobileClock = firstSignal.clock;
+                      const mobileScoreHome = firstSignal.score_home ?? '-';
+                      const mobileScoreAway = firstSignal.score_away ?? '-';
 
-                                return (
-                                  <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
-                                    <td className="py-2 px-3">
-                                      {clock !== null && clock !== undefined ? (
-                                        <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
-                                      ) : (
-                                        <span className="text-gray-500">-</span>
-                                      )}
-                                    </td>
-                                    <td className="py-2 px-3">
-                                      <span className="text-emerald-400 font-medium">{selectionLabel}</span>
-                                    </td>
-                                    <td className="py-2 px-3 text-gray-300">{fairOdds}</td>
-                                    <td className="py-2 px-3 text-white font-semibold">{marketOdds}</td>
-                                    <td className="py-2 px-3 text-emerald-400">{evDisplay}</td>
-                                    <td className="py-2 px-3 text-yellow-400">{stakeDisplay !== '-' ? `${stakeDisplay} units` : '-'}</td>
-                                    <td className="py-2 px-3">
-                                      {Boolean(isValuable) ? (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-                                          💎
-                                        </span>
-                                      ) : (
-                                        <span className="text-gray-500">-</span>
-                                      )}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
+                      return (
+                        <>
+                          {/* Mobile Card View - Show only 1 signal */}
+                          <div className="md:hidden">
+                            <div className="bg-gray-800/50 rounded-xl p-3 border border-white/10">
+                              {/* Header: Clock, Score, Status */}
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-white font-bold">{mobileClock !== null && mobileClock !== undefined ? `${String(mobileClock)}''` : '-'}</span>
+                                  <span className="text-gray-300">{String(mobileScoreHome)}-{String(mobileScoreAway)}</span>
+                                </div>
+                                <span className="px-2 py-1 rounded text-xs bg-gray-700 text-gray-300">NORMAL</span>
+                              </div>
+                              {/* Selection */}
+                              <div className="flex items-center gap-2 mb-3">
+                                <span className="px-2 py-1 rounded text-xs font-bold bg-pink-500/20 text-pink-400 border border-pink-500/40">{mobileSelectionLabel}</span>
+                              </div>
+                              {/* Stats Grid */}
+                              <div className="grid grid-cols-5 gap-2 text-center text-xs">
+                                <div>
+                                  <div className="text-gray-500 mb-1">Fair</div>
+                                  <div className="text-gray-300">{mobileFairOdds}</div>
+                                </div>
+                                <div>
+                                  <div className="text-gray-500 mb-1">Market</div>
+                                  <div className="text-white font-semibold">{mobileMarketOdds}</div>
+                                </div>
+                                <div>
+                                  <div className="text-gray-500 mb-1">EV</div>
+                                  <div className="text-yellow-400">{mobileEvDisplay}</div>
+                                </div>
+                                <div>
+                                  <div className="text-gray-500 mb-1">{t('stake')}</div>
+                                  <div className="text-emerald-400">{mobileStakeDisplay}</div>
+                                </div>
+                                <div>
+                                  <div className="text-gray-500 mb-1">P/L</div>
+                                  <div className="text-gray-400">-</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Desktop Table View - Show 3 signals */}
+                          <div className="hidden md:block overflow-x-auto">
+                            <table className="w-full text-sm">
+                              <thead>
+                                <tr className="border-b border-white/10">
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('fairOdds')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('marketOdds')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('ev')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {lastLiveSignals.map((signal: any, index: number) => {
+                                  const raw = signal as Record<string, unknown>;
+                                  const selection = String(raw.selection_1x2 || '').toUpperCase();
+                                  const selectionLabel = selection === 'HOME' || selection === '1' ? t('home_team') : selection === 'DRAW' || selection === 'X' ? t('draw') : t('away_team');
+                                  const fairOdds = raw.fair_odds_1x2 !== null && raw.fair_odds_1x2 !== undefined ? Number(raw.fair_odds_1x2).toFixed(2) : '-';
+                                  const marketOdds = raw.market_odds_1x2 !== null && raw.market_odds_1x2 !== undefined ? Number(raw.market_odds_1x2).toFixed(2) : '-';
+                                  const evStr = String(raw.expected_value_1x2 || '').replace('%', '');
+                                  const evNum = parseFloat(evStr);
+                                  const evDisplay = !isNaN(evNum) ? `+${evNum.toFixed(2)}%` : '-';
+                                  const stakeStr = String(raw.recommended_stake_1x2 || '').replace('%', '');
+                                  const stakeNum = parseFloat(stakeStr);
+                                  const stakeDisplay = !isNaN(stakeNum) ? `${stakeNum.toFixed(2)}` : '-';
+                                  const isValuable = raw.is_valuable_1x2;
+                                  const clock = raw.clock;
+                                  const isLatest = index === 0;
+
+                                  return (
+                                    <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
+                                      <td className="py-2 px-3">
+                                        {clock !== null && clock !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{String(clock)}&apos;</span>
+                                        ) : (
+                                          <span className="text-gray-500">-</span>
+                                        )}
+                                      </td>
+                                      <td className="py-2 px-3">
+                                        <span className="text-emerald-400 font-medium">{selectionLabel}</span>
+                                      </td>
+                                      <td className="py-2 px-3 text-gray-300">{fairOdds}</td>
+                                      <td className="py-2 px-3 text-white font-semibold">{marketOdds}</td>
+                                      <td className="py-2 px-3 text-emerald-400">{evDisplay}</td>
+                                      <td className="py-2 px-3 text-yellow-400">{stakeDisplay !== '-' ? `${stakeDisplay} units` : '-'}</td>
+                                      <td className="py-2 px-3">
+                                        {Boolean(isValuable) ? (
+                                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                                            💎
+                                          </span>
+                                        ) : (
+                                          <span className="text-gray-500">-</span>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </>
                       );
                     })()
                   ) : (
