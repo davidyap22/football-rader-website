@@ -50,6 +50,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     line: 'Line',
     over: 'Over',
     under: 'Under',
+    realBetResults: 'Real Bet Results',
+    betType: 'Bet Type',
+    viewPdf: 'View PDF',
+    oddsChartHistory: 'Odds Chart History',
+    signalsHistory: 'Signals History',
   },
   es: {
     profitSummary: 'Resumen de Ganancias',
@@ -91,6 +96,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     line: 'Línea',
     over: 'Más',
     under: 'Menos',
+    realBetResults: 'Resultados de Apuestas Reales',
+    betType: 'Tipo de Apuesta',
+    viewPdf: 'Ver PDF',
+    oddsChartHistory: 'Historial de Cuotas',
+    signalsHistory: 'Historial de Señales',
   },
   pt: {
     profitSummary: 'Resumo de Lucros',
@@ -132,6 +142,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     line: 'Linha',
     over: 'Mais',
     under: 'Menos',
+    realBetResults: 'Resultados de Apostas Reais',
+    betType: 'Tipo de Aposta',
+    viewPdf: 'Ver PDF',
+    oddsChartHistory: 'Histórico de Odds',
+    signalsHistory: 'Histórico de Sinais',
   },
   de: {
     profitSummary: 'Gewinnubersicht',
@@ -173,6 +188,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     line: 'Linie',
     over: 'Uber',
     under: 'Unter',
+    realBetResults: 'Echte Wettergebnisse',
+    betType: 'Wettart',
+    viewPdf: 'PDF Ansehen',
+    oddsChartHistory: 'Quotenverlauf',
+    signalsHistory: 'Signalverlauf',
   },
   fr: {
     profitSummary: 'Resume des Profits',
@@ -214,6 +234,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     line: 'Ligne',
     over: 'Plus',
     under: 'Moins',
+    realBetResults: 'Résultats de Paris Réels',
+    betType: 'Type de Pari',
+    viewPdf: 'Voir PDF',
+    oddsChartHistory: 'Historique des Cotes',
+    signalsHistory: 'Historique des Signaux',
   },
   ja: {
     profitSummary: '収益サマリー',
@@ -255,6 +280,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     line: 'ライン',
     over: 'オーバー',
     under: 'アンダー',
+    realBetResults: '実際のベット結果',
+    betType: 'ベットタイプ',
+    viewPdf: 'PDFを見る',
+    oddsChartHistory: 'オッズチャート履歴',
+    signalsHistory: 'シグナル履歴',
   },
   ko: {
     profitSummary: '수익 요약',
@@ -296,6 +326,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     line: '라인',
     over: '오버',
     under: '언더',
+    realBetResults: '실제 베팅 결과',
+    betType: '베팅 유형',
+    viewPdf: 'PDF 보기',
+    oddsChartHistory: '배당 차트 기록',
+    signalsHistory: '시그널 기록',
   },
   zh: {
     profitSummary: '盈利摘要',
@@ -337,6 +372,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     line: '盘口',
     over: '大球',
     under: '小球',
+    realBetResults: '实盘投注结果',
+    betType: '投注类型',
+    viewPdf: '查看PDF',
+    oddsChartHistory: '赔率图表历史',
+    signalsHistory: '信号历史',
   },
   tw: {
     profitSummary: '盈利摘要',
@@ -378,6 +418,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     line: '盤口',
     over: '大球',
     under: '小球',
+    realBetResults: '實盤投注結果',
+    betType: '投注類型',
+    viewPdf: '查看PDF',
+    oddsChartHistory: '賠率圖表歷史',
+    signalsHistory: '信號歷史',
   },
   id: {
     profitSummary: 'Ringkasan Keuntungan',
@@ -419,6 +464,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     line: 'Garis',
     over: 'Over',
     under: 'Under',
+    realBetResults: 'Hasil Taruhan Nyata',
+    betType: 'Jenis Taruhan',
+    viewPdf: 'Lihat PDF',
+    oddsChartHistory: 'Riwayat Grafik Odds',
+    signalsHistory: 'Riwayat Sinyal',
   },
 };
 
@@ -497,6 +547,16 @@ interface BetRecord {
   created_at?: string;
 }
 
+interface RealBetResult {
+  id: number;
+  created_at: string;
+  fixture_id: number;
+  profit_or_loss: number;
+  total_bets: number;
+  pdf_link: string;
+  bet_type: string;
+}
+
 interface Props {
   locale: string;
   league: string;
@@ -515,6 +575,7 @@ interface Props {
   matchStartTime?: string;
   teamTranslations: Record<string, any>;
   leagueTranslations: Record<string, any>;
+  realBetResults: RealBetResult[];
 }
 
 export default function ProfitSummaryClient({
@@ -535,6 +596,7 @@ export default function ProfitSummaryClient({
   matchStartTime,
   teamTranslations,
   leagueTranslations,
+  realBetResults,
 }: Props) {
   const t = (key: string) => TRANSLATIONS[locale]?.[key] || TRANSLATIONS.en[key] || key;
   const localePath = (path: string) => locale === 'en' ? path : `/${locale}${path}`;
@@ -584,6 +646,14 @@ export default function ProfitSummaryClient({
   // Mobile-specific states
   const [mobileSelectedModelIndex, setMobileSelectedModelIndex] = useState<number>(0);
   const [mobileModelDropdownOpen, setMobileModelDropdownOpen] = useState(false);
+  // Tab state for switching between sections (default to signalsHistory)
+  const [activeTab, setActiveTab] = useState<'realBetResults' | 'oddsChart' | 'signalsHistory'>('signalsHistory');
+  const [tabDropdownOpen, setTabDropdownOpen] = useState(false);
+
+  // Initialize selectedModel to 'All Models' since default tab is signalsHistory
+  useEffect(() => {
+    setSelectedModel('All Models');
+  }, []);
 
   // Check auth status
   useEffect(() => {
@@ -939,8 +1009,197 @@ export default function ProfitSummaryClient({
             </div>
           )}
 
+          {/* Tab Buttons - Mobile Dropdown */}
+          <div className="md:hidden mb-6 relative">
+            <button
+              onClick={() => setTabDropdownOpen(!tabDropdownOpen)}
+              className={`w-full px-4 py-3 rounded-xl text-sm font-medium transition-all flex items-center justify-between ${
+                activeTab === 'signalsHistory'
+                  ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white'
+                  : activeTab === 'oddsChart'
+                  ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black'
+                  : 'bg-gradient-to-r from-green-500 to-green-600 text-white'
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                {activeTab === 'signalsHistory' && (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                )}
+                {activeTab === 'oddsChart' && (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                  </svg>
+                )}
+                {activeTab === 'realBetResults' && (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                )}
+                {activeTab === 'signalsHistory' ? t('signalsHistory') : activeTab === 'oddsChart' ? t('oddsChartHistory') : t('realBetResults')}
+              </span>
+              <svg className={`w-5 h-5 transition-transform ${tabDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {tabDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-white/10 rounded-xl overflow-hidden z-50 shadow-xl">
+                <button
+                  onClick={() => {
+                    setActiveTab('signalsHistory');
+                    setSelectedModel('All Models');
+                    setTabDropdownOpen(false);
+                  }}
+                  className={`w-full px-4 py-3 text-left text-sm font-medium flex items-center gap-2 transition-all ${
+                    activeTab === 'signalsHistory'
+                      ? 'bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-400'
+                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  {t('signalsHistory')}
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveTab('oddsChart');
+                    setTabDropdownOpen(false);
+                  }}
+                  className={`w-full px-4 py-3 text-left text-sm font-medium flex items-center gap-2 transition-all ${
+                    activeTab === 'oddsChart'
+                      ? 'bg-gradient-to-r from-yellow-400/20 to-amber-500/20 text-yellow-400'
+                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                  </svg>
+                  {t('oddsChartHistory')}
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveTab('realBetResults');
+                    setTabDropdownOpen(false);
+                  }}
+                  className={`w-full px-4 py-3 text-left text-sm font-medium flex items-center gap-2 transition-all ${
+                    activeTab === 'realBetResults'
+                      ? 'bg-gradient-to-r from-green-500/20 to-green-600/20 text-green-400'
+                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {t('realBetResults')}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Tab Buttons - Desktop */}
+          <div className="hidden md:flex flex-wrap gap-2 mb-6">
+            <button
+              onClick={() => {
+                setActiveTab('signalsHistory');
+                setSelectedModel('All Models');
+              }}
+              className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
+                activeTab === 'signalsHistory'
+                  ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/25'
+                  : 'bg-gray-800/80 text-gray-400 hover:bg-gray-700 hover:text-white border border-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              {t('signalsHistory')}
+            </button>
+            <button
+              onClick={() => setActiveTab('oddsChart')}
+              className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
+                activeTab === 'oddsChart'
+                  ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black shadow-lg shadow-yellow-500/25'
+                  : 'bg-gray-800/80 text-gray-400 hover:bg-gray-700 hover:text-white border border-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+              </svg>
+              {t('oddsChartHistory')}
+            </button>
+            <button
+              onClick={() => setActiveTab('realBetResults')}
+              className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
+                activeTab === 'realBetResults'
+                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/25'
+                  : 'bg-gray-800/80 text-gray-400 hover:bg-gray-700 hover:text-white border border-white/10'
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {t('realBetResults')}
+            </button>
+          </div>
+
+          {/* Real Bet Results Section - Card Layout */}
+          {activeTab === 'realBetResults' && realBetResults && realBetResults.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {t('realBetResults')}
+              </h3>
+
+              {/* Cards Grid - Responsive */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {realBetResults.map((result, idx) => (
+                  <div key={idx} className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/10 p-5 relative overflow-hidden hover:border-emerald-500/30 transition-all">
+                    {/* Background decoration */}
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+
+                    {/* Header: Bet Type + PDF */}
+                    <div className="flex items-center justify-between mb-4 relative z-10">
+                      <span className="text-lg font-bold text-white uppercase">{result.bet_type}</span>
+                      {result.pdf_link && (
+                        <a
+                          href={result.pdf_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-red-500/20 hover:bg-red-500/30 transition-colors group"
+                          title={t('viewPdf')}
+                        >
+                          <svg className="w-6 h-6 text-red-400 group-hover:text-red-300 transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM8.531 16.066c-.064.127-.191.191-.318.191a.443.443 0 0 1-.191-.064c-.191-.127-.255-.382-.127-.573.318-.509.7-.954 1.145-1.336-.509-.764-.891-1.591-1.145-2.483H6.75v-.509h1.782c-.064-.318-.127-.7-.127-1.082h.573c0 .382.064.764.127 1.082h2.356c-.064-.318-.127-.7-.127-1.082h.573c0 .382.064.764.127 1.082h1.718v.509h-1.145c.254.891.636 1.718 1.145 2.483.445.382.827.827 1.145 1.336.127.191.064.446-.127.573a.443.443 0 0 1-.191.064c-.127 0-.254-.064-.318-.191-.254-.382-.573-.764-.954-1.082-.382.318-.7.7-.954 1.082zm1.591-2.993c.191.573.445 1.082.764 1.527.318-.445.573-.954.764-1.527H10.122z"/>
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+
+                    {/* Stats */}
+                    <div className="space-y-3 relative z-10">
+                      <div>
+                        <span className="text-xs text-gray-500 uppercase tracking-wider">{t('totalBets')}</span>
+                        <div className="text-2xl font-bold text-white">{result.total_bets}</div>
+                      </div>
+                      <div>
+                        <span className="text-xs text-gray-500 uppercase tracking-wider">{t('totalProfit')}</span>
+                        <div className={`text-2xl font-bold ${result.profit_or_loss >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {result.profit_or_loss >= 0 ? '+$' : '-$'}{Math.abs(result.profit_or_loss).toFixed(2)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Odds History Charts */}
-          {oddsHistory && oddsHistory.length > 0 && (
+          {activeTab === 'oddsChart' && oddsHistory && oddsHistory.length > 0 && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
               {/* 1X2 Odds Chart */}
               <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/10 p-4">
@@ -1023,6 +1282,7 @@ export default function ProfitSummaryClient({
           )}
 
           {/* Mobile Model Cards - Single card with dropdown */}
+          {activeTab === 'signalsHistory' && (
           <div className="md:hidden mb-8">
             {/* Model Selector Dropdown */}
             <div className="relative mb-4">
@@ -1173,8 +1433,10 @@ export default function ProfitSummaryClient({
               );
             })()}
           </div>
+          )}
 
           {/* Desktop Model Cards Grid */}
+          {activeTab === 'signalsHistory' && (
           <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
             {modelStats.map((stat, index) => {
               const modelName = stat.model === 'Value Hunter' ? t('hdpSniper')
@@ -1302,9 +1564,10 @@ export default function ProfitSummaryClient({
               );
             })}
           </div>
+          )}
 
           {/* Bet Details Section */}
-          {selectedModel && (
+          {activeTab === 'signalsHistory' && selectedModel && (
             <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/10 p-4 md:p-6">
               <h2 className="text-lg md:text-xl font-bold text-white mb-4">
                 {t('betDetails')} - {selectedModel === 'Value Hunter' ? t('hdpSniper')
