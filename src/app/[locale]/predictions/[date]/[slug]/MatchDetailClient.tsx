@@ -93,7 +93,9 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Clock", selection: "Selection", line: "Line", fairOdds: "Fair Odds",
     marketOdds: "Market Odds", ev: "EV", stake: "Stake", value: "Value",
     betType: "Bet Type", oddsAtSignal: "Odds at Signal", scoreHome: "Score Home", scoreAway: "Score Away",
+    score: "Score", status: "Status", unrealizedPL: "Unrealized P/L",
     matchNotStarted: "Match has not started yet",
+    matchEnded: "Match has ended",
     homeWin: "Home Win", awayWin: "Away Win",
     // Stats labels
     winProbability: "WIN PROBABILITY",
@@ -137,7 +139,9 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Reloj", selection: "Selección", line: "Línea", fairOdds: "Cuotas Justas",
     marketOdds: "Cuotas del Mercado", ev: "EV", stake: "Apuesta", value: "Valor",
     betType: "Tipo de Apuesta", oddsAtSignal: "Cuotas en Señal", scoreHome: "Goles Local", scoreAway: "Goles Visitante",
+    score: "Marcador", status: "Estado", unrealizedPL: "P/L No Realizado",
     matchNotStarted: "El partido aún no ha comenzado",
+    matchEnded: "El partido ha terminado",
     homeWin: "Victoria Local", awayWin: "Victoria Visitante",
     // Stats labels
     winProbability: "PROBABILIDAD DE VICTORIA",
@@ -181,7 +185,9 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Relógio", selection: "Seleção", line: "Linha", fairOdds: "Odds Justas",
     marketOdds: "Odds do Mercado", ev: "EV", stake: "Aposta", value: "Valor",
     betType: "Tipo de Aposta", oddsAtSignal: "Odds no Sinal", scoreHome: "Gols Casa", scoreAway: "Gols Fora",
+    score: "Placar", status: "Status", unrealizedPL: "L/P Não Realizado",
     matchNotStarted: "A partida ainda não começou",
+    matchEnded: "A partida terminou",
     homeWin: "Vitória Casa", awayWin: "Vitória Fora",
     // Stats labels
     winProbability: "PROBABILIDADE DE VITÓRIA",
@@ -225,7 +231,9 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Uhr", selection: "Auswahl", line: "Linie", fairOdds: "Faire Quoten",
     marketOdds: "Marktquoten", ev: "EV", stake: "Einsatz", value: "Wert",
     betType: "Wetttyp", oddsAtSignal: "Quoten bei Signal", scoreHome: "Tore Heim", scoreAway: "Tore Auswärts",
+    score: "Spielstand", status: "Status", unrealizedPL: "Unrealisierter G/V",
     matchNotStarted: "Das Spiel hat noch nicht begonnen",
+    matchEnded: "Das Spiel ist beendet",
     homeWin: "Heimsieg", awayWin: "Auswärtssieg",
     // Stats labels
     winProbability: "SIEGWAHRSCHEINLICHKEIT",
@@ -269,7 +277,9 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Horloge", selection: "Sélection", line: "Ligne", fairOdds: "Cotes Justes",
     marketOdds: "Cotes du Marché", ev: "EV", stake: "Mise", value: "Valeur",
     betType: "Type de Pari", oddsAtSignal: "Cotes au Signal", scoreHome: "Score Domicile", scoreAway: "Score Extérieur",
+    score: "Score", status: "Statut", unrealizedPL: "G/P Non Réalisé",
     matchNotStarted: "Le match n'a pas encore commencé",
+    matchEnded: "Le match est terminé",
     homeWin: "Victoire Domicile", awayWin: "Victoire Extérieur",
     // Stats labels
     winProbability: "PROBABILITÉ DE VICTOIRE",
@@ -313,7 +323,9 @@ const translations: Record<string, Record<string, string>> = {
     clock: "時計", selection: "選択", line: "ライン", fairOdds: "適正オッズ",
     marketOdds: "市場オッズ", ev: "EV", stake: "ステーク", value: "バリュー",
     betType: "ベットタイプ", oddsAtSignal: "シグナル時オッズ", scoreHome: "ホームスコア", scoreAway: "アウェイスコア",
+    score: "スコア", status: "ステータス", unrealizedPL: "含み損益",
     matchNotStarted: "試合はまだ始まっていません",
+    matchEnded: "試合が終了しました",
     homeWin: "ホーム勝利", awayWin: "アウェイ勝利",
     // Stats labels
     winProbability: "勝利確率",
@@ -357,7 +369,9 @@ const translations: Record<string, Record<string, string>> = {
     clock: "시간", selection: "선택", line: "라인", fairOdds: "공정 배당률",
     marketOdds: "시장 배당률", ev: "EV", stake: "스테이크", value: "가치",
     betType: "베팅 유형", oddsAtSignal: "시그널 시 배당률", scoreHome: "홈 득점", scoreAway: "원정 득점",
+    score: "스코어", status: "상태", unrealizedPL: "미실현 손익",
     matchNotStarted: "경기가 아직 시작되지 않았습니다",
+    matchEnded: "경기가 종료되었습니다",
     homeWin: "홈 승리", awayWin: "원정 승리",
     // Stats labels
     winProbability: "승리 확률",
@@ -401,7 +415,9 @@ const translations: Record<string, Record<string, string>> = {
     clock: "时钟", selection: "选择", line: "让球", fairOdds: "公平赔率",
     marketOdds: "市场赔率", ev: "EV", stake: "赌注", value: "价值",
     betType: "投注类型", oddsAtSignal: "信号时赔率", scoreHome: "主队比分", scoreAway: "客队比分",
+    score: "比分", status: "状态", unrealizedPL: "未实现盈亏",
     matchNotStarted: "比赛尚未开始",
+    matchEnded: "比赛已结束",
     homeWin: "主胜", awayWin: "客胜",
     // Stats labels
     winProbability: "胜率",
@@ -445,7 +461,9 @@ const translations: Record<string, Record<string, string>> = {
     clock: "時鐘", selection: "選擇", line: "讓球", fairOdds: "公平賠率",
     marketOdds: "市場賠率", ev: "EV", stake: "賭注", value: "價值",
     betType: "投注類型", oddsAtSignal: "信號時賠率", scoreHome: "主隊比分", scoreAway: "客隊比分",
+    score: "比分", status: "狀態", unrealizedPL: "未實現盈虧",
     matchNotStarted: "比賽尚未開始",
+    matchEnded: "比賽已結束",
     homeWin: "主勝", awayWin: "客勝",
     // Stats labels
     winProbability: "勝率",
@@ -489,7 +507,9 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Waktu", selection: "Pilihan", line: "Garis", fairOdds: "Odds Wajar",
     marketOdds: "Odds Pasar", ev: "EV", stake: "Taruhan", value: "Nilai",
     betType: "Jenis Taruhan", oddsAtSignal: "Odds saat Sinyal", scoreHome: "Skor Tuan Rumah", scoreAway: "Skor Tamu",
+    score: "Skor", status: "Status", unrealizedPL: "Untung/Rugi Belum Direalisasi",
     matchNotStarted: "Pertandingan belum dimulai",
+    matchEnded: "Pertandingan telah selesai",
     homeWin: "Tuan Rumah Menang", awayWin: "Tamu Menang",
     // Stats labels
     winProbability: "PROBABILITAS KEMENANGAN",
@@ -2967,20 +2987,20 @@ export default function MatchDetailClient() {
                       <table className="w-full text-sm border-collapse hidden md:table">
                         <thead className="sticky top-0 bg-[#0d1117]">
                           <tr>
-                            <th className="text-left py-3 px-2 text-gray-400 font-medium">Clock</th>
-                            <th className="text-left py-3 px-2 text-gray-400 font-medium">Score</th>
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">Selection</th>
+                            <th className="text-left py-3 px-2 text-gray-400 font-medium">{t('clock')}</th>
+                            <th className="text-left py-3 px-2 text-gray-400 font-medium">{t('score')}</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('selection')}</th>
                             {(modalMarketFilter === 'overunder' || modalMarketFilter === 'handicap') && (
-                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Line</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('line')}</th>
                             )}
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">Fair Odds</th>
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">Market Odds</th>
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">EV</th>
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">Stake</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('fairOdds')}</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('marketOdds')}</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('ev')}</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('stake')}</th>
                             {modalMarketFilter === 'handicap' && (
-                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Unrealized P/L</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('unrealizedPL')}</th>
                             )}
-                            <th className="text-center py-3 px-2 text-gray-400 font-medium">Status</th>
+                            <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('status')}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -2991,13 +3011,13 @@ export default function MatchDetailClient() {
                             const getSelectionLabel = () => {
                               if (modalMarketFilter === 'moneyline') {
                                 const sel = String(rawRecord.selection_1x2 || '').toUpperCase();
-                                return sel === 'HOME' || sel === '1' ? 'Home' : sel === 'DRAW' || sel === 'X' ? 'Draw' : 'Away';
+                                return sel === 'HOME' || sel === '1' ? t('home_team') : sel === 'DRAW' || sel === 'X' ? t('draw') : t('away_team');
                               } else if (modalMarketFilter === 'overunder') {
                                 const sel = String(rawRecord.selection_ou || '').toLowerCase();
-                                return sel === 'over' ? 'Over' : 'Under';
+                                return sel === 'over' ? t('over') : t('under');
                               } else {
                                 const sel = String(rawRecord.selection_hdp || '').toLowerCase();
-                                return sel === 'home' ? 'Home' : 'Away';
+                                return sel === 'home' ? t('home_team') : t('away_team');
                               }
                             };
                             const getFairOdds = () => {
@@ -3160,13 +3180,13 @@ export default function MatchDetailClient() {
                           const getSelectionLabel = () => {
                             if (modalMarketFilter === 'moneyline') {
                               const sel = String(rawRecord.selection_1x2 || '').toUpperCase();
-                              return sel === 'HOME' || sel === '1' ? 'Home' : sel === 'DRAW' || sel === 'X' ? 'Draw' : 'Away';
+                              return sel === 'HOME' || sel === '1' ? t('home_team') : sel === 'DRAW' || sel === 'X' ? t('draw') : t('away_team');
                             } else if (modalMarketFilter === 'overunder') {
                               const sel = String(rawRecord.selection_ou || '').toLowerCase();
-                              return sel === 'over' ? 'Over' : 'Under';
+                              return sel === 'over' ? t('over') : t('under');
                             } else {
                               const sel = String(rawRecord.selection_hdp || '').toLowerCase();
-                              return sel === 'home' ? 'Home' : 'Away';
+                              return sel === 'home' ? t('home_team') : t('away_team');
                             }
                           };
                           const getFairOdds = () => {
@@ -3354,12 +3374,12 @@ export default function MatchDetailClient() {
                         <table className="w-full text-sm border-collapse hidden md:table">
                           <thead className="sticky top-0 bg-[#0d1117]">
                             <tr>
-                              <th className="text-left py-3 px-2 text-gray-400 font-medium">Clock</th>
+                              <th className="text-left py-3 px-2 text-gray-400 font-medium">{t('clock')}</th>
                               <th className="text-left py-3 px-2 text-gray-400 font-medium">Bet Type</th>
-                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Selection</th>
-                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Line</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('selection')}</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('line')}</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Odds</th>
-                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Stake</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('stake')}</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Score Home</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Score Away</th>
                             </tr>
@@ -3478,9 +3498,9 @@ export default function MatchDetailClient() {
                     <table className="w-full text-sm border-collapse hidden md:table">
                       <thead className="sticky top-0 bg-[#0d1117]">
                         <tr>
-                          <th className="text-left py-3 px-3 text-gray-400 font-medium">Clock</th>
+                          <th className="text-left py-3 px-3 text-gray-400 font-medium">{t('clock')}</th>
                           <th className="text-left py-3 px-3 text-gray-400 font-medium">Signal</th>
-                          <th className="text-left py-3 px-3 text-gray-400 font-medium">Selection</th>
+                          <th className="text-left py-3 px-3 text-gray-400 font-medium">{t('selection')}</th>
                           {modalMarketFilter === 'moneyline' && (
                             <>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Home</th>
@@ -3490,14 +3510,14 @@ export default function MatchDetailClient() {
                           )}
                           {modalMarketFilter === 'overunder' && (
                             <>
-                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Line</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('line')}</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Over</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Under</th>
                             </>
                           )}
                           {modalMarketFilter === 'handicap' && (
                             <>
-                              <th className="text-center py-3 px-2 text-gray-400 font-medium">Line</th>
+                              <th className="text-center py-3 px-2 text-gray-400 font-medium">{t('line')}</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Home</th>
                               <th className="text-center py-3 px-2 text-gray-400 font-medium">Away</th>
                             </>
@@ -4027,7 +4047,7 @@ export default function MatchDetailClient() {
                     key={p.id}
                     onClick={() => !isLocked && handlePersonalityChange(p.id)}
                     disabled={isLocked}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all relative overflow-hidden group flex items-center gap-2 ${
+                    className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all relative overflow-hidden group flex items-center gap-1.5 md:gap-2 flex-shrink-0 ${
                       isLocked
                         ? 'bg-gray-800 text-gray-400 border border-gray-700 cursor-not-allowed'
                         : selectedPersonality === p.id
@@ -4136,7 +4156,7 @@ export default function MatchDetailClient() {
                               <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
-                              <p className="text-sm">Match has ended</p>
+                              <p className="text-sm">{t('matchEnded')}</p>
                             </div>
                           </div>
                         );
@@ -4147,12 +4167,12 @@ export default function MatchDetailClient() {
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="border-b border-white/10">
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('fairOdds')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('marketOdds')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('ev')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
                                 </tr>
                               </thead>
@@ -4201,7 +4221,7 @@ export default function MatchDetailClient() {
                               </tbody>
                             </table>
                           </div>
-                          <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                          <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                         </div>
                       );
                     })()
@@ -4226,12 +4246,12 @@ export default function MatchDetailClient() {
                           <table className="w-full text-sm">
                             <thead>
                               <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('fairOdds')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('marketOdds')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('ev')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
                               </tr>
                             </thead>
@@ -4317,7 +4337,7 @@ export default function MatchDetailClient() {
                             <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <p className="text-sm">Match has ended</p>
+                            <p className="text-sm">{t('matchEnded')}</p>
                           </div>
                         </div>
                       );
@@ -4328,9 +4348,9 @@ export default function MatchDetailClient() {
                           <table className="w-full text-sm">
                             <thead>
                               <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Signal</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Home</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Draw</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Away</th>
@@ -4380,7 +4400,7 @@ export default function MatchDetailClient() {
                             </tbody>
                           </table>
                         </div>
-                        <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                        <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                       </div>
                     );
                   })()
@@ -4583,7 +4603,7 @@ export default function MatchDetailClient() {
                             <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <p className="text-sm">Match has ended</p>
+                            <p className="text-sm">{t('matchEnded')}</p>
                           </div>
                         </div>
                       );
@@ -4594,12 +4614,12 @@ export default function MatchDetailClient() {
                           <table className="w-full text-sm">
                             <thead>
                               <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('fairOdds')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('marketOdds')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('ev')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
                               </tr>
                             </thead>
@@ -4648,7 +4668,7 @@ export default function MatchDetailClient() {
                             </tbody>
                           </table>
                         </div>
-                        <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                        <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                       </div>
                     );
                   })()
@@ -4666,7 +4686,7 @@ export default function MatchDetailClient() {
                         <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p className="text-sm">Match has ended</p>
+                        <p className="text-sm">{t('matchEnded')}</p>
                       </div>
                     ) : (
                       <div className="space-y-2">
@@ -4696,7 +4716,7 @@ export default function MatchDetailClient() {
                               <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
-                              <p className="text-sm">Match has ended</p>
+                              <p className="text-sm">{t('matchEnded')}</p>
                             </div>
                           </div>
                         );
@@ -4707,13 +4727,13 @@ export default function MatchDetailClient() {
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="border-b border-white/10">
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('fairOdds')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('marketOdds')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('ev')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
                                 </tr>
                               </thead>
@@ -4765,7 +4785,7 @@ export default function MatchDetailClient() {
                               </tbody>
                             </table>
                           </div>
-                          <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                          <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                         </div>
                       );
                     })()
@@ -4790,13 +4810,13 @@ export default function MatchDetailClient() {
                           <table className="w-full text-sm">
                             <thead>
                               <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('fairOdds')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('marketOdds')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('ev')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
                               </tr>
                             </thead>
@@ -4886,7 +4906,7 @@ export default function MatchDetailClient() {
                               <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
-                              <p className="text-sm">Match has ended</p>
+                              <p className="text-sm">{t('matchEnded')}</p>
                             </div>
                           </div>
                         );
@@ -4897,12 +4917,12 @@ export default function MatchDetailClient() {
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="border-b border-white/10">
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Bet Type</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Odds at Signal</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
                                 </tr>
@@ -4939,7 +4959,7 @@ export default function MatchDetailClient() {
                               </tbody>
                             </table>
                           </div>
-                          <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                          <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                         </div>
                       );
                     })()
@@ -4964,12 +4984,12 @@ export default function MatchDetailClient() {
                           <table className="w-full text-sm">
                             <thead>
                               <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Bet Type</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Odds at Signal</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
                               </tr>
@@ -5031,7 +5051,7 @@ export default function MatchDetailClient() {
                             <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <p className="text-sm">Match has ended</p>
+                            <p className="text-sm">{t('matchEnded')}</p>
                           </div>
                         </div>
                       );
@@ -5042,10 +5062,10 @@ export default function MatchDetailClient() {
                           <table className="w-full text-sm">
                             <thead>
                               <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Signal</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Over</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Under</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Bookmaker</th>
@@ -5093,7 +5113,7 @@ export default function MatchDetailClient() {
                             </tbody>
                           </table>
                         </div>
-                        <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                        <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                       </div>
                     );
                   })()
@@ -5239,7 +5259,7 @@ export default function MatchDetailClient() {
                               <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
-                              <p className="text-sm">Match has ended</p>
+                              <p className="text-sm">{t('matchEnded')}</p>
                             </div>
                           </div>
                         );
@@ -5250,13 +5270,13 @@ export default function MatchDetailClient() {
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="border-b border-white/10">
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('fairOdds')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('marketOdds')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('ev')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
                                 </tr>
                               </thead>
@@ -5308,7 +5328,7 @@ export default function MatchDetailClient() {
                               </tbody>
                             </table>
                           </div>
-                          <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                          <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                         </div>
                       );
                     })()
@@ -5333,13 +5353,13 @@ export default function MatchDetailClient() {
                           <table className="w-full text-sm">
                             <thead>
                               <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Fair Odds</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Market Odds</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">EV</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('fairOdds')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('marketOdds')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('ev')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Value</th>
                               </tr>
                             </thead>
@@ -5429,7 +5449,7 @@ export default function MatchDetailClient() {
                               <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
-                              <p className="text-sm">Match has ended</p>
+                              <p className="text-sm">{t('matchEnded')}</p>
                             </div>
                           </div>
                         );
@@ -5440,12 +5460,12 @@ export default function MatchDetailClient() {
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="border-b border-white/10">
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Bet Type</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Odds at Signal</th>
-                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
                                   <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
                                 </tr>
@@ -5482,7 +5502,7 @@ export default function MatchDetailClient() {
                               </tbody>
                             </table>
                           </div>
-                          <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                          <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                         </div>
                       );
                     })()
@@ -5507,12 +5527,12 @@ export default function MatchDetailClient() {
                           <table className="w-full text-sm">
                             <thead>
                               <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Bet Type</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Odds at Signal</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Stake</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
                               </tr>
@@ -5574,7 +5594,7 @@ export default function MatchDetailClient() {
                             <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <p className="text-sm">Match has ended</p>
+                            <p className="text-sm">{t('matchEnded')}</p>
                           </div>
                         </div>
                       );
@@ -5585,10 +5605,10 @@ export default function MatchDetailClient() {
                           <table className="w-full text-sm">
                             <thead>
                               <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Clock</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Signal</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Selection</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Line</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Home</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Away</th>
                                 <th className="text-left py-2 px-3 text-gray-400 font-medium">Bookmaker</th>
@@ -5636,7 +5656,7 @@ export default function MatchDetailClient() {
                             </tbody>
                           </table>
                         </div>
-                        <div className="text-center mt-4 text-gray-500 text-sm">Match has ended</div>
+                        <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                       </div>
                     );
                   })()
