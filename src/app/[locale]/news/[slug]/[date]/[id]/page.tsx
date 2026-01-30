@@ -80,14 +80,21 @@ export default async function NewsArticlePage({ params }: PageProps) {
     .single();
 
   // SEO-friendly server-rendered content (hidden from users but visible to crawlers)
+  // Note: content might be JSONB, so check if it's a string before using substring
+  const contentPreview = newsArticle?.content
+    ? (typeof newsArticle.content === 'string'
+        ? newsArticle.content.substring(0, 500) + '...'
+        : '')
+    : '';
+
   const seoContent = newsArticle ? (
     <div className="sr-only" aria-hidden="true">
       <article>
         <h1>{newsArticle.title}</h1>
         <p>{newsArticle.summary}</p>
         <time dateTime={newsArticle.created_at}>{newsArticle.created_at}</time>
-        {newsArticle.content && (
-          <div dangerouslySetInnerHTML={{ __html: newsArticle.content.substring(0, 500) + '...' }} />
+        {contentPreview && (
+          <div dangerouslySetInnerHTML={{ __html: contentPreview }} />
         )}
       </article>
     </div>
