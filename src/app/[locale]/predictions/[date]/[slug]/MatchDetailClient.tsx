@@ -1163,8 +1163,11 @@ export default function MatchDetailClient() {
     }
   }, [showSignalHistory, modalMarketFilter, modalBetStyleFilter, fetchSignalHistory, fetchValueHunterHistory, fetchBetaSignalsHistory]);
 
-  // Fetch signal history when match is finished (to show last 3 signals)
+  // Fetch signal history when match is finished (to show last 3 signals) - ONLY for logged-in users
   useEffect(() => {
+    // Security: Only fetch signal history for logged-in users
+    if (!user) return;
+
     if (match?.type === 'Finished' && match?.fixture_id) {
       // Fetch regular signal history for all markets
       fetchSignalHistory('moneyline', selectedPersonality);
@@ -1179,10 +1182,13 @@ export default function MatchDetailClient() {
       // This ensures data is available when user switches to Oddsflow Beta
       fetchBetaSignalsHistory();
     }
-  }, [match?.type, match?.fixture_id, selectedPersonality, fetchSignalHistory, fetchValueHunterHistory, fetchBetaSignalsHistory]);
+  }, [match?.type, match?.fixture_id, user, selectedPersonality, fetchSignalHistory, fetchValueHunterHistory, fetchBetaSignalsHistory]);
 
-  // Auto-refresh live signals for HDP Sniper every 5 seconds for live matches
+  // Auto-refresh live signals for HDP Sniper every 5 seconds for live matches - ONLY for logged-in users
   useEffect(() => {
+    // Security: Only auto-refresh for logged-in users
+    if (!user) return;
+
     if (match?.type !== 'Finished' && selectedPersonality === 'value' && match?.fixture_id) {
       // Initial fetch
       fetchValueHunterHistory();
@@ -1196,10 +1202,13 @@ export default function MatchDetailClient() {
       // Cleanup on unmount or when dependencies change
       return () => clearInterval(intervalId);
     }
-  }, [match?.type, match?.fixture_id, selectedPersonality, fetchValueHunterHistory]);
+  }, [match?.type, match?.fixture_id, user, selectedPersonality, fetchValueHunterHistory]);
 
-  // Auto-refresh beta signals every 5 seconds for live matches with Oddsflow Beta
+  // Auto-refresh beta signals every 5 seconds for live matches with Oddsflow Beta - ONLY for logged-in users
   useEffect(() => {
+    // Security: Only auto-refresh for logged-in users
+    if (!user) return;
+
     // Only refresh if match is live and Oddsflow Beta is selected
     if (match?.type !== 'Finished' && selectedPersonality === 'beta' && match?.fixture_id) {
       // Initial fetch
@@ -1214,7 +1223,7 @@ export default function MatchDetailClient() {
       // Cleanup on unmount or when dependencies change
       return () => clearInterval(intervalId);
     }
-  }, [match?.type, match?.fixture_id, selectedPersonality, fetchBetaSignalsHistory]);
+  }, [match?.type, match?.fixture_id, user, selectedPersonality, fetchBetaSignalsHistory]);
 
   // Fetch profit summary for finished matches
   const fetchProfitSummary = useCallback(async (fixtureId: number, betStyle?: string) => {
@@ -1267,8 +1276,11 @@ export default function MatchDetailClient() {
     }
   };
 
-  // Fetch AI predictions when personality or match changes
+  // Fetch AI predictions when personality or match changes - ONLY for logged-in users
   useEffect(() => {
+    // Security: Only fetch premium data (AI predictions, signals) for logged-in users
+    if (!user) return;
+
     const personality = PERSONALITIES.find(p => p.id === selectedPersonality);
     if (match?.fixture_id && personality) {
       fetchAIPredictions(match.fixture_id, personality.aiModel);
@@ -1288,7 +1300,7 @@ export default function MatchDetailClient() {
         });
       }
     }
-  }, [selectedPersonality, match?.fixture_id, fetchAIPredictions]);
+  }, [selectedPersonality, match?.fixture_id, user, fetchAIPredictions]);
 
   // Fetch match data from database
   const fetchMatch = useCallback(async (isRefresh: boolean = false) => {
@@ -1407,30 +1419,43 @@ export default function MatchDetailClient() {
   }, []);
 
   // Fetch all data (match + odds + AI predictions + lineups)
-  const fetchAllData = useCallback(async (isRefresh: boolean = false) => {
+  const fetchAllData = useCallback(async (isRefresh: boolean = false, isLoggedIn: boolean = false) => {
     const matchData = await fetchMatch(isRefresh);
-    console.log('[fetchAllData] matchData:', matchData?.id, 'fixture_id:', matchData?.fixture_id);
+    console.log('[fetchAllData] matchData:', matchData?.id, 'fixture_id:', matchData?.fixture_id, 'isLoggedIn:', isLoggedIn);
     if (matchData?.fixture_id) {
-      // Fetch odds, AI predictions, match prediction, lineups, events, and statistics in parallel
+      // For non-logged-in users, only fetch free data (lineups, events, stats)
+      // For logged-in users, also fetch premium data (odds, AI predictions, signals)
       const personality = PERSONALITIES.find(p => p.id === selectedPersonality);
-      const [, , predictionResult, lineupsResult, eventsResult, statsResult, liveSignalsResult] = await Promise.all([
-        fetchOdds(matchData.fixture_id, matchData.type === 'In Play'),
-        personality ? fetchAIPredictions(matchData.fixture_id, personality.aiModel) : Promise.resolve(),
-        getMatchPrediction(matchData.fixture_id),
+
+      // Free data - available to all users
+      const freeDataPromises = [
         // Only fetch lineups on initial load, not on refresh
         !isRefresh ? getFixtureLineups(matchData.fixture_id) : Promise.resolve({ data: null }),
         // Fetch events (always fetch to show live updates)
         getFixtureEvents(matchData.fixture_id),
         // Fetch match statistics
         getMatchStatistics(matchData.fixture_id),
+      ];
+
+      // Premium data - only for logged-in users
+      const premiumDataPromises = isLoggedIn ? [
+        fetchOdds(matchData.fixture_id, matchData.type === 'In Play'),
+        personality ? fetchAIPredictions(matchData.fixture_id, personality.aiModel) : Promise.resolve(),
+        getMatchPrediction(matchData.fixture_id),
         // Fetch live signals for Value Hunter (refresh on every cycle)
         selectedPersonality === 'value'
           ? getLiveSignals(matchData.fixture_id)
           : Promise.resolve({ data: null }),
-      ]);
-      if (predictionResult?.data) {
-        setMatchPrediction(predictionResult.data);
-      }
+      ] : [
+        Promise.resolve(), // No odds
+        Promise.resolve(), // No AI predictions
+        Promise.resolve({ data: null }), // No match prediction
+        Promise.resolve({ data: null }), // No live signals
+      ];
+
+      const [lineupsResult, eventsResult, statsResult] = await Promise.all(freeDataPromises);
+      const [, , predictionResult, liveSignalsResult] = await Promise.all(premiumDataPromises);
+
       if (lineupsResult?.data) {
         setLineups(lineupsResult.data);
       }
@@ -1443,19 +1468,25 @@ export default function MatchDetailClient() {
       if (statsResult?.data) {
         setMatchStats(statsResult.data);
       }
-      // Update live signals state for Value Hunter
-      if (liveSignalsResult?.data) {
-        setLiveSignals(liveSignalsResult.data);
+      // Premium data - only set if logged in
+      if (isLoggedIn) {
+        if (predictionResult?.data) {
+          setMatchPrediction(predictionResult.data);
+        }
+        // Update live signals state for Value Hunter
+        if (liveSignalsResult?.data) {
+          setLiveSignals(liveSignalsResult.data);
+        }
       }
     }
   }, [fetchMatch, fetchOdds, fetchAIPredictions, selectedPersonality]);
 
-  // Initial data fetch
+  // Initial data fetch - wait for auth check to complete
   useEffect(() => {
-    if (matchId) {
-      fetchAllData(false);
+    if (matchId && authChecked) {
+      fetchAllData(false, !!user);
     }
-  }, [matchId, fetchAllData]);
+  }, [matchId, authChecked, user, fetchAllData]);
 
   // Fetch team name translations when match is loaded
   useEffect(() => {
@@ -1546,7 +1577,8 @@ export default function MatchDetailClient() {
         setRefreshCountdown(prev => {
           if (prev <= 1) {
             // Fetch all data (match score + odds + AI predictions) when countdown reaches 0
-            fetchAllData(true);
+            // Only fetch premium data (odds, signals) if user is logged in
+            fetchAllData(true, !!user);
             return 10; // Reset to 10
           }
           return prev - 1;
@@ -1557,7 +1589,7 @@ export default function MatchDetailClient() {
         clearInterval(countdownInterval);
       };
     }
-  }, [match, fetchAllData]);
+  }, [match, user, fetchAllData]);
 
   // Background refresh for match score and clock every 10 seconds (for live matches)
   useEffect(() => {
