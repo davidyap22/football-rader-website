@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer, LiveSignals, getLiveSignals, getLiveSignalsByBetStyle, getLiveSignalsHistoryByBetStyle, FixtureEvent, getFixtureEvents, MatchStatistics, getMatchStatistics, TeamNameLanguage, getPlayerTranslations, PlayerTranslation } from '@/lib/supabase';
 import { LEAGUE_NAMES_LOCALIZED, LEAGUES_CONFIG } from '@/lib/leagues-data';
+import { playerNameToSlug } from '@/lib/team-data';
 import { User } from '@supabase/supabase-js';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
@@ -811,20 +812,9 @@ export default function MatchDetailClient() {
     const leagueConfig = LEAGUES_CONFIG.find(l => l.dbName === match?.league_name);
     const leagueSlug = leagueConfig?.slug || 'premier-league';
 
-    // Generate player slug: first initial + last name (e.g., "Thibaut Courtois" -> "t-courtois")
-    const nameParts = player.player_name?.split(' ') || [];
-    let playerSlug = '';
-    if (nameParts.length >= 2) {
-      const firstInitial = nameParts[0].charAt(0).toLowerCase();
-      const lastName = nameParts[nameParts.length - 1].toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
-        .replace(/[^a-z0-9]/g, ''); // Remove special characters
-      playerSlug = `${firstInitial}-${lastName}`;
-    } else if (nameParts.length === 1) {
-      playerSlug = nameParts[0].toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9]/g, '');
-    }
+    // Generate player slug using the same function as player detail page
+    // e.g., "Álvaro Carreras" -> "lvaro-carreras"
+    const playerSlug = playerNameToSlug(player.player_name);
 
     return localePath(`/leagues/${leagueSlug}/player/${playerSlug}-${player.player_id}`);
   };
