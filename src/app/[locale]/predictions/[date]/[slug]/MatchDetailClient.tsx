@@ -667,30 +667,21 @@ export default function MatchDetailClient() {
   const [userSubscription, setUserSubscription] = useState<UserSubscription | null>(null);
   const currentLang = LANGUAGES.find(l => l.code === selectedLang) || LANGUAGES[0];
 
-  // Check auth session and redirect if not logged in
+  // Check auth session (allow non-logged-in users to view the page)
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        // Not logged in - redirect to login (use replace to fix back button issue)
-        router.replace(localePath('/login'));
-        return;
-      }
-      setUser(session.user);
+      setUser(session?.user || null);
       setAuthChecked(true);
     };
     checkUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
-      if (!session?.user) {
-        router.replace(localePath('/login'));
-        return;
-      }
-      setUser(session.user);
+      setUser(session?.user || null);
     });
 
     return () => subscription.unsubscribe();
-  }, [router]);
+  }, []);
 
   // Load user subscription
   useEffect(() => {
@@ -758,7 +749,8 @@ export default function MatchDetailClient() {
   const [matchStats, setMatchStats] = useState<MatchStatistics[] | null>(null);
 
   // Section tab filter: 'odds' | 'comparison' | 'lineups' | 'events' | 'stats'
-  const [selectedSection, setSelectedSection] = useState<'odds' | 'comparison' | 'lineups' | 'events' | 'stats'>('odds');
+  // Default to 'comparison' - non-logged-in users can view comparison, but need to login to view odds & AI
+  const [selectedSection, setSelectedSection] = useState<'odds' | 'comparison' | 'lineups' | 'events' | 'stats'>('comparison');
 
   // Mobile section dropdown state
   const [showSectionDropdown, setShowSectionDropdown] = useState(false);
@@ -769,9 +761,22 @@ export default function MatchDetailClient() {
   // Mobile signal history bet style dropdown state
   const [showModalBetStyleDropdown, setShowModalBetStyleDropdown] = useState(false);
 
+  // Login modal state for non-logged-in users trying to access premium features
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   // Translation function
   const t = (key: string): string => {
     return translations[selectedLang]?.[key] || translations['EN']?.[key] || key;
+  };
+
+  // Handle section tab change - check login for 'odds' tab
+  const handleSectionChange = (section: 'odds' | 'comparison' | 'lineups' | 'events' | 'stats') => {
+    if (section === 'odds' && !user) {
+      // Show login modal for non-logged-in users trying to access Odds & AI
+      setShowLoginModal(true);
+      return;
+    }
+    setSelectedSection(section);
   };
 
   // Map selectedLang to database language key for player names
@@ -1983,7 +1988,7 @@ export default function MatchDetailClient() {
                 ].map((tab) => (
                   <button
                     key={tab.id}
-                    onClick={() => { setSelectedSection(tab.id as typeof selectedSection); setShowSectionDropdown(false); }}
+                    onClick={() => { handleSectionChange(tab.id as typeof selectedSection); setShowSectionDropdown(false); }}
                     className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
                       selectedSection === tab.id ? `bg-gradient-to-r ${tab.gradient} text-white` : 'text-gray-300 hover:bg-white/5'
                     }`}
@@ -2002,7 +2007,7 @@ export default function MatchDetailClient() {
           {/* Section Tab Filter - Desktop Tabs */}
           <div className="hidden md:flex items-center gap-2 mb-6 overflow-x-auto pb-2">
             <button
-              onClick={() => setSelectedSection('odds')}
+              onClick={() => handleSectionChange('odds')}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
                 selectedSection === 'odds'
                   ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/25'
@@ -6505,6 +6510,123 @@ export default function MatchDetailClient() {
           <p>{t('allRights')} {t('footer')}</p>
         </div>
       </footer>
+
+      {/* Login Modal for non-logged-in users trying to access Odds & AI */}
+      {showLoginModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            onClick={() => setShowLoginModal(false)}
+          />
+
+          {/* Modal Content */}
+          <div className="relative bg-gradient-to-br from-gray-900 to-gray-950 border border-white/10 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowLoginModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Icon */}
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 flex items-center justify-center">
+              <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+
+            {/* Title */}
+            <h2 className="text-2xl font-bold text-center mb-2 bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+              {selectedLang === '中文' ? '登录以查看预测' :
+               selectedLang === '繁體' ? '登入以查看預測' :
+               selectedLang === 'JA' ? 'ログインして予測を見る' :
+               selectedLang === 'KO' ? '예측을 보려면 로그인하세요' :
+               selectedLang === 'ES' ? 'Inicia sesión para ver predicciones' :
+               selectedLang === 'PT' ? 'Faça login para ver previsões' :
+               selectedLang === 'DE' ? 'Anmelden um Vorhersagen zu sehen' :
+               selectedLang === 'FR' ? 'Connectez-vous pour voir les prédictions' :
+               selectedLang === 'ID' ? 'Masuk untuk melihat prediksi' :
+               'Sign in to view predictions'}
+            </h2>
+
+            {/* Description */}
+            <p className="text-gray-400 text-center mb-8">
+              {selectedLang === '中文' ? '创建免费账户或登录以访问AI预测和分析' :
+               selectedLang === '繁體' ? '創建免費帳戶或登入以訪問AI預測和分析' :
+               selectedLang === 'JA' ? '無料アカウントを作成するかログインしてAI予測と分析にアクセス' :
+               selectedLang === 'KO' ? '무료 계정을 만들거나 로그인하여 AI 예측 및 분석에 액세스하세요' :
+               selectedLang === 'ES' ? 'Crea una cuenta gratis o inicia sesión para acceder a predicciones y análisis de IA' :
+               selectedLang === 'PT' ? 'Crie uma conta gratuita ou faça login para acessar previsões e análises de IA' :
+               selectedLang === 'DE' ? 'Erstellen Sie ein kostenloses Konto oder melden Sie sich an, um auf KI-Vorhersagen zuzugreifen' :
+               selectedLang === 'FR' ? 'Créez un compte gratuit ou connectez-vous pour accéder aux prédictions IA' :
+               selectedLang === 'ID' ? 'Buat akun gratis atau masuk untuk mengakses prediksi dan analisis AI' :
+               'Create a free account or sign in to access AI predictions and analysis'}
+            </p>
+
+            {/* Buttons */}
+            <div className="space-y-3">
+              <Link
+                href={localePath('/get-started')}
+                className="block w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-black font-semibold text-center hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
+                onClick={() => setShowLoginModal(false)}
+              >
+                {selectedLang === '中文' ? '免费注册' :
+                 selectedLang === '繁體' ? '免費註冊' :
+                 selectedLang === 'JA' ? '無料で登録' :
+                 selectedLang === 'KO' ? '무료 가입' :
+                 selectedLang === 'ES' ? 'Registrarse gratis' :
+                 selectedLang === 'PT' ? 'Cadastre-se grátis' :
+                 selectedLang === 'DE' ? 'Kostenlos registrieren' :
+                 selectedLang === 'FR' ? "S'inscrire gratuitement" :
+                 selectedLang === 'ID' ? 'Daftar Gratis' :
+                 'Sign Up Free'}
+              </Link>
+              <Link
+                href={localePath('/login')}
+                className="block w-full py-3 px-4 rounded-xl border border-white/20 text-white font-semibold text-center hover:bg-white/10 transition-all"
+                onClick={() => setShowLoginModal(false)}
+              >
+                {selectedLang === '中文' ? '已有账户？登录' :
+                 selectedLang === '繁體' ? '已有帳戶？登入' :
+                 selectedLang === 'JA' ? 'アカウントをお持ちですか？ログイン' :
+                 selectedLang === 'KO' ? '이미 계정이 있으신가요? 로그인' :
+                 selectedLang === 'ES' ? '¿Ya tienes cuenta? Iniciar sesión' :
+                 selectedLang === 'PT' ? 'Já tem conta? Entrar' :
+                 selectedLang === 'DE' ? 'Bereits ein Konto? Anmelden' :
+                 selectedLang === 'FR' ? 'Déjà un compte? Se connecter' :
+                 selectedLang === 'ID' ? 'Sudah punya akun? Masuk' :
+                 'Already have an account? Log In'}
+              </Link>
+            </div>
+
+            {/* Benefits */}
+            <div className="mt-6 pt-6 border-t border-white/10">
+              <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span>{selectedLang === '中文' ? '7天免费试用' : selectedLang === '繁體' ? '7天免費試用' : selectedLang === 'ID' ? 'Uji coba 7 hari gratis' : '7-day free trial'}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span>{selectedLang === '中文' ? 'AI驱动的预测' : selectedLang === '繁體' ? 'AI驅動的預測' : selectedLang === 'ID' ? 'Prediksi berbasis AI' : 'AI-powered predictions'}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span>{selectedLang === '中文' ? '实时赔率分析' : selectedLang === '繁體' ? '實時賠率分析' : selectedLang === 'ID' ? 'Analisis odds real-time' : 'Real-time odds analysis'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

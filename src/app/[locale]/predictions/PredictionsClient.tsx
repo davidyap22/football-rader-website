@@ -445,12 +445,10 @@ function PredictionsContent({
     }
   };
 
-  // Handle match click - check if user is logged in
+  // Handle match click - allow all users to access match details
   const handleMatchClick = (e: React.MouseEvent, matchId: number) => {
-    if (!user) {
-      e.preventDefault();
-      setShowLoginModal(true);
-    }
+    // Allow all users (logged in or not) to access match detail page
+    // Login prompt will be shown on match detail page when accessing premium features
   };
 
   // Check auth session
