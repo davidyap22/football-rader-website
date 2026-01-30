@@ -2088,9 +2088,113 @@ interface LeagueData {
 }
 
 function LeaguesSection() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [leagues, setLeagues] = useState<LeagueData[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Localized league names
+  const leagueNamesLocalized: Record<string, Record<string, string>> = {
+    'Premier League': { en: 'Premier League', de: 'Premier League', es: 'Premier League', fr: 'Premier League', id: 'Premier League', ja: 'プレミアリーグ', ko: '프리미어리그', pt: 'Premier League', zh: '英超', tw: '英超' },
+    'La Liga': { en: 'La Liga', de: 'La Liga', es: 'La Liga', fr: 'La Liga', id: 'La Liga', ja: 'ラ・リーガ', ko: '라리가', pt: 'La Liga', zh: '西甲', tw: '西甲' },
+    'Bundesliga': { en: 'Bundesliga', de: 'Bundesliga', es: 'Bundesliga', fr: 'Bundesliga', id: 'Bundesliga', ja: 'ブンデスリーガ', ko: '분데스리가', pt: 'Bundesliga', zh: '德甲', tw: '德甲' },
+    'Serie A': { en: 'Serie A', de: 'Serie A', es: 'Serie A', fr: 'Serie A', id: 'Serie A', ja: 'セリエA', ko: '세리에 A', pt: 'Serie A', zh: '意甲', tw: '義甲' },
+    'Ligue 1': { en: 'Ligue 1', de: 'Ligue 1', es: 'Ligue 1', fr: 'Ligue 1', id: 'Ligue 1', ja: 'リーグ・アン', ko: '리그 1', pt: 'Ligue 1', zh: '法甲', tw: '法甲' },
+    'UEFA Champions League': { en: 'UEFA Champions League', de: 'Champions League', es: 'Champions League', fr: 'Ligue des Champions', id: 'Liga Champions', ja: 'チャンピオンズリーグ', ko: '챔피언스리그', pt: 'Liga dos Campeões', zh: '欧冠', tw: '歐冠' },
+  };
+
+  // Localized league descriptions
+  const leagueDescsLocalized: Record<string, Record<string, string>> = {
+    'Premier League': {
+      en: 'EPL top 5 betting predictions • Premier League AI predictor',
+      zh: '英超五大联赛预测 • AI智能分析预测',
+      tw: '英超五大聯賽預測 • AI智能分析預測',
+      ja: 'プレミアリーグ予想 • AI分析',
+      ko: '프리미어리그 예측 • AI 분석',
+      de: 'Premier League KI-Vorhersagen • Top 5 Wett-Tipps',
+      es: 'Predicciones Premier League • Análisis IA',
+      fr: 'Pronostics Premier League • Analyse IA',
+      pt: 'Palpites Premier League • Análise IA',
+      id: 'Prediksi Liga Inggris • Analisis AI',
+    },
+    'La Liga': {
+      en: 'La Liga top 5 betting predictions • Spanish football AI tips',
+      zh: '西甲联赛预测 • 西班牙足球AI分析',
+      tw: '西甲聯賽預測 • 西班牙足球AI分析',
+      ja: 'ラ・リーガ予想 • スペインサッカーAI分析',
+      ko: '라리가 예측 • 스페인 축구 AI 분석',
+      de: 'La Liga KI-Vorhersagen • Spanischer Fußball',
+      es: 'Predicciones La Liga • Fútbol español IA',
+      fr: 'Pronostics La Liga • Football espagnol IA',
+      pt: 'Palpites La Liga • Futebol espanhol IA',
+      id: 'Prediksi La Liga • Sepak bola Spanyol AI',
+    },
+    'Bundesliga': {
+      en: 'Bundesliga AI betting predictions • German league analysis',
+      zh: '德甲联赛预测 • 德国足球AI分析',
+      tw: '德甲聯賽預測 • 德國足球AI分析',
+      ja: 'ブンデスリーガ予想 • ドイツサッカーAI分析',
+      ko: '분데스리가 예측 • 독일 축구 AI 분석',
+      de: 'Bundesliga KI-Vorhersagen • Deutsche Liga Analyse',
+      es: 'Predicciones Bundesliga • Liga alemana IA',
+      fr: 'Pronostics Bundesliga • Ligue allemande IA',
+      pt: 'Palpites Bundesliga • Liga alemã IA',
+      id: 'Prediksi Bundesliga • Liga Jerman AI',
+    },
+    'Serie A': {
+      en: 'Serie A artificial intelligence picks • Italian football tips',
+      zh: '意甲联赛预测 • 意大利足球AI分析',
+      tw: '義甲聯賽預測 • 義大利足球AI分析',
+      ja: 'セリエA予想 • イタリアサッカーAI分析',
+      ko: '세리에 A 예측 • 이탈리아 축구 AI 분석',
+      de: 'Serie A KI-Vorhersagen • Italienischer Fußball',
+      es: 'Predicciones Serie A • Fútbol italiano IA',
+      fr: 'Pronostics Serie A • Football italien IA',
+      pt: 'Palpites Serie A • Futebol italiano IA',
+      id: 'Prediksi Serie A • Sepak bola Italia AI',
+    },
+    'Ligue 1': {
+      en: 'Ligue 1 AI prediction model • French league insights',
+      zh: '法甲联赛预测 • 法国足球AI分析',
+      tw: '法甲聯賽預測 • 法國足球AI分析',
+      ja: 'リーグ・アン予想 • フランスサッカーAI分析',
+      ko: '리그 1 예측 • 프랑스 축구 AI 분석',
+      de: 'Ligue 1 KI-Vorhersagen • Französische Liga',
+      es: 'Predicciones Ligue 1 • Liga francesa IA',
+      fr: 'Pronostics Ligue 1 • Ligue française IA',
+      pt: 'Palpites Ligue 1 • Liga francesa IA',
+      id: 'Prediksi Ligue 1 • Liga Prancis AI',
+    },
+    'UEFA Champions League': {
+      en: 'Champions League betting analysis AI • UCL predictions',
+      zh: '欧冠联赛预测 • 欧洲冠军联赛AI分析',
+      tw: '歐冠聯賽預測 • 歐洲冠軍聯賽AI分析',
+      ja: 'チャンピオンズリーグ予想 • UCL AI分析',
+      ko: '챔피언스리그 예측 • UCL AI 분석',
+      de: 'Champions League KI-Vorhersagen • UCL Analyse',
+      es: 'Predicciones Champions League • UCL IA',
+      fr: 'Pronostics Ligue des Champions • UCL IA',
+      pt: 'Palpites Liga dos Campeões • UCL IA',
+      id: 'Prediksi Liga Champions • UCL AI',
+    },
+  };
+
+  const getLocalizedLeagueName = (name: string): string => {
+    for (const key of Object.keys(leagueNamesLocalized)) {
+      if (name.toLowerCase().includes(key.toLowerCase())) {
+        return leagueNamesLocalized[key][locale] || leagueNamesLocalized[key]['en'] || name;
+      }
+    }
+    return name;
+  };
+
+  const getLocalizedLeagueDesc = (name: string): string => {
+    for (const key of Object.keys(leagueDescsLocalized)) {
+      if (name.toLowerCase().includes(key.toLowerCase())) {
+        return leagueDescsLocalized[key][locale] || leagueDescsLocalized[key]['en'] || 'AI-powered predictions & betting analysis';
+      }
+    }
+    return 'AI-powered predictions & betting analysis';
+  };
 
   // Priority leagues that should always appear
   const priorityLeagues: LeagueData[] = [
@@ -2188,21 +2292,6 @@ function LeaguesSection() {
               };
               return getPriority(a.league_name) - getPriority(b.league_name);
             }).map((league, index) => {
-              // SEO descriptions for each league
-              const leagueSeoDesc: Record<string, string> = {
-                'Premier League': 'EPL top 5 betting predictions • Premier League AI predictor',
-                'La Liga': 'La Liga top 5 betting predictions • Spanish football AI tips',
-                'Bundesliga': 'Bundesliga AI betting predictions • German league analysis',
-                'Serie A': 'Serie A artificial intelligence picks • Italian football tips',
-                'Ligue 1': 'Ligue 1 AI prediction model • French league insights',
-                'UEFA Champions League': 'Champions League betting analysis AI • UCL predictions',
-              };
-              const getSeoDesc = (name: string) => {
-                for (const key of Object.keys(leagueSeoDesc)) {
-                  if (name.toLowerCase().includes(key.toLowerCase())) return leagueSeoDesc[key];
-                }
-                return 'AI-powered predictions & betting analysis';
-              };
               // League name to slug mapping
               const leagueSlugMap: Record<string, string> = {
                 'Premier League': 'premier-league',
@@ -2252,8 +2341,8 @@ function LeaguesSection() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white text-lg group-hover:text-emerald-300 transition-colors">{league.league_name}</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">{getSeoDesc(league.league_name)}</p>
+                    <h3 className="font-semibold text-white text-lg group-hover:text-emerald-300 transition-colors">{getLocalizedLeagueName(league.league_name)}</h3>
+                    <p className="text-xs text-gray-500 mt-0.5">{getLocalizedLeagueDesc(league.league_name)}</p>
                   </div>
                 </div>
                 <div className="text-right relative">
@@ -2275,7 +2364,31 @@ function AIPredictionsSection() {
   const { t, localePath, locale } = useLanguage();
   const [matches, setMatches] = useState<Prematch[]>([]);
   const [predictions, setPredictions] = useState<Map<number, { home: number; draw: number; away: number }>>(new Map());
+  const [teamNames, setTeamNames] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
+
+  // Localized league names
+  const leagueNamesLocalized: Record<string, Record<string, string>> = {
+    'Premier League': { en: 'Premier League', de: 'Premier League', es: 'Premier League', fr: 'Premier League', id: 'Premier League', ja: 'プレミアリーグ', ko: '프리미어리그', pt: 'Premier League', zh: '英超', tw: '英超' },
+    'La Liga': { en: 'La Liga', de: 'La Liga', es: 'La Liga', fr: 'La Liga', id: 'La Liga', ja: 'ラ・リーガ', ko: '라리가', pt: 'La Liga', zh: '西甲', tw: '西甲' },
+    'Bundesliga': { en: 'Bundesliga', de: 'Bundesliga', es: 'Bundesliga', fr: 'Bundesliga', id: 'Bundesliga', ja: 'ブンデスリーガ', ko: '분데스리가', pt: 'Bundesliga', zh: '德甲', tw: '德甲' },
+    'Serie A': { en: 'Serie A', de: 'Serie A', es: 'Serie A', fr: 'Serie A', id: 'Serie A', ja: 'セリエA', ko: '세리에 A', pt: 'Serie A', zh: '意甲', tw: '義甲' },
+    'Ligue 1': { en: 'Ligue 1', de: 'Ligue 1', es: 'Ligue 1', fr: 'Ligue 1', id: 'Ligue 1', ja: 'リーグ・アン', ko: '리그 1', pt: 'Ligue 1', zh: '法甲', tw: '法甲' },
+    'UEFA Champions League': { en: 'Champions League', de: 'Champions League', es: 'Champions League', fr: 'Ligue des Champions', id: 'Liga Champions', ja: 'チャンピオンズリーグ', ko: '챔피언스리그', pt: 'Liga dos Campeões', zh: '欧冠', tw: '歐冠' },
+  };
+
+  const getLocalizedLeagueName = (name: string): string => {
+    for (const key of Object.keys(leagueNamesLocalized)) {
+      if (name.toLowerCase().includes(key.toLowerCase())) {
+        return leagueNamesLocalized[key][locale] || leagueNamesLocalized[key]['en'] || name;
+      }
+    }
+    return name;
+  };
+
+  const getLocalizedTeamName = (englishName: string): string => {
+    return teamNames[englishName] || englishName;
+  };
 
   useEffect(() => {
     async function fetchMatches() {
@@ -2313,6 +2426,34 @@ function AIPredictionsSection() {
             });
             setPredictions(predMap);
           }
+
+          // Fetch team name translations from team_statistics
+          const allTeamNames = matchesData.flatMap((m: Prematch) => [m.home_name, m.away_name]).filter(Boolean);
+          const uniqueTeamNames = [...new Set(allTeamNames)];
+
+          if (uniqueTeamNames.length > 0) {
+            const { data: teamData } = await supabase
+              .from('team_statistics')
+              .select('team_name, team_name_language')
+              .in('team_name', uniqueTeamNames);
+
+            if (teamData) {
+              const teamNameMap: Record<string, string> = {};
+              // Map locale codes for team_name_language
+              const localeKeyMap: Record<string, string> = {
+                'zh': 'zh_cn', 'tw': 'zh_tw', 'ja': 'ja', 'ko': 'ko',
+                'de': 'de', 'es': 'es', 'fr': 'fr', 'pt': 'pt', 'id': 'id'
+              };
+              const langKey = localeKeyMap[locale] || locale;
+
+              teamData.forEach((team: any) => {
+                if (team.team_name_language && team.team_name_language[langKey]) {
+                  teamNameMap[team.team_name] = team.team_name_language[langKey];
+                }
+              });
+              setTeamNames(teamNameMap);
+            }
+          }
         }
       } catch (error) {
         console.error('Error fetching matches:', error);
@@ -2322,7 +2463,7 @@ function AIPredictionsSection() {
     }
 
     fetchMatches();
-  }, []);
+  }, [locale]);
 
   const formatTime = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -2477,7 +2618,7 @@ function AIPredictionsSection() {
                                 />
                               </div>
                             )}
-                            <span className="text-gray-400 text-xs font-medium">{match.league_name}</span>
+                            <span className="text-gray-400 text-xs font-medium">{getLocalizedLeagueName(match.league_name || '')}</span>
                           </div>
                           <div className="flex items-center gap-2 text-xs text-gray-500">
                             <span className="text-emerald-400">{formatMatchDate(match.start_date_msia)}</span>
@@ -2499,7 +2640,7 @@ function AIPredictionsSection() {
                                 className="rounded-full flex-shrink-0"
                               />
                             )}
-                            <span className="text-white text-sm font-medium truncate">{match.home_name}</span>
+                            <span className="text-white text-sm font-medium truncate">{getLocalizedTeamName(match.home_name || '')}</span>
                           </div>
 
                           {/* VS */}
@@ -2507,7 +2648,7 @@ function AIPredictionsSection() {
 
                           {/* Away Team */}
                           <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
-                            <span className="text-white text-sm font-medium truncate text-right">{match.away_name}</span>
+                            <span className="text-white text-sm font-medium truncate text-right">{getLocalizedTeamName(match.away_name || '')}</span>
                             {match.away_logo && (
                               <Image
                                 src={match.away_logo}
@@ -2558,7 +2699,7 @@ function AIPredictionsSection() {
                                 />
                               </div>
                             )}
-                            <span className="text-gray-300 text-xs font-medium truncate">{match.league_name}</span>
+                            <span className="text-gray-300 text-xs font-medium truncate">{getLocalizedLeagueName(match.league_name || '')}</span>
                           </div>
                           <div className="flex items-center gap-2 text-gray-500 text-xs">
                             <span className="text-emerald-400/80">{formatMatchDate(match.start_date_msia)}</span>
@@ -2571,7 +2712,7 @@ function AIPredictionsSection() {
                         <div className="col-span-6 relative">
                           <div className="flex items-center justify-center gap-2">
                             <div className="flex items-center gap-2 flex-1 justify-end">
-                              <span className="text-white text-sm font-medium text-right truncate group-hover:text-emerald-300 transition-colors">{match.home_name}</span>
+                              <span className="text-white text-sm font-medium text-right truncate group-hover:text-emerald-300 transition-colors">{getLocalizedTeamName(match.home_name || '')}</span>
                               {match.home_logo && (
                                 <div className="relative">
                                   <div className="absolute inset-0 bg-emerald-400/0 group-hover:bg-emerald-400/20 rounded-full transition-colors duration-300" />
@@ -2599,7 +2740,7 @@ function AIPredictionsSection() {
                                   />
                                 </div>
                               )}
-                              <span className="text-white text-sm font-medium truncate group-hover:text-emerald-300 transition-colors">{match.away_name}</span>
+                              <span className="text-white text-sm font-medium truncate group-hover:text-emerald-300 transition-colors">{getLocalizedTeamName(match.away_name || '')}</span>
                             </div>
                           </div>
                         </div>
