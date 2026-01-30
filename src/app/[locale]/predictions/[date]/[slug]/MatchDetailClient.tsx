@@ -1427,34 +1427,29 @@ export default function MatchDetailClient() {
       // For logged-in users, also fetch premium data (odds, AI predictions, signals)
       const personality = PERSONALITIES.find(p => p.id === selectedPersonality);
 
-      // Free data - available to all users
-      const freeDataPromises = [
-        // Only fetch lineups on initial load, not on refresh
-        !isRefresh ? getFixtureLineups(matchData.fixture_id) : Promise.resolve({ data: null }),
-        // Fetch events (always fetch to show live updates)
-        getFixtureEvents(matchData.fixture_id),
-        // Fetch match statistics
-        getMatchStatistics(matchData.fixture_id),
-      ];
+      // Free data - available to all users (fetch separately to preserve types)
+      const lineupsPromise = !isRefresh ? getFixtureLineups(matchData.fixture_id) : Promise.resolve({ data: null });
+      const eventsPromise = getFixtureEvents(matchData.fixture_id);
+      const statsPromise = getMatchStatistics(matchData.fixture_id);
 
       // Premium data - only for logged-in users
-      const premiumDataPromises = isLoggedIn ? [
-        fetchOdds(matchData.fixture_id, matchData.type === 'In Play'),
-        personality ? fetchAIPredictions(matchData.fixture_id, personality.aiModel) : Promise.resolve(),
-        getMatchPrediction(matchData.fixture_id),
-        // Fetch live signals for Value Hunter (refresh on every cycle)
-        selectedPersonality === 'value'
-          ? getLiveSignals(matchData.fixture_id)
-          : Promise.resolve({ data: null }),
-      ] : [
-        Promise.resolve(), // No odds
-        Promise.resolve(), // No AI predictions
-        Promise.resolve({ data: null }), // No match prediction
-        Promise.resolve({ data: null }), // No live signals
-      ];
+      const oddsPromise = isLoggedIn ? fetchOdds(matchData.fixture_id, matchData.type === 'In Play') : Promise.resolve();
+      const aiPromise = isLoggedIn && personality ? fetchAIPredictions(matchData.fixture_id, personality.aiModel) : Promise.resolve();
+      const predictionPromise = isLoggedIn ? getMatchPrediction(matchData.fixture_id) : Promise.resolve({ data: null });
+      const signalsPromise = isLoggedIn && selectedPersonality === 'value'
+        ? getLiveSignals(matchData.fixture_id)
+        : Promise.resolve({ data: null });
 
-      const [lineupsResult, eventsResult, statsResult] = await Promise.all(freeDataPromises);
-      const [, , predictionResult, liveSignalsResult] = await Promise.all(premiumDataPromises);
+      // Await all promises
+      const [lineupsResult, eventsResult, statsResult, , , predictionResult, liveSignalsResult] = await Promise.all([
+        lineupsPromise,
+        eventsPromise,
+        statsPromise,
+        oddsPromise,
+        aiPromise,
+        predictionPromise,
+        signalsPromise,
+      ]);
 
       if (lineupsResult?.data) {
         setLineups(lineupsResult.data);
