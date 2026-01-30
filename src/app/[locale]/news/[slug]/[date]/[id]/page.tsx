@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase, getLocalizedNewsContent } from '@/lib/supabase';
 import NewsArticleClient from './NewsArticleClient';
 
 interface PageProps {
@@ -34,12 +34,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? `/news/${id}`
     : `/${locale}/news/${id}`;
 
+  // Extract localized content (title and summary might be JSONB objects)
+  const localizedTitle = getLocalizedNewsContent(newsArticle.title, locale) || 'News Article | OddsFlow';
+  const localizedSummary = getLocalizedNewsContent(newsArticle.summary, locale) || 'Football news and AI betting insights';
+
   return {
-    title: newsArticle.title || 'News Article | OddsFlow',
-    description: newsArticle.summary || 'Football news and AI betting insights',
+    title: localizedTitle,
+    description: localizedSummary,
     openGraph: {
-      title: newsArticle.title || 'News Article',
-      description: newsArticle.summary || 'Football news and insights',
+      title: localizedTitle,
+      description: localizedSummary,
       type: 'article',
       publishedTime: newsArticle.created_at,
       images: newsArticle.image_url ? [newsArticle.image_url] : [],
@@ -47,8 +51,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary_large_image',
-      title: newsArticle.title || 'News Article',
-      description: newsArticle.summary || 'Football news and insights',
+      title: localizedTitle,
+      description: localizedSummary,
       images: newsArticle.image_url ? [newsArticle.image_url] : [],
     },
     alternates: {
@@ -80,18 +84,17 @@ export default async function NewsArticlePage({ params }: PageProps) {
     .single();
 
   // SEO-friendly server-rendered content (hidden from users but visible to crawlers)
-  // Note: content might be JSONB, so check if it's a string before using substring
-  const contentPreview = newsArticle?.content
-    ? (typeof newsArticle.content === 'string'
-        ? newsArticle.content.substring(0, 500) + '...'
-        : '')
-    : '';
+  // Note: title, summary, content might be JSONB objects, so use getLocalizedNewsContent
+  const seoTitle = newsArticle ? getLocalizedNewsContent(newsArticle.title, locale) : '';
+  const seoSummary = newsArticle ? getLocalizedNewsContent(newsArticle.summary, locale) : '';
+  const seoContentText = newsArticle ? getLocalizedNewsContent(newsArticle.content, locale) : '';
+  const contentPreview = seoContentText ? seoContentText.substring(0, 500) + '...' : '';
 
   const seoContent = newsArticle ? (
     <div className="sr-only" aria-hidden="true">
       <article>
-        <h1>{newsArticle.title}</h1>
-        <p>{newsArticle.summary}</p>
+        <h1>{seoTitle}</h1>
+        <p>{seoSummary}</p>
         <time dateTime={newsArticle.created_at}>{newsArticle.created_at}</time>
         {contentPreview && (
           <div dangerouslySetInnerHTML={{ __html: contentPreview }} />
