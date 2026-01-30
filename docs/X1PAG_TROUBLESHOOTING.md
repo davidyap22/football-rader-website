@@ -18,7 +18,7 @@ Protocol mapping refers to the configuration in X1PAG's system that:
 - Enables specific payment protocols (card, PIX, boleto, etc.)
 
 ### Verification
-Our test script (`test-x1pag-api.js`) confirmed that:
+Our test script (`scripts/test-x1pag-api.js`) confirmed that:
 ✅ Request format is correct
 ✅ Hash generation is correct (SHA1 of MD5)
 ✅ All required fields are present
@@ -128,10 +128,10 @@ You can use the test scripts to verify the fix once X1PAG makes configuration ch
 
 ```bash
 # Test hash generation
-node test-x1pag-hash.js
+node scripts/test-x1pag-hash.js
 
 # Test API connection
-node test-x1pag-api.js
+node scripts/test-x1pag-api.js
 ```
 
 When the configuration is fixed, you should see:
@@ -156,7 +156,7 @@ When the configuration is fixed, you should see:
 
 1. **Immediate:** Contact X1PAG support with the information above
 2. **While Waiting:** Test if BRL currency works (if you need BRL support)
-3. **After Fix:** Run `node test-x1pag-api.js` to verify
+3. **After Fix:** Run `node scripts/test-x1pag-api.js` to verify
 4. **After Verification:** Test full payment flow in the application
 
 ### Additional Notes
@@ -181,7 +181,7 @@ Once X1PAG confirms the configuration is fixed:
 
 1. **Test API Connection:**
    ```bash
-   node test-x1pag-api.js
+   node scripts/test-x1pag-api.js
    ```
    Expected: HTTP 200 with redirect_url
 

@@ -122,13 +122,13 @@ I created test scripts to verify the issue:
 
 ### 1. 测试 Hash 生成 (Test Hash Generation)
 ```bash
-node test-x1pag-hash.js
+node scripts/test-x1pag-hash.js
 ```
 ✅ Hash 生成正确 Hash generation is correct
 
 ### 2. 测试 API 连接 (Test API Connection)
 ```bash
-node test-x1pag-api.js
+node scripts/test-x1pag-api.js
 ```
 ❌ 返回错误 100000 Returns error 100000
 
@@ -184,7 +184,7 @@ Once X1PAG confirms configuration is done, run:
 
 ```bash
 # 1. 测试 API Test API
-node test-x1pag-api.js
+node scripts/test-x1pag-api.js
 # 应该看到 HTTP 200 和 redirect_url
 # Should see HTTP 200 with redirect_url
 
@@ -201,8 +201,8 @@ node test-x1pag-api.js
 ## 📚 相关文档 (Related Documents)
 
 - `X1PAG_TROUBLESHOOTING.md` - 详细故障排除指南 Detailed troubleshooting guide
-- `test-x1pag-api.js` - API 测试脚本 API test script
-- `test-x1pag-hash.js` - Hash 验证脚本 Hash verification script
+- `scripts/test-x1pag-api.js` - API 测试脚本 API test script
+- `scripts/test-x1pag-hash.js` - Hash 验证脚本 Hash verification script
 
 ---
 
