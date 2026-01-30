@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer, LiveSignals, getLiveSignals, getLiveSignalsByBetStyle, getLiveSignalsHistoryByBetStyle, FixtureEvent, getFixtureEvents, MatchStatistics, getMatchStatistics, TeamNameLanguage, getPlayerTranslations, PlayerTranslation } from '@/lib/supabase';
 import { LEAGUE_NAMES_LOCALIZED, LEAGUES_CONFIG } from '@/lib/leagues-data';
-import { playerNameToSlug } from '@/lib/team-data';
 import { User } from '@supabase/supabase-js';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
@@ -804,19 +803,6 @@ export default function MatchDetailClient() {
   const getPlayerPhoto = (player: FixturePlayer): string | null => {
     const translation = playerTranslations[player.player_id];
     return translation?.photo || null;
-  };
-
-  // Generate player detail page URL
-  const getPlayerUrl = (player: FixturePlayer): string => {
-    // Get league slug from match league_name
-    const leagueConfig = LEAGUES_CONFIG.find(l => l.dbName === match?.league_name);
-    const leagueSlug = leagueConfig?.slug || 'premier-league';
-
-    // Generate player slug using the same function as player detail page
-    // e.g., "Álvaro Carreras" -> "lvaro-carreras"
-    const playerSlug = playerNameToSlug(player.player_name);
-
-    return localePath(`/leagues/${leagueSlug}/player/${playerSlug}-${player.player_id}`);
   };
 
   // Odds related state
@@ -2408,12 +2394,9 @@ export default function MatchDetailClient() {
 
                       const playerPhoto = getPlayerPhoto(player);
                       return (
-                        <Link
+                        <div
                           key={player.id}
-                          href={getPlayerUrl(player)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer hover:scale-110 transition-transform"
+                          className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
                           style={{ left: `${left}%`, top: `${topAdjusted}%` }}
                         >
                           {playerPhoto ? (
@@ -2428,7 +2411,7 @@ export default function MatchDetailClient() {
                           <span className="mt-1 px-1 bg-black/60 rounded text-[8px] sm:text-[10px] text-white whitespace-nowrap max-w-[60px] truncate">
                             {getLocalizedPlayerLastName(player)}
                           </span>
-                        </Link>
+                        </div>
                       );
                     })}
 
@@ -2444,12 +2427,9 @@ export default function MatchDetailClient() {
 
                       const playerPhoto = getPlayerPhoto(player);
                       return (
-                        <Link
+                        <div
                           key={player.id}
-                          href={getPlayerUrl(player)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer hover:scale-110 transition-transform"
+                          className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
                           style={{ left: `${left}%`, top: `${topAdjusted}%` }}
                         >
                           {playerPhoto ? (
@@ -2464,7 +2444,7 @@ export default function MatchDetailClient() {
                           <span className="mt-1 px-1 bg-black/60 rounded text-[8px] sm:text-[10px] text-white whitespace-nowrap max-w-[60px] truncate">
                             {getLocalizedPlayerLastName(player)}
                           </span>
-                        </Link>
+                        </div>
                       );
                     })}
                   </div>
@@ -2504,19 +2484,13 @@ export default function MatchDetailClient() {
                           <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Starting XI</div>
                           <div className="space-y-1">
                             {lineup.starters.map((player: FixturePlayer) => (
-                              <Link
-                                key={player.id}
-                                href={getPlayerUrl(player)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-sm hover:bg-white/5 rounded px-1 -mx-1 transition-colors cursor-pointer"
-                              >
+                              <div key={player.id} className="flex items-center gap-2 text-sm">
                                 <span className={`w-6 text-center font-mono ${index === 0 ? 'text-blue-400' : 'text-green-400'}`}>
                                   {player.number || '-'}
                                 </span>
-                                <span className="text-white hover:text-blue-400 transition-colors">{getLocalizedPlayerName(player)}</span>
+                                <span className="text-white">{getLocalizedPlayerName(player)}</span>
                                 <span className="text-gray-500 text-xs ml-auto">{player.pos}</span>
-                              </Link>
+                              </div>
                             ))}
                           </div>
                         </div>
@@ -2527,19 +2501,13 @@ export default function MatchDetailClient() {
                             <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Substitutes</div>
                             <div className="space-y-1">
                               {lineup.substitutes.map((player: FixturePlayer) => (
-                                <Link
-                                  key={player.id}
-                                  href={getPlayerUrl(player)}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-2 text-sm opacity-70 hover:opacity-100 hover:bg-white/5 rounded px-1 -mx-1 transition-all cursor-pointer"
-                                >
+                                <div key={player.id} className="flex items-center gap-2 text-sm opacity-70">
                                   <span className={`w-6 text-center font-mono ${index === 0 ? 'text-blue-400' : 'text-green-400'}`}>
                                     {player.number || '-'}
                                   </span>
-                                  <span className="text-gray-300 hover:text-blue-400 transition-colors">{getLocalizedPlayerName(player)}</span>
+                                  <span className="text-gray-300">{getLocalizedPlayerName(player)}</span>
                                   <span className="text-gray-500 text-xs ml-auto">{player.pos}</span>
-                                </Link>
+                                </div>
                               ))}
                             </div>
                           </div>
