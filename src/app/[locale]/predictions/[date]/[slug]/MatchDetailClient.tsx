@@ -85,6 +85,8 @@ const translations: Record<string, Record<string, string>> = {
     saves: "Goalkeeper Saves", passes: "Total Passes", passAccuracy: "Pass Accuracy", expectedGoals: "Expected Goals (xG)",
     // Market tabs
     overUnderMarket: "Over/Under", asianHandicapMarket: "Asian Handicap",
+    // Signal History modal
+    marketType: "Market Type", betStyle: "Bet Style", market1x2: "1X2", marketOU: "O/U", marketHDP: "HDP", winner: "Winner",
     // Buttons
     signalHistory: "Signal History", profitSummary: "Profit Summary",
     // Bet styles
@@ -133,6 +135,8 @@ const translations: Record<string, Record<string, string>> = {
     saves: "Paradas", passes: "Pases Totales", passAccuracy: "Precisión de Pases", expectedGoals: "Goles Esperados (xG)",
     // Market tabs
     overUnderMarket: "Más/Menos", asianHandicapMarket: "Hándicap Asiático",
+    // Signal History modal
+    marketType: "Tipo de Mercado", betStyle: "Estilo de Apuesta", market1x2: "1X2", marketOU: "M/M", marketHDP: "HDP", winner: "Ganador",
     // Buttons
     signalHistory: "Historial de Señales", profitSummary: "Resumen de Beneficios",
     // Bet styles
@@ -181,6 +185,8 @@ const translations: Record<string, Record<string, string>> = {
     saves: "Defesas", passes: "Passes Totais", passAccuracy: "Precisão de Passes", expectedGoals: "Gols Esperados (xG)",
     // Market tabs
     overUnderMarket: "Mais/Menos", asianHandicapMarket: "Handicap Asiático",
+    // Signal History modal
+    marketType: "Tipo de Mercado", betStyle: "Estilo de Aposta", market1x2: "1X2", marketOU: "M/M", marketHDP: "HDP", winner: "Vencedor",
     // Buttons
     signalHistory: "Histórico de Sinais", profitSummary: "Resumo de Lucros",
     // Bet styles
@@ -229,6 +235,8 @@ const translations: Record<string, Record<string, string>> = {
     saves: "Paraden", passes: "Pässe Gesamt", passAccuracy: "Passgenauigkeit", expectedGoals: "Erwartete Tore (xG)",
     // Market tabs
     overUnderMarket: "Über/Unter", asianHandicapMarket: "Asiatisches Handicap",
+    // Signal History modal
+    marketType: "Markttyp", betStyle: "Wettstil", market1x2: "1X2", marketOU: "Ü/U", marketHDP: "HDP", winner: "Sieger",
     // Buttons
     signalHistory: "Signalverlauf", profitSummary: "Gewinnzusammenfassung",
     // Bet styles
@@ -277,6 +285,8 @@ const translations: Record<string, Record<string, string>> = {
     saves: "Arrêts", passes: "Passes Totales", passAccuracy: "Précision des Passes", expectedGoals: "Buts Attendus (xG)",
     // Market tabs
     overUnderMarket: "Plus/Moins", asianHandicapMarket: "Handicap Asiatique",
+    // Signal History modal
+    marketType: "Type de Marché", betStyle: "Style de Pari", market1x2: "1X2", marketOU: "P/M", marketHDP: "HDP", winner: "Gagnant",
     // Buttons
     signalHistory: "Historique des Signaux", profitSummary: "Résumé des Profits",
     // Bet styles
@@ -325,6 +335,8 @@ const translations: Record<string, Record<string, string>> = {
     saves: "GKセーブ", passes: "パス総数", passAccuracy: "パス成功率", expectedGoals: "期待ゴール (xG)",
     // Market tabs
     overUnderMarket: "オーバー/アンダー", asianHandicapMarket: "アジアンハンディキャップ",
+    // Signal History modal
+    marketType: "マーケットタイプ", betStyle: "ベットスタイル", market1x2: "1X2", marketOU: "O/U", marketHDP: "HDP", winner: "勝者",
     // Buttons
     signalHistory: "シグナル履歴", profitSummary: "利益サマリー",
     // Bet styles
@@ -373,6 +385,8 @@ const translations: Record<string, Record<string, string>> = {
     saves: "선방", passes: "총 패스", passAccuracy: "패스 성공률", expectedGoals: "기대 골 (xG)",
     // Market tabs
     overUnderMarket: "오버/언더", asianHandicapMarket: "아시안 핸디캡",
+    // Signal History modal
+    marketType: "마켓 유형", betStyle: "베팅 스타일", market1x2: "1X2", marketOU: "O/U", marketHDP: "HDP", winner: "승자",
     // Buttons
     signalHistory: "시그널 히스토리", profitSummary: "수익 요약",
     // Bet styles
@@ -421,6 +435,8 @@ const translations: Record<string, Record<string, string>> = {
     saves: "扑救", passes: "传球总数", passAccuracy: "传球成功率", expectedGoals: "预期进球 (xG)",
     // Market tabs
     overUnderMarket: "大小球", asianHandicapMarket: "亚洲让球",
+    // Signal History modal
+    marketType: "市场类型", betStyle: "投注风格", market1x2: "独赢", marketOU: "大小", marketHDP: "让球", winner: "胜者",
     // Buttons
     signalHistory: "信号历史", profitSummary: "利润摘要",
     // Bet styles
@@ -469,6 +485,8 @@ const translations: Record<string, Record<string, string>> = {
     saves: "撲救", passes: "傳球總數", passAccuracy: "傳球成功率", expectedGoals: "預期進球 (xG)",
     // Market tabs
     overUnderMarket: "大小球", asianHandicapMarket: "亞洲讓球",
+    // Signal History modal
+    marketType: "市場類型", betStyle: "投注風格", market1x2: "獨贏", marketOU: "大小", marketHDP: "讓球", winner: "勝者",
     // Buttons
     signalHistory: "信號歷史", profitSummary: "利潤摘要",
     // Bet styles
@@ -517,6 +535,8 @@ const translations: Record<string, Record<string, string>> = {
     saves: "Penyelamatan", passes: "Total Umpan", passAccuracy: "Akurasi Umpan", expectedGoals: "Gol yang Diharapkan (xG)",
     // Market tabs
     overUnderMarket: "Over/Under", asianHandicapMarket: "Handicap Asia",
+    // Signal History modal
+    marketType: "Jenis Pasar", betStyle: "Gaya Taruhan", market1x2: "1X2", marketOU: "O/U", marketHDP: "HDP", winner: "Pemenang",
     // Buttons
     signalHistory: "Riwayat Sinyal", profitSummary: "Ringkasan Keuntungan",
     // Bet styles
@@ -2092,7 +2112,9 @@ export default function MatchDetailClient() {
                         </div>
                         <div>
                           <div className="text-xs text-emerald-400 font-medium uppercase tracking-wider mb-1">{t('aiAdvice')}</div>
-                          <p className="text-gray-300 text-sm">{matchPrediction.advice}</p>
+                          <p className="text-gray-300 text-sm">
+                            {matchPrediction.advice?.replace(/^Winner\s*:\s*/i, `${t('winner')} : `)}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -3169,7 +3191,7 @@ export default function MatchDetailClient() {
                 <div className="absolute top-0 right-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
                 <div className="flex items-center justify-between mb-4 relative z-10">
-                  <h3 className="text-xl font-bold text-white">Signal History</h3>
+                  <h3 className="text-xl font-bold text-white">{t('signalHistory')}</h3>
                   <button
                     onClick={() => setShowSignalHistory(false)}
                     className="p-2 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
@@ -3184,7 +3206,7 @@ export default function MatchDetailClient() {
                 <div className="relative z-10 space-y-3 mb-4">
                   {/* Market Type Filter */}
                   <div>
-                    <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Market Type</label>
+                    <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">{t('marketType')}</label>
                     <div className="flex gap-2">
                       <button
                         onClick={() => setModalMarketFilter('moneyline')}
@@ -3194,7 +3216,7 @@ export default function MatchDetailClient() {
                             : 'bg-white/5 text-gray-400 hover:bg-white/10'
                         }`}
                       >
-                        1X2
+                        {t('market1x2')}
                       </button>
                       <button
                         onClick={() => setModalMarketFilter('overunder')}
@@ -3204,7 +3226,7 @@ export default function MatchDetailClient() {
                             : 'bg-white/5 text-gray-400 hover:bg-white/10'
                         }`}
                       >
-                        O/U
+                        {t('marketOU')}
                       </button>
                       <button
                         onClick={() => setModalMarketFilter('handicap')}
@@ -3214,14 +3236,14 @@ export default function MatchDetailClient() {
                             : 'bg-white/5 text-gray-400 hover:bg-white/10'
                         }`}
                       >
-                        HDP
+                        {t('marketHDP')}
                       </button>
                     </div>
                   </div>
 
                   {/* Bet Style Filter - Mobile Dropdown */}
                   <div className="md:hidden relative">
-                    <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Bet Style</label>
+                    <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">{t('betStyle')}</label>
                     {(() => {
                       const currentStyle = PERSONALITIES.find(p => p.id === modalBetStyleFilter);
                       return (
@@ -3243,24 +3265,31 @@ export default function MatchDetailClient() {
                             </svg>
                           </button>
                           {showModalBetStyleDropdown && (
-                            <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
-                              {PERSONALITIES.filter(p => isStyleAvailable(p.id)).map((p) => (
-                                <button
-                                  key={p.id}
-                                  onClick={() => { setModalBetStyleFilter(p.id); setShowModalBetStyleDropdown(false); }}
-                                  className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
-                                    modalBetStyleFilter === p.id ? `bg-gradient-to-r ${p.color} text-white` : 'text-gray-300 hover:bg-white/5'
-                                  }`}
-                                >
-                                  {p.image && (
-                                    <div className={`w-6 h-6 rounded flex items-center justify-center bg-gradient-to-br ${p.logoColor}`}>
-                                      <img src={p.image} alt={t(p.nameKey)} className="w-4 h-4 object-contain" />
-                                    </div>
-                                  )}
-                                  {t(p.nameKey)}
-                                </button>
-                              ))}
-                            </div>
+                            <>
+                              {/* Backdrop to close dropdown when clicking outside */}
+                              <div
+                                className="fixed inset-0 z-[60]"
+                                onClick={() => setShowModalBetStyleDropdown(false)}
+                              />
+                              <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900/95 backdrop-blur-sm border border-white/10 rounded-xl shadow-2xl z-[70] overflow-hidden">
+                                {PERSONALITIES.filter(p => isStyleAvailable(p.id)).map((p) => (
+                                  <button
+                                    key={p.id}
+                                    onClick={() => { setModalBetStyleFilter(p.id); setShowModalBetStyleDropdown(false); }}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
+                                      modalBetStyleFilter === p.id ? `bg-gradient-to-r ${p.color} text-white` : 'text-gray-300 hover:bg-white/5'
+                                    }`}
+                                  >
+                                    {p.image && (
+                                      <div className={`w-6 h-6 rounded flex items-center justify-center bg-gradient-to-br ${p.logoColor}`}>
+                                        <img src={p.image} alt={t(p.nameKey)} className="w-4 h-4 object-contain" />
+                                      </div>
+                                    )}
+                                    {t(p.nameKey)}
+                                  </button>
+                                ))}
+                              </div>
+                            </>
                           )}
                         </>
                       );
@@ -3269,7 +3298,7 @@ export default function MatchDetailClient() {
 
                   {/* Bet Style Filter - Desktop */}
                   <div className="hidden md:block">
-                    <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Bet Style</label>
+                    <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">{t('betStyle')}</label>
                     <div className="flex gap-2 overflow-x-auto pb-1">
                       {PERSONALITIES.filter(p => isStyleAvailable(p.id)).map((p) => (
                         <button
