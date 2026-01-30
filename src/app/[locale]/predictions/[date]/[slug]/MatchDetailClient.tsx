@@ -4993,9 +4993,51 @@ export default function MatchDetailClient() {
                           </div>
                         );
                       }
+                      // Get first signal for mobile card
+                      const firstSignal = lastLiveSignals[0] as unknown as Record<string, unknown>;
+                      const mobileSelection = String(firstSignal.selection_ou || '').toLowerCase();
+                      const mobileSelectionLabel = mobileSelection === 'over' ? t('over') : t('under');
+                      const mobileLineValue = firstSignal.total_points_mainline ?? firstSignal.totalpoints_main_line ?? firstSignal.line_ou ?? firstSignal.line ?? null;
+                      const mobileLine = mobileLineValue !== null && mobileLineValue !== undefined ? String(mobileLineValue) : '-';
+                      const mobileFairOdds = firstSignal.fair_odds_ou !== null && firstSignal.fair_odds_ou !== undefined ? Number(firstSignal.fair_odds_ou).toFixed(2) : '-';
+                      const mobileMarketOdds = firstSignal.market_odds_ou !== null && firstSignal.market_odds_ou !== undefined ? Number(firstSignal.market_odds_ou).toFixed(2) : '-';
+                      const mobileEvStr = String(firstSignal.expected_value_ou || '').replace('%', '');
+                      const mobileEvNum = parseFloat(mobileEvStr);
+                      const mobileEvDisplay = !isNaN(mobileEvNum) ? `+${mobileEvNum.toFixed(2)}%` : '-';
+                      const mobileStakeStr = String(firstSignal.recommended_stake_ou || '').replace('%', '');
+                      const mobileStakeNum = parseFloat(mobileStakeStr);
+                      const mobileStakeDisplay = !isNaN(mobileStakeNum) ? `${mobileStakeNum.toFixed(2)}u` : '-';
+                      const mobileClock = firstSignal.clock;
+                      const mobileScoreHome = firstSignal.score_home ?? '-';
+                      const mobileScoreAway = firstSignal.score_away ?? '-';
+
                       return (
                         <div className="opacity-30">
-                          <div className="overflow-x-auto">
+                          {/* Mobile Card View */}
+                          <div className="md:hidden">
+                            <div className="bg-gray-800/50 rounded-xl p-3 border border-white/10">
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                  <span className="text-white font-bold">{mobileClock !== null && mobileClock !== undefined ? `${String(mobileClock)}''` : '-'}</span>
+                                  <span className="text-gray-300">{String(mobileScoreHome)}-{String(mobileScoreAway)}</span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2 mb-3">
+                                <span className="px-2 py-1 rounded text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">{mobileSelectionLabel}</span>
+                                <span className="text-amber-400 text-sm">{t('line')}: {mobileLine}</span>
+                              </div>
+                              <div className="grid grid-cols-4 gap-2 text-center text-xs">
+                                <div><div className="text-gray-500 mb-1">Fair</div><div className="text-gray-300">{mobileFairOdds}</div></div>
+                                <div><div className="text-gray-500 mb-1">Market</div><div className="text-white font-semibold">{mobileMarketOdds}</div></div>
+                                <div><div className="text-gray-500 mb-1">EV</div><div className="text-yellow-400">{mobileEvDisplay}</div></div>
+                                <div><div className="text-gray-500 mb-1">{t('stake')}</div><div className="text-emerald-400">{mobileStakeDisplay}</div></div>
+                              </div>
+                            </div>
+                            <div className="text-center mt-3 text-gray-500 text-sm">{t('matchEnded')}</div>
+                          </div>
+
+                          {/* Desktop Table */}
+                          <div className="hidden md:block overflow-x-auto">
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="border-b border-white/10">
@@ -5015,7 +5057,7 @@ export default function MatchDetailClient() {
                                   const selection = String(raw.selection_ou || '').toLowerCase();
                                   const lineValue = raw.total_points_mainline ?? raw.totalpoints_main_line ?? raw.line_ou ?? raw.line ?? null;
                                   const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '-';
-                                  const selectionLabel = selection === 'over' ? 'Over' : 'Under';
+                                  const selectionLabel = selection === 'over' ? t('over') : t('under');
                                   const fairOdds = raw.fair_odds_ou !== null && raw.fair_odds_ou !== undefined ? Number(raw.fair_odds_ou).toFixed(2) : '-';
                                   const marketOdds = raw.market_odds_ou !== null && raw.market_odds_ou !== undefined ? Number(raw.market_odds_ou).toFixed(2) : '-';
                                   const evStr = String(raw.expected_value_ou || '').replace('%', '');
@@ -5031,7 +5073,7 @@ export default function MatchDetailClient() {
                                     <tr key={index} className="border-b border-white/5">
                                       <td className="py-2 px-3">
                                         {clock !== null && clock !== undefined ? (
-                                          <span className="text-red-400 font-bold tabular-nums">{String(clock)}'</span>
+                                          <span className="text-red-400 font-bold tabular-nums">{String(clock)}&apos;</span>
                                         ) : (
                                           <span className="text-gray-500">-</span>
                                         )}
@@ -5056,8 +5098,8 @@ export default function MatchDetailClient() {
                                 })}
                               </tbody>
                             </table>
+                            <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                           </div>
-                          <div className="text-center mt-4 text-gray-500 text-sm">{t('matchEnded')}</div>
                         </div>
                       );
                     })()
