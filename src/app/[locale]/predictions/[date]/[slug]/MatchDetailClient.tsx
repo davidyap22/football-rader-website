@@ -1139,6 +1139,9 @@ export default function MatchDetailClient() {
       fetchSignalHistory(selectedMarket, selectedPersonality);
     }
 
+    // Close any open dropdowns before showing modal
+    setShowPersonalityDropdown(false);
+    setShowSectionDropdown(false);
     setShowSignalHistory(true);
   };
 
