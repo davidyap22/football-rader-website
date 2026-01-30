@@ -719,6 +719,12 @@ export default function MatchDetailClient() {
   // Mobile section dropdown state
   const [showSectionDropdown, setShowSectionDropdown] = useState(false);
 
+  // Mobile personality/model dropdown state
+  const [showPersonalityDropdown, setShowPersonalityDropdown] = useState(false);
+
+  // Mobile signal history bet style dropdown state
+  const [showModalBetStyleDropdown, setShowModalBetStyleDropdown] = useState(false);
+
   // Translation function
   const t = (key: string): string => {
     return translations[selectedLang]?.[key] || translations['EN']?.[key] || key;
@@ -3037,8 +3043,56 @@ export default function MatchDetailClient() {
                     </div>
                   </div>
 
-                  {/* Bet Style Filter */}
-                  <div>
+                  {/* Bet Style Filter - Mobile Dropdown */}
+                  <div className="md:hidden relative">
+                    <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Bet Style</label>
+                    {(() => {
+                      const currentStyle = PERSONALITIES.find(p => p.id === modalBetStyleFilter);
+                      return (
+                        <>
+                          <button
+                            onClick={() => setShowModalBetStyleDropdown(!showModalBetStyleDropdown)}
+                            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl bg-gradient-to-r ${currentStyle?.color || 'from-gray-700 to-gray-800'} border border-white/20 text-white`}
+                          >
+                            <span className="flex items-center gap-2 font-medium text-sm">
+                              {currentStyle?.image && (
+                                <div className={`w-6 h-6 rounded flex items-center justify-center bg-gradient-to-br ${currentStyle.logoColor}`}>
+                                  <img src={currentStyle.image} alt={t(currentStyle.nameKey)} className="w-4 h-4 object-contain" />
+                                </div>
+                              )}
+                              {currentStyle ? t(currentStyle.nameKey) : ''}
+                            </span>
+                            <svg className={`w-4 h-4 transition-transform ${showModalBetStyleDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                          {showModalBetStyleDropdown && (
+                            <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+                              {PERSONALITIES.filter(p => isStyleAvailable(p.id)).map((p) => (
+                                <button
+                                  key={p.id}
+                                  onClick={() => { setModalBetStyleFilter(p.id); setShowModalBetStyleDropdown(false); }}
+                                  className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
+                                    modalBetStyleFilter === p.id ? `bg-gradient-to-r ${p.color} text-white` : 'text-gray-300 hover:bg-white/5'
+                                  }`}
+                                >
+                                  {p.image && (
+                                    <div className={`w-6 h-6 rounded flex items-center justify-center bg-gradient-to-br ${p.logoColor}`}>
+                                      <img src={p.image} alt={t(p.nameKey)} className="w-4 h-4 object-contain" />
+                                    </div>
+                                  )}
+                                  {t(p.nameKey)}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Bet Style Filter - Desktop */}
+                  <div className="hidden md:block">
                     <label className="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Bet Style</label>
                     <div className="flex gap-2 overflow-x-auto pb-1">
                       {PERSONALITIES.filter(p => isStyleAvailable(p.id)).map((p) => (
@@ -4097,18 +4151,6 @@ export default function MatchDetailClient() {
                 )}
               </div>
               <div className="flex items-center gap-2">
-                {/* Profit Summary Button - Only for Finished matches */}
-                {match.type === 'Finished' && (
-                  <button
-                    onClick={openProfitSummary}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-medium hover:from-emerald-500/30 hover:to-cyan-500/30 transition-all cursor-pointer"
-                  >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    {t('profitSummary')}
-                  </button>
-                )}
                 <button
                   onClick={openSignalHistory}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-400 text-xs font-medium hover:from-amber-500/30 hover:to-orange-500/30 transition-all cursor-pointer"
@@ -4121,8 +4163,61 @@ export default function MatchDetailClient() {
               </div>
             </div>
 
-            {/* Personality Quick Select - Updated to match Performance page */}
-            <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+            {/* Personality Quick Select - Mobile Dropdown */}
+            <div className="md:hidden mb-4 relative">
+              {(() => {
+                const currentPersonality = PERSONALITIES.find(p => p.id === selectedPersonality);
+                return (
+                  <>
+                    <button
+                      onClick={() => setShowPersonalityDropdown(!showPersonalityDropdown)}
+                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl bg-gradient-to-r ${currentPersonality?.color || 'from-gray-700 to-gray-800'} border border-white/20 text-white`}
+                    >
+                      <span className="flex items-center gap-2 font-medium">
+                        {currentPersonality?.image && (
+                          <div className={`w-7 h-7 rounded-lg flex items-center justify-center bg-gradient-to-br ${currentPersonality.logoColor}`}>
+                            <img src={currentPersonality.image} alt={t(currentPersonality.nameKey)} className="w-5 h-5 object-contain" />
+                          </div>
+                        )}
+                        <span className="text-sm">{currentPersonality ? t(currentPersonality.nameKey) : ''}</span>
+                      </span>
+                      <svg className={`w-5 h-5 transition-transform ${showPersonalityDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {showPersonalityDropdown && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+                        {PERSONALITIES.map((p) => {
+                          const available = isStyleAvailable(p.id);
+                          const isLocked = p.isLocked || !available;
+                          return (
+                            <button
+                              key={p.id}
+                              onClick={() => { if (!isLocked) { handlePersonalityChange(p.id); setShowPersonalityDropdown(false); } }}
+                              disabled={isLocked}
+                              className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
+                                isLocked ? 'text-gray-500 cursor-not-allowed' : selectedPersonality === p.id ? `bg-gradient-to-r ${p.color} text-white` : 'text-gray-300 hover:bg-white/5'
+                              }`}
+                            >
+                              {p.image && (
+                                <div className={`w-7 h-7 rounded-lg flex items-center justify-center bg-gradient-to-br ${p.logoColor}`}>
+                                  <img src={p.image} alt={t(p.nameKey)} className="w-5 h-5 object-contain" />
+                                </div>
+                              )}
+                              {t(p.nameKey)}
+                              {p.isLocked && <span className="ml-auto text-xs text-orange-400">COMING SOON</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
+
+            {/* Personality Quick Select - Desktop */}
+            <div className="hidden md:flex gap-2 mb-4 overflow-x-auto pb-1">
               {PERSONALITIES.map((p) => {
                 const available = isStyleAvailable(p.id);
                 const isLocked = p.isLocked || !available;
@@ -4131,7 +4226,7 @@ export default function MatchDetailClient() {
                     key={p.id}
                     onClick={() => !isLocked && handlePersonalityChange(p.id)}
                     disabled={isLocked}
-                    className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all relative overflow-hidden group flex items-center gap-1.5 md:gap-2 flex-shrink-0 ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all relative overflow-hidden group flex items-center gap-2 flex-shrink-0 ${
                       isLocked
                         ? 'bg-gray-800 text-gray-400 border border-gray-700 cursor-not-allowed'
                         : selectedPersonality === p.id
@@ -4139,40 +4234,20 @@ export default function MatchDetailClient() {
                         : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10 cursor-pointer'
                     }`}
                   >
-                    {/* Coming Soon badge for locked features */}
                     {p.isLocked && (
                       <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full z-20 shadow-lg">
                         COMING SOON
                       </span>
                     )}
-
-                    {/* Hover shine effect */}
                     {selectedPersonality !== p.id && !isLocked && (
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                     )}
-
-                    {/* Icon image with custom background colors */}
                     {p.image && (
-                      <div
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center relative z-10 transition-all bg-gradient-to-br ${p.logoColor} ${
-                          selectedPersonality === p.id
-                            ? 'shadow-xl scale-110 ring-2 ring-white/30'
-                            : ''
-                        }`}
-                      >
-                        <img
-                          src={p.image}
-                          alt={t(p.nameKey)}
-                          className={`object-contain transition-all ${
-                            selectedPersonality === p.id ? 'w-6 h-6' : 'w-5 h-5'
-                          }`}
-                        />
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center relative z-10 transition-all bg-gradient-to-br ${p.logoColor} ${selectedPersonality === p.id ? 'shadow-xl scale-110 ring-2 ring-white/30' : ''}`}>
+                        <img src={p.image} alt={t(p.nameKey)} className={`object-contain transition-all ${selectedPersonality === p.id ? 'w-6 h-6' : 'w-5 h-5'}`} />
                       </div>
                     )}
-
                     <span className="relative z-10 whitespace-nowrap">{t(p.nameKey)}</span>
-
-                    {/* Lock icon for subscription-locked styles */}
                     {!p.isLocked && !available && (
                       <svg className="w-3 h-3 relative z-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
