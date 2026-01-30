@@ -256,8 +256,8 @@ export default function ArticlePage() {
   };
 
   const getLocaleUrl = (targetLocale: Locale): string => {
-    const basePath = targetLocale === 'en' ? '' : `/${targetLocale}`;
-    return `${basePath}/news/${slug}/${date}/${articleId}`;
+    // Always include locale prefix to match route structure
+    return `/${targetLocale}/news/${slug}/${date}/${articleId}`;
   };
 
   const t = (key: string) => translations[selectedLang]?.[key] || translations['EN'][key] || key;

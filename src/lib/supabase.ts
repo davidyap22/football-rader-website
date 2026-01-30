@@ -951,8 +951,8 @@ export const buildNewsUrl = (news: FootballNews, locale: string = 'en'): string 
   const date = formatNewsDate(news.created_at || news.published_at);
   const id = news.id;
 
-  const basePath = locale === 'en' ? '' : `/${locale}`;
-  return `${basePath}/news/${slug}/${date}/${id}`;
+  // Always include locale prefix to match [locale]/news/[slug]/[date]/[id] route structure
+  return `/${locale}/news/${slug}/${date}/${id}`;
 };
 
 // Contact message interface
