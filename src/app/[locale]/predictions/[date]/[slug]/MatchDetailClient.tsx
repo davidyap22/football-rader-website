@@ -812,24 +812,12 @@ export default function MatchDetailClient() {
     const leagueConfig = LEAGUES_CONFIG.find(l => l.dbName === match?.league_name);
     const leagueSlug = leagueConfig?.slug || 'premier-league';
 
-    // Normalize team name (remove accents) for TEAM_MAPPINGS lookup
-    const normalizedTeamName = teamName
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, ''); // Remove diacritics: München -> Munchen
-
-    // Try to get team slug from TEAM_MAPPINGS (check both original and normalized)
-    const teamMapping = TEAM_MAPPINGS[teamName] || TEAM_MAPPINGS[normalizedTeamName];
-    let teamSlug = teamMapping?.slug;
-
-    // If not found, generate slug from team name
-    if (!teamSlug) {
-      teamSlug = normalizedTeamName
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
-        .replace(/\s+/g, '-') // Replace spaces with hyphens
-        .replace(/-+/g, '-') // Replace multiple hyphens
-        .trim();
-    }
+    // Generate slug from team name - preserve accented characters (e.g., München stays as münchen)
+    const teamSlug = teamName
+      .toLowerCase()
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens
+      .trim();
 
     return localePath(`/leagues/${leagueSlug}/${teamSlug}`);
   };
