@@ -383,7 +383,7 @@ ${realBetResults.length > 0 ? `
 Verified Actual Bets Placed: ${realBetSummary.totalBets} bets
 Total Verified Profit: ${realBetSummary.totalProfit >= 0 ? '+' : ''}$${realBetSummary.totalProfit.toFixed(2)}
 Bet Types: ${realBetSummary.betTypes.join(', ')}
-${realBetSummary.pdfLinks.length > 0 ? `PDF Proof Available: ${realBetSummary.pdfLinks.map(p => `${p.type} (${p.url})`).join(', ')}` : ''}
+${realBetSummary.pdfLinks.length > 0 ? `PDF Proof Available: ${realBetSummary.pdfLinks.map((p: { type: string; url: string }) => `${p.type} (${p.url})`).join(', ')}` : ''}
 Verification Status: VERIFIED - Downloadable PDF bet slips available as proof
 ` : 'No real bet results recorded for this match.'}
 
