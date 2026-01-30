@@ -812,7 +812,13 @@ export default function MatchDetailClient() {
     const leagueConfig = LEAGUES_CONFIG.find(l => l.dbName === match?.league_name);
     const leagueSlug = leagueConfig?.slug || 'premier-league';
 
-    // Generate slug from team name - preserve accented characters (e.g., München stays as münchen)
+    // Try to get team slug from TEAM_MAPPINGS first
+    const teamMapping = TEAM_MAPPINGS[teamName];
+    if (teamMapping?.slug) {
+      return localePath(`/leagues/${leagueSlug}/${teamMapping.slug}`);
+    }
+
+    // Fallback: generate slug from team name - preserve accented characters
     const teamSlug = teamName
       .toLowerCase()
       .replace(/\s+/g, '-') // Replace spaces with hyphens

@@ -67,10 +67,12 @@ const TEAM_MAPPINGS: Record<string, { league: string; slug: string }> = {
   'Real Valladolid': { league: 'la-liga', slug: 'real-valladolid' },
 
   // Bundesliga
-  'Bayern Munich': { league: 'bundesliga', slug: 'bayern-munich' },
-  'Bayern': { league: 'bundesliga', slug: 'bayern-munich' },
-  'FC Bayern': { league: 'bundesliga', slug: 'bayern-munich' },
-  'Bayern Munchen': { league: 'bundesliga', slug: 'bayern-munich' },
+  'Bayern Munich': { league: 'bundesliga', slug: 'bayern-münchen' },
+  'Bayern': { league: 'bundesliga', slug: 'bayern-münchen' },
+  'FC Bayern': { league: 'bundesliga', slug: 'bayern-münchen' },
+  'FC Bayern München': { league: 'bundesliga', slug: 'bayern-münchen' },
+  'Bayern Munchen': { league: 'bundesliga', slug: 'bayern-münchen' },
+  'Bayern München': { league: 'bundesliga', slug: 'bayern-münchen' },
   'Borussia Dortmund': { league: 'bundesliga', slug: 'borussia-dortmund' },
   'Dortmund': { league: 'bundesliga', slug: 'borussia-dortmund' },
   'BVB': { league: 'bundesliga', slug: 'borussia-dortmund' },
