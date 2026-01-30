@@ -98,6 +98,8 @@ const translations: Record<string, Record<string, string>> = {
     matchNotStarted: "Match has not started yet",
     matchEnded: "Match has ended",
     homeWin: "Home Win", awayWin: "Away Win",
+    // AI Prediction section
+    aiAdvice: "AI Advice", predictedWinner: "Predicted Winner", goals: "Goals", homeGoals: "Home Goals", awayGoals: "Away Goals",
     // Stats labels
     winProbability: "WIN PROBABILITY",
     statStrength: "Strength", statAttacking: "Attacking", statDefensive: "Defensive",
@@ -144,6 +146,8 @@ const translations: Record<string, Record<string, string>> = {
     matchNotStarted: "El partido aún no ha comenzado",
     matchEnded: "El partido ha terminado",
     homeWin: "Victoria Local", awayWin: "Victoria Visitante",
+    // AI Prediction section
+    aiAdvice: "Consejo IA", predictedWinner: "Ganador Predicho", goals: "Goles", homeGoals: "Goles Local", awayGoals: "Goles Visitante",
     // Stats labels
     winProbability: "PROBABILIDAD DE VICTORIA",
     statStrength: "Fuerza", statAttacking: "Ataque", statDefensive: "Defensa",
@@ -190,6 +194,8 @@ const translations: Record<string, Record<string, string>> = {
     matchNotStarted: "A partida ainda não começou",
     matchEnded: "A partida terminou",
     homeWin: "Vitória Casa", awayWin: "Vitória Fora",
+    // AI Prediction section
+    aiAdvice: "Conselho IA", predictedWinner: "Vencedor Previsto", goals: "Gols", homeGoals: "Gols Casa", awayGoals: "Gols Fora",
     // Stats labels
     winProbability: "PROBABILIDADE DE VITÓRIA",
     statStrength: "Força", statAttacking: "Ataque", statDefensive: "Defesa",
@@ -236,6 +242,8 @@ const translations: Record<string, Record<string, string>> = {
     matchNotStarted: "Das Spiel hat noch nicht begonnen",
     matchEnded: "Das Spiel ist beendet",
     homeWin: "Heimsieg", awayWin: "Auswärtssieg",
+    // AI Prediction section
+    aiAdvice: "KI-Ratschlag", predictedWinner: "Vorhergesagter Sieger", goals: "Tore", homeGoals: "Heim Tore", awayGoals: "Auswärts Tore",
     // Stats labels
     winProbability: "SIEGWAHRSCHEINLICHKEIT",
     statStrength: "Stärke", statAttacking: "Angriff", statDefensive: "Verteidigung",
@@ -282,6 +290,8 @@ const translations: Record<string, Record<string, string>> = {
     matchNotStarted: "Le match n'a pas encore commencé",
     matchEnded: "Le match est terminé",
     homeWin: "Victoire Domicile", awayWin: "Victoire Extérieur",
+    // AI Prediction section
+    aiAdvice: "Conseil IA", predictedWinner: "Vainqueur Prédit", goals: "Buts", homeGoals: "Buts Domicile", awayGoals: "Buts Extérieur",
     // Stats labels
     winProbability: "PROBABILITÉ DE VICTOIRE",
     statStrength: "Force", statAttacking: "Attaque", statDefensive: "Défense",
@@ -328,6 +338,8 @@ const translations: Record<string, Record<string, string>> = {
     matchNotStarted: "試合はまだ始まっていません",
     matchEnded: "試合が終了しました",
     homeWin: "ホーム勝利", awayWin: "アウェイ勝利",
+    // AI Prediction section
+    aiAdvice: "AIアドバイス", predictedWinner: "予想勝者", goals: "ゴール", homeGoals: "ホームゴール", awayGoals: "アウェイゴール",
     // Stats labels
     winProbability: "勝利確率",
     statStrength: "強さ", statAttacking: "攻撃力", statDefensive: "守備力",
@@ -374,6 +386,8 @@ const translations: Record<string, Record<string, string>> = {
     matchNotStarted: "경기가 아직 시작되지 않았습니다",
     matchEnded: "경기가 종료되었습니다",
     homeWin: "홈 승리", awayWin: "원정 승리",
+    // AI Prediction section
+    aiAdvice: "AI 조언", predictedWinner: "예상 승자", goals: "골", homeGoals: "홈 골", awayGoals: "원정 골",
     // Stats labels
     winProbability: "승리 확률",
     statStrength: "강도", statAttacking: "공격력", statDefensive: "수비력",
@@ -420,6 +434,8 @@ const translations: Record<string, Record<string, string>> = {
     matchNotStarted: "比赛尚未开始",
     matchEnded: "比赛已结束",
     homeWin: "主胜", awayWin: "客胜",
+    // AI Prediction section
+    aiAdvice: "AI建议", predictedWinner: "预测胜者", goals: "进球", homeGoals: "主队进球", awayGoals: "客队进球",
     // Stats labels
     winProbability: "胜率",
     statStrength: "实力", statAttacking: "进攻", statDefensive: "防守",
@@ -466,6 +482,8 @@ const translations: Record<string, Record<string, string>> = {
     matchNotStarted: "比賽尚未開始",
     matchEnded: "比賽已結束",
     homeWin: "主勝", awayWin: "客勝",
+    // AI Prediction section
+    aiAdvice: "AI建議", predictedWinner: "預測勝者", goals: "進球", homeGoals: "主隊進球", awayGoals: "客隊進球",
     // Stats labels
     winProbability: "勝率",
     statStrength: "實力", statAttacking: "進攻", statDefensive: "防守",
@@ -512,6 +530,8 @@ const translations: Record<string, Record<string, string>> = {
     matchNotStarted: "Pertandingan belum dimulai",
     matchEnded: "Pertandingan telah selesai",
     homeWin: "Tuan Rumah Menang", awayWin: "Tamu Menang",
+    // AI Prediction section
+    aiAdvice: "Saran AI", predictedWinner: "Pemenang Prediksi", goals: "Gol", homeGoals: "Gol Tuan Rumah", awayGoals: "Gol Tamu",
     // Stats labels
     winProbability: "PROBABILITAS KEMENANGAN",
     statStrength: "Kekuatan", statAttacking: "Serangan", statDefensive: "Pertahanan",
@@ -2071,7 +2091,7 @@ export default function MatchDetailClient() {
                           </svg>
                         </div>
                         <div>
-                          <div className="text-xs text-emerald-400 font-medium uppercase tracking-wider mb-1">AI Advice</div>
+                          <div className="text-xs text-emerald-400 font-medium uppercase tracking-wider mb-1">{t('aiAdvice')}</div>
                           <p className="text-gray-300 text-sm">{matchPrediction.advice}</p>
                         </div>
                       </div>
@@ -2087,7 +2107,7 @@ export default function MatchDetailClient() {
                         {/* Glow pulse */}
                         <div className="absolute inset-0 animate-pulse bg-emerald-500/10 rounded-xl" />
                         <div className="relative">
-                          <div className="text-xs text-emerald-300/80 mb-2 font-medium uppercase tracking-wider">Predicted Winner</div>
+                          <div className="text-xs text-emerald-300/80 mb-2 font-medium uppercase tracking-wider">{t('predictedWinner')}</div>
                           <div className="text-emerald-400 font-bold text-lg flex items-center justify-center gap-2">
                             <span className="animate-bounce text-xl">🏆</span>
                             <span className="drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">{matchPrediction.winner_name}</span>
@@ -2097,7 +2117,7 @@ export default function MatchDetailClient() {
                     )}
                     {matchPrediction.under_over && (
                       <div className="bg-white/5 rounded-xl p-4 text-center border border-white/5">
-                        <div className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Goals</div>
+                        <div className="text-xs text-gray-500 mb-2 uppercase tracking-wider">{t('goals')}</div>
                         <div className="text-cyan-400 font-bold text-base">{matchPrediction.under_over}</div>
                       </div>
                     )}
@@ -2114,7 +2134,7 @@ export default function MatchDetailClient() {
                           <div className="absolute inset-0 animate-pulse bg-blue-500/5 rounded-xl" />
                         )}
                         <div className="relative">
-                          <div className={`text-xs mb-2 uppercase tracking-wider ${matchPrediction.winner_name === match?.home_name ? 'text-blue-300/80 font-medium' : 'text-gray-500'}`}>Home Goals</div>
+                          <div className={`text-xs mb-2 uppercase tracking-wider ${matchPrediction.winner_name === match?.home_name ? 'text-blue-300/80 font-medium' : 'text-gray-500'}`}>{t('homeGoals')}</div>
                           <div className={`font-bold text-lg ${matchPrediction.winner_name === match?.home_name ? 'text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]' : 'text-blue-400'}`}>
                             {matchPrediction.goals_home}
                           </div>
@@ -2134,7 +2154,7 @@ export default function MatchDetailClient() {
                           <div className="absolute inset-0 animate-pulse bg-green-500/5 rounded-xl" />
                         )}
                         <div className="relative">
-                          <div className={`text-xs mb-2 uppercase tracking-wider ${matchPrediction.winner_name === match?.away_name ? 'text-green-300/80 font-medium' : 'text-gray-500'}`}>Away Goals</div>
+                          <div className={`text-xs mb-2 uppercase tracking-wider ${matchPrediction.winner_name === match?.away_name ? 'text-green-300/80 font-medium' : 'text-gray-500'}`}>{t('awayGoals')}</div>
                           <div className={`font-bold text-lg ${matchPrediction.winner_name === match?.away_name ? 'text-green-400 drop-shadow-[0_0_10px_rgba(34,197,94,0.6)]' : 'text-green-400'}`}>
                             {matchPrediction.goals_away}
                           </div>
