@@ -95,6 +95,10 @@ const translations: Record<string, Record<string, string>> = {
     betType: "Bet Type", oddsAtSignal: "Odds at Signal", scoreHome: "Score Home", scoreAway: "Score Away",
     matchNotStarted: "Match has not started yet",
     homeWin: "Home Win", awayWin: "Away Win",
+    // Stats labels
+    winProbability: "WIN PROBABILITY",
+    statStrength: "Strength", statAttacking: "Attacking", statDefensive: "Defensive",
+    statPoisson: "Poisson", statH2hStrength: "H2H Strength", statH2hGoals: "H2H Goals",
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA", community: "Comunidad", news: "Noticias", solution: "Solución", pricing: "Precios",
@@ -135,6 +139,10 @@ const translations: Record<string, Record<string, string>> = {
     betType: "Tipo de Apuesta", oddsAtSignal: "Cuotas en Señal", scoreHome: "Goles Local", scoreAway: "Goles Visitante",
     matchNotStarted: "El partido aún no ha comenzado",
     homeWin: "Victoria Local", awayWin: "Victoria Visitante",
+    // Stats labels
+    winProbability: "PROBABILIDAD DE VICTORIA",
+    statStrength: "Fuerza", statAttacking: "Ataque", statDefensive: "Defensa",
+    statPoisson: "Poisson", statH2hStrength: "Fuerza H2H", statH2hGoals: "Goles H2H",
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho IA", community: "Comunidade", news: "Notícias", solution: "Solução", pricing: "Preços",
@@ -175,6 +183,10 @@ const translations: Record<string, Record<string, string>> = {
     betType: "Tipo de Aposta", oddsAtSignal: "Odds no Sinal", scoreHome: "Gols Casa", scoreAway: "Gols Fora",
     matchNotStarted: "A partida ainda não começou",
     homeWin: "Vitória Casa", awayWin: "Vitória Fora",
+    // Stats labels
+    winProbability: "PROBABILIDADE DE VITÓRIA",
+    statStrength: "Força", statAttacking: "Ataque", statDefensive: "Defesa",
+    statPoisson: "Poisson", statH2hStrength: "Força H2H", statH2hGoals: "Gols H2H",
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung", community: "Community", news: "Nachrichten", solution: "Lösung", pricing: "Preise",
@@ -215,6 +227,10 @@ const translations: Record<string, Record<string, string>> = {
     betType: "Wetttyp", oddsAtSignal: "Quoten bei Signal", scoreHome: "Tore Heim", scoreAway: "Tore Auswärts",
     matchNotStarted: "Das Spiel hat noch nicht begonnen",
     homeWin: "Heimsieg", awayWin: "Auswärtssieg",
+    // Stats labels
+    winProbability: "SIEGWAHRSCHEINLICHKEIT",
+    statStrength: "Stärke", statAttacking: "Angriff", statDefensive: "Verteidigung",
+    statPoisson: "Poisson", statH2hStrength: "H2H Stärke", statH2hGoals: "H2H Tore",
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance IA", community: "Communauté", news: "Actualités", solution: "Solution", pricing: "Tarifs",
@@ -255,6 +271,10 @@ const translations: Record<string, Record<string, string>> = {
     betType: "Type de Pari", oddsAtSignal: "Cotes au Signal", scoreHome: "Score Domicile", scoreAway: "Score Extérieur",
     matchNotStarted: "Le match n'a pas encore commencé",
     homeWin: "Victoire Domicile", awayWin: "Victoire Extérieur",
+    // Stats labels
+    winProbability: "PROBABILITÉ DE VICTOIRE",
+    statStrength: "Force", statAttacking: "Attaque", statDefensive: "Défense",
+    statPoisson: "Poisson", statH2hStrength: "Force H2H", statH2hGoals: "Buts H2H",
   },
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AIパフォーマンス", community: "コミュニティ", news: "ニュース", solution: "ソリューション", pricing: "料金",
@@ -295,6 +315,10 @@ const translations: Record<string, Record<string, string>> = {
     betType: "ベットタイプ", oddsAtSignal: "シグナル時オッズ", scoreHome: "ホームスコア", scoreAway: "アウェイスコア",
     matchNotStarted: "試合はまだ始まっていません",
     homeWin: "ホーム勝利", awayWin: "アウェイ勝利",
+    // Stats labels
+    winProbability: "勝利確率",
+    statStrength: "強さ", statAttacking: "攻撃力", statDefensive: "守備力",
+    statPoisson: "ポアソン", statH2hStrength: "対戦強度", statH2hGoals: "対戦得点",
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성능", community: "커뮤니티", news: "뉴스", solution: "솔루션", pricing: "가격",
@@ -335,6 +359,10 @@ const translations: Record<string, Record<string, string>> = {
     betType: "베팅 유형", oddsAtSignal: "시그널 시 배당률", scoreHome: "홈 득점", scoreAway: "원정 득점",
     matchNotStarted: "경기가 아직 시작되지 않았습니다",
     homeWin: "홈 승리", awayWin: "원정 승리",
+    // Stats labels
+    winProbability: "승리 확률",
+    statStrength: "강도", statAttacking: "공격력", statDefensive: "수비력",
+    statPoisson: "포아송", statH2hStrength: "상대 전적 강도", statH2hGoals: "상대 전적 득점",
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现", community: "社区", news: "新闻", solution: "解决方案", pricing: "价格",
@@ -375,6 +403,10 @@ const translations: Record<string, Record<string, string>> = {
     betType: "投注类型", oddsAtSignal: "信号时赔率", scoreHome: "主队比分", scoreAway: "客队比分",
     matchNotStarted: "比赛尚未开始",
     homeWin: "主胜", awayWin: "客胜",
+    // Stats labels
+    winProbability: "胜率",
+    statStrength: "实力", statAttacking: "进攻", statDefensive: "防守",
+    statPoisson: "泊松", statH2hStrength: "交锋实力", statH2hGoals: "交锋进球",
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現", community: "社區", news: "新聞", solution: "解決方案", pricing: "價格",
@@ -415,6 +447,10 @@ const translations: Record<string, Record<string, string>> = {
     betType: "投注類型", oddsAtSignal: "信號時賠率", scoreHome: "主隊比分", scoreAway: "客隊比分",
     matchNotStarted: "比賽尚未開始",
     homeWin: "主勝", awayWin: "客勝",
+    // Stats labels
+    winProbability: "勝率",
+    statStrength: "實力", statAttacking: "進攻", statDefensive: "防守",
+    statPoisson: "泊松", statH2hStrength: "交鋒實力", statH2hGoals: "交鋒進球",
   },
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI", community: "Komunitas", news: "Berita", solution: "Solusi", pricing: "Harga",
@@ -455,6 +491,10 @@ const translations: Record<string, Record<string, string>> = {
     betType: "Jenis Taruhan", oddsAtSignal: "Odds saat Sinyal", scoreHome: "Skor Tuan Rumah", scoreAway: "Skor Tamu",
     matchNotStarted: "Pertandingan belum dimulai",
     homeWin: "Tuan Rumah Menang", awayWin: "Tamu Menang",
+    // Stats labels
+    winProbability: "PROBABILITAS KEMENANGAN",
+    statStrength: "Kekuatan", statAttacking: "Serangan", statDefensive: "Pertahanan",
+    statPoisson: "Poisson", statH2hStrength: "Kekuatan H2H", statH2hGoals: "Gol H2H",
   },
 };
 
@@ -1854,7 +1894,7 @@ export default function MatchDetailClient() {
                   {/* Win Probability Bar */}
                   {(matchPrediction.prob_home || matchPrediction.prob_draw || matchPrediction.prob_away) && (
                     <div className="mb-6">
-                      <div className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Win Probability</div>
+                      <div className="text-xs text-gray-500 mb-2 uppercase tracking-wider">{t('winProbability')}</div>
                       <div className="flex h-8 rounded-lg overflow-hidden">
                         <div
                           className="bg-blue-500 flex items-center justify-center text-xs font-bold text-white"
@@ -1888,12 +1928,12 @@ export default function MatchDetailClient() {
                     <ResponsiveContainer width="100%" height={320}>
                       <RadarChart
                         data={[
-                          { stat: 'Strength', home: matchPrediction.strength_home ?? 0, away: matchPrediction.strength_away ?? 0 },
-                          { stat: 'Attacking', home: matchPrediction.attacking_home ?? 0, away: matchPrediction.attacking_away ?? 0 },
-                          { stat: 'Defensive', home: matchPrediction.defensive_home ?? 0, away: matchPrediction.defensive_away ?? 0 },
-                          { stat: 'Poisson', home: matchPrediction.poisson_home ?? 0, away: matchPrediction.poisson_away ?? 0 },
-                          { stat: 'H2H Strength', home: matchPrediction.h2h_strength_home ?? 0, away: matchPrediction.h2h_strength_away ?? 0 },
-                          { stat: 'H2H Goals', home: matchPrediction.h2h_goals_home ?? 0, away: matchPrediction.h2h_goals_away ?? 0 },
+                          { stat: t('statStrength'), home: matchPrediction.strength_home ?? 0, away: matchPrediction.strength_away ?? 0 },
+                          { stat: t('statAttacking'), home: matchPrediction.attacking_home ?? 0, away: matchPrediction.attacking_away ?? 0 },
+                          { stat: t('statDefensive'), home: matchPrediction.defensive_home ?? 0, away: matchPrediction.defensive_away ?? 0 },
+                          { stat: t('statPoisson'), home: matchPrediction.poisson_home ?? 0, away: matchPrediction.poisson_away ?? 0 },
+                          { stat: t('statH2hStrength'), home: matchPrediction.h2h_strength_home ?? 0, away: matchPrediction.h2h_strength_away ?? 0 },
+                          { stat: t('statH2hGoals'), home: matchPrediction.h2h_goals_home ?? 0, away: matchPrediction.h2h_goals_away ?? 0 },
                         ]}
                         margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
                       >
@@ -1939,7 +1979,7 @@ export default function MatchDetailClient() {
                       <div>
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-blue-400 font-medium">{matchPrediction.strength_home ?? 0}%</span>
-                          <span className="text-gray-400 uppercase tracking-wider">Strength</span>
+                          <span className="text-gray-400 uppercase tracking-wider">{t('statStrength')}</span>
                           <span className="text-green-400 font-medium">{matchPrediction.strength_away ?? 0}%</span>
                         </div>
                         <div className="flex h-2 gap-1">
@@ -1958,7 +1998,7 @@ export default function MatchDetailClient() {
                       <div>
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-blue-400 font-medium">{matchPrediction.attacking_home ?? 0}%</span>
-                          <span className="text-gray-400 uppercase tracking-wider">Attacking</span>
+                          <span className="text-gray-400 uppercase tracking-wider">{t('statAttacking')}</span>
                           <span className="text-green-400 font-medium">{matchPrediction.attacking_away ?? 0}%</span>
                         </div>
                         <div className="flex h-2 gap-1">
@@ -1977,7 +2017,7 @@ export default function MatchDetailClient() {
                       <div>
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-blue-400 font-medium">{matchPrediction.defensive_home ?? 0}%</span>
-                          <span className="text-gray-400 uppercase tracking-wider">Defensive</span>
+                          <span className="text-gray-400 uppercase tracking-wider">{t('statDefensive')}</span>
                           <span className="text-green-400 font-medium">{matchPrediction.defensive_away ?? 0}%</span>
                         </div>
                         <div className="flex h-2 gap-1">
@@ -1996,7 +2036,7 @@ export default function MatchDetailClient() {
                       <div>
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-blue-400 font-medium">{matchPrediction.poisson_home ?? 0}%</span>
-                          <span className="text-gray-400 uppercase tracking-wider">Poisson</span>
+                          <span className="text-gray-400 uppercase tracking-wider">{t('statPoisson')}</span>
                           <span className="text-green-400 font-medium">{matchPrediction.poisson_away ?? 0}%</span>
                         </div>
                         <div className="flex h-2 gap-1">
@@ -2015,7 +2055,7 @@ export default function MatchDetailClient() {
                       <div>
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-blue-400 font-medium">{matchPrediction.h2h_strength_home ?? 0}%</span>
-                          <span className="text-gray-400 uppercase tracking-wider">H2H Strength</span>
+                          <span className="text-gray-400 uppercase tracking-wider">{t('statH2hStrength')}</span>
                           <span className="text-green-400 font-medium">{matchPrediction.h2h_strength_away ?? 0}%</span>
                         </div>
                         <div className="flex h-2 gap-1">
@@ -2034,7 +2074,7 @@ export default function MatchDetailClient() {
                       <div>
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-blue-400 font-medium">{matchPrediction.h2h_goals_home ?? 0}%</span>
-                          <span className="text-gray-400 uppercase tracking-wider">H2H Goals</span>
+                          <span className="text-gray-400 uppercase tracking-wider">{t('statH2hGoals')}</span>
                           <span className="text-green-400 font-medium">{matchPrediction.h2h_goals_away ?? 0}%</span>
                         </div>
                         <div className="flex h-2 gap-1">
