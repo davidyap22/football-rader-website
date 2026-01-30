@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer, LiveSignals, getLiveSignals, getLiveSignalsByBetStyle, getLiveSignalsHistoryByBetStyle, FixtureEvent, getFixtureEvents, MatchStatistics, getMatchStatistics } from '@/lib/supabase';
+import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer, LiveSignals, getLiveSignals, getLiveSignalsByBetStyle, getLiveSignalsHistoryByBetStyle, FixtureEvent, getFixtureEvents, MatchStatistics, getMatchStatistics, TeamNameLanguage } from '@/lib/supabase';
+import { LEAGUE_NAMES_LOCALIZED } from '@/lib/leagues-data';
 import { User } from '@supabase/supabase-js';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
@@ -647,6 +648,35 @@ export default function MatchDetailClient() {
 
   // Signal History state
   const [showSignalHistory, setShowSignalHistory] = useState(false);
+
+  // Team name localization
+  const [teamNameMap, setTeamNameMap] = useState<Record<string, string>>({});
+
+  // Map database league names to slugs for localization lookup
+  const leagueNameToSlug: Record<string, string> = {
+    'Premier League': 'premier-league',
+    'Bundesliga': 'bundesliga',
+    'Serie A': 'serie-a',
+    'La Liga': 'la-liga',
+    'Ligue 1': 'ligue-1',
+    'UEFA Champions League': 'champions-league',
+    'UEFA Europa League': 'europa-league',
+  };
+
+  // Helper function to get localized league name
+  const getLeagueNameLocalized = (dbName: string): string => {
+    const slug = leagueNameToSlug[dbName];
+    if (slug && LEAGUE_NAMES_LOCALIZED[slug]) {
+      const localized = LEAGUE_NAMES_LOCALIZED[slug][locale];
+      if (localized) return localized.name;
+    }
+    return dbName;
+  };
+
+  // Helper function to get localized team name
+  const getTeamNameLocalized = (englishName: string): string => {
+    return teamNameMap[englishName] || englishName;
+  };
   const [signalHistory, setSignalHistory] = useState<{
     moneyline: Moneyline1x2Prediction[];
     overunder: OverUnderPrediction[];
@@ -1181,6 +1211,54 @@ export default function MatchDetailClient() {
     }
   }, [matchId, fetchAllData]);
 
+  // Fetch team name translations when match is loaded
+  useEffect(() => {
+    if (!match || locale === 'en') return;
+
+    async function fetchTeamNames() {
+      const teamNames = [match!.home_name, match!.away_name];
+
+      try {
+        const { data, error } = await supabase
+          .from('team_statistics')
+          .select('team_name, team_name_language')
+          .in('team_name', teamNames);
+
+        if (error || !data) return;
+
+        // Map locale codes to team_name_language keys
+        const localeMap: Record<string, keyof TeamNameLanguage> = {
+          'en': 'en',
+          'es': 'es',
+          'pt': 'pt',
+          'de': 'de',
+          'fr': 'fr',
+          'ja': 'ja',
+          'ko': 'ko',
+          'zh': 'zh_cn',
+          'tw': 'zh_tw',
+          'id': 'id',
+        };
+
+        const langKey = localeMap[locale];
+        const nameMap: Record<string, string> = {};
+
+        data.forEach((team: { team_name: string | null; team_name_language: TeamNameLanguage | null }) => {
+          if (!team.team_name) return;
+          if (team.team_name_language && langKey && team.team_name_language[langKey]) {
+            nameMap[team.team_name] = team.team_name_language[langKey] as string;
+          }
+        });
+
+        setTeamNameMap(nameMap);
+      } catch (err) {
+        console.error('Error fetching team translations:', err);
+      }
+    }
+
+    fetchTeamNames();
+  }, [match, locale]);
+
   // Set up polling and countdown - refresh all data every 10 seconds
   useEffect(() => {
     if (match) {
@@ -1449,7 +1527,7 @@ export default function MatchDetailClient() {
                   <img src={match.league_logo} alt={match.league_name} className="w-6 h-6 object-contain" />
                 </div>
               )}
-              <span className="text-gray-400 font-medium">{match.league_name}</span>
+              <span className="text-gray-400 font-medium">{getLeagueNameLocalized(match.league_name)}</span>
               <span className="text-gray-600">•</span>
               <span className="text-gray-500 text-sm">{formatDateTime(match.start_date_msia)}</span>
             </div>
@@ -1474,7 +1552,7 @@ export default function MatchDetailClient() {
                 </div>
                 <span className={`font-semibold text-lg text-center ${
                   match.type === 'Finished' && (match.goals_home ?? 0) > (match.goals_away ?? 0) ? 'text-emerald-400' : 'text-white'
-                }`}>{match.home_name}</span>
+                }`}>{getTeamNameLocalized(match.home_name)}</span>
                 <span className="text-xs text-gray-500">HOME</span>
               </div>
 
@@ -1538,7 +1616,7 @@ export default function MatchDetailClient() {
                 </div>
                 <span className={`font-semibold text-lg text-center ${
                   match.type === 'Finished' && (match.goals_away ?? 0) > (match.goals_home ?? 0) ? 'text-emerald-400' : 'text-white'
-                }`}>{match.away_name}</span>
+                }`}>{getTeamNameLocalized(match.away_name)}</span>
                 <span className="text-xs text-gray-500">AWAY</span>
               </div>
             </div>
@@ -1767,9 +1845,9 @@ export default function MatchDetailClient() {
                         </div>
                       </div>
                       <div className="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>{match?.home_name}</span>
-                        <span>Draw</span>
-                        <span>{match?.away_name}</span>
+                        <span>{match ? getTeamNameLocalized(match.home_name) : ''}</span>
+                        <span>{t('draw')}</span>
+                        <span>{match ? getTeamNameLocalized(match.away_name) : ''}</span>
                       </div>
                     </div>
                   )}
@@ -1800,7 +1878,7 @@ export default function MatchDetailClient() {
                           tickCount={6}
                         />
                         <Radar
-                          name={match?.home_name || 'Home'}
+                          name={match ? getTeamNameLocalized(match.home_name) : 'Home'}
                           dataKey="home"
                           stroke="#3B82F6"
                           fill="#3B82F6"
@@ -1808,7 +1886,7 @@ export default function MatchDetailClient() {
                           strokeWidth={2}
                         />
                         <Radar
-                          name={match?.away_name || 'Away'}
+                          name={match ? getTeamNameLocalized(match.away_name) : 'Away'}
                           dataKey="away"
                           stroke="#22C55E"
                           fill="#22C55E"
@@ -1944,11 +2022,11 @@ export default function MatchDetailClient() {
                   <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-white/5">
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                      <span className="text-xs text-gray-400">{match?.home_name}</span>
+                      <span className="text-xs text-gray-400">{match ? getTeamNameLocalized(match.home_name) : ''}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      <span className="text-xs text-gray-400">{match?.away_name}</span>
+                      <span className="text-xs text-gray-400">{match ? getTeamNameLocalized(match.away_name) : ''}</span>
                     </div>
                   </div>
                   </>
@@ -2372,10 +2450,10 @@ export default function MatchDetailClient() {
                             <img src={match.home_logo} alt={match.home_name} className="w-full h-full object-contain" />
                           </div>
                         )}
-                        <span className="text-sm font-bold text-blue-400">{match.home_name}</span>
+                        <span className="text-sm font-bold text-blue-400">{getTeamNameLocalized(match.home_name)}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-bold text-green-400">{match.away_name}</span>
+                        <span className="text-sm font-bold text-green-400">{getTeamNameLocalized(match.away_name)}</span>
                         {match.away_logo && (
                           <div className="w-10 h-10 rounded-full bg-white/10 p-1.5 flex items-center justify-center">
                             <img src={match.away_logo} alt={match.away_name} className="w-full h-full object-contain" />
