@@ -3271,16 +3271,16 @@ export default function MatchDetailClient() {
                             <>
                               {/* Backdrop to close dropdown when clicking outside */}
                               <div
-                                className="fixed inset-0 z-[60]"
+                                className="fixed inset-0 z-[100] bg-black/50"
                                 onClick={() => setShowModalBetStyleDropdown(false)}
                               />
-                              <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900/95 backdrop-blur-sm border border-white/10 rounded-xl shadow-2xl z-[70] overflow-hidden">
+                              <div className="absolute top-full left-0 right-0 mt-2 bg-[#0d1117] border border-white/20 rounded-xl shadow-2xl z-[110] overflow-hidden">
                                 {PERSONALITIES.filter(p => isStyleAvailable(p.id)).map((p) => (
                                   <button
                                     key={p.id}
                                     onClick={() => { setModalBetStyleFilter(p.id); setShowModalBetStyleDropdown(false); }}
                                     className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
-                                      modalBetStyleFilter === p.id ? `bg-gradient-to-r ${p.color} text-white` : 'text-gray-300 hover:bg-white/5'
+                                      modalBetStyleFilter === p.id ? `bg-gradient-to-r ${p.color} text-white` : 'text-gray-300 hover:bg-white/10'
                                     }`}
                                   >
                                     {p.image && (
