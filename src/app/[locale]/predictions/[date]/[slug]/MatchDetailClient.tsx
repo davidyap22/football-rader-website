@@ -1433,6 +1433,9 @@ export default function MatchDetailClient() {
     if (!lineups || lineups.length === 0 || locale === 'en') return;
 
     async function fetchPlayerNames() {
+      // Guard against null (TypeScript doesn't narrow in async closures)
+      if (!lineups) return;
+
       // Get all player IDs from lineups
       const playerIds: number[] = [];
       lineups.forEach((lineup: TeamLineup) => {
