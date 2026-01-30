@@ -1134,6 +1134,58 @@ export const getFixtureLineups = async (fixtureId: number) => {
   }
 };
 
+// Player name language interface (JSONB structure)
+export interface PlayerNameLanguage {
+  de?: string;
+  es?: string;
+  fr?: string;
+  id?: string;
+  ja?: string;
+  ko?: string;
+  pt?: string;
+  zh_cn?: string;
+  zh_tw?: string;
+}
+
+// Player translation data
+export interface PlayerTranslation {
+  player_id: number;
+  first_name_language: PlayerNameLanguage | null;
+  last_name_language: PlayerNameLanguage | null;
+}
+
+// Get player name translations from player_stats table
+export const getPlayerTranslations = async (playerIds: number[]) => {
+  if (!supabase || playerIds.length === 0) {
+    return { data: null, error: null };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('player_stats')
+      .select('player_id, first_name_language, last_name_language')
+      .in('player_id', playerIds);
+
+    if (error) {
+      console.error('Error fetching player translations:', error);
+      return { data: null, error };
+    }
+
+    // Create a map: player_id -> translation data
+    const translationsMap: Record<number, PlayerTranslation> = {};
+    if (data) {
+      data.forEach((player: PlayerTranslation) => {
+        translationsMap[player.player_id] = player;
+      });
+    }
+
+    return { data: translationsMap, error: null };
+  } catch (err) {
+    console.error('Failed to fetch player translations:', err);
+    return { data: null, error: { message: 'Failed to fetch player translations' } };
+  }
+};
+
 // Submit contact form message
 export const submitContactMessage = async (contactData: Omit<ContactMessage, 'id' | 'created_at'>) => {
   // Check if supabase client is available

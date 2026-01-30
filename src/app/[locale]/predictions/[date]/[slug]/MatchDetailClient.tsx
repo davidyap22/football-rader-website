@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer, LiveSignals, getLiveSignals, getLiveSignalsByBetStyle, getLiveSignalsHistoryByBetStyle, FixtureEvent, getFixtureEvents, MatchStatistics, getMatchStatistics, TeamNameLanguage } from '@/lib/supabase';
+import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer, LiveSignals, getLiveSignals, getLiveSignalsByBetStyle, getLiveSignalsHistoryByBetStyle, FixtureEvent, getFixtureEvents, MatchStatistics, getMatchStatistics, TeamNameLanguage, getPlayerTranslations, PlayerTranslation } from '@/lib/supabase';
 import { LEAGUE_NAMES_LOCALIZED } from '@/lib/leagues-data';
 import { User } from '@supabase/supabase-js';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
@@ -707,6 +707,9 @@ export default function MatchDetailClient() {
   // Lineup data
   const [lineups, setLineups] = useState<TeamLineup[] | null>(null);
 
+  // Player name translations
+  const [playerTranslations, setPlayerTranslations] = useState<Record<number, PlayerTranslation>>({});
+
   // Events data
   const [events, setEvents] = useState<FixtureEvent[] | null>(null);
 
@@ -728,6 +731,72 @@ export default function MatchDetailClient() {
   // Translation function
   const t = (key: string): string => {
     return translations[selectedLang]?.[key] || translations['EN']?.[key] || key;
+  };
+
+  // Map selectedLang to database language key for player names
+  const langToDbKey: Record<string, string> = {
+    'EN': '', // English uses original name
+    'ES': 'es',
+    'PT': 'pt',
+    'DE': 'de',
+    'FR': 'fr',
+    'JA': 'ja',
+    'KO': 'ko',
+    '中文': 'zh_cn',
+    '繁體': 'zh_tw',
+    'ID': 'id',
+  };
+
+  // Get localized player name
+  const getLocalizedPlayerName = (player: FixturePlayer): string => {
+    const dbKey = langToDbKey[selectedLang];
+
+    // If English or no key mapping, return original name
+    if (!dbKey || selectedLang === 'EN') {
+      return player.player_name;
+    }
+
+    const translation = playerTranslations[player.player_id];
+    if (!translation) {
+      return player.player_name;
+    }
+
+    const firstName = translation.first_name_language?.[dbKey as keyof typeof translation.first_name_language] || '';
+    const lastName = translation.last_name_language?.[dbKey as keyof typeof translation.last_name_language] || '';
+
+    // If we have translated names, combine them
+    if (firstName || lastName) {
+      // For Asian languages, put last name first
+      if (['ja', 'ko', 'zh_cn', 'zh_tw'].includes(dbKey)) {
+        return `${lastName}${firstName}`.trim() || player.player_name;
+      }
+      return `${firstName} ${lastName}`.trim() || player.player_name;
+    }
+
+    return player.player_name;
+  };
+
+  // Get localized player last name only (for pitch display)
+  const getLocalizedPlayerLastName = (player: FixturePlayer): string => {
+    const dbKey = langToDbKey[selectedLang];
+
+    // If English or no key mapping, return original last name
+    if (!dbKey || selectedLang === 'EN') {
+      return player.player_name?.split(' ').pop() || player.player_name;
+    }
+
+    const translation = playerTranslations[player.player_id];
+    if (!translation) {
+      return player.player_name?.split(' ').pop() || player.player_name;
+    }
+
+    const lastName = translation.last_name_language?.[dbKey as keyof typeof translation.last_name_language];
+
+    if (lastName) {
+      return lastName;
+    }
+
+    return player.player_name?.split(' ').pop() || player.player_name;
   };
 
   // Odds related state
@@ -1358,6 +1427,33 @@ export default function MatchDetailClient() {
 
     fetchTeamNames();
   }, [match, locale]);
+
+  // Fetch player name translations when lineups are loaded
+  useEffect(() => {
+    if (!lineups || lineups.length === 0 || locale === 'en') return;
+
+    async function fetchPlayerNames() {
+      // Get all player IDs from lineups
+      const playerIds: number[] = [];
+      lineups.forEach((lineup: TeamLineup) => {
+        lineup.starters.forEach((player: FixturePlayer) => {
+          if (player.player_id) playerIds.push(player.player_id);
+        });
+        lineup.substitutes.forEach((player: FixturePlayer) => {
+          if (player.player_id) playerIds.push(player.player_id);
+        });
+      });
+
+      if (playerIds.length === 0) return;
+
+      const { data } = await getPlayerTranslations(playerIds);
+      if (data) {
+        setPlayerTranslations(data);
+      }
+    }
+
+    fetchPlayerNames();
+  }, [lineups, locale]);
 
   // Set up polling and countdown - refresh all data every 10 seconds
   useEffect(() => {
@@ -2297,7 +2393,7 @@ export default function MatchDetailClient() {
                             {player.number || '?'}
                           </div>
                           <span className="mt-1 px-1 bg-black/60 rounded text-[8px] sm:text-[10px] text-white whitespace-nowrap max-w-[60px] truncate">
-                            {player.player_name?.split(' ').pop() || player.player_name}
+                            {getLocalizedPlayerLastName(player)}
                           </span>
                         </div>
                       );
@@ -2323,7 +2419,7 @@ export default function MatchDetailClient() {
                             {player.number || '?'}
                           </div>
                           <span className="mt-1 px-1 bg-black/60 rounded text-[8px] sm:text-[10px] text-white whitespace-nowrap max-w-[60px] truncate">
-                            {player.player_name?.split(' ').pop() || player.player_name}
+                            {getLocalizedPlayerLastName(player)}
                           </span>
                         </div>
                       );
@@ -2369,7 +2465,7 @@ export default function MatchDetailClient() {
                                 <span className={`w-6 text-center font-mono ${index === 0 ? 'text-blue-400' : 'text-green-400'}`}>
                                   {player.number || '-'}
                                 </span>
-                                <span className="text-white">{player.player_name}</span>
+                                <span className="text-white">{getLocalizedPlayerName(player)}</span>
                                 <span className="text-gray-500 text-xs ml-auto">{player.pos}</span>
                               </div>
                             ))}
@@ -2386,7 +2482,7 @@ export default function MatchDetailClient() {
                                   <span className={`w-6 text-center font-mono ${index === 0 ? 'text-blue-400' : 'text-green-400'}`}>
                                     {player.number || '-'}
                                   </span>
-                                  <span className="text-gray-300">{player.player_name}</span>
+                                  <span className="text-gray-300">{getLocalizedPlayerName(player)}</span>
                                   <span className="text-gray-500 text-xs ml-auto">{player.pos}</span>
                                 </div>
                               ))}
