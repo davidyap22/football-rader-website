@@ -74,6 +74,8 @@ function getInitialDate() {
 import FlagIcon from "@/components/FlagIcon";
 import { generateMatchSlug } from '@/lib/slug-utils';
 import { SportsEventsListJsonLd } from '@/components/JsonLd';
+import { LEAGUE_NAMES_LOCALIZED, LEAGUES_CONFIG } from '@/lib/leagues-data';
+import { TeamNameLanguage } from '@/lib/supabase';
 
 // Translations
 const translations: Record<string, Record<string, string>> = {
@@ -102,6 +104,7 @@ const translations: Record<string, Record<string, string>> = {
     footer: "18+ | Gambling involves risk. Please gamble responsibly.",
     allRights: "© 2026 OddsFlow. All rights reserved.",
     aiConfidence: "AI Confidence",
+    draw: "Draw",
   },
   ES: {
     aiPredictions: "Predicciones IA",
@@ -128,6 +131,7 @@ const translations: Record<string, Record<string, string>> = {
     footer: "18+ | El juego implica riesgo. Por favor juega responsablemente.",
     allRights: "© 2026 OddsFlow. Todos los derechos reservados.",
     aiConfidence: "Confianza IA",
+    draw: "Empate",
   },
   PT: {
     aiPredictions: "Previsões IA",
@@ -154,6 +158,7 @@ const translations: Record<string, Record<string, string>> = {
     footer: "18+ | O jogo envolve risco. Por favor, jogue com responsabilidade.",
     allRights: "© 2026 OddsFlow. Todos os direitos reservados.",
     aiConfidence: "Confiança IA",
+    draw: "Empate",
   },
   DE: {
     aiPredictions: "KI-Vorhersagen",
@@ -180,6 +185,7 @@ const translations: Record<string, Record<string, string>> = {
     footer: "18+ | Glücksspiel birgt Risiken. Bitte spielen Sie verantwortungsvoll.",
     allRights: "© 2026 OddsFlow. Alle Rechte vorbehalten.",
     aiConfidence: "KI-Konfidenz",
+    draw: "Unentschieden",
   },
   FR: {
     aiPredictions: "Prédictions IA",
@@ -206,6 +212,7 @@ const translations: Record<string, Record<string, string>> = {
     footer: "18+ | Les jeux d'argent comportent des risques. Jouez responsablement.",
     allRights: "© 2026 OddsFlow. Tous droits réservés.",
     aiConfidence: "Confiance IA",
+    draw: "Nul",
   },
   JA: {
     aiPredictions: "AI予測",
@@ -232,6 +239,7 @@ const translations: Record<string, Record<string, string>> = {
     footer: "18歳以上 | ギャンブルにはリスクが伴います。責任を持ってプレイしてください。",
     allRights: "© 2026 OddsFlow. 全著作権所有。",
     aiConfidence: "AI信頼度",
+    draw: "引き分け",
   },
   KO: {
     aiPredictions: "AI 예측",
@@ -258,6 +266,7 @@ const translations: Record<string, Record<string, string>> = {
     footer: "18세 이상 | 도박에는 위험이 따릅니다. 책임감 있게 플레이하세요.",
     allRights: "© 2026 OddsFlow. 모든 권리 보유.",
     aiConfidence: "AI 신뢰도",
+    draw: "무승부",
   },
   '中文': {
     aiPredictions: "AI预测",
@@ -284,6 +293,7 @@ const translations: Record<string, Record<string, string>> = {
     footer: "18+ | 博彩有风险，请理性投注。",
     allRights: "© 2026 OddsFlow. 保留所有权利。",
     aiConfidence: "AI 信心",
+    draw: "平局",
   },
   '繁體': {
     aiPredictions: "AI預測",
@@ -310,6 +320,7 @@ const translations: Record<string, Record<string, string>> = {
     footer: "18+ | 博彩有風險，請理性投注。",
     allRights: "© 2026 OddsFlow. 保留所有權利。",
     aiConfidence: "AI 信心",
+    draw: "平手",
   },
   ID: {
     aiPredictions: "Prediksi AI",
@@ -336,6 +347,7 @@ const translations: Record<string, Record<string, string>> = {
     footer: "18+ | Perjudian melibatkan risiko. Harap bertaruh dengan bijak.",
     allRights: "© 2026 OddsFlow. Hak cipta dilindungi.",
     aiConfidence: "Keyakinan AI",
+    draw: "Seri",
   },
 };
 
@@ -524,6 +536,20 @@ function PredictionsContent({
     return translations[selectedLang]?.[key] || translations['EN']?.[key] || key;
   };
 
+  // Localized month names for all supported languages
+  const monthNames: Record<string, string[]> = {
+    EN: ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'],
+    ES: ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'],
+    PT: ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'],
+    DE: ['JANUAR', 'FEBRUAR', 'MÄRZ', 'APRIL', 'MAI', 'JUNI', 'JULI', 'AUGUST', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DEZEMBER'],
+    FR: ['JANVIER', 'FÉVRIER', 'MARS', 'AVRIL', 'MAI', 'JUIN', 'JUILLET', 'AOÛT', 'SEPTEMBRE', 'OCTOBRE', 'NOVEMBRE', 'DÉCEMBRE'],
+    JA: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+    KO: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+    '中文': ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+    '繁體': ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+    ID: ['JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI', 'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'],
+  };
+
   // Format date label with translation
   const formatDateLabelTranslated = (date: Date, todayDate: Date) => {
     const dateUTC = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
@@ -535,9 +561,51 @@ function PredictionsContent({
     if (diffDays === 1) return t('tomorrow');
 
     const day = date.getUTCDate();
-    const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+    const months = monthNames[selectedLang] || monthNames['EN'];
     const month = months[date.getUTCMonth()];
+
+    // For Asian languages (JA, KO, ZH, TW), use "月日" format
+    if (['JA', 'KO', '中文', '繁體'].includes(selectedLang)) {
+      return `${month}${day}日`;
+    }
+
     return `${day} ${month}`;
+  };
+
+  // Map database league names to slugs for localization lookup
+  const leagueNameToSlug: Record<string, string> = {
+    'Premier League': 'premier-league',
+    'Bundesliga': 'bundesliga',
+    'Serie A': 'serie-a',
+    'La Liga': 'la-liga',
+    'Ligue 1': 'ligue-1',
+    'UEFA Champions League': 'champions-league',
+    'UEFA Europa League': 'europa-league',
+    'FA Cup': 'fa-cup',
+    'EFL Cup': 'efl-cup',
+    'Copa del Rey': 'copa-del-rey',
+    'DFB Pokal': 'dfb-pokal',
+    'Coupe de France': 'coupe-de-france',
+    'Coppa Italia': 'coppa-italia',
+  };
+
+  // Helper function to get localized league name
+  const getLeagueNameLocalized = (dbName: string): string => {
+    const slug = leagueNameToSlug[dbName];
+    if (slug && LEAGUE_NAMES_LOCALIZED[slug]) {
+      const localized = LEAGUE_NAMES_LOCALIZED[slug][locale];
+      if (localized) return localized.name;
+    }
+    // Fallback to database name
+    return dbName;
+  };
+
+  // State for localized team names
+  const [teamNameMap, setTeamNameMap] = useState<Record<string, string>>({});
+
+  // Helper function to get localized team name
+  const getTeamNameLocalized = (englishName: string): string => {
+    return teamNameMap[englishName] || englishName;
   };
 
   useEffect(() => {
@@ -609,6 +677,62 @@ function PredictionsContent({
 
     return () => clearInterval(refreshInterval);
   }, [selectedDate, isDateInitialized, initialDate]);
+
+  // Fetch team name translations when matches change
+  useEffect(() => {
+    if (matches.length === 0 || locale === 'en') return;
+
+    async function fetchTeamNames() {
+      // Extract unique team names
+      const teamNames = new Set<string>();
+      matches.forEach(match => {
+        teamNames.add(match.home_name);
+        teamNames.add(match.away_name);
+      });
+
+      if (teamNames.size === 0) return;
+
+      try {
+        // Fetch team statistics to get localized names
+        const { data, error } = await supabase
+          .from('team_statistics')
+          .select('team_name, team_name_language')
+          .in('team_name', Array.from(teamNames));
+
+        if (error || !data) return;
+
+        // Map locale codes to team_name_language keys
+        const localeMap: Record<string, keyof TeamNameLanguage> = {
+          'en': 'en',
+          'es': 'es',
+          'pt': 'pt',
+          'de': 'de',
+          'fr': 'fr',
+          'ja': 'ja',
+          'ko': 'ko',
+          'zh': 'zh_cn',
+          'tw': 'zh_tw',
+          'id': 'id',
+        };
+
+        const langKey = localeMap[locale];
+        const nameMap: Record<string, string> = {};
+
+        data.forEach((team: { team_name: string | null; team_name_language: TeamNameLanguage | null }) => {
+          if (!team.team_name) return;
+          if (team.team_name_language && langKey && team.team_name_language[langKey]) {
+            nameMap[team.team_name] = team.team_name_language[langKey] as string;
+          }
+        });
+
+        setTeamNameMap(nameMap);
+      } catch (err) {
+        console.error('Error fetching team translations:', err);
+      }
+    }
+
+    fetchTeamNames();
+  }, [matches, locale]);
 
   const formatTime = (dateStr: string) => {
     // The database stores Malaysia time (UTC+8)
@@ -1006,7 +1130,7 @@ function PredictionsContent({
                       <img src={logo} alt={leagueName} className="w-6 h-6 object-contain" />
                     </div>
                   )}
-                  <h3 className="font-semibold text-white">{leagueName}</h3>
+                  <h3 className="font-semibold text-white">{getLeagueNameLocalized(leagueName)}</h3>
                   <span className="text-xs text-gray-500 ml-auto">{leagueMatches.length} {t('matches')}</span>
                 </div>
 
@@ -1022,6 +1146,8 @@ function PredictionsContent({
                       href={localePath(`/predictions/${matchDate}/${matchSlug}`)}
                       key={match.id}
                       onClick={(e) => handleMatchClick(e, match.id)}
+                      target={user ? "_blank" : undefined}
+                      rel={user ? "noopener noreferrer" : undefined}
                       className={`block transition-all duration-300 group cursor-pointer relative overflow-hidden ${
                         match.type === 'In Play'
                           ? 'bg-red-500/5 hover:bg-red-500/10 border-l-2 border-red-500'
@@ -1080,7 +1206,7 @@ function PredictionsContent({
                                 <img src={match.home_logo} alt="" className="w-full h-full object-contain" />
                               </div>
                             )}
-                            <span className="text-white font-medium text-sm truncate">{match.home_name}</span>
+                            <span className="text-white font-medium text-sm truncate">{getTeamNameLocalized(match.home_name)}</span>
                           </div>
 
                           {/* VS / Score */}
@@ -1098,7 +1224,7 @@ function PredictionsContent({
 
                           {/* Away Team */}
                           <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
-                            <span className="text-white font-medium text-sm truncate text-right">{match.away_name}</span>
+                            <span className="text-white font-medium text-sm truncate text-right">{getTeamNameLocalized(match.away_name)}</span>
                             {match.away_logo && (
                               <div className="w-8 h-8 rounded-full bg-white p-0.5 flex-shrink-0">
                                 <img src={match.away_logo} alt="" className="w-full h-full object-contain" />
@@ -1114,7 +1240,9 @@ function PredictionsContent({
                             <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30">
                               <span className="text-amber-400">🏆</span>
                               <span className="text-emerald-400 font-semibold truncate">
-                                {predictions[match.fixture_id].winner_name || 'Draw'}
+                                {predictions[match.fixture_id].winner_name
+                                  ? getTeamNameLocalized(predictions[match.fixture_id].winner_name!)
+                                  : t('draw')}
                               </span>
                             </div>
                             {/* Win Probabilities */}
@@ -1175,7 +1303,7 @@ function PredictionsContent({
                           <div className="flex items-center gap-3">
                             {/* Home Team */}
                             <div className="flex items-center gap-2 flex-1 justify-end">
-                              <span className="text-white font-medium text-sm text-right truncate">{match.home_name}</span>
+                              <span className="text-white font-medium text-sm text-right truncate">{getTeamNameLocalized(match.home_name)}</span>
                               {match.home_logo && (
                                 <div className="w-7 h-7 rounded-full bg-white p-0.5 flex-shrink-0">
                                   <img src={match.home_logo} alt="" className="w-full h-full object-contain" />
@@ -1203,7 +1331,7 @@ function PredictionsContent({
                                   <img src={match.away_logo} alt="" className="w-full h-full object-contain" />
                                 </div>
                               )}
-                              <span className="text-white font-medium text-sm truncate">{match.away_name}</span>
+                              <span className="text-white font-medium text-sm truncate">{getTeamNameLocalized(match.away_name)}</span>
                             </div>
                           </div>
                         </div>
@@ -1216,7 +1344,9 @@ function PredictionsContent({
                               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30">
                                 <span className="text-amber-400">🏆</span>
                                 <span className="text-emerald-400 font-semibold truncate max-w-[100px]">
-                                  {predictions[match.fixture_id].winner_name || 'Draw'}
+                                  {predictions[match.fixture_id].winner_name
+                                    ? getTeamNameLocalized(predictions[match.fixture_id].winner_name!)
+                                    : t('draw')}
                                 </span>
                               </div>
                               {/* Win Probabilities */}
