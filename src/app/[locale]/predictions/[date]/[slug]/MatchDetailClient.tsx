@@ -3271,26 +3271,31 @@ export default function MatchDetailClient() {
                             <>
                               {/* Backdrop to close dropdown when clicking outside */}
                               <div
-                                className="fixed inset-0 z-[100] bg-black/50"
+                                className="fixed inset-0 z-[100]"
                                 onClick={() => setShowModalBetStyleDropdown(false)}
                               />
-                              <div className="absolute top-full left-0 right-0 mt-2 bg-[#0d1117] border border-white/20 rounded-xl shadow-2xl z-[110] overflow-hidden">
-                                {PERSONALITIES.filter(p => isStyleAvailable(p.id)).map((p) => (
-                                  <button
-                                    key={p.id}
-                                    onClick={() => { setModalBetStyleFilter(p.id); setShowModalBetStyleDropdown(false); }}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
-                                      modalBetStyleFilter === p.id ? `bg-gradient-to-r ${p.color} text-white` : 'text-gray-300 hover:bg-white/10'
-                                    }`}
-                                  >
-                                    {p.image && (
-                                      <div className={`w-6 h-6 rounded flex items-center justify-center bg-gradient-to-br ${p.logoColor}`}>
-                                        <img src={p.image} alt={t(p.nameKey)} className="w-4 h-4 object-contain" />
-                                      </div>
-                                    )}
-                                    {t(p.nameKey)}
-                                  </button>
-                                ))}
+                              {/* Dropdown with extended solid background */}
+                              <div className="absolute top-full left-0 right-0 mt-2 z-[110]">
+                                <div className="bg-[#0d1117] border border-white/20 rounded-xl shadow-2xl overflow-hidden">
+                                  {PERSONALITIES.filter(p => isStyleAvailable(p.id)).map((p) => (
+                                    <button
+                                      key={p.id}
+                                      onClick={() => { setModalBetStyleFilter(p.id); setShowModalBetStyleDropdown(false); }}
+                                      className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
+                                        modalBetStyleFilter === p.id ? `bg-gradient-to-r ${p.color} text-white` : 'text-gray-300 hover:bg-white/10'
+                                      }`}
+                                    >
+                                      {p.image && (
+                                        <div className={`w-6 h-6 rounded flex items-center justify-center bg-gradient-to-br ${p.logoColor}`}>
+                                          <img src={p.image} alt={t(p.nameKey)} className="w-4 h-4 object-contain" />
+                                        </div>
+                                      )}
+                                      {t(p.nameKey)}
+                                    </button>
+                                  ))}
+                                </div>
+                                {/* Solid background extension to cover content below */}
+                                <div className="h-[600px] bg-[#0d1117] -mt-2" />
                               </div>
                             </>
                           )}
