@@ -346,7 +346,7 @@ export default function PrivacyPolicyClient({ locale, children }: PrivacyPolicyC
       {/* Main Content - SSR */}
       {children}
 
-<Footer localePath={localePath} t={t} />
+<Footer localePath={localePath} t={t} locale={locale} />
     </div>
   );
 }

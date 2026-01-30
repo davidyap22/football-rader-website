@@ -3738,7 +3738,7 @@ export default function PerformanceClient({
         </div>
       )}
 
-      <Footer localePath={localePath} t={t} />
+      <Footer localePath={localePath} t={t} locale={locale} />
       </div>
     </div>
   );

@@ -2311,7 +2311,7 @@ export default function LeagueDetailPage() {
         );
       })()}
 
-<Footer localePath={localePath} t={t} />
+<Footer localePath={localePath} t={t} locale={locale} />
     </div>
   );
 }

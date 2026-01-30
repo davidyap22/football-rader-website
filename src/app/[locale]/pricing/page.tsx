@@ -1509,7 +1509,7 @@ export default function PricingPage() {
         }}
       />
 
-<Footer localePath={localePath} t={t} />
+<Footer localePath={localePath} t={t} locale={locale} />
     </div>
   );
 }

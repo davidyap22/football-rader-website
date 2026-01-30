@@ -352,7 +352,7 @@ export default function ResponsibleGamingClient({ locale, children }: Responsibl
       {/* Main Content from Server Component */}
       {children}
 
-<Footer localePath={localePath} t={t} />
+<Footer localePath={localePath} t={t} locale={locale} />
     </div>
   );
 }

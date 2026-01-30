@@ -1485,7 +1485,7 @@ export default function BlogClient({ locale: propLocale }: BlogClientProps) {
         </div>
       </section>
 
-<Footer localePath={localePath} t={t} />
+<Footer localePath={localePath} t={t} locale={locale} />
     </div>
   );
 }

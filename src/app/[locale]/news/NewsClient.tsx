@@ -1430,7 +1430,7 @@ export default function NewsPage() {
         </div>
       </main>
 
-<Footer localePath={localePath} t={t} />
+<Footer localePath={localePath} t={t} locale={locale} />
     </div>
   );
 }

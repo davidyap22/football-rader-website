@@ -3345,7 +3345,17 @@ function CookieConsentWrapper() {
 
 // ============ Footer ============
 function Footer() {
-  const { t, localePath } = useLanguage();
+  const { t, localePath, locale } = useLanguage();
+
+  // Localized league names for footer
+  const footerLeagues = [
+    { slug: 'premier-league', names: { en: 'Premier League', de: 'Premier League', es: 'Premier League', fr: 'Premier League', id: 'Premier League', ja: 'プレミアリーグ', ko: '프리미어리그', pt: 'Premier League', zh: '英超', tw: '英超' } },
+    { slug: 'la-liga', names: { en: 'La Liga', de: 'La Liga', es: 'La Liga', fr: 'La Liga', id: 'La Liga', ja: 'ラ・リーガ', ko: '라리가', pt: 'La Liga', zh: '西甲', tw: '西甲' } },
+    { slug: 'serie-a', names: { en: 'Serie A', de: 'Serie A', es: 'Serie A', fr: 'Serie A', id: 'Serie A', ja: 'セリエA', ko: '세리에 A', pt: 'Serie A', zh: '意甲', tw: '義甲' } },
+    { slug: 'bundesliga', names: { en: 'Bundesliga', de: 'Bundesliga', es: 'Bundesliga', fr: 'Bundesliga', id: 'Bundesliga', ja: 'ブンデスリーガ', ko: '분데스리가', pt: 'Bundesliga', zh: '德甲', tw: '德甲' } },
+    { slug: 'ligue-1', names: { en: 'Ligue 1', de: 'Ligue 1', es: 'Ligue 1', fr: 'Ligue 1', id: 'Ligue 1', ja: 'リーグ・アン', ko: '리그 1', pt: 'Ligue 1', zh: '法甲', tw: '法甲' } },
+    { slug: 'champions-league', names: { en: 'Champions League', de: 'Champions League', es: 'Champions League', fr: 'Ligue des Champions', id: 'Liga Champions', ja: 'チャンピオンズリーグ', ko: '챔피언스리그', pt: 'Liga dos Campeões', zh: '欧冠', tw: '歐冠' } },
+  ];
 
   return (
     <footer className="py-16 px-4 bg-black border-t border-white/5">
@@ -3406,12 +3416,13 @@ function Footer() {
           <div>
             <h4 className="font-semibold mb-5 text-white">{t('popularLeagues')}</h4>
             <ul className="space-y-3 text-gray-400">
-              <li><Link href={localePath('/leagues/premier-league')} className="hover:text-emerald-400 transition-colors">Premier League</Link></li>
-              <li><Link href={localePath('/leagues/la-liga')} className="hover:text-emerald-400 transition-colors">La Liga</Link></li>
-              <li><Link href={localePath('/leagues/serie-a')} className="hover:text-emerald-400 transition-colors">Serie A</Link></li>
-              <li><Link href={localePath('/leagues/bundesliga')} className="hover:text-emerald-400 transition-colors">Bundesliga</Link></li>
-              <li><Link href={localePath('/leagues/ligue-1')} className="hover:text-emerald-400 transition-colors">Ligue 1</Link></li>
-              <li><Link href={localePath('/leagues/champions-league')} className="hover:text-emerald-400 transition-colors">Champions League</Link></li>
+              {footerLeagues.map((league) => (
+                <li key={league.slug}>
+                  <Link href={localePath(`/leagues/${league.slug}`)} className="hover:text-emerald-400 transition-colors">
+                    {league.names[locale] || league.names['en']}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

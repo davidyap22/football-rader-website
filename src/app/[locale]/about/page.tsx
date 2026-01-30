@@ -872,7 +872,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <Footer localePath={localePath} t={t} />
+      <Footer localePath={localePath} t={t} locale={locale} />
     </div>
   );
 }
