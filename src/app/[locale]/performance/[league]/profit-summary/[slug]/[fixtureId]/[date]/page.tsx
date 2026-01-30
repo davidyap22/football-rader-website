@@ -493,7 +493,7 @@ This page serves as the official, immutable verification source for OddsFlow.ai 
             "name": "OddsFlow.ai"
           },
           "datePublished": date,
-          "appearance": realBetSummary.pdfLinks.map(p => ({
+          "appearance": realBetSummary.pdfLinks.map((p: { type: string; url: string }) => ({
             "@type": "CreativeWork",
             "name": `${p.type} Bet Slip PDF`,
             "url": p.url,
