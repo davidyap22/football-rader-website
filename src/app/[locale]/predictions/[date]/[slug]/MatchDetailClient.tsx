@@ -5225,9 +5225,38 @@ export default function MatchDetailClient() {
                           </div>
                         );
                       }
+                      // Get latest signal for mobile card view
+                      const latestBetaSignal = lastBetaSignals[0];
+                      const mobileClockBetaOU = latestBetaSignal?.minute_at_bet;
+                      const mobileScoreHomeBetaOU = latestBetaSignal?.score_home_at_bet ?? '-';
+                      const mobileScoreAwayBetaOU = latestBetaSignal?.score_away_at_bet ?? '-';
+                      const mobileBetTypeBetaOU = latestBetaSignal?.bet_type || '-';
+                      const mobileSelectionBetaOU = latestBetaSignal?.selection || '-';
+                      const mobileLineBetaOU = latestBetaSignal?.line !== null && latestBetaSignal?.line !== undefined ? latestBetaSignal.line : '-';
+                      const mobileOddsBetaOU = latestBetaSignal?.odds !== null && latestBetaSignal?.odds !== undefined ? Number(latestBetaSignal.odds).toFixed(2) : '-';
+                      const mobileStakeBetaOU = latestBetaSignal?.stake !== null && latestBetaSignal?.stake !== undefined ? `$${latestBetaSignal.stake}` : '-';
                       return (
                         <div className="opacity-30">
-                          <div className="overflow-x-auto">
+                          {/* Mobile Card View */}
+                          <div className="md:hidden">
+                            <div className="bg-gray-800/50 rounded-xl p-3 border border-white/10">
+                              <div className="flex items-center justify-between mb-3">
+                                <span className="text-white font-bold">{mobileClockBetaOU !== null && mobileClockBetaOU !== undefined ? `${String(mobileClockBetaOU)}'` : '-'}</span>
+                                <span className="text-gray-300">{String(mobileScoreHomeBetaOU)}-{String(mobileScoreAwayBetaOU)}</span>
+                              </div>
+                              <div className="flex items-center gap-2 mb-3">
+                                <span className="px-2 py-1 rounded text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">{mobileBetTypeBetaOU}</span>
+                                <span className="text-emerald-400 font-medium">{mobileSelectionBetaOU}</span>
+                              </div>
+                              <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                                <div><div className="text-gray-500 mb-1">{t('line')}</div><div className="text-amber-400">{mobileLineBetaOU}</div></div>
+                                <div><div className="text-gray-500 mb-1">Odds</div><div className="text-white font-semibold">{mobileOddsBetaOU}</div></div>
+                                <div><div className="text-gray-500 mb-1">{t('stake')}</div><div className="text-yellow-400">{mobileStakeBetaOU}</div></div>
+                              </div>
+                            </div>
+                          </div>
+                          {/* Desktop Table View */}
+                          <div className="hidden md:block overflow-x-auto">
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="border-b border-white/10">
@@ -5293,55 +5322,86 @@ export default function MatchDetailClient() {
                           </div>
                         );
                       }
+                      // Get latest signal for mobile card view
+                      const latestBetaSignalLive = lastBetaSignals[0];
+                      const mobileClockBetaOULive = latestBetaSignalLive?.minute_at_bet;
+                      const mobileScoreHomeBetaOULive = latestBetaSignalLive?.score_home_at_bet ?? '-';
+                      const mobileScoreAwayBetaOULive = latestBetaSignalLive?.score_away_at_bet ?? '-';
+                      const mobileBetTypeBetaOULive = latestBetaSignalLive?.bet_type || '-';
+                      const mobileSelectionBetaOULive = latestBetaSignalLive?.selection || '-';
+                      const mobileLineBetaOULive = latestBetaSignalLive?.line !== null && latestBetaSignalLive?.line !== undefined ? latestBetaSignalLive.line : '-';
+                      const mobileOddsBetaOULive = latestBetaSignalLive?.odds !== null && latestBetaSignalLive?.odds !== undefined ? Number(latestBetaSignalLive.odds).toFixed(2) : '-';
+                      const mobileStakeBetaOULive = latestBetaSignalLive?.stake !== null && latestBetaSignalLive?.stake !== undefined ? `$${latestBetaSignalLive.stake}` : '-';
                       return (
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-sm">
-                            <thead>
-                              <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Bet Type</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Odds at Signal</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {lastBetaSignals.map((signal: any, index: number) => {
-                                // First item in array is the latest signal
-                                const isLatest = index === 0;
-                                return (
-                                  <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
-                                    <td className="py-2 px-3">
-                                      {signal.minute_at_bet !== null && signal.minute_at_bet !== undefined ? (
-                                        <span className="text-red-400 font-bold tabular-nums">{signal.minute_at_bet}'</span>
-                                      ) : (
-                                        <span className="text-gray-500">-</span>
-                                      )}
-                                    </td>
-                                    <td className="py-2 px-3">
-                                      <span className="text-cyan-400 text-xs font-medium">{signal.bet_type || '-'}</span>
-                                    </td>
-                                    <td className="py-2 px-3">
-                                      <span className="text-emerald-400 font-medium">{signal.selection || '-'}</span>
-                                    </td>
-                                    <td className="py-2 px-3 text-amber-400">{signal.line !== null && signal.line !== undefined ? signal.line : '-'}</td>
-                                    <td className="py-2 px-3 text-white font-semibold">
-                                      {signal.odds !== null && signal.odds !== undefined ? Number(signal.odds).toFixed(2) : '-'}
-                                    </td>
-                                    <td className="py-2 px-3 text-yellow-400">
-                                      {signal.stake !== null && signal.stake !== undefined ? `$${signal.stake}` : '-'}
-                                    </td>
-                                    <td className="py-2 px-3 text-gray-300">{signal.score_home_at_bet !== null && signal.score_home_at_bet !== undefined ? signal.score_home_at_bet : '-'}</td>
-                                    <td className="py-2 px-3 text-gray-300">{signal.score_away_at_bet !== null && signal.score_away_at_bet !== undefined ? signal.score_away_at_bet : '-'}</td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
+                        <>
+                          {/* Mobile Card View */}
+                          <div className="md:hidden">
+                            <div className="bg-red-500/20 rounded-xl p-3 border border-red-500/40">
+                              <div className="flex items-center justify-between mb-3">
+                                <span className="text-white font-bold">{mobileClockBetaOULive !== null && mobileClockBetaOULive !== undefined ? `${String(mobileClockBetaOULive)}'` : '-'}</span>
+                                <span className="text-gray-300">{String(mobileScoreHomeBetaOULive)}-{String(mobileScoreAwayBetaOULive)}</span>
+                              </div>
+                              <div className="flex items-center gap-2 mb-3">
+                                <span className="px-2 py-1 rounded text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">{mobileBetTypeBetaOULive}</span>
+                                <span className="text-emerald-400 font-medium">{mobileSelectionBetaOULive}</span>
+                              </div>
+                              <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                                <div><div className="text-gray-500 mb-1">{t('line')}</div><div className="text-amber-400">{mobileLineBetaOULive}</div></div>
+                                <div><div className="text-gray-500 mb-1">Odds</div><div className="text-white font-semibold">{mobileOddsBetaOULive}</div></div>
+                                <div><div className="text-gray-500 mb-1">{t('stake')}</div><div className="text-yellow-400">{mobileStakeBetaOULive}</div></div>
+                              </div>
+                            </div>
+                          </div>
+                          {/* Desktop Table View */}
+                          <div className="hidden md:block overflow-x-auto">
+                            <table className="w-full text-sm">
+                              <thead>
+                                <tr className="border-b border-white/10">
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Bet Type</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Odds at Signal</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {lastBetaSignals.map((signal: any, index: number) => {
+                                  // First item in array is the latest signal
+                                  const isLatest = index === 0;
+                                  return (
+                                    <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
+                                      <td className="py-2 px-3">
+                                        {signal.minute_at_bet !== null && signal.minute_at_bet !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{signal.minute_at_bet}'</span>
+                                        ) : (
+                                          <span className="text-gray-500">-</span>
+                                        )}
+                                      </td>
+                                      <td className="py-2 px-3">
+                                        <span className="text-cyan-400 text-xs font-medium">{signal.bet_type || '-'}</span>
+                                      </td>
+                                      <td className="py-2 px-3">
+                                        <span className="text-emerald-400 font-medium">{signal.selection || '-'}</span>
+                                      </td>
+                                      <td className="py-2 px-3 text-amber-400">{signal.line !== null && signal.line !== undefined ? signal.line : '-'}</td>
+                                      <td className="py-2 px-3 text-white font-semibold">
+                                        {signal.odds !== null && signal.odds !== undefined ? Number(signal.odds).toFixed(2) : '-'}
+                                      </td>
+                                      <td className="py-2 px-3 text-yellow-400">
+                                        {signal.stake !== null && signal.stake !== undefined ? `$${signal.stake}` : '-'}
+                                      </td>
+                                      <td className="py-2 px-3 text-gray-300">{signal.score_home_at_bet !== null && signal.score_home_at_bet !== undefined ? signal.score_home_at_bet : '-'}</td>
+                                      <td className="py-2 px-3 text-gray-300">{signal.score_away_at_bet !== null && signal.score_away_at_bet !== undefined ? signal.score_away_at_bet : '-'}</td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </>
                       );
                     })()
                   ) : (
@@ -5810,9 +5870,38 @@ export default function MatchDetailClient() {
                           </div>
                         );
                       }
+                      // Get latest signal for mobile card view
+                      const latestBetaSignalHdp = lastBetaSignals[0];
+                      const mobileClockBetaHdp = latestBetaSignalHdp?.minute_at_bet;
+                      const mobileScoreHomeBetaHdp = latestBetaSignalHdp?.score_home_at_bet ?? '-';
+                      const mobileScoreAwayBetaHdp = latestBetaSignalHdp?.score_away_at_bet ?? '-';
+                      const mobileBetTypeBetaHdp = latestBetaSignalHdp?.bet_type || '-';
+                      const mobileSelectionBetaHdp = latestBetaSignalHdp?.selection || '-';
+                      const mobileLineBetaHdp = latestBetaSignalHdp?.line !== null && latestBetaSignalHdp?.line !== undefined ? latestBetaSignalHdp.line : '-';
+                      const mobileOddsBetaHdp = latestBetaSignalHdp?.odds !== null && latestBetaSignalHdp?.odds !== undefined ? Number(latestBetaSignalHdp.odds).toFixed(2) : '-';
+                      const mobileStakeBetaHdp = latestBetaSignalHdp?.stake !== null && latestBetaSignalHdp?.stake !== undefined ? `$${latestBetaSignalHdp.stake}` : '-';
                       return (
                         <div className="opacity-30">
-                          <div className="overflow-x-auto">
+                          {/* Mobile Card View */}
+                          <div className="md:hidden">
+                            <div className="bg-gray-800/50 rounded-xl p-3 border border-white/10">
+                              <div className="flex items-center justify-between mb-3">
+                                <span className="text-white font-bold">{mobileClockBetaHdp !== null && mobileClockBetaHdp !== undefined ? `${String(mobileClockBetaHdp)}'` : '-'}</span>
+                                <span className="text-gray-300">{String(mobileScoreHomeBetaHdp)}-{String(mobileScoreAwayBetaHdp)}</span>
+                              </div>
+                              <div className="flex items-center gap-2 mb-3">
+                                <span className="px-2 py-1 rounded text-xs font-bold bg-purple-500/20 text-purple-400 border border-purple-500/40">{mobileBetTypeBetaHdp}</span>
+                                <span className="text-emerald-400 font-medium">{mobileSelectionBetaHdp}</span>
+                              </div>
+                              <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                                <div><div className="text-gray-500 mb-1">{t('line')}</div><div className="text-amber-400">{mobileLineBetaHdp}</div></div>
+                                <div><div className="text-gray-500 mb-1">Odds</div><div className="text-white font-semibold">{mobileOddsBetaHdp}</div></div>
+                                <div><div className="text-gray-500 mb-1">{t('stake')}</div><div className="text-yellow-400">{mobileStakeBetaHdp}</div></div>
+                              </div>
+                            </div>
+                          </div>
+                          {/* Desktop Table View */}
+                          <div className="hidden md:block overflow-x-auto">
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="border-b border-white/10">
@@ -5878,55 +5967,86 @@ export default function MatchDetailClient() {
                           </div>
                         );
                       }
+                      // Get latest signal for mobile card view
+                      const latestBetaSignalHdpLive = lastBetaSignals[0];
+                      const mobileClockBetaHdpLive = latestBetaSignalHdpLive?.minute_at_bet;
+                      const mobileScoreHomeBetaHdpLive = latestBetaSignalHdpLive?.score_home_at_bet ?? '-';
+                      const mobileScoreAwayBetaHdpLive = latestBetaSignalHdpLive?.score_away_at_bet ?? '-';
+                      const mobileBetTypeBetaHdpLive = latestBetaSignalHdpLive?.bet_type || '-';
+                      const mobileSelectionBetaHdpLive = latestBetaSignalHdpLive?.selection || '-';
+                      const mobileLineBetaHdpLive = latestBetaSignalHdpLive?.line !== null && latestBetaSignalHdpLive?.line !== undefined ? latestBetaSignalHdpLive.line : '-';
+                      const mobileOddsBetaHdpLive = latestBetaSignalHdpLive?.odds !== null && latestBetaSignalHdpLive?.odds !== undefined ? Number(latestBetaSignalHdpLive.odds).toFixed(2) : '-';
+                      const mobileStakeBetaHdpLive = latestBetaSignalHdpLive?.stake !== null && latestBetaSignalHdpLive?.stake !== undefined ? `$${latestBetaSignalHdpLive.stake}` : '-';
                       return (
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-sm">
-                            <thead>
-                              <tr className="border-b border-white/10">
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Bet Type</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Odds at Signal</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
-                                <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {lastBetaSignals.map((signal: any, index: number) => {
-                                // First item in array is the latest signal
-                                const isLatest = index === 0;
-                                return (
-                                  <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
-                                    <td className="py-2 px-3">
-                                      {signal.minute_at_bet !== null && signal.minute_at_bet !== undefined ? (
-                                        <span className="text-red-400 font-bold tabular-nums">{signal.minute_at_bet}'</span>
-                                      ) : (
-                                        <span className="text-gray-500">-</span>
-                                      )}
-                                    </td>
-                                    <td className="py-2 px-3">
-                                      <span className="text-purple-400 text-xs font-medium">{signal.bet_type || '-'}</span>
-                                    </td>
-                                    <td className="py-2 px-3">
-                                      <span className="text-emerald-400 font-medium">{signal.selection || '-'}</span>
-                                    </td>
-                                    <td className="py-2 px-3 text-amber-400">{signal.line !== null && signal.line !== undefined ? signal.line : '-'}</td>
-                                    <td className="py-2 px-3 text-white font-semibold">
-                                      {signal.odds !== null && signal.odds !== undefined ? Number(signal.odds).toFixed(2) : '-'}
-                                    </td>
-                                    <td className="py-2 px-3 text-yellow-400">
-                                      {signal.stake !== null && signal.stake !== undefined ? `$${signal.stake}` : '-'}
-                                    </td>
-                                    <td className="py-2 px-3 text-gray-300">{signal.score_home_at_bet !== null && signal.score_home_at_bet !== undefined ? signal.score_home_at_bet : '-'}</td>
-                                    <td className="py-2 px-3 text-gray-300">{signal.score_away_at_bet !== null && signal.score_away_at_bet !== undefined ? signal.score_away_at_bet : '-'}</td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
+                        <>
+                          {/* Mobile Card View */}
+                          <div className="md:hidden">
+                            <div className="bg-red-500/20 rounded-xl p-3 border border-red-500/40">
+                              <div className="flex items-center justify-between mb-3">
+                                <span className="text-white font-bold">{mobileClockBetaHdpLive !== null && mobileClockBetaHdpLive !== undefined ? `${String(mobileClockBetaHdpLive)}'` : '-'}</span>
+                                <span className="text-gray-300">{String(mobileScoreHomeBetaHdpLive)}-{String(mobileScoreAwayBetaHdpLive)}</span>
+                              </div>
+                              <div className="flex items-center gap-2 mb-3">
+                                <span className="px-2 py-1 rounded text-xs font-bold bg-purple-500/20 text-purple-400 border border-purple-500/40">{mobileBetTypeBetaHdpLive}</span>
+                                <span className="text-emerald-400 font-medium">{mobileSelectionBetaHdpLive}</span>
+                              </div>
+                              <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                                <div><div className="text-gray-500 mb-1">{t('line')}</div><div className="text-amber-400">{mobileLineBetaHdpLive}</div></div>
+                                <div><div className="text-gray-500 mb-1">Odds</div><div className="text-white font-semibold">{mobileOddsBetaHdpLive}</div></div>
+                                <div><div className="text-gray-500 mb-1">{t('stake')}</div><div className="text-yellow-400">{mobileStakeBetaHdpLive}</div></div>
+                              </div>
+                            </div>
+                          </div>
+                          {/* Desktop Table View */}
+                          <div className="hidden md:block overflow-x-auto">
+                            <table className="w-full text-sm">
+                              <thead>
+                                <tr className="border-b border-white/10">
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('clock')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Bet Type</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('selection')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('line')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Odds at Signal</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">{t('stake')}</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Home</th>
+                                  <th className="text-left py-2 px-3 text-gray-400 font-medium">Score Away</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {lastBetaSignals.map((signal: any, index: number) => {
+                                  // First item in array is the latest signal
+                                  const isLatest = index === 0;
+                                  return (
+                                    <tr key={index} className={`border-b border-white/5 ${isLatest ? 'bg-red-500/20' : ''}`}>
+                                      <td className="py-2 px-3">
+                                        {signal.minute_at_bet !== null && signal.minute_at_bet !== undefined ? (
+                                          <span className="text-red-400 font-bold tabular-nums">{signal.minute_at_bet}'</span>
+                                        ) : (
+                                          <span className="text-gray-500">-</span>
+                                        )}
+                                      </td>
+                                      <td className="py-2 px-3">
+                                        <span className="text-purple-400 text-xs font-medium">{signal.bet_type || '-'}</span>
+                                      </td>
+                                      <td className="py-2 px-3">
+                                        <span className="text-emerald-400 font-medium">{signal.selection || '-'}</span>
+                                      </td>
+                                      <td className="py-2 px-3 text-amber-400">{signal.line !== null && signal.line !== undefined ? signal.line : '-'}</td>
+                                      <td className="py-2 px-3 text-white font-semibold">
+                                        {signal.odds !== null && signal.odds !== undefined ? Number(signal.odds).toFixed(2) : '-'}
+                                      </td>
+                                      <td className="py-2 px-3 text-yellow-400">
+                                        {signal.stake !== null && signal.stake !== undefined ? `$${signal.stake}` : '-'}
+                                      </td>
+                                      <td className="py-2 px-3 text-gray-300">{signal.score_home_at_bet !== null && signal.score_home_at_bet !== undefined ? signal.score_home_at_bet : '-'}</td>
+                                      <td className="py-2 px-3 text-gray-300">{signal.score_away_at_bet !== null && signal.score_away_at_bet !== undefined ? signal.score_away_at_bet : '-'}</td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </>
                       );
                     })()
                   ) : (
