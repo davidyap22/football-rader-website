@@ -93,6 +93,8 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Clock", selection: "Selection", line: "Line", fairOdds: "Fair Odds",
     marketOdds: "Market Odds", ev: "EV", stake: "Stake", value: "Value",
     betType: "Bet Type", oddsAtSignal: "Odds at Signal", scoreHome: "Score Home", scoreAway: "Score Away",
+    matchNotStarted: "Match has not started yet",
+    homeWin: "Home Win", awayWin: "Away Win",
   },
   ES: {
     home: "Inicio", predictions: "Predicciones", leagues: "Ligas", performance: "Rendimiento IA", community: "Comunidad", news: "Noticias", solution: "Solución", pricing: "Precios",
@@ -131,6 +133,8 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Reloj", selection: "Selección", line: "Línea", fairOdds: "Cuotas Justas",
     marketOdds: "Cuotas del Mercado", ev: "EV", stake: "Apuesta", value: "Valor",
     betType: "Tipo de Apuesta", oddsAtSignal: "Cuotas en Señal", scoreHome: "Goles Local", scoreAway: "Goles Visitante",
+    matchNotStarted: "El partido aún no ha comenzado",
+    homeWin: "Victoria Local", awayWin: "Victoria Visitante",
   },
   PT: {
     home: "Início", predictions: "Previsões", leagues: "Ligas", performance: "Desempenho IA", community: "Comunidade", news: "Notícias", solution: "Solução", pricing: "Preços",
@@ -169,6 +173,8 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Relógio", selection: "Seleção", line: "Linha", fairOdds: "Odds Justas",
     marketOdds: "Odds do Mercado", ev: "EV", stake: "Aposta", value: "Valor",
     betType: "Tipo de Aposta", oddsAtSignal: "Odds no Sinal", scoreHome: "Gols Casa", scoreAway: "Gols Fora",
+    matchNotStarted: "A partida ainda não começou",
+    homeWin: "Vitória Casa", awayWin: "Vitória Fora",
   },
   DE: {
     home: "Startseite", predictions: "Vorhersagen", leagues: "Ligen", performance: "KI-Leistung", community: "Community", news: "Nachrichten", solution: "Lösung", pricing: "Preise",
@@ -207,6 +213,8 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Uhr", selection: "Auswahl", line: "Linie", fairOdds: "Faire Quoten",
     marketOdds: "Marktquoten", ev: "EV", stake: "Einsatz", value: "Wert",
     betType: "Wetttyp", oddsAtSignal: "Quoten bei Signal", scoreHome: "Tore Heim", scoreAway: "Tore Auswärts",
+    matchNotStarted: "Das Spiel hat noch nicht begonnen",
+    homeWin: "Heimsieg", awayWin: "Auswärtssieg",
   },
   FR: {
     home: "Accueil", predictions: "Prédictions", leagues: "Ligues", performance: "Performance IA", community: "Communauté", news: "Actualités", solution: "Solution", pricing: "Tarifs",
@@ -245,6 +253,8 @@ const translations: Record<string, Record<string, string>> = {
     clock: "Horloge", selection: "Sélection", line: "Ligne", fairOdds: "Cotes Justes",
     marketOdds: "Cotes du Marché", ev: "EV", stake: "Mise", value: "Valeur",
     betType: "Type de Pari", oddsAtSignal: "Cotes au Signal", scoreHome: "Score Domicile", scoreAway: "Score Extérieur",
+    matchNotStarted: "Le match n'a pas encore commencé",
+    homeWin: "Victoire Domicile", awayWin: "Victoire Extérieur",
   },
   JA: {
     home: "ホーム", predictions: "予測", leagues: "リーグ", performance: "AIパフォーマンス", community: "コミュニティ", news: "ニュース", solution: "ソリューション", pricing: "料金",
@@ -283,6 +293,8 @@ const translations: Record<string, Record<string, string>> = {
     clock: "時計", selection: "選択", line: "ライン", fairOdds: "適正オッズ",
     marketOdds: "市場オッズ", ev: "EV", stake: "ステーク", value: "バリュー",
     betType: "ベットタイプ", oddsAtSignal: "シグナル時オッズ", scoreHome: "ホームスコア", scoreAway: "アウェイスコア",
+    matchNotStarted: "試合はまだ始まっていません",
+    homeWin: "ホーム勝利", awayWin: "アウェイ勝利",
   },
   KO: {
     home: "홈", predictions: "예측", leagues: "리그", performance: "AI 성능", community: "커뮤니티", news: "뉴스", solution: "솔루션", pricing: "가격",
@@ -321,6 +333,8 @@ const translations: Record<string, Record<string, string>> = {
     clock: "시간", selection: "선택", line: "라인", fairOdds: "공정 배당률",
     marketOdds: "시장 배당률", ev: "EV", stake: "스테이크", value: "가치",
     betType: "베팅 유형", oddsAtSignal: "시그널 시 배당률", scoreHome: "홈 득점", scoreAway: "원정 득점",
+    matchNotStarted: "경기가 아직 시작되지 않았습니다",
+    homeWin: "홈 승리", awayWin: "원정 승리",
   },
   '中文': {
     home: "首页", predictions: "预测", leagues: "联赛", performance: "AI表现", community: "社区", news: "新闻", solution: "解决方案", pricing: "价格",
@@ -359,6 +373,8 @@ const translations: Record<string, Record<string, string>> = {
     clock: "时钟", selection: "选择", line: "让球", fairOdds: "公平赔率",
     marketOdds: "市场赔率", ev: "EV", stake: "赌注", value: "价值",
     betType: "投注类型", oddsAtSignal: "信号时赔率", scoreHome: "主队比分", scoreAway: "客队比分",
+    matchNotStarted: "比赛尚未开始",
+    homeWin: "主胜", awayWin: "客胜",
   },
   '繁體': {
     home: "首頁", predictions: "預測", leagues: "聯賽", performance: "AI表現", community: "社區", news: "新聞", solution: "解決方案", pricing: "價格",
@@ -397,6 +413,8 @@ const translations: Record<string, Record<string, string>> = {
     clock: "時鐘", selection: "選擇", line: "讓球", fairOdds: "公平賠率",
     marketOdds: "市場賠率", ev: "EV", stake: "賭注", value: "價值",
     betType: "投注類型", oddsAtSignal: "信號時賠率", scoreHome: "主隊比分", scoreAway: "客隊比分",
+    matchNotStarted: "比賽尚未開始",
+    homeWin: "主勝", awayWin: "客勝",
   },
   ID: {
     home: "Beranda", predictions: "Prediksi", leagues: "Liga", performance: "Performa AI", community: "Komunitas", news: "Berita", solution: "Solusi", pricing: "Harga",
@@ -424,6 +442,19 @@ const translations: Record<string, Record<string, string>> = {
     possession: "Penguasaan Bola", totalShots: "Total Tembakan", shotsOnGoal: "Tembakan Tepat Sasaran", shotsOffGoal: "Tembakan Meleset",
     corners: "Tendangan Sudut", fouls: "Pelanggaran", offsides: "Offside", yellowCards: "Kartu Kuning", redCards: "Kartu Merah",
     saves: "Penyelamatan", passes: "Total Umpan", passAccuracy: "Akurasi Umpan", expectedGoals: "Gol yang Diharapkan (xG)",
+    // Market tabs
+    overUnderMarket: "Over/Under", asianHandicapMarket: "Handicap Asia",
+    // Buttons
+    signalHistory: "Riwayat Sinyal", profitSummary: "Ringkasan Keuntungan",
+    // Bet styles
+    allStyles: "Semua Gaya", hdpSniper: "Penembak HDP", activeTrader: "Trader Aktif",
+    oddsflowCoreStrategy: "Strategi Inti Oddsflow", oddsflowBeta: "Oddsflow Beta",
+    // Table columns
+    clock: "Waktu", selection: "Pilihan", line: "Garis", fairOdds: "Odds Wajar",
+    marketOdds: "Odds Pasar", ev: "EV", stake: "Taruhan", value: "Nilai",
+    betType: "Jenis Taruhan", oddsAtSignal: "Odds saat Sinyal", scoreHome: "Skor Tuan Rumah", scoreAway: "Skor Tamu",
+    matchNotStarted: "Pertandingan belum dimulai",
+    homeWin: "Tuan Rumah Menang", awayWin: "Tamu Menang",
   },
 };
 
@@ -1553,7 +1584,7 @@ export default function MatchDetailClient() {
                 <span className={`font-semibold text-lg text-center ${
                   match.type === 'Finished' && (match.goals_home ?? 0) > (match.goals_away ?? 0) ? 'text-emerald-400' : 'text-white'
                 }`}>{getTeamNameLocalized(match.home_name)}</span>
-                <span className="text-xs text-gray-500">HOME</span>
+                <span className="text-xs text-gray-500 uppercase">{t('home_team')}</span>
               </div>
 
               {/* VS / Score */}
@@ -1575,7 +1606,7 @@ export default function MatchDetailClient() {
                       {match.type === 'In Play' && (
                         <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                       )}
-                      {match.type === 'In Play' ? (match.status_elapsed ? `${match.status_elapsed}'` : 'LIVE') : 'Full Time'}
+                      {match.type === 'In Play' ? (match.status_elapsed ? `${match.status_elapsed}'` : t('live')) : t('fullTime')}
                     </span>
                   </>
                 ) : (
@@ -1592,7 +1623,7 @@ export default function MatchDetailClient() {
                        match.type === 'Cancelled' ? 'Cancelled' :
                        match.type === 'Abandoned' ? 'Abandoned' :
                        match.type === 'Not Played' ? 'Not Played' :
-                       'Not Started'}
+                       t('notStarted')}
                     </span>
                   </>
                 )}
@@ -1617,7 +1648,7 @@ export default function MatchDetailClient() {
                 <span className={`font-semibold text-lg text-center ${
                   match.type === 'Finished' && (match.goals_away ?? 0) > (match.goals_home ?? 0) ? 'text-emerald-400' : 'text-white'
                 }`}>{getTeamNameLocalized(match.away_name)}</span>
-                <span className="text-xs text-gray-500">AWAY</span>
+                <span className="text-xs text-gray-500 uppercase">{t('away_team')}</span>
               </div>
             </div>
 
@@ -2554,15 +2585,15 @@ export default function MatchDetailClient() {
                   <h3 className="text-gray-400 text-sm font-medium mb-3">1X2</h3>
                   <div className="grid grid-cols-3 gap-2">
                     <div className={`bg-white/5 rounded-lg p-3 text-center hover:bg-emerald-500/20 transition-all cursor-pointer ${getFlashClass(oddsFlash.moneyline_1x2_home)}`}>
-                      <div className="text-xs text-gray-500 mb-1">Home</div>
+                      <div className="text-xs text-gray-500 mb-1">{t('home_team')}</div>
                       <div className="text-lg font-bold text-white">{currentOdds.moneyline_1x2_home?.toFixed(2) ?? '-'}</div>
                     </div>
                     <div className={`bg-white/5 rounded-lg p-3 text-center hover:bg-emerald-500/20 transition-all cursor-pointer ${getFlashClass(oddsFlash.moneyline_1x2_draw)}`}>
-                      <div className="text-xs text-gray-500 mb-1">Draw</div>
+                      <div className="text-xs text-gray-500 mb-1">{t('draw')}</div>
                       <div className="text-lg font-bold text-white">{currentOdds.moneyline_1x2_draw?.toFixed(2) ?? '-'}</div>
                     </div>
                     <div className={`bg-white/5 rounded-lg p-3 text-center hover:bg-emerald-500/20 transition-all cursor-pointer ${getFlashClass(oddsFlash.moneyline_1x2_away)}`}>
-                      <div className="text-xs text-gray-500 mb-1">Away</div>
+                      <div className="text-xs text-gray-500 mb-1">{t('away_team')}</div>
                       <div className="text-lg font-bold text-white">{currentOdds.moneyline_1x2_away?.toFixed(2) ?? '-'}</div>
                     </div>
                   </div>
@@ -2570,14 +2601,14 @@ export default function MatchDetailClient() {
 
                 {/* Over/Under Odds */}
                 <div className="bg-white/5 rounded-xl p-4">
-                  <h3 className="text-gray-400 text-sm font-medium mb-3">Over/Under {currentOdds.totalpoints_main_line ?? '-'}</h3>
+                  <h3 className="text-gray-400 text-sm font-medium mb-3">{t('overUnderMarket')} {currentOdds.totalpoints_main_line ?? '-'}</h3>
                   <div className="grid grid-cols-2 gap-2">
                     <div className={`bg-white/5 rounded-lg p-3 text-center hover:bg-emerald-500/20 transition-all cursor-pointer ${getFlashClass(oddsFlash.totalpoints_over)}`}>
-                      <div className="text-xs text-gray-500 mb-1">Over</div>
+                      <div className="text-xs text-gray-500 mb-1">{t('over')}</div>
                       <div className="text-lg font-bold text-white">{currentOdds.totalpoints_over?.toFixed(2) ?? '-'}</div>
                     </div>
                     <div className={`bg-white/5 rounded-lg p-3 text-center hover:bg-emerald-500/20 transition-all cursor-pointer ${getFlashClass(oddsFlash.totalpoints_under)}`}>
-                      <div className="text-xs text-gray-500 mb-1">Under</div>
+                      <div className="text-xs text-gray-500 mb-1">{t('under')}</div>
                       <div className="text-lg font-bold text-white">{currentOdds.totalpoints_under?.toFixed(2) ?? '-'}</div>
                     </div>
                   </div>
@@ -2585,14 +2616,14 @@ export default function MatchDetailClient() {
 
                 {/* Handicap Odds */}
                 <div className="bg-white/5 rounded-xl p-4">
-                  <h3 className="text-gray-400 text-sm font-medium mb-3">Asian Handicap {currentOdds.handicap_main_line !== null && currentOdds.handicap_main_line !== undefined ? (currentOdds.handicap_main_line > 0 ? '+' : '') + currentOdds.handicap_main_line : '-'}</h3>
+                  <h3 className="text-gray-400 text-sm font-medium mb-3">{t('asianHandicapMarket')} {currentOdds.handicap_main_line !== null && currentOdds.handicap_main_line !== undefined ? (currentOdds.handicap_main_line > 0 ? '+' : '') + currentOdds.handicap_main_line : '-'}</h3>
                   <div className="grid grid-cols-2 gap-2">
                     <div className={`bg-white/5 rounded-lg p-3 text-center hover:bg-emerald-500/20 transition-all cursor-pointer ${getFlashClass(oddsFlash.handicap_home)}`}>
-                      <div className="text-xs text-gray-500 mb-1">Home</div>
+                      <div className="text-xs text-gray-500 mb-1">{t('home_team')}</div>
                       <div className="text-lg font-bold text-white">{currentOdds.handicap_home?.toFixed(2) ?? '-'}</div>
                     </div>
                     <div className={`bg-white/5 rounded-lg p-3 text-center hover:bg-emerald-500/20 transition-all cursor-pointer ${getFlashClass(oddsFlash.handicap_away)}`}>
-                      <div className="text-xs text-gray-500 mb-1">Away</div>
+                      <div className="text-xs text-gray-500 mb-1">{t('away_team')}</div>
                       <div className="text-lg font-bold text-white">{currentOdds.handicap_away?.toFixed(2) ?? '-'}</div>
                     </div>
                   </div>
@@ -4223,7 +4254,7 @@ export default function MatchDetailClient() {
                           <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          <p className="text-sm">Match has not started yet</p>
+                          <p className="text-sm">{t('matchNotStarted')}</p>
                         </div>
                       ) : (
                         <div className="space-y-2">
@@ -4588,7 +4619,7 @@ export default function MatchDetailClient() {
                         <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p className="text-sm">Match has not started yet</p>
+                        <p className="text-sm">{t('matchNotStarted')}</p>
                       </div>
                     ) : match.type === 'Finished' ? (
                       <div className="space-y-2">
@@ -4791,7 +4822,7 @@ export default function MatchDetailClient() {
                           <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          <p className="text-sm">Match has not started yet</p>
+                          <p className="text-sm">{t('matchNotStarted')}</p>
                         </div>
                       ) : (
                         <div className="space-y-2">
@@ -5334,7 +5365,7 @@ export default function MatchDetailClient() {
                           <svg className="w-10 h-10 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          <p className="text-sm">Match has not started yet</p>
+                          <p className="text-sm">{t('matchNotStarted')}</p>
                         </div>
                       ) : (
                         <div className="space-y-2">
@@ -5720,7 +5751,7 @@ export default function MatchDetailClient() {
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-white/5">
         <div className="max-w-7xl mx-auto text-center text-gray-500 text-sm">
-          <p>&copy; 2026 OddsFlow. All rights reserved. Gambling involves risk. Please gamble responsibly.</p>
+          <p>{t('allRights')} {t('footer')}</p>
         </div>
       </footer>
     </div>
