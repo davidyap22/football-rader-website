@@ -2116,7 +2116,13 @@ export default function MatchDetailClient() {
                         <div>
                           <div className="text-xs text-emerald-400 font-medium uppercase tracking-wider mb-1">{t('aiAdvice')}</div>
                           <p className="text-gray-300 text-sm">
-                            {matchPrediction.advice?.replace(/^Winner\s*:\s*/i, `${t('winner')} : `)}
+                            {(() => {
+                              let advice = matchPrediction.advice?.replace(/^Winner\s*:\s*/i, `${t('winner')} : `) || '';
+                              // Replace team names with localized versions
+                              if (match?.home_name) advice = advice.replace(match.home_name, getTeamNameLocalized(match.home_name));
+                              if (match?.away_name) advice = advice.replace(match.away_name, getTeamNameLocalized(match.away_name));
+                              return advice;
+                            })()}
                           </p>
                         </div>
                       </div>
@@ -2135,7 +2141,7 @@ export default function MatchDetailClient() {
                           <div className="text-xs text-emerald-300/80 mb-2 font-medium uppercase tracking-wider">{t('predictedWinner')}</div>
                           <div className="text-emerald-400 font-bold text-lg flex items-center justify-center gap-2">
                             <span className="animate-bounce text-xl">🏆</span>
-                            <span className="drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">{matchPrediction.winner_name}</span>
+                            <span className="drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">{getTeamNameLocalized(matchPrediction.winner_name)}</span>
                           </div>
                         </div>
                       </div>
