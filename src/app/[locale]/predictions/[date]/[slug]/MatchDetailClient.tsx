@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase, Prematch, OddsHistory, Moneyline1x2Prediction, OverUnderPrediction, HandicapPrediction, ProfitSummary, getUserSubscription, UserSubscription, MatchPrediction, getMatchPrediction, TeamLineup, getFixtureLineups, FixturePlayer, LiveSignals, getLiveSignals, getLiveSignalsByBetStyle, getLiveSignalsHistoryByBetStyle, FixtureEvent, getFixtureEvents, MatchStatistics, getMatchStatistics, TeamNameLanguage, getPlayerTranslations, PlayerTranslation } from '@/lib/supabase';
 import { LEAGUE_NAMES_LOCALIZED, LEAGUES_CONFIG } from '@/lib/leagues-data';
+import { TEAM_MAPPINGS } from '@/lib/auto-link-teams';
 import { User } from '@supabase/supabase-js';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
 import FlagIcon, { LANGUAGES } from "@/components/FlagIcon";
@@ -803,6 +804,30 @@ export default function MatchDetailClient() {
   const getPlayerPhoto = (player: FixturePlayer): string | null => {
     const translation = playerTranslations[player.player_id];
     return translation?.photo || null;
+  };
+
+  // Generate team profile URL
+  const getTeamUrl = (teamName: string): string => {
+    // Get league slug from match data
+    const leagueConfig = LEAGUES_CONFIG.find(l => l.dbName === match?.league_name);
+    const leagueSlug = leagueConfig?.slug || 'premier-league';
+
+    // Try to get team slug from TEAM_MAPPINGS
+    const teamMapping = TEAM_MAPPINGS[teamName];
+    let teamSlug = teamMapping?.slug;
+
+    // If not found, generate slug from team name
+    if (!teamSlug) {
+      teamSlug = teamName
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-') // Replace multiple hyphens
+        .trim();
+    }
+
+    return localePath(`/leagues/${leagueSlug}/${teamSlug}`);
   };
 
   // Odds related state
@@ -1743,14 +1768,21 @@ export default function MatchDetailClient() {
               <div className="flex flex-col items-center gap-3 flex-1">
                 <div className="relative">
                   {match.home_logo && (
-                    <div className={`w-20 h-20 rounded-full bg-white p-2 flex items-center justify-center shadow-lg ${
-                      match.type === 'Finished' && (match.goals_home ?? 0) > (match.goals_away ?? 0) ? 'ring-2 ring-emerald-500' : ''
-                    }`}>
-                      <img src={match.home_logo} alt={match.home_name} className="w-full h-full object-contain" />
-                    </div>
+                    <Link
+                      href={getTeamUrl(match.home_name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`group relative block w-20 h-20 rounded-full bg-white p-2 shadow-lg cursor-pointer overflow-hidden transition-transform duration-300 hover:scale-110 ${
+                        match.type === 'Finished' && (match.goals_home ?? 0) > (match.goals_away ?? 0) ? 'ring-2 ring-emerald-500' : ''
+                      }`}
+                    >
+                      <img src={match.home_logo} alt={match.home_name} className="w-full h-full object-contain relative z-10" />
+                      {/* White flash effect on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-out" />
+                    </Link>
                   )}
                   {match.type === 'Finished' && (match.goals_home ?? 0) > (match.goals_away ?? 0) && (
-                    <div className="absolute -top-1 -right-1 px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-bold shadow-lg">
+                    <div className="absolute -top-1 -right-1 px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-bold shadow-lg z-20">
                       WIN
                     </div>
                   )}
@@ -1807,14 +1839,21 @@ export default function MatchDetailClient() {
               <div className="flex flex-col items-center gap-3 flex-1">
                 <div className="relative">
                   {match.away_logo && (
-                    <div className={`w-20 h-20 rounded-full bg-white p-2 flex items-center justify-center shadow-lg ${
-                      match.type === 'Finished' && (match.goals_away ?? 0) > (match.goals_home ?? 0) ? 'ring-2 ring-emerald-500' : ''
-                    }`}>
-                      <img src={match.away_logo} alt={match.away_name} className="w-full h-full object-contain" />
-                    </div>
+                    <Link
+                      href={getTeamUrl(match.away_name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`group relative block w-20 h-20 rounded-full bg-white p-2 shadow-lg cursor-pointer overflow-hidden transition-transform duration-300 hover:scale-110 ${
+                        match.type === 'Finished' && (match.goals_away ?? 0) > (match.goals_home ?? 0) ? 'ring-2 ring-emerald-500' : ''
+                      }`}
+                    >
+                      <img src={match.away_logo} alt={match.away_name} className="w-full h-full object-contain relative z-10" />
+                      {/* White flash effect on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-out" />
+                    </Link>
                   )}
                   {match.type === 'Finished' && (match.goals_away ?? 0) > (match.goals_home ?? 0) && (
-                    <div className="absolute -top-1 -right-1 px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-bold shadow-lg">
+                    <div className="absolute -top-1 -right-1 px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-bold shadow-lg z-20">
                       WIN
                     </div>
                   )}
