@@ -581,6 +581,9 @@ export default function ProfitSummaryClient({
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  // Mobile-specific states
+  const [mobileSelectedModelIndex, setMobileSelectedModelIndex] = useState<number>(0);
+  const [mobileModelDropdownOpen, setMobileModelDropdownOpen] = useState(false);
 
   // Check auth status
   useEffect(() => {
@@ -1019,8 +1022,160 @@ export default function ProfitSummaryClient({
             </div>
           )}
 
-          {/* Model Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
+          {/* Mobile Model Cards - Single card with dropdown */}
+          <div className="md:hidden mb-8">
+            {/* Model Selector Dropdown */}
+            <div className="relative mb-4">
+              <button
+                onClick={() => setMobileModelDropdownOpen(!mobileModelDropdownOpen)}
+                className="w-full flex items-center justify-between px-4 py-3 bg-gray-800 border border-white/10 rounded-xl text-white"
+              >
+                <span className="font-medium">
+                  {(() => {
+                    const model = models[mobileSelectedModelIndex];
+                    return model === 'Value Hunter' ? t('hdpSniper')
+                      : model === 'Aggressive' ? t('activeTrader')
+                      : model === 'Balanced' ? t('oddsflowCore')
+                      : model === 'Oddsflow Beta v8' ? t('oddsflowBeta')
+                      : t('allModels');
+                  })()}
+                </span>
+                <svg className={`w-5 h-5 transition-transform ${mobileModelDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {mobileModelDropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setMobileModelDropdownOpen(false)} />
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden">
+                    {models.map((model, index) => {
+                      const modelName = model === 'Value Hunter' ? t('hdpSniper')
+                        : model === 'Aggressive' ? t('activeTrader')
+                        : model === 'Balanced' ? t('oddsflowCore')
+                        : model === 'Oddsflow Beta v8' ? t('oddsflowBeta')
+                        : t('allModels');
+                      const isLocked = lockedModels.includes(model);
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            if (!isLocked) {
+                              setMobileSelectedModelIndex(index);
+                              setMobileModelDropdownOpen(false);
+                            }
+                          }}
+                          disabled={isLocked}
+                          className={`w-full px-4 py-3 text-left flex items-center justify-between ${
+                            mobileSelectedModelIndex === index ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-300 hover:bg-white/5'
+                          } ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          <span>{modelName}</span>
+                          {isLocked && <span className="text-xs bg-red-600 px-2 py-0.5 rounded-full text-white">{t('comingSoon')}</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Single Model Card for Mobile */}
+            {(() => {
+              const stat = modelStats[mobileSelectedModelIndex];
+              const modelName = stat.model === 'Value Hunter' ? t('hdpSniper')
+                : stat.model === 'Aggressive' ? t('activeTrader')
+                : stat.model === 'Balanced' ? t('oddsflowCore')
+                : stat.model === 'Oddsflow Beta v8' ? t('oddsflowBeta')
+                : t('allModels');
+              const isLocked = lockedModels.includes(stat.model);
+              const bgImage = stat.model === 'All Models' ? '/performance/AllModels.png'
+                : stat.model === 'Value Hunter' ? '/performance/Hdp-snipper.png'
+                : stat.model === 'Aggressive' ? '/performance/Active-trader.png'
+                : stat.model === 'Balanced' ? '/performance/Oddsflow-core-strategic.png'
+                : stat.model === 'Oddsflow Beta v8' ? '/performance/Oddsflow-beta.png'
+                : '';
+
+              return (
+                <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/10 p-4 relative overflow-hidden">
+                  <div className="absolute inset-0 opacity-5 z-0" style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                  {isLocked && (
+                    <div className="absolute -top-2 -right-2 z-20">
+                      <span className="px-2 py-1 rounded-full bg-red-600 text-white text-[10px] font-bold uppercase shadow-lg">{t('comingSoon')}</span>
+                    </div>
+                  )}
+                  <div className="relative z-10">
+                    <h3 className="text-lg font-bold text-white mb-4">{modelName}</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('totalProfit')}</div>
+                        <div className={`text-xl font-bold ${stat.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {stat.totalProfit >= 0 ? '+' : ''}{stat.totalProfit.toFixed(2)}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('roi')}</div>
+                        <div className={`text-xl font-bold ${stat.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {stat.roi >= 0 ? '+' : ''}{stat.roi.toFixed(2)}%
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('totalInvested')}</div>
+                        <div className="text-lg font-bold text-white">${stat.totalInvested.toFixed(2)}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{t('totalBets')}</div>
+                        <div className="text-lg font-bold text-white">{stat.totalBets}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">{t('profitByMarket')}</div>
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-cyan-500"></div>
+                              <span className="text-sm text-gray-300">{t('moneyline1x2')}</span>
+                            </div>
+                            <span className={`text-sm font-bold ${stat.profitMoneyline >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                              {stat.profitMoneyline >= 0 ? '+' : ''}{stat.profitMoneyline.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                              <span className="text-sm text-gray-300">{t('asianHandicap')}</span>
+                            </div>
+                            <span className={`text-sm font-bold ${stat.profitHandicap >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                              {stat.profitHandicap >= 0 ? '+' : ''}{stat.profitHandicap.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                              <span className="text-sm text-gray-300">{t('overUnder')}</span>
+                            </div>
+                            <span className={`text-sm font-bold ${stat.profitOU >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                              {stat.profitOU >= 0 ? '+' : ''}{stat.profitOU.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => !isLocked && setSelectedModel(selectedModel === stat.model ? null : stat.model)}
+                        disabled={isLocked}
+                        className={`w-full mt-4 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                          isLocked ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white hover:from-emerald-600 hover:to-cyan-600'
+                        }`}
+                      >
+                        {selectedModel === stat.model ? t('betDetails') + ' ▼' : t('viewDetails')}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Desktop Model Cards Grid */}
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
             {modelStats.map((stat, index) => {
               const modelName = stat.model === 'Value Hunter' ? t('hdpSniper')
                 : stat.model === 'Aggressive' ? t('activeTrader')
@@ -1150,8 +1305,8 @@ export default function ProfitSummaryClient({
 
           {/* Bet Details Section */}
           {selectedModel && (
-            <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/10 p-6">
-              <h2 className="text-xl font-bold text-white mb-4">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-xl border border-white/10 p-4 md:p-6">
+              <h2 className="text-lg md:text-xl font-bold text-white mb-4">
                 {t('betDetails')} - {selectedModel === 'Value Hunter' ? t('hdpSniper')
                   : selectedModel === 'Aggressive' ? t('activeTrader')
                   : selectedModel === 'Balanced' ? t('oddsflowCore')
@@ -1159,13 +1314,13 @@ export default function ProfitSummaryClient({
                   : t('allModels')}
               </h2>
 
-              {/* Bet Type Filter */}
-              <div className="flex gap-2 mb-6 flex-wrap">
+              {/* Bet Type Filter - Scrollable on mobile */}
+              <div className="flex gap-2 mb-6 overflow-x-auto pb-2 -mx-1 px-1">
                 {['All', 'HDP', '1X2', 'OU'].map((filter) => (
                   <button
                     key={filter}
                     onClick={() => setBetTypeFilter(filter)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                       betTypeFilter === filter
                         ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white'
                         : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
@@ -1176,7 +1331,7 @@ export default function ProfitSummaryClient({
                 ))}
               </div>
 
-              {/* Bet Records Table */}
+              {/* Bet Records */}
               {(() => {
                 const allRecords = modelStats.find(s => s.model === selectedModel)?.records || [];
                 const filteredRecords = allRecords.filter(record => {
@@ -1189,62 +1344,125 @@ export default function ProfitSummaryClient({
                 });
 
                 return (
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="text-left text-gray-400 text-sm border-b border-white/10">
-                          <th className="pb-3">Clock</th>
-                          <th className="pb-3">Type</th>
-                          <th className="pb-3">Selection</th>
-                          <th className="pb-3">Line</th>
-                          <th className="pb-3">Odds</th>
-                          <th className="pb-3">Stake</th>
-                          <th className="pb-3">Score</th>
-                          <th className="pb-3">Status</th>
-                          <th className="pb-3 text-right">Profit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredRecords.length === 0 ? (
-                          <tr>
-                            <td colSpan={9} className="py-12 text-center text-gray-500">
-                              No signals
+                  <>
+                    {/* Mobile Cards View */}
+                    <div className="md:hidden space-y-3">
+                      {filteredRecords.length === 0 ? (
+                        <div className="py-12 text-center text-gray-500">No signals</div>
+                      ) : (
+                        filteredRecords.map((record, idx) => (
+                          <div key={idx} className="bg-gray-800/50 rounded-xl border border-white/5 p-4">
+                            {/* Header Row: Type Badge + Selection + Status */}
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-2">
+                                <span className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400 font-medium">
+                                  {record.type || '-'}
+                                </span>
+                                <span className="text-white font-medium">{record.selection || '-'}</span>
+                              </div>
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                record.status?.toLowerCase() === 'win' ? 'bg-emerald-500/20 text-emerald-400' :
+                                record.status?.toLowerCase() === 'loss' ? 'bg-red-500/20 text-red-400' :
+                                'bg-gray-500/20 text-gray-400'
+                              }`}>
+                                {record.status || '-'}
+                              </span>
+                            </div>
+
+                            {/* Stats Grid */}
+                            <div className="grid grid-cols-2 gap-3 text-sm">
+                              <div>
+                                <span className="text-gray-500 text-xs">Clock</span>
+                                <div className="text-white">{record.clock}'</div>
+                              </div>
+                              <div>
+                                <span className="text-gray-500 text-xs">Line</span>
+                                <div className="text-gray-300">{record.line || '-'}</div>
+                              </div>
+                              <div>
+                                <span className="text-gray-500 text-xs">Odds</span>
+                                <div className="text-white">{record.odds?.toFixed(2) || '-'}</div>
+                              </div>
+                              <div>
+                                <span className="text-gray-500 text-xs">Stake</span>
+                                <div className="text-white">${record.stake_money?.toFixed(2) || '0.00'}</div>
+                              </div>
+                              <div>
+                                <span className="text-gray-500 text-xs">Score</span>
+                                <div className="text-white">
+                                  {(record.score_home_at_bet ?? record.home_score ?? 0)}-{(record.score_away_at_bet ?? record.away_score ?? 0)}
+                                </div>
+                              </div>
+                              <div>
+                                <span className="text-gray-500 text-xs">Profit</span>
+                                <div className={`font-bold ${(record.profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                  {(record.profit ?? 0) >= 0 ? '+' : ''}{record.profit?.toFixed(2) || '0.00'}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="text-left text-gray-400 text-sm border-b border-white/10">
+                            <th className="pb-3">Clock</th>
+                            <th className="pb-3">Type</th>
+                            <th className="pb-3">Selection</th>
+                            <th className="pb-3">Line</th>
+                            <th className="pb-3">Odds</th>
+                            <th className="pb-3">Stake</th>
+                            <th className="pb-3">Score</th>
+                            <th className="pb-3">Status</th>
+                            <th className="pb-3 text-right">Profit</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredRecords.length === 0 ? (
+                            <tr>
+                              <td colSpan={9} className="py-12 text-center text-gray-500">
+                                No signals
+                              </td>
+                            </tr>
+                          ) : (
+                            filteredRecords.map((record, idx) => (
+                          <tr key={idx} className="border-b border-white/5 hover:bg-white/5">
+                            <td className="py-3 text-sm text-white">{record.clock}'</td>
+                            <td className="py-3 text-sm">
+                              <span className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400">
+                                {record.type || '-'}
+                              </span>
+                            </td>
+                            <td className="py-3 text-sm text-white">{record.selection || '-'}</td>
+                            <td className="py-3 text-sm text-gray-400">{record.line || '-'}</td>
+                            <td className="py-3 text-sm text-white">{record.odds?.toFixed(2) || '-'}</td>
+                            <td className="py-3 text-sm text-white">${record.stake_money?.toFixed(2) || '0.00'}</td>
+                            <td className="py-3 text-sm text-white">
+                              {(record.score_home_at_bet ?? record.home_score ?? 0)}-{(record.score_away_at_bet ?? record.away_score ?? 0)}
+                            </td>
+                            <td className="py-3 text-sm">
+                              <span className={`px-2 py-1 rounded text-xs ${
+                                record.status?.toLowerCase() === 'win' ? 'bg-emerald-500/20 text-emerald-400' :
+                                record.status?.toLowerCase() === 'loss' ? 'bg-red-500/20 text-red-400' :
+                                'bg-gray-500/20 text-gray-400'
+                              }`}>
+                                {record.status || '-'}
+                              </span>
+                            </td>
+                            <td className={`py-3 text-sm font-bold text-right ${(record.profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                              {(record.profit ?? 0) >= 0 ? '+' : ''}{record.profit?.toFixed(2) || '0.00'}
                             </td>
                           </tr>
-                        ) : (
-                          filteredRecords.map((record, idx) => (
-                        <tr key={idx} className="border-b border-white/5 hover:bg-white/5">
-                          <td className="py-3 text-sm text-white">{record.clock}'</td>
-                          <td className="py-3 text-sm">
-                            <span className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-400">
-                              {record.type || '-'}
-                            </span>
-                          </td>
-                          <td className="py-3 text-sm text-white">{record.selection || '-'}</td>
-                          <td className="py-3 text-sm text-gray-400">{record.line || '-'}</td>
-                          <td className="py-3 text-sm text-white">{record.odds?.toFixed(2) || '-'}</td>
-                          <td className="py-3 text-sm text-white">${record.stake_money?.toFixed(2) || '0.00'}</td>
-                          <td className="py-3 text-sm text-white">
-                            {(record.score_home_at_bet ?? record.home_score ?? 0)}-{(record.score_away_at_bet ?? record.away_score ?? 0)}
-                          </td>
-                          <td className="py-3 text-sm">
-                            <span className={`px-2 py-1 rounded text-xs ${
-                              record.status?.toLowerCase() === 'win' ? 'bg-emerald-500/20 text-emerald-400' :
-                              record.status?.toLowerCase() === 'loss' ? 'bg-red-500/20 text-red-400' :
-                              'bg-gray-500/20 text-gray-400'
-                            }`}>
-                              {record.status || '-'}
-                            </span>
-                          </td>
-                          <td className={`py-3 text-sm font-bold text-right ${(record.profit ?? 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {(record.profit ?? 0) >= 0 ? '+' : ''}{record.profit?.toFixed(2) || '0.00'}
-                          </td>
-                        </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
                 );
               })()}
             </div>
