@@ -1423,7 +1423,7 @@ export default function MatchDetailClient() {
     const matchData = await fetchMatch(isRefresh);
     console.log('[fetchAllData] matchData:', matchData?.id, 'fixture_id:', matchData?.fixture_id, 'isLoggedIn:', isLoggedIn);
     if (matchData?.fixture_id) {
-      // For non-logged-in users, only fetch free data (lineups, events, stats)
+      // For non-logged-in users, fetch free data (comparison, lineups, events, stats)
       // For logged-in users, also fetch premium data (odds, AI predictions, signals)
       const personality = PERSONALITIES.find(p => p.id === selectedPersonality);
 
@@ -1431,23 +1431,23 @@ export default function MatchDetailClient() {
       const lineupsPromise = !isRefresh ? getFixtureLineups(matchData.fixture_id) : Promise.resolve({ data: null });
       const eventsPromise = getFixtureEvents(matchData.fixture_id);
       const statsPromise = getMatchStatistics(matchData.fixture_id);
+      const predictionPromise = getMatchPrediction(matchData.fixture_id); // Free - for Comparison tab
 
-      // Premium data - only for logged-in users
+      // Premium data - only for logged-in users (Odds & AI tab)
       const oddsPromise = isLoggedIn ? fetchOdds(matchData.fixture_id, matchData.type === 'In Play') : Promise.resolve();
       const aiPromise = isLoggedIn && personality ? fetchAIPredictions(matchData.fixture_id, personality.aiModel) : Promise.resolve();
-      const predictionPromise = isLoggedIn ? getMatchPrediction(matchData.fixture_id) : Promise.resolve({ data: null });
       const signalsPromise = isLoggedIn && selectedPersonality === 'value'
         ? getLiveSignals(matchData.fixture_id)
         : Promise.resolve({ data: null });
 
       // Await all promises
-      const [lineupsResult, eventsResult, statsResult, , , predictionResult, liveSignalsResult] = await Promise.all([
+      const [lineupsResult, eventsResult, statsResult, predictionResult, , , liveSignalsResult] = await Promise.all([
         lineupsPromise,
         eventsPromise,
         statsPromise,
+        predictionPromise,
         oddsPromise,
         aiPromise,
-        predictionPromise,
         signalsPromise,
       ]);
 
@@ -1463,15 +1463,12 @@ export default function MatchDetailClient() {
       if (statsResult?.data) {
         setMatchStats(statsResult.data);
       }
+      if (predictionResult?.data) {
+        setMatchPrediction(predictionResult.data);
+      }
       // Premium data - only set if logged in
-      if (isLoggedIn) {
-        if (predictionResult?.data) {
-          setMatchPrediction(predictionResult.data);
-        }
-        // Update live signals state for Value Hunter
-        if (liveSignalsResult?.data) {
-          setLiveSignals(liveSignalsResult.data);
-        }
+      if (isLoggedIn && liveSignalsResult?.data) {
+        setLiveSignals(liveSignalsResult.data);
       }
     }
   }, [fetchMatch, fetchOdds, fetchAIPredictions, selectedPersonality]);
