@@ -2,17 +2,52 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/config';
+import { supabase } from '@/lib/supabase';
 import NewsClient from './NewsClient';
+import NewsSSR from './NewsSSR';
 
 // Generate static params for all locales
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
+// Server-side data fetching for SEO
+async function getInitialNewsData() {
+  try {
+    // Get total count
+    const { count } = await supabase
+      .from('football_news')
+      .select('*', { count: 'exact', head: true });
+
+    // Fetch first page of articles for SSR
+    const { data: articles, error } = await supabase
+      .from('football_news')
+      .select('id, title, summary, image_url, created_at, category')
+      .order('created_at', { ascending: false, nullsFirst: false })
+      .range(0, 19); // First 20 articles
+
+    if (error) {
+      console.error('Error fetching news for SSR:', error);
+      return { articles: [], totalCount: 0 };
+    }
+
+    return {
+      articles: articles || [],
+      totalCount: count || 0,
+    };
+  } catch (error) {
+    console.error('Error in getInitialNewsData:', error);
+    return { articles: [], totalCount: 0 };
+  }
+}
+
 // SEO Metadata
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const baseUrl = 'https://www.oddsflow.ai';
+
+  // Fetch article count for dynamic metadata
+  const { totalCount } = await getInitialNewsData();
 
   const titles: Record<string, string> = {
     en: "Football News & AI Betting Insights | OddsFlow",
@@ -27,7 +62,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     id: "Berita Sepak Bola & Wawasan Taruhan AI | OddsFlow",
   };
 
-  const descriptions: Record<string, string> = {
+  const baseDescriptions: Record<string, string> = {
     en: "Stay updated with the latest football news, betting insights, and AI predictions. Expert analysis, match previews, and data-driven betting strategies.",
     es: "Mantente actualizado con las últimas noticias de fútbol, insights de apuestas y predicciones IA. Análisis experto, previas de partidos y estrategias de apuestas basadas en datos.",
     pt: "Fique atualizado com as últimas notícias de futebol, insights de apostas e previsões IA. Análise especializada, prévias de partidas e estratégias de apostas baseadas em dados.",
@@ -40,27 +75,45 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     id: "Tetap update dengan berita sepak bola terbaru, wawasan taruhan, dan prediksi AI. Analisis ahli, preview pertandingan, dan strategi taruhan berbasis data.",
   };
 
+  // Add article count to description
+  const description = totalCount > 0
+    ? `${totalCount}+ articles. ${baseDescriptions[locale] || baseDescriptions.en}`
+    : baseDescriptions[locale] || baseDescriptions.en;
+
   return {
     title: titles[locale] || titles.en,
-    description: descriptions[locale] || descriptions.en,
+    description,
     alternates: {
       canonical: locale === 'en' ? `${baseUrl}/news` : `${baseUrl}/${locale}/news`,
+      languages: {
+        'en': `${baseUrl}/news`,
+        'es': `${baseUrl}/es/news`,
+        'pt': `${baseUrl}/pt/news`,
+        'de': `${baseUrl}/de/news`,
+        'fr': `${baseUrl}/fr/news`,
+        'ja': `${baseUrl}/ja/news`,
+        'ko': `${baseUrl}/ko/news`,
+        'zh-CN': `${baseUrl}/zh/news`,
+        'zh-TW': `${baseUrl}/tw/news`,
+        'id': `${baseUrl}/id/news`,
+        'x-default': `${baseUrl}/news`,
+      }
     },
     openGraph: {
       title: titles[locale] || titles.en,
-      description: descriptions[locale] || descriptions.en,
+      description,
       type: 'website',
       url: locale === 'en' ? `${baseUrl}/news` : `${baseUrl}/${locale}/news`,
     },
     twitter: {
       card: 'summary_large_image',
       title: titles[locale] || titles.en,
-      description: descriptions[locale] || descriptions.en,
+      description,
     },
   };
 }
 
-// Loading fallback
+// Loading fallback - still needed for client-side navigation
 function LoadingFallback() {
   return (
     <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
@@ -84,9 +137,22 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
   // Enable static rendering
   setRequestLocale(locale);
 
+  // Fetch initial data on server for SSR
+  const { articles, totalCount } = await getInitialNewsData();
+
   return (
-    <Suspense fallback={<LoadingFallback />}>
-      <NewsClient />
-    </Suspense>
+    <>
+      {/* SSR Content - Rendered on server, visible to crawlers but hidden from users */}
+      <NewsSSR
+        locale={locale}
+        articles={articles}
+        totalCount={totalCount}
+      />
+
+      {/* Client Component - Interactive UI for users */}
+      <Suspense fallback={<LoadingFallback />}>
+        <NewsClient />
+      </Suspense>
+    </>
   );
 }

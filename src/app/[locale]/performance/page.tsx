@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { getInitialPerformanceData } from '@/lib/performance-data';
 import PerformanceClient from './PerformanceClient';
+import PerformanceSSR from './PerformanceSSR';
 import { locales, type Locale } from '@/i18n/config';
 import { PerformanceDatasetJsonLd } from '@/components/JsonLd';
 import VerificationMetadata from './VerificationMetadata';
@@ -183,6 +184,16 @@ export default async function PerformancePage({ params }: { params: Promise<{ lo
           roi={initialData.stats.roi}
         />
       )}
+
+      {/* SSR Content - Rendered on server, visible to crawlers but hidden from users */}
+      <PerformanceSSR
+        locale={locale}
+        stats={initialData.stats}
+        matches={initialMatches}
+        totalMatchCount={initialData.totalMatchCount}
+      />
+
+      {/* Client Component - Interactive UI for users */}
       <Suspense fallback={<LoadingFallback />}>
         <PerformanceClient
           locale={locale}
