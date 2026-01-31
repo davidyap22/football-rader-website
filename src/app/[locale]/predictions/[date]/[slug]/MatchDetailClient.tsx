@@ -3408,7 +3408,7 @@ export default function MatchDetailClient() {
                                 return sel === 'over' ? t('over') : t('under');
                               } else {
                                 const sel = String(rawRecord.selection_hdp || '').toLowerCase();
-                                return sel === 'home' ? t('home_team') : t('away_team');
+                                return sel.includes('home') ? t('home_team') : t('away_team');
                               }
                             };
                             const getFairOdds = () => {
@@ -3483,7 +3483,7 @@ export default function MatchDetailClient() {
 
                               // Get selection - use same logic as getSelectionLabel (defaults to AWAY if not home)
                               const selStr = String(rawRecord.selection_hdp || '').toLowerCase().trim();
-                              const selection: 'HOME' | 'AWAY' = selStr === 'home' ? 'HOME' : 'AWAY';
+                              const selection: 'HOME' | 'AWAY' = selStr.includes('home') ? 'HOME' : 'AWAY';
 
                               // Get line - the displayed line is the absolute value for the selected team
                               // For AWAY selection, the line shown is the away team's handicap (positive = advantage)
@@ -3577,7 +3577,7 @@ export default function MatchDetailClient() {
                               return sel === 'over' ? t('over') : t('under');
                             } else {
                               const sel = String(rawRecord.selection_hdp || '').toLowerCase();
-                              return sel === 'home' ? t('home_team') : t('away_team');
+                              return sel.includes('home') ? t('home_team') : t('away_team');
                             }
                           };
                           const getFairOdds = () => {
@@ -3658,7 +3658,7 @@ export default function MatchDetailClient() {
                             const [homeGoals, awayGoals] = scoreParts;
 
                             const selStr = String(rawRecord.selection_hdp || '').toLowerCase().trim();
-                            const selection: 'HOME' | 'AWAY' = selStr === 'home' ? 'HOME' : 'AWAY';
+                            const selection: 'HOME' | 'AWAY' = selStr.includes('home') ? 'HOME' : 'AWAY';
 
                             const lineVal = rawRecord.handicap_main_line ?? rawRecord.handicap_mainline ?? rawRecord.line_hdp ?? rawRecord.line ?? null;
                             if (lineVal === null || lineVal === undefined) return null;
@@ -5894,7 +5894,7 @@ export default function MatchDetailClient() {
                       // Get first signal for mobile card
                       const firstSignal = lastLiveSignals[0] as unknown as Record<string, unknown>;
                       const mobileSelection = String(firstSignal.selection_hdp || '').toLowerCase();
-                      const mobileSelectionLabel = mobileSelection === 'home' ? t('home_team') : t('away_team');
+                      const mobileSelectionLabel = mobileSelection.includes('home') ? t('home_team') : t('away_team');
                       const mobileLineValue = firstSignal.handicap_mainline ?? firstSignal.line_hdp ?? firstSignal.line ?? null;
                       const mobileLine = mobileLineValue !== null && mobileLineValue !== undefined ? String(mobileLineValue) : '-';
                       const mobileFairOdds = firstSignal.fair_odds_hdp !== null && firstSignal.fair_odds_hdp !== undefined ? Number(firstSignal.fair_odds_hdp).toFixed(2) : '-';
@@ -5955,7 +5955,7 @@ export default function MatchDetailClient() {
                                   const selection = String(raw.selection_hdp || '').toLowerCase();
                                   const lineValue = raw.handicap_mainline ?? raw.line_hdp ?? raw.line ?? null;
                                   const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '-';
-                                  const selectionLabel = selection === 'home' ? t('home_team') : t('away_team');
+                                  const selectionLabel = selection.includes('home') ? t('home_team') : t('away_team');
                                   const fairOdds = raw.fair_odds_hdp !== null && raw.fair_odds_hdp !== undefined ? Number(raw.fair_odds_hdp).toFixed(2) : '-';
                                   const marketOdds = raw.market_odds_hdp !== null && raw.market_odds_hdp !== undefined ? Number(raw.market_odds_hdp).toFixed(2) : '-';
                                   const evStr = String(raw.expected_value_hdp || '').replace('%', '');
@@ -6036,7 +6036,7 @@ export default function MatchDetailClient() {
                               {lastLiveSignals.map((signal: any, index: number) => {
                                 const raw = signal as Record<string, unknown>;
                                 const selection = String(raw.selection_hdp || '').toLowerCase();
-                                const selectionLabel = selection === 'home' ? 'Home' : 'Away';
+                                const selectionLabel = selection.includes('home') ? 'Home' : 'Away';
                                 const lineValue = raw.handicap_main_line ?? raw.handicap_mainline ?? raw.line_hdp ?? raw.line ?? null;
                                 const line = lineValue !== null && lineValue !== undefined ? String(lineValue) : '-';
                                 const fairOdds = raw.fair_odds_hdp !== null && raw.fair_odds_hdp !== undefined ? Number(raw.fair_odds_hdp).toFixed(2) : '-';
