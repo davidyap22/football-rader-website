@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { supabase, ProfitSummary } from '@/lib/supabase';
+import { supabase, ProfitSummary, buildLocalePath } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import {
   LineChart,
@@ -61,6 +61,7 @@ const translations: Record<string, Record<string, string>> = {
     transparentAI: "Transparent AI",
     safestTips: "Safest Tips",
     mostAccurate: "Most Accurate",
+    realBetResults: "Real Bet Results",
     today: "Today",
     dayAgo: "day ago",
     daysAgo: "days ago",
@@ -144,6 +145,7 @@ const translations: Record<string, Record<string, string>> = {
     transparentAI: "IA Transparente",
     safestTips: "Consejos Seguros",
     mostAccurate: "Más Preciso",
+    realBetResults: "Resultados Reales",
     today: "Hoy",
     dayAgo: "día atrás",
     daysAgo: "días atrás",
@@ -227,6 +229,7 @@ const translations: Record<string, Record<string, string>> = {
     transparentAI: "IA Transparente",
     safestTips: "Dicas Seguras",
     mostAccurate: "Mais Preciso",
+    realBetResults: "Resultados Reais",
     today: "Hoje",
     dayAgo: "dia atrás",
     daysAgo: "dias atrás",
@@ -310,6 +313,7 @@ const translations: Record<string, Record<string, string>> = {
     transparentAI: "Transparente KI",
     safestTips: "Sicherste Tipps",
     mostAccurate: "Am Genauesten",
+    realBetResults: "Echte Wettergebnisse",
     today: "Heute",
     dayAgo: "Tag her",
     daysAgo: "Tage her",
@@ -393,6 +397,7 @@ const translations: Record<string, Record<string, string>> = {
     transparentAI: "IA Transparente",
     safestTips: "Conseils Sûrs",
     mostAccurate: "Plus Précis",
+    realBetResults: "Résultats Réels",
     today: "Aujourd'hui",
     dayAgo: "jour dernier",
     daysAgo: "jours derniers",
@@ -476,6 +481,7 @@ const translations: Record<string, Record<string, string>> = {
     transparentAI: "透明なAI",
     safestTips: "最も安全",
     mostAccurate: "最も正確",
+    realBetResults: "実際の賭け結果",
     today: "今日",
     dayAgo: "日前",
     daysAgo: "日前",
@@ -559,6 +565,7 @@ const translations: Record<string, Record<string, string>> = {
     transparentAI: "투명한 AI",
     safestTips: "가장 안전",
     mostAccurate: "가장 정확",
+    realBetResults: "실제 베팅 결과",
     today: "오늘",
     dayAgo: "일 전",
     daysAgo: "일 전",
@@ -642,6 +649,7 @@ const translations: Record<string, Record<string, string>> = {
     transparentAI: "透明AI",
     safestTips: "最安全",
     mostAccurate: "最准确",
+    realBetResults: "真实投注结果",
     today: "今天",
     dayAgo: "天前",
     daysAgo: "天前",
@@ -725,6 +733,7 @@ const translations: Record<string, Record<string, string>> = {
     transparentAI: "透明AI",
     safestTips: "最安全",
     mostAccurate: "最準確",
+    realBetResults: "真實投注結果",
     today: "今天",
     dayAgo: "天前",
     daysAgo: "天前",
@@ -808,6 +817,7 @@ const translations: Record<string, Record<string, string>> = {
     transparentAI: "AI Transparan",
     safestTips: "Tips Teraman",
     mostAccurate: "Paling Akurat",
+    realBetResults: "Hasil Taruhan Nyata",
     today: "Hari ini",
     dayAgo: "hari lalu",
     daysAgo: "hari lalu",
@@ -2407,6 +2417,18 @@ export default function PerformanceClient({
               </svg>
               <span className="text-xs md:text-sm text-yellow-400 font-medium whitespace-nowrap">{t('mostAccurate')}</span>
             </div>
+            {/* Real Bet Results - Gold button with shimmer */}
+            <Link
+              href={buildLocalePath('/performance/real-bet-results', locale)}
+              className="relative flex items-center justify-center gap-1.5 md:gap-2 px-3 md:px-5 py-2.5 rounded-full bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 border border-yellow-300/50 shadow-lg shadow-yellow-500/30 hover:scale-110 transition-all duration-300 overflow-hidden group"
+            >
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out animate-shimmer"></div>
+              <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-900 flex-shrink-0 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-xs md:text-sm text-gray-900 font-bold whitespace-nowrap relative z-10">{t('realBetResults')}</span>
+            </Link>
           </div>
 
           {loading ? (

@@ -951,8 +951,25 @@ export const buildNewsUrl = (news: FootballNews, locale: string = 'en'): string 
   const date = formatNewsDate(news.created_at || news.published_at);
   const id = news.id;
 
-  // Always include locale prefix to match [locale]/news/[slug]/[date]/[id] route structure
+  // For English (default locale), don't include /en prefix
+  // For other locales, include the locale prefix
+  if (locale === 'en') {
+    return `/news/${slug}/${date}/${id}`;
+  }
   return `/${locale}/news/${slug}/${date}/${id}`;
+};
+
+// Helper function to build locale-aware URLs
+// English (default locale) doesn't get /en prefix, other locales do
+export const buildLocalePath = (path: string, locale: string = 'en'): string => {
+  // Ensure path starts with /
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+
+  // For English (default locale), don't include /en prefix
+  if (locale === 'en') {
+    return normalizedPath;
+  }
+  return `/${locale}${normalizedPath}`;
 };
 
 // Contact message interface

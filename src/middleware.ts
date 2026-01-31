@@ -7,7 +7,7 @@ import { locales, defaultLocale } from './i18n/config';
 const intlMiddleware = createIntlMiddleware({
   locales,
   defaultLocale,
-  localePrefix: 'always',  // Always include locale prefix to fix deep nested routes
+  localePrefix: 'as-needed',  // Don't show /en for English (default locale)
   localeDetection: false,
 });
 
